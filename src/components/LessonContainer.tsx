@@ -1,416 +1,290 @@
 import React, { useState } from 'react';
-import { LessonQuestion, ALL_LESSONS } from '../data/lessonsData';
+import { ALL_LESSONS, LessonQuestion, LessonActivity, TOPICS } from '../data/lessonsData';
 import { sound } from '../utils/soundEffects';
+import { ArrowLeft, ArrowRight, Pencil, Lightbulb, CheckCircle, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {
-  ArrowLeft,
-  ArrowRight,
-  Lightbulb,
-  CheckCircle,
-  HelpCircle,
-  Pencil,
-  BookOpen,
-  Award
-} from 'lucide-react';
-
-// Activity components
 import { PictographViewer } from './activities/PictographViewer';
 import { PictographBuilder } from './activities/PictographBuilder';
-import { VolumeSlider } from './activities/VolumeSlider';
 import { VolumeComparison } from './activities/VolumeComparison';
+import { VolumeSlider } from './activities/VolumeSlider';
 import { BarModelViewer } from './activities/BarModelViewer';
 import { SudokuBoard } from './activities/SudokuBoard';
+import { PixidokuBoard } from './activities/PixidokuBoard';
 import { PatternAnimals } from './activities/PatternAnimals';
 import { FlowerMaze } from './activities/FlowerMaze';
+import { StarBattleBoard } from './activities/StarBattleBoard';
 import { QueueCounter } from './activities/QueueCounter';
 import { CornerCross } from './activities/CornerCross';
 import { LogicSeatOrder } from './activities/LogicSeatOrder';
-import { PixidokuBoard } from './activities/PixidokuBoard';
-import { StarBattleBoard } from './activities/StarBattleBoard';
 
 interface LessonContainerProps {
   lesson: LessonQuestion;
-  onLessonChange: (lessonId: string) => void;
+  isCompleted: boolean;
+  onLessonChange: (nextId: string) => void;
   onBackToMap: () => void;
   onOpenScratchpad: () => void;
   onLessonCompleted: (lessonId: string) => void;
-  isCompleted: boolean;
 }
+
+const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
+  switch (activity.type) {
+    case 'pictographViewer':
+      return (
+        <PictographViewer
+          keyNotice={activity.keyNotice}
+          items={activity.items}
+          subQuestions={activity.subQuestions}
+          multiplier={activity.multiplier}
+          onAllCompleted={onCompleted}
+        />
+      );
+    case 'pictographBuilder':
+      return (
+        <PictographBuilder
+          categories={activity.categories}
+          multiplier={activity.multiplier}
+          totalPeople={activity.totalPeople}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'volumeComparison':
+      return (
+        <VolumeComparison
+          bottles={activity.bottles}
+          questions={activity.questions}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'volumeSlider':
+      return (
+        <VolumeSlider
+          bottles={activity.bottles}
+          targetCondition={activity.targetCondition}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'barModel':
+      return (
+        <BarModelViewer bars={activity.bars} questions={activity.questions} onCompleted={onCompleted} />
+      );
+    case 'sudoku':
+      return (
+        <SudokuBoard
+          type={activity.sudokuType}
+          symbols={activity.symbols}
+          initialGrid={activity.initialGrid}
+          solution={activity.solution}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'pixidoku':
+      return (
+        <PixidokuBoard
+          size={activity.size}
+          animals={activity.animals}
+          initialGrid={activity.initialGrid}
+          solution={activity.solution}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'patternAnimals':
+      return (
+        <PatternAnimals
+          sequence={activity.sequence}
+          choices={activity.choices}
+          target1={activity.target1}
+          target2={activity.target2}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'flowerMaze':
+      return <FlowerMaze pattern={activity.pattern} onCompleted={onCompleted} />;
+    case 'starBattle':
+      return (
+        <StarBattleBoard
+          size={activity.size}
+          targetStarCount={activity.targetStarCount}
+          regions={activity.regions}
+          starsSolution={activity.starsSolution}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'queueCounter':
+      return (
+        <QueueCounter
+          fromFront={activity.fromFront}
+          fromBack={activity.fromBack}
+          correctTotal={activity.correctTotal}
+          formula={activity.formula}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'cornerCross':
+      return (
+        <CornerCross
+          shape={activity.shape}
+          verticalCount={activity.verticalCount}
+          horizontalCount={activity.horizontalCount}
+          intersectionPerson={activity.intersectionPerson}
+          options={activity.options}
+          correctAnswer={activity.correctAnswer}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'logicSeatOrder':
+      return (
+        <LogicSeatOrder
+          seatsCount={activity.seatsCount}
+          correctOrder={activity.correctOrder}
+          allowedCharacters={activity.allowedCharacters}
+          onCompleted={onCompleted}
+        />
+      );
+  }
+};
 
 export const LessonContainer: React.FC<LessonContainerProps> = ({
   lesson,
+  isCompleted,
   onLessonChange,
   onBackToMap,
   onOpenScratchpad,
-  onLessonCompleted,
-  isCompleted
+  onLessonCompleted
 }) => {
   const [showHint, setShowHint] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [justFinishedId, setJustFinishedId] = useState<string | null>(null);
 
-  const currentIndex = ALL_LESSONS.findIndex((l) => l.id === lesson.id);
-  const prevLesson = currentIndex > 0 ? ALL_LESSONS[currentIndex - 1] : null;
-  const nextLesson = currentIndex < ALL_LESSONS.length - 1 ? ALL_LESSONS[currentIndex + 1] : null;
+  const topic = TOPICS.find((t) => t.id === lesson.topicId);
+  const lessonIndex = ALL_LESSONS.findIndex((l) => l.id === lesson.id);
+  const prevLesson = lessonIndex > 0 ? ALL_LESSONS[lessonIndex - 1] : undefined;
+  const nextLesson = lessonIndex < ALL_LESSONS.length - 1 ? ALL_LESSONS[lessonIndex + 1] : undefined;
+  const justFinished = justFinishedId === lesson.id;
 
-  const handleComplete = () => {
+  const handleCompleted = () => {
+    setJustFinishedId(lesson.id);
     onLessonCompleted(lesson.id);
     confetti({
-      particleCount: 70,
-      spread: 60,
+      particleCount: 80,
+      spread: 70,
       origin: { y: 0.6 }
     });
   };
 
-  const renderActivity = () => {
-    switch (lesson.questionType) {
-      case 'pictograph_read': {
-        const d = lesson.interactiveData as any;
-        return (
-          <PictographViewer
-            key={lesson.id}
-            keyNotice={d.keyNotice}
-            items={d.items}
-            subQuestions={d.subQuestions}
-            multiplier={d.multiplier || 1}
-            onAllCompleted={handleComplete}
-          />
-        );
-      }
-      case 'pictograph_build': {
-        const d = lesson.interactiveData as any;
-        return (
-          <PictographBuilder
-            key={lesson.id}
-            categories={d.categories}
-            multiplier={d.multiplier}
-            totalPeople={d.totalPeople}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'volume_slider': {
-        const d = lesson.interactiveData as any;
-        return (
-          <VolumeSlider
-            key={lesson.id}
-            bottles={d.bottles}
-            targetCondition={d.targetCondition}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'volume_compare': {
-        const d = lesson.interactiveData as any;
-        return (
-          <VolumeComparison
-            key={lesson.id}
-            bottles={d.bottles}
-            questions={d.questions}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'bar_model': {
-        const d = lesson.interactiveData as any;
-        return (
-          <BarModelViewer
-            key={lesson.id}
-            bars={d.bars}
-            questions={d.questions}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'sudoku_shape': {
-        const d = lesson.interactiveData as any;
-        if (lesson.id === 'challenge-star-battle') {
-          return (
-            <StarBattleBoard
-              key={lesson.id}
-              size={d.size}
-              targetStarCount={d.targetStarCount}
-              regions={d.regions}
-              starsSolution={d.starsSolution}
-              onCompleted={handleComplete}
-            />
-          );
-        }
-        return (
-          <SudokuBoard
-            key={lesson.id}
-            type="shape"
-            symbols={d.symbols}
-            initialGrid={d.initialGrid}
-            solution={d.solution}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'sudoku_number': {
-        const d = lesson.interactiveData as any;
-        return (
-          <SudokuBoard
-            key={lesson.id}
-            type="number"
-            initialGrid={d.initialGrid}
-            solution={d.solution}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'pattern_sequence': {
-        const d = lesson.interactiveData as any;
-        return (
-          <PatternAnimals
-            key={lesson.id}
-            sequence={d.sequence}
-            choices={d.choices}
-            target1={d.target1}
-            target2={d.target2}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'pattern_maze': {
-        const d = lesson.interactiveData as any;
-        return (
-          <FlowerMaze
-            key={lesson.id}
-            pattern={d.pattern}
-            gridSize={d.gridSize}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'queue_counter': {
-        const d = lesson.interactiveData as any;
-        return (
-          <QueueCounter
-            key={lesson.id}
-            fromFront={d.fromFront}
-            fromBack={d.fromBack}
-            correctTotal={d.correctTotal}
-            formula={d.formula}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'corner_cross': {
-        const d = lesson.interactiveData as any;
-        return (
-          <CornerCross
-            key={lesson.id}
-            shape={d.shape}
-            verticalCount={d.verticalCount}
-            horizontalCount={d.horizontalCount}
-            intersectionPerson={d.intersectionPerson}
-            options={d.options}
-            correctAnswer={d.correctAnswer}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'logic_height': {
-        const d = lesson.interactiveData as any;
-        return (
-          <VolumeComparison
-            key={lesson.id}
-            bottles={[
-              { id: 'benny', label: 'Benny 🐵', levelPercent: 90, color: '#f59e0b' },
-              { id: 'casey', label: 'Casey 🐹', levelPercent: 60, color: '#f59e0b' },
-              { id: 'abby', label: 'Abby 🐰', levelPercent: 40, color: '#f59e0b' }
-            ]}
-            questions={d.questions}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'logic_seating': {
-        const d = lesson.interactiveData as any;
-        return (
-          <LogicSeatOrder
-            key={lesson.id}
-            seatsCount={d.seatsCount}
-            correctOrder={d.correctOrder}
-            allowedCharacters={d.allowedCharacters}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      case 'pixidoku_5x5': {
-        const d = lesson.interactiveData as any;
-        return (
-          <PixidokuBoard
-            key={lesson.id}
-            size={d.size}
-            animals={d.animals}
-            initialGrid={d.initialGrid}
-            solution={d.solution}
-            onCompleted={handleComplete}
-          />
-        );
-      }
-      default:
-        return <div>Chuyên đề đang được chuẩn bị.</div>;
-    }
+  const goTo = (id: string) => {
+    sound.playClick();
+    setShowHint(false);
+    onLessonChange(id);
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-16">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex items-center justify-between gap-4">
+    <div className="space-y-6 pb-12">
+      {/* Top actions */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <button
           type="button"
           onClick={() => {
             sound.playClick();
             onBackToMap();
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs md:text-sm transition-colors border border-slate-200"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border-2 border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 shadow-xs"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Quay lại bản đồ
+          <ArrowLeft className="w-4 h-4" /> Về bản đồ
         </button>
 
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-500 hidden sm:inline">
-            Bài {currentIndex + 1} / {ALL_LESSONS.length}
-          </span>
-          <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-black">
-            {lesson.badgeTitle}
-          </span>
+        <button
+          type="button"
+          onClick={() => {
+            sound.playClick();
+            onOpenScratchpad();
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 border-2 border-amber-300 text-sm font-bold text-amber-900 hover:bg-amber-200 shadow-xs"
+        >
+          <Pencil className="w-4 h-4" /> Giấy nháp
+        </button>
+      </div>
+
+      {/* Lesson header */}
+      <div
+        className={`rounded-3xl p-6 md:p-8 text-white shadow-lg bg-gradient-to-r ${
+          topic?.bgGradient ?? 'from-emerald-500 to-teal-600'
+        }`}
+      >
+        <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider">
+          <span className="bg-black/20 px-2.5 py-1 rounded-full">{lesson.topicName}</span>
+          <span className="bg-white/25 px-2.5 py-1 rounded-full">{lesson.badgeTitle}</span>
+          {isCompleted && (
+            <span className="bg-amber-400 text-amber-950 px-2.5 py-1 rounded-full flex items-center gap-1">
+              <CheckCircle className="w-3 h-3" /> Đã hoàn thành
+            </span>
+          )}
+        </div>
+        <h1 className="mt-3 text-2xl md:text-3xl font-black font-display tracking-tight">{lesson.title}</h1>
+        <p className="mt-2 text-sm md:text-base font-medium text-white/90">{lesson.instruction}</p>
+      </div>
+
+      {/* Mascot speech & hint */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex-1 flex items-start gap-3 bg-white rounded-3xl border-2 border-slate-100 p-4 shadow-sm">
+          <span className="text-4xl">{lesson.mascot.avatar}</span>
+          <div>
+            <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{lesson.mascot.name}</p>
+            <p className="text-sm md:text-base font-semibold text-slate-800">{lesson.mascot.message}</p>
+          </div>
+        </div>
+
+        <div className="md:w-80 bg-sky-50 rounded-3xl border-2 border-sky-200 p-4">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              setShowHint((v) => !v);
+            }}
+            className="inline-flex items-center gap-2 text-sm font-bold text-sky-800"
+          >
+            <Lightbulb className="w-4 h-4 text-amber-500" />
+            {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}
+          </button>
+          {showHint && <p className="mt-2 text-sm font-medium text-sky-900">{lesson.hint}</p>}
         </div>
       </div>
 
-      {/* Mascot Speech Bubble Card */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-3xl p-4 md:p-6 shadow-sm flex items-start gap-4">
-        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white border-2 border-amber-300 shadow-md flex items-center justify-center text-3xl md:text-4xl shrink-0">
-          {lesson.mascot.avatar}
-        </div>
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="font-black text-amber-900 text-sm md:text-base font-display">
-              {lesson.mascot.name} nhắn nhủ:
-            </span>
-            {isCompleted && (
-              <span className="flex items-center gap-1 text-[11px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                <CheckCircle className="w-3 h-3" /> Đã hoàn thành
-              </span>
-            )}
-          </div>
-          <p className="text-xs md:text-sm text-amber-950 font-medium leading-relaxed italic">
-            "{lesson.mascot.quote}"
-          </p>
-        </div>
+      {/* Activity (keyed so state resets between lessons) */}
+      <div key={lesson.id} className="bg-white/70 rounded-3xl border-2 border-slate-100 p-4 md:p-6 shadow-sm">
+        {renderActivity(lesson.activity, handleCompleted)}
       </div>
 
-      {/* Lesson Title & Instruction */}
-      <div className="bg-white rounded-3xl p-6 md:p-8 border-2 border-slate-200/90 shadow-md space-y-4">
-        <div>
-          <span className="text-xs font-extrabold text-emerald-600 uppercase tracking-wider block">
-            {lesson.topicName}
-          </span>
-          <h2 className="text-xl md:text-2xl font-black font-display text-slate-900 mt-1">
-            {lesson.title}
-          </h2>
-          <p className="text-sm md:text-base text-slate-600 font-medium mt-2 whitespace-pre-line leading-relaxed">
-            {lesson.instruction}
+      {justFinished && (
+        <div className="bg-emerald-50 border-2 border-emerald-300 rounded-3xl p-5 text-center space-y-1">
+          <p className="text-lg font-black text-emerald-800">🎉 Tuyệt vời! Bạn đã hoàn thành thử thách!</p>
+          <p className="text-sm font-semibold text-emerald-700 flex items-center justify-center gap-1">
+            <Star className="w-4 h-4 fill-amber-300 text-amber-400" /> Thu thập được ngôi sao mới
           </p>
         </div>
+      )}
 
-        {/* The Core Interactive Exercise */}
-        <div className="pt-2">{renderActivity()}</div>
-
-        {/* Footer Support Tools: Hint, Scratchpad, Explanation */}
-        <div className="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setShowHint(!showHint);
-              }}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold border border-amber-200 transition-colors"
-            >
-              <Lightbulb className="w-4 h-4 text-amber-600" />
-              {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setShowExplanation(!showExplanation);
-              }}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-bold border border-sky-200 transition-colors"
-            >
-              <HelpCircle className="w-4 h-4 text-sky-600" />
-              {showExplanation ? 'Ẩn lời giải' : 'Đáp án & Lời giải'}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                onOpenScratchpad();
-              }}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-200 transition-colors"
-            >
-              <Pencil className="w-4 h-4 text-slate-600" />
-              Bảng vẽ nháp
-            </button>
-          </div>
-
-          {/* Next / Prev Navigation */}
-          <div className="flex items-center gap-2">
-            {prevLesson && (
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  onLessonChange(prevLesson.id);
-                }}
-                className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-600 transition-colors"
-                title="Bài trước"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-            )}
-
-            {nextLesson && (
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  onLessonChange(nextLesson.id);
-                }}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm shadow-md transition-transform active:scale-95"
-              >
-                <span>Bài tiếp theo</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Collapsible Hint Drawer */}
-        {showHint && (
-          <div className="p-4 bg-amber-50/90 rounded-2xl border-2 border-amber-300 text-xs md:text-sm text-amber-900 font-medium animate-in fade-in duration-150">
-            <span className="font-black flex items-center gap-1.5 text-amber-800 mb-1">
-              💡 Gợi ý tư duy:
-            </span>
-            {lesson.hint}
-          </div>
-        )}
-
-        {/* Collapsible Explanation Drawer */}
-        {showExplanation && (
-          <div className="p-4 bg-sky-50/90 rounded-2xl border-2 border-sky-300 text-xs md:text-sm text-sky-950 font-medium animate-in fade-in duration-150">
-            <span className="font-black flex items-center gap-1.5 text-sky-800 mb-1">
-              📖 Giải thích chi tiết từ giáo trình:
-            </span>
-            {lesson.explanation}
-          </div>
-        )}
+      {/* Navigation */}
+      <div className="flex items-center justify-between gap-3">
+        <button
+          type="button"
+          disabled={!prevLesson}
+          onClick={() => prevLesson && goTo(prevLesson.id)}
+          className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-white border-2 border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <ArrowLeft className="w-4 h-4" /> Bài trước
+        </button>
+        <span className="text-xs font-bold text-slate-500">
+          {lessonIndex + 1} / {ALL_LESSONS.length}
+        </span>
+        <button
+          type="button"
+          disabled={!nextLesson}
+          onClick={() => nextLesson && goTo(nextLesson.id)}
+          className={`inline-flex items-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold text-white shadow-md disabled:opacity-40 disabled:cursor-not-allowed bg-gradient-to-r ${
+            topic?.bgGradient ?? 'from-emerald-500 to-teal-600'
+          }`}
+        >
+          Bài tiếp theo <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
