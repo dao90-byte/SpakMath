@@ -20,6 +20,8 @@ import { ItemOrdering } from './activities/ItemOrdering';
 import { PatternMatrixViewer } from './activities/PatternMatrixViewer';
 import { CircularMazeViewer } from './activities/CircularMazeViewer';
 import { CattleFenceViewer } from './activities/CattleFenceViewer';
+import { MatrixGrid2x2 } from './activities/MatrixGrid2x2';
+import { NumberMatrixBoard } from './activities/NumberMatrixBoard';
 
 interface LessonContainerProps {
   lesson: LessonQuestion;
@@ -170,6 +172,30 @@ const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
       return <CircularMazeViewer onCompleted={onCompleted} />;
     case 'cattleFence':
       return <CattleFenceViewer onCompleted={onCompleted} />;
+    case 'matrix2x2':
+      return (
+        <MatrixGrid2x2
+          title={activity.title}
+          ruleExplanation={activity.ruleExplanation}
+          sampleGrids={activity.sampleGrids}
+          choices={activity.choices}
+          correctChoiceId={activity.correctChoiceId}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'numberMatrix':
+      return (
+        <NumberMatrixBoard
+          title={activity.title}
+          subtitle={activity.subtitle}
+          targetSum={activity.targetSum}
+          initialGrid={activity.initialGrid}
+          solution={activity.solution}
+          allowedNumbers={activity.allowedNumbers}
+          hintFormula={activity.hintFormula}
+          onCompleted={onCompleted}
+        />
+      );
   }
 };
 

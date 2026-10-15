@@ -134,7 +134,7 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                   </div>
 
                   {/* Lesson Buttons */}
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
+                  <div className="space-y-2 pt-2 border-t border-slate-100 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
                     {topicLessons.map((lesson) => {
                       const isDone = completedLessonIds.includes(lesson.id);
 

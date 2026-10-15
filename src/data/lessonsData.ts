@@ -132,6 +132,24 @@ export type LessonActivity =
     }
   | {
       type: 'cattleFence';
+    }
+  | {
+      type: 'matrix2x2';
+      title: string;
+      ruleExplanation: string;
+      sampleGrids: { stepNum: number; grid: (string | null)[][] }[];
+      choices: { id: string; label: string; grid: (string | null)[][] }[];
+      correctChoiceId: string;
+    }
+  | {
+      type: 'numberMatrix';
+      title: string;
+      subtitle: string;
+      targetSum?: number;
+      initialGrid: (number | null)[][];
+      solution: number[][];
+      allowedNumbers?: number[];
+      hintFormula?: string;
     };
 
 export interface LessonQuestion {
@@ -1153,7 +1171,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'sudoku',
     topicName: topicName('sudoku'),
     title: 'Sudoku hình học 4x4 màu sắc',
-    badgeTitle: 'Bài 1 · Trang 47',
+    badgeTitle: 'Bài 1.1 · Trang 47',
     instruction: 'Vẽ các hình còn thiếu sao cho mỗi hàng, mỗi cột và mỗi khối 2x2 đều phải có đủ 4 hình: 🔺 Tam giác, 🟢 Hình tròn, 🟧 Hình vuông, ❤️ Trái tim.',
     hint: 'Tìm hàng hoặc cột chỉ còn thiếu 1 hình để điền trước!',
     mascot: { ...ABBY, message: 'Không được có 2 hình giống hệt nhau trong cùng 1 hàng, cột hay khối 2x2 đâu nha!' },
@@ -1181,13 +1199,45 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
-    id: 'sud-num-2',
+    id: 'sud-shape-2',
     topicId: 'sudoku',
     topicName: topicName('sudoku'),
-    title: 'Sudoku chữ số 1 đến 4',
-    badgeTitle: 'Bài 2 · Trang 48',
-    instruction: 'Điền vào các ô. Mỗi hàng, cột và khối 2x2 phải có các số từ 1 đến 4.',
-    hint: 'Mỗi hàng phải có đủ các số 1, 2, 3, 4 không trùng nhau.',
+    title: 'Sudoku 4x4 biểu tượng kỳ diệu',
+    badgeTitle: 'Bài 1.2 · Trang 47',
+    instruction: 'Điền các biểu tượng kỳ diệu còn thiếu: ⭐️ Ngôi sao, 🌸 Bông hoa, 🌙 Mặt trăng, 🍀 Cỏ may mắn sao cho mỗi hàng, cột và khối 2x2 có đủ 4 biểu tượng.',
+    hint: 'Khối 2x2 góc trên bên trái đã có Ngôi sao và Mặt trăng, chỉ còn thiếu Bông hoa và Cỏ may mắn!',
+    mascot: { ...CASEY, message: 'Bộ 4 biểu tượng thiên nhiên cực xinh xắn, cùng thử sức nhé!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'shape',
+      symbols: [
+        { id: 'star', icon: '⭐️', name: 'Ngôi sao' },
+        { id: 'flower', icon: '🌸', name: 'Bông hoa' },
+        { id: 'moon', icon: '🌙', name: 'Mặt trăng' },
+        { id: 'clover', icon: '🍀', name: 'Cỏ may mắn' }
+      ],
+      initialGrid: [
+        [null, 'star', 'moon', null],
+        ['moon', null, null, 'star'],
+        ['star', null, null, 'moon'],
+        [null, 'moon', 'star', null]
+      ],
+      solution: [
+        ['flower', 'star', 'moon', 'clover'],
+        ['moon', 'clover', 'flower', 'star'],
+        ['star', 'flower', 'clover', 'moon'],
+        ['clover', 'moon', 'star', 'flower']
+      ]
+    }
+  },
+  {
+    id: 'sud-num-2-1',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku chữ số 1 đến 4 (Cơ bản)',
+    badgeTitle: 'Bài 2.1 · Trang 48',
+    instruction: 'Điền vào các ô. Mỗi hàng, cột và khối 2x2 phải có các số từ 1 đến 4 không trùng nhau.',
+    hint: 'Mỗi hàng và mỗi cột phải có đủ các số 1, 2, 3, 4.',
     mascot: { ...BENNY, message: 'Các số 1, 2, 3, 4 đang chờ bạn sắp xếp vào đúng vị trí nè!' },
     activity: {
       type: 'sudoku',
@@ -1207,11 +1257,37 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
-    id: 'sud-jigsaw-3',
+    id: 'sud-num-2-2',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku chữ số 1 đến 4 (Thử thách nâng cao)',
+    badgeTitle: 'Bài 2.2 · Trang 48',
+    instruction: 'Cấp độ khó hơn với ít manh mối ban đầu hơn! Hãy suy luận để điền các chữ số từ 1 đến 4 vào toàn bộ lưới.',
+    hint: 'Hàng 1 có số 1 và số 4 ở hai góc. Khối 2x2 trên bên phải đã có 3 và 4!',
+    mascot: { ...MAYLE, message: 'Bình tĩnh suy luận loại trừ, em sẽ tìm ra tất cả các ô trống!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [1, null, null, 4],
+        [null, 4, 1, null],
+        [null, 1, 4, null],
+        [4, null, null, 1]
+      ],
+      solution: [
+        [1, 2, 3, 4],
+        [3, 4, 1, 2],
+        [2, 1, 4, 3],
+        [4, 3, 2, 1]
+      ]
+    }
+  },
+  {
+    id: 'sud-jigsaw-3-1',
     topicId: 'sudoku',
     topicName: topicName('sudoku'),
     title: 'Sudoku 4x4 khối xếp hình cùng màu (Jigsaw)',
-    badgeTitle: 'Bài 3 · Trang 49',
+    badgeTitle: 'Bài 3.1 · Trang 49',
     instruction: 'Điền vào các ô. Mỗi hàng, cột và các khối cùng màu phải có các số từ 1 đến 4.',
     hint: 'Thay vì khối 2x2, lần này là 4 khối màu zic-zac: Hồng, Xanh dương, Xanh lá, Vàng! Mỗi khối màu phải có đủ 1, 2, 3, 4.',
     mascot: { ...CASEY, message: 'Dạng Sudoku khối zic-zac này rất thú vị! Chú ý các ô cùng màu nhé!' },
@@ -1230,7 +1306,6 @@ export const ALL_LESSONS: LessonQuestion[] = [
         [null, null, null, 4],
         [3, null, null, 1]
       ],
-      // Solution from page 81 (Trang 5 đáp án)
       solution: [
         [4, 1, 2, 3],
         [1, 4, 3, 2],
@@ -1240,11 +1315,43 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
-    id: 'sud-killer-4',
+    id: 'sud-jigsaw-3-2',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku khối đa hình bất đối xứng (Jigsaw 3.2)',
+    badgeTitle: 'Bài 3.2 · Trang 49',
+    instruction: 'Mỗi hàng, mỗi cột và mỗi khối màu (Hồng chữ L, Xanh khối vuông, Xanh ngọc chữ Z, Cam hàng dưới) đều phải chứa đủ 1, 2, 3, 4.',
+    hint: 'Khối màu cam ở hàng dưới cùng đã có sẵn số 2 và 3, chỉ cần điền 1 và 4!',
+    mascot: { ...BENNY, message: 'Các khối màu hình thù kỳ lạ biến bài toán thành trò chơi ghép hình!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      colorBlocks: [
+        ['bg-rose-100', 'bg-rose-100', 'bg-sky-100', 'bg-sky-100'],
+        ['bg-rose-100', 'bg-emerald-100', 'bg-sky-100', 'bg-sky-100'],
+        ['bg-rose-100', 'bg-emerald-100', 'bg-emerald-100', 'bg-emerald-100'],
+        ['bg-amber-100', 'bg-amber-100', 'bg-amber-100', 'bg-amber-100']
+      ],
+      initialGrid: [
+        [1, null, 3, null],
+        [null, 3, null, 1],
+        [null, null, 1, null],
+        [2, null, null, 3]
+      ],
+      solution: [
+        [1, 2, 3, 4],
+        [4, 3, 2, 1],
+        [3, 4, 1, 2],
+        [2, 1, 4, 3]
+      ]
+    }
+  },
+  {
+    id: 'sud-killer-4-1',
     topicId: 'sudoku',
     topicName: topicName('sudoku'),
     title: 'Sudoku tính tổng (Killer Sudoku Mini)',
-    badgeTitle: 'Bài 4 · Trang 50',
+    badgeTitle: 'Bài 4.1 · Trang 50',
     instruction: 'Điền số thích hợp từ 1 đến 4. Mỗi hàng và cột có số 1-4. Tổng các số trong mỗi khung hai ô phải bằng số màu đỏ ở góc trái trên cùng.',
     hint: 'Khung có số 7 ở góc trên gồm 2 ô: 3 và 4 (3+4=7). Khung có số 3 gồm 1 và 2 (1+2=3). Khung có số 5 gồm 1 và 4 hoặc 2 và 3!',
     mascot: { ...MAYLE, message: 'Vừa giải Sudoku vừa rèn luyện phép cộng nhẩm rất tuyệt vời!' },
@@ -1263,12 +1370,244 @@ export const ALL_LESSONS: LessonQuestion[] = [
         [null, null, null, null],
         [null, null, null, null]
       ],
-      // Solution from page 81 (Trang 6 đáp án)
       solution: [
         [3, 4, 1, 2],
         [2, 3, 4, 1],
         [4, 1, 2, 3],
         [1, 2, 3, 4]
+      ]
+    }
+  },
+  {
+    id: 'sud-killer-4-2',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Killer Sudoku mini: Khung tổng nâng cao',
+    badgeTitle: 'Bài 4.2 · Trang 50',
+    instruction: 'Điền các số 1 đến 4 vào lưới. Tổng hai ô trong cùng một khung màu phải đúng bằng con số nhỏ ở góc trên!',
+    hint: 'Khung góc trên bên trái có tổng = 6 (4 + 2 = 6). Khung có tổng = 4 (3 + 1 = 4)!',
+    mascot: { ...ABBY, message: 'Thử thách Killer Sudoku giúp tính nhẩm siêu nhanh!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      sumLabels: [
+        [6, null, 4, null],
+        [null, 7, null, null],
+        [null, 5, null, 7],
+        [4, null, null, null]
+      ],
+      initialGrid: [
+        [4, null, 3, null],
+        [null, 3, null, 2],
+        [2, null, 1, null],
+        [null, 1, null, 4]
+      ],
+      solution: [
+        [4, 2, 3, 1],
+        [1, 3, 4, 2],
+        [2, 4, 1, 3],
+        [3, 1, 2, 4]
+      ]
+    }
+  },
+  {
+    id: 'mat-rot-2x2',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận số 2x2 xoay quy luật kim đồng hồ',
+    badgeTitle: 'Bài 5.1 · Trang 55',
+    instruction: 'Quan sát các con số 1, 2, 3, 4 trong ma trận 2x2 di chuyển xoay tròn theo chiều kim đồng hồ qua Ô 1, Ô 2, Ô 3. Hãy chọn Ô 4 chính xác!',
+    hint: 'Số 1 ở Ô 1 nằm ở góc trên trái, sang Ô 2 chuyển sang góc trên phải, sang Ô 3 xuống góc dưới phải. Vậy ở Ô 4, số 1 sẽ ở góc dưới trái!',
+    mascot: { ...CASEY, message: 'Hãy theo dõi đường đi của số 1 để tìm ra quy luật xoay tròn!' },
+    activity: {
+      type: 'matrix2x2',
+      title: 'QUY LUẬT MA TRẬN SỐ XOAY 2x2',
+      ruleExplanation: 'Các chữ số xoay chuyển vị trí theo chiều kim đồng hồ quanh 4 góc:',
+      sampleGrids: [
+        {
+          stepNum: 1,
+          grid: [
+            ['1', '2'],
+            ['4', '3']
+          ]
+        },
+        {
+          stepNum: 2,
+          grid: [
+            ['4', '1'],
+            ['3', '2']
+          ]
+        },
+        {
+          stepNum: 3,
+          grid: [
+            ['3', '4'],
+            ['2', '1']
+          ]
+        }
+      ],
+      choices: [
+        {
+          id: 'optA',
+          label: 'Hình A (Chính xác)',
+          grid: [
+            ['2', '3'],
+            ['1', '4']
+          ]
+        },
+        {
+          id: 'optB',
+          label: 'Hình B',
+          grid: [
+            ['1', '2'],
+            ['3', '4']
+          ]
+        },
+        {
+          id: 'optC',
+          label: 'Hình C',
+          grid: [
+            ['4', '3'],
+            ['2', '1']
+          ]
+        },
+        {
+          id: 'optD',
+          label: 'Hình D',
+          grid: [
+            ['3', '2'],
+            ['4', '1']
+          ]
+        }
+      ],
+      correctChoiceId: 'optA'
+    }
+  },
+  {
+    id: 'mat-sym-2x2',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận số 2x2 quy luật hoán vị đối xứng',
+    badgeTitle: 'Bài 5.2 · Trang 57',
+    instruction: 'Các số chẵn 2, 4, 6, 8 biến đổi vị trí theo quy luật hoán vị cột và dòng qua các bước. Hãy tìm ma trận tiếp theo ở Ô 4.',
+    hint: 'Bước 1 sang Bước 2 đổi chỗ 2 cột. Bước 2 sang Bước 3 đổi chỗ 2 hàng. Bước 3 sang Bước 4 đổi chỗ 2 cột tiếp tục!',
+    mascot: { ...BENNY, message: 'Nhảy đổi chỗ giữa các hàng và cột thật là nhịp nhàng!' },
+    activity: {
+      type: 'matrix2x2',
+      title: 'MA TRẬN HOÁN VỊ ĐỐI XỨNG',
+      ruleExplanation: 'Quy luật đổi chỗ lần lượt giữa hai cột và hai hàng:',
+      sampleGrids: [
+        {
+          stepNum: 1,
+          grid: [
+            ['2', '4'],
+            ['6', '8']
+          ]
+        },
+        {
+          stepNum: 2,
+          grid: [
+            ['4', '2'],
+            ['8', '6']
+          ]
+        },
+        {
+          stepNum: 3,
+          grid: [
+            ['8', '6'],
+            ['4', '2']
+          ]
+        }
+      ],
+      choices: [
+        {
+          id: 'opt1',
+          label: 'Ma trận 1',
+          grid: [
+            ['2', '4'],
+            ['8', '6']
+          ]
+        },
+        {
+          id: 'opt2',
+          label: 'Ma trận 2 (Đúng)',
+          grid: [
+            ['6', '8'],
+            ['2', '4']
+          ]
+        },
+        {
+          id: 'opt3',
+          label: 'Ma trận 3',
+          grid: [
+            ['4', '8'],
+            ['2', '6']
+          ]
+        },
+        {
+          id: 'opt4',
+          label: 'Ma trận 4',
+          grid: [
+            ['8', '4'],
+            ['6', '2']
+          ]
+        }
+      ],
+      correctChoiceId: 'opt2'
+    }
+  },
+  {
+    id: 'mat-magic-3x3',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận số Ma Phương Magic Square 3x3 (Tổng = 15)',
+    badgeTitle: 'Bài 6.1 · Trang 52',
+    instruction: 'Điền các chữ số thích hợp vào ô trống sao cho TỔNG CÁC SỐ TRÊN MỖI HÀNG, MỖI CỘT đều bằng đúng 15!',
+    hint: 'Hàng 1: 8 + ? + 6 = 15 => Cần điền số 1. Hàng 2: 3 + 5 + ? = 15 => Cần điền số 7. Hàng 3: ? + 9 + 2 = 15 => Cần điền số 4!',
+    mascot: { ...MAYLE, message: 'Ma phương toán học cổ điển nổi tiếng thế giới! Mỗi hàng và mỗi cột đều có tổng đúng bằng 15!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ô VUÔNG MA THUẬT (MAGIC SQUARE 3x3)',
+      subtitle: 'Điền số vào các ô trống sao cho tổng mỗi hàng và mỗi cột đều bằng 15',
+      targetSum: 15,
+      hintFormula: 'Hàng 1: 8 + 1 + 6 = 15; Hàng 2: 3 + 5 + 7 = 15; Hàng 3: 4 + 9 + 2 = 15',
+      allowedNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      initialGrid: [
+        [8, null, 6],
+        [3, 5, null],
+        [null, 9, 2]
+      ],
+      solution: [
+        [8, 1, 6],
+        [3, 5, 7],
+        [4, 9, 2]
+      ]
+    }
+  },
+  {
+    id: 'mat-sum-grid',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận số phép tính cộng theo hàng (Tổng = 10)',
+    badgeTitle: 'Bài 6.2 · Trang 52',
+    instruction: 'Quan sát các phép tính cộng trong ma trận 3x3 và điền số còn thiếu vào các ô trống để hoàn thành ma trận.',
+    hint: 'Hàng 1: 5 + 4 = 9. Hàng 2: 3 + ? = 10 => ? = 7. Hàng 3: ? + 2 = 10 => ? = 8!',
+    mascot: { ...ABBY, message: 'Nhìn hàng ngang ta có các phép tính cộng: A + B = C!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'MA TRẬN PHÉP TÍNH CỘNG A + B = C',
+      subtitle: 'Tìm các số còn thiếu theo hàng: Ô thứ nhất + Ô thứ hai = Ô thứ ba',
+      allowedNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      hintFormula: '5 + 4 = 9 | 3 + 7 = 10 | 8 + 2 = 10',
+      initialGrid: [
+        [5, 4, null],
+        [3, null, 10],
+        [null, 2, 10]
+      ],
+      solution: [
+        [5, 4, 9],
+        [3, 7, 10],
+        [8, 2, 10]
       ]
     }
   },
