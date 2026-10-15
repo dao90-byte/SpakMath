@@ -13,6 +13,8 @@ interface SudokuBoardProps {
   symbols?: ShapeSymbol[];
   initialGrid: (string | number | null)[][];
   solution: (string | number)[][];
+  colorBlocks?: string[][]; // For Jigsaw Sudoku (Page 49)
+  sumLabels?: (number | null)[][]; // For Killer Sudoku (Page 50)
   onCompleted: () => void;
 }
 
@@ -21,6 +23,8 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
   symbols = [],
   initialGrid,
   solution,
+  colorBlocks,
+  sumLabels,
   onCompleted
 }) => {
   const [grid, setGrid] = useState<(string | number | null)[][]>(
@@ -103,7 +107,7 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
 
   return (
     <div className="space-y-6 flex flex-col items-center">
-      {/* 4x4 Grid with 2x2 thicker borders */}
+      {/* 4x4 Grid with custom or standard borders */}
       <div className="bg-white p-4 md:p-6 rounded-3xl border-4 border-slate-700 shadow-xl inline-block">
         <div className="grid grid-cols-4 gap-1.5 md:gap-2">
           {grid.map((row, r) =>
@@ -113,26 +117,37 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
               const isInSelectedRowCol =
                 selectedCell && (selectedCell[0] === r || selectedCell[1] === c);
 
-              // 2x2 border accentuating classes
-              const borderBottom = r === 1 ? 'border-b-4 border-b-slate-700' : '';
-              const borderRight = c === 1 ? 'border-r-4 border-r-slate-700' : '';
+              // Standard 2x2 borders if not colorBlocks
+              const borderBottom =
+                !colorBlocks && r === 1 ? 'border-b-4 border-b-slate-700' : '';
+              const borderRight =
+                !colorBlocks && c === 1 ? 'border-r-4 border-r-slate-700' : '';
 
-              let bgStyle = 'bg-slate-50 hover:bg-amber-50';
+              const cellBg = colorBlocks?.[r]?.[c] || 'bg-slate-50';
+
+              let bgStyle = `${cellBg} hover:opacity-90`;
               if (isLocked) {
-                bgStyle = 'bg-slate-200/90 text-slate-900 cursor-not-allowed font-extrabold';
+                bgStyle = `${cellBg} text-slate-900 cursor-not-allowed font-extrabold brightness-95`;
               } else if (isSelected) {
                 bgStyle = 'bg-amber-300 ring-4 ring-amber-500 scale-105 z-10 shadow-lg';
               } else if (isInSelectedRowCol) {
-                bgStyle = 'bg-amber-50/80';
+                bgStyle = `${cellBg} ring-2 ring-amber-200`;
               }
+
+              const sumBadge = sumLabels?.[r]?.[c];
 
               return (
                 <button
                   key={`${r}-${c}`}
                   type="button"
                   onClick={() => handleCellClick(r, c)}
-                  className={`w-14 h-14 md:w-18 md:h-18 rounded-2xl flex items-center justify-center text-2xl md:text-3xl font-black transition-all border border-slate-300 ${borderBottom} ${borderRight} ${bgStyle}`}
+                  className={`w-14 h-14 md:w-18 md:h-18 rounded-2xl flex items-center justify-center text-2xl md:text-3xl font-black transition-all border border-slate-300 relative ${borderBottom} ${borderRight} ${bgStyle}`}
                 >
+                  {sumBadge && (
+                    <span className="absolute top-1 left-1.5 text-xs font-black text-rose-600 font-sans">
+                      {sumBadge}
+                    </span>
+                  )}
                   {getSymbolIcon(val)}
                 </button>
               );
@@ -197,7 +212,7 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
 
       {isSuccess && (
         <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Chúc mừng! Bé đã giải đúng Sudoku 4x4 xuất sắc!
+          🎉 Chúc mừng! Bé đã giải đúng Sudoku xuất sắc!
         </div>
       )}
     </div>

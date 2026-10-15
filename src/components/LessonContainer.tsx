@@ -16,6 +16,10 @@ import { StarBattleBoard } from './activities/StarBattleBoard';
 import { QueueCounter } from './activities/QueueCounter';
 import { CornerCross } from './activities/CornerCross';
 import { LogicSeatOrder } from './activities/LogicSeatOrder';
+import { ItemOrdering } from './activities/ItemOrdering';
+import { PatternMatrixViewer } from './activities/PatternMatrixViewer';
+import { CircularMazeViewer } from './activities/CircularMazeViewer';
+import { CattleFenceViewer } from './activities/CattleFenceViewer';
 
 interface LessonContainerProps {
   lesson: LessonQuestion;
@@ -74,6 +78,8 @@ const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
           symbols={activity.symbols}
           initialGrid={activity.initialGrid}
           solution={activity.solution}
+          colorBlocks={activity.colorBlocks}
+          sumLabels={activity.sumLabels}
           onCompleted={onCompleted}
         />
       );
@@ -140,6 +146,30 @@ const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
           onCompleted={onCompleted}
         />
       );
+    case 'itemOrdering':
+      return (
+        <ItemOrdering
+          promptText={activity.promptText}
+          items={activity.items}
+          correctOrder={activity.correctOrder}
+          directionLabel={activity.directionLabel}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'patternMatrix':
+      return (
+        <PatternMatrixViewer
+          ruleDescription={activity.ruleDescription}
+          steps={activity.steps}
+          choices={activity.choices}
+          correctChoiceId={activity.correctChoiceId}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'circularMaze':
+      return <CircularMazeViewer onCompleted={onCompleted} />;
+    case 'cattleFence':
+      return <CattleFenceViewer onCompleted={onCompleted} />;
   }
 };
 
