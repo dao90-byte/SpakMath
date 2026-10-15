@@ -1,0 +1,6 @@
+{
+  "name": "Toán Tư Duy Lớp 3 - Spark Math Adventure",
+  "description": "Ứng dụng học Toán Tư Duy Lớp 3 tương tác sinh động, trực quan dành cho trẻ 9 tuổi dựa trên giáo trình Spark Math.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
