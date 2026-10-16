@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Box, Layers, Check, RotateCcw, Lightbulb, Sparkles } from 'lucide-react';
+import { Box, Layers } from 'lucide-react';
 
 export interface CubeLayer {
   layerName: string;
@@ -29,7 +29,6 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
   onCompleted
 }) => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [showLayersBreakdown, setShowLayersBreakdown] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSelectOption = (count: number) => {
@@ -39,7 +38,6 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
     if (count === totalCubes) {
       sound.playCorrect();
       setIsSuccess(true);
-      setShowLayersBreakdown(true);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
@@ -172,45 +170,38 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
         </div>
       </div>
 
-      {/* Layer Breakdown Toggle & Display */}
-      <div className="w-full bg-white rounded-3xl border-2 border-slate-200 p-4 md:p-5 shadow-sm space-y-3">
-        <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              setShowLayersBreakdown((v) => !v);
-            }}
-            className="flex items-center gap-2 text-xs font-black uppercase text-indigo-700 hover:text-indigo-900"
-          >
-            <Layers className="w-4 h-4 text-indigo-500" />
-            {showLayersBreakdown ? 'Ẩn phân tích tầng' : 'Xem giải thích theo từng tầng'}
-          </button>
-          <span className="text-xs font-extrabold text-slate-500">
-            Tổng cộng: <strong className="text-indigo-700 text-sm">{totalCubes}</strong> khối
-          </span>
-        </div>
-
-        {showLayersBreakdown && (
-          <div className="space-y-2 pt-2 border-t border-slate-100 text-xs sm:text-sm font-semibold text-slate-700">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {layers.map((l, i) => (
-                <div key={i} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
-                  <p className="font-extrabold text-slate-600 text-xs">{l.layerName}</p>
-                  <p className="text-base font-black text-indigo-600">{l.count} khối</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-slate-600 italic bg-amber-50 p-3 rounded-2xl border border-amber-200 mt-2">
-              {explanation}
-            </p>
-          </div>
-        )}
-      </div>
-
+      {/* Celebratory result and explanation (only visible after solving correctly) */}
       {isSuccess && (
-        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-950 font-bold text-center w-full shadow-md animate-bounce-slow">
-          🎉 Hoan hô! Bạn đã đếm chính xác toàn bộ {totalCubes} khối lập phương không gian!
+        <div className="w-full space-y-4">
+          <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-950 font-bold text-center w-full shadow-md animate-bounce-slow">
+            🎉 Hoan hô! Bạn đã đếm chính xác toàn bộ {totalCubes} khối lập phương không gian!
+          </div>
+
+          <div className="w-full bg-white rounded-3xl border-2 border-slate-200 p-4 md:p-5 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-2 text-xs font-black uppercase text-indigo-700">
+                <Layers className="w-4 h-4 text-indigo-500" />
+                Giải thích phân tích theo từng tầng
+              </span>
+              <span className="text-xs font-extrabold text-slate-500">
+                Tổng cộng: <strong className="text-indigo-700 text-sm">{totalCubes}</strong> khối
+              </span>
+            </div>
+
+            <div className="space-y-2 pt-2 border-t border-slate-100 text-xs sm:text-sm font-semibold text-slate-700">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {layers.map((l, i) => (
+                  <div key={i} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                    <p className="font-extrabold text-slate-600 text-xs">{l.layerName}</p>
+                    <p className="text-base font-black text-indigo-600">{l.count} khối</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-slate-600 italic bg-amber-50 p-3 rounded-2xl border border-amber-200 mt-2">
+                {explanation}
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>

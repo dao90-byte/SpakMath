@@ -1592,7 +1592,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
       initialGrid: [
         ['rabbit', 'monkey', null, 'bear'],
         ['mouse', 'bear', 'rabbit', null],
-        [null, 'mouse', 'bear', 'monkey'],
+        ['monkey', 'mouse', 'bear', null],
         ['bear', null, 'monkey', 'mouse']
       ],
       solution: [
@@ -1657,7 +1657,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
         ['triangle', null, null, 'square'],
         [null, null, 'circle', null],
         [null, null, 'square', 'heart'],
-        [null, 'heart', null, null]
+        ['heart', null, null, null]
       ],
       solution: [
         ['triangle', 'circle', 'heart', 'square'],
@@ -1827,23 +1827,29 @@ export const ALL_LESSONS: LessonQuestion[] = [
     activity: {
       type: 'sudoku',
       sudokuType: 'number',
+      colorBlocks: [
+        ['bg-rose-100', 'bg-rose-100', 'bg-sky-100', 'bg-sky-100'],
+        ['bg-amber-100', 'bg-amber-100', 'bg-emerald-100', 'bg-emerald-100'],
+        ['bg-sky-100', 'bg-sky-100', 'bg-rose-100', 'bg-rose-100'],
+        ['bg-emerald-100', 'bg-emerald-100', 'bg-amber-100', 'bg-amber-100']
+      ],
       sumLabels: [
-        [7, null, 5, 3],
-        [5, null, null, null],
-        [5, 3, 7, null],
-        [null, null, 5, null]
+        [7, null, 3, null],
+        [3, null, 7, null],
+        [7, null, 3, null],
+        [3, null, 7, null]
       ],
       initialGrid: [
-        [null, null, null, 2],
-        [null, 3, null, null],
-        [null, null, null, null],
-        [null, null, null, null]
+        [null, 4, null, 2],
+        [1, null, null, null],
+        [null, null, 2, null],
+        [2, null, null, 3]
       ],
       solution: [
         [3, 4, 1, 2],
-        [2, 3, 4, 1],
-        [4, 1, 2, 3],
-        [1, 2, 3, 4]
+        [1, 2, 3, 4],
+        [4, 3, 2, 1],
+        [2, 1, 4, 3]
       ]
     }
   },
@@ -3010,18 +3016,18 @@ export const ALL_LESSONS: LessonQuestion[] = [
         { id: 'unicorn', icon: '🦄', name: 'Kỳ lân' }
       ],
       initialGrid: [
-        ['wolf', null, null, null, 'wolf'],
-        [null, null, null, null, null],
-        ['bear', null, null, null, 'unicorn'],
-        ['cow', null, 'wolf', 'monkey', null],
-        [null, null, null, 'cow', null]
+        ['wolf', null, null, null, 'unicorn'],
+        [null, 'bear', null, 'unicorn', null],
+        ['bear', null, null, 'wolf', null],
+        [null, 'unicorn', null, null, 'bear'],
+        ['unicorn', null, 'monkey', null, 'cow']
       ],
       solution: [
-        ['wolf', 'monkey', 'bear', 'cow', 'wolf'],
-        ['unicorn', 'cow', 'unicorn', 'monkey', 'bear'],
-        ['bear', 'monkey', 'bear', 'cow', 'unicorn'],
+        ['wolf', 'monkey', 'bear', 'cow', 'unicorn'],
+        ['monkey', 'bear', 'cow', 'unicorn', 'wolf'],
+        ['bear', 'cow', 'unicorn', 'wolf', 'monkey'],
         ['cow', 'unicorn', 'wolf', 'monkey', 'bear'],
-        ['wolf', 'monkey', 'bear', 'cow', 'unicorn']
+        ['unicorn', 'wolf', 'monkey', 'bear', 'cow']
       ]
     }
   },
@@ -3052,20 +3058,20 @@ export const ALL_LESSONS: LessonQuestion[] = [
       size: 6,
       targetStarCount: 6,
       regions: [
-        [0, 0, 1, 1, 1, 2],
-        [0, 0, 1, 2, 2, 2],
-        [3, 3, 3, 2, 4, 4],
-        [3, 5, 5, 5, 4, 4],
-        [3, 5, 5, 5, 4, 4],
-        [5, 5, 5, 5, 4, 4]
+        [0, 0, 1, 1, 1, 1],
+        [0, 0, 1, 1, 2, 2],
+        [0, 0, 3, 3, 2, 2],
+        [3, 3, 3, 4, 2, 2],
+        [3, 4, 4, 4, 5, 5],
+        [4, 4, 5, 5, 5, 5]
       ],
       starsSolution: [
-        [0, 1],
-        [1, 5],
-        [2, 0],
-        [3, 3],
-        [4, 4],
-        [5, 2]
+        [0, 0],
+        [1, 2],
+        [2, 4],
+        [3, 1],
+        [4, 3],
+        [5, 5]
       ]
     }
   },
@@ -3083,7 +3089,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
       rows: 4,
       cols: 4,
       clues: [
-        [2, 2, 0, null],
+        [2, 2, 1, null],
         [1, 1, null, null],
         [2, 2, null, null],
         [null, null, null, null]
@@ -3433,11 +3439,11 @@ export const ALL_LESSONS: LessonQuestion[] = [
       rows: 5,
       cols: 5,
       clues: [
-        [null, null, 0, null, null],
+        [null, null, 1, null, null],
         [null, 2, 1, 2, null],
         [null, 1, 0, 1, null],
         [null, 2, 1, 2, null],
-        [null, null, 0, null, null]
+        [null, null, 1, null, null]
       ],
       solutionEdges: {
         h: [

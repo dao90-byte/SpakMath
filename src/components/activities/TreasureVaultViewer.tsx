@@ -27,7 +27,6 @@ export const TreasureVaultViewer: React.FC<TreasureVaultViewerProps> = ({
   const [digits, setDigits] = useState<number[]>(Array(codeLength).fill(0));
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showHint, setShowHint] = useState(false);
 
   const incrementDigit = (index: number) => {
     sound.playClick();
@@ -76,17 +75,6 @@ export const TreasureVaultViewer: React.FC<TreasureVaultViewerProps> = ({
         `Mã ${digits.join('')} chưa chính xác! (Hiện tại: ${rightDigits} số có mặt, ${exactPos} số đúng vị trí). Hãy đọc kỹ lại các manh mối!`
       );
     }
-  };
-
-  const handleAutoSolve = () => {
-    sound.playCorrect();
-    setDigits([...solutionCode]);
-    setIsUnlocked(true);
-    setErrorMessage(null);
-    setTimeout(() => {
-      sound.playStarCollect();
-      onCompleted();
-    }, 600);
   };
 
   return (
@@ -197,18 +185,11 @@ export const TreasureVaultViewer: React.FC<TreasureVaultViewerProps> = ({
 
         {/* Action Button */}
         {!isUnlocked && (
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 w-full">
-            <button
-              type="button"
-              onClick={handleAutoSolve}
-              className="px-4 py-2.5 rounded-2xl bg-slate-700 hover:bg-slate-600 text-amber-300 font-bold text-xs"
-            >
-              Gợi ý mật mã
-            </button>
+          <div className="mt-6 flex items-center justify-center w-full">
             <button
               type="button"
               onClick={handleTestCode}
-              className="flex-1 max-w-xs py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-base shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2"
+              className="w-full max-w-xs py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-base shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2"
             >
               <Key className="w-5 h-5" /> Mở Khóa Két Sắt
             </button>

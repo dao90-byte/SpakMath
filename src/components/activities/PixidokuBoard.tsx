@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, Eraser, Lightbulb } from 'lucide-react';
+import { Check, RotateCcw, Eraser } from 'lucide-react';
 
 interface AnimalSymbol {
   id: string;
@@ -94,16 +94,6 @@ export const PixidokuBoard: React.FC<PixidokuBoardProps> = ({
     }
   };
 
-  const handleAutoSolve = () => {
-    sound.playCorrect();
-    setGrid(solution.map((row) => [...row]));
-    setIsSuccess(true);
-    setTimeout(() => {
-      sound.playVictory();
-      onCompleted();
-    }, 500);
-  };
-
   const getAnimalIcon = (id: string | null) => {
     if (!id) return '';
     const found = animals.find((a) => a.id === id);
@@ -173,14 +163,6 @@ export const PixidokuBoard: React.FC<PixidokuBoardProps> = ({
         >
           <RotateCcw className="w-4 h-4" />
           Chơi lại
-        </button>
-        <button
-          type="button"
-          onClick={handleAutoSolve}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm shadow-md"
-        >
-          <Lightbulb className="w-4 h-4" />
-          Xem gợi ý giải
         </button>
         <button
           type="button"

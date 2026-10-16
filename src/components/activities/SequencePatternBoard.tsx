@@ -172,13 +172,8 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
               if (item.isMissing) {
                 return (
                   <div key={item.id} className="flex items-center gap-2 sm:gap-3">
-                    {index > 0 && item.stepHint && (
-                      <div className="flex flex-col items-center">
-                        <span className="text-[11px] font-black text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full whitespace-nowrap">
-                          {item.stepHint}
-                        </span>
-                        <span className="text-purple-400 text-xs">➔</span>
-                      </div>
+                    {index > 0 && (
+                      <span className="text-purple-400 text-sm font-bold">➔</span>
                     )}
                     <div
                       className={`w-16 h-18 sm:w-18 sm:h-20 rounded-2xl border-3 flex flex-col items-center justify-center font-black transition-all ${
@@ -198,13 +193,8 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
 
               return (
                 <div key={item.id} className="flex items-center gap-2 sm:gap-3">
-                  {index > 0 && item.stepHint && (
-                    <div className="flex flex-col items-center">
-                      <span className="text-[11px] font-black text-purple-600 bg-purple-100 px-2 py-0.5 rounded-full whitespace-nowrap">
-                        {item.stepHint}
-                      </span>
-                      <span className="text-purple-400 text-xs">➔</span>
-                    </div>
+                  {index > 0 && (
+                    <span className="text-purple-400 text-sm font-bold">➔</span>
                   )}
                   <div className="w-16 h-18 sm:w-18 sm:h-20 rounded-2xl border-2 border-slate-200 bg-slate-50 flex flex-col items-center justify-center shadow-xs">
                     <span className="text-2xl font-black text-slate-800">

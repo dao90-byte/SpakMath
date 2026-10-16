@@ -125,11 +125,6 @@ export const NumberMatrixBoard: React.FC<NumberMatrixBoardProps> = ({
         <p className="text-sm md:text-base font-black text-amber-950 mt-1">
           {subtitle}
         </p>
-        {hintFormula && (
-          <p className="text-xs font-bold text-amber-700 mt-1 bg-amber-50 py-1 px-3 rounded-full inline-block">
-            💡 Gợi ý: {hintFormula}
-          </p>
-        )}
       </div>
 
       {/* Interactive Matrix Grid */}

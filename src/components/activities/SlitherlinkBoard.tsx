@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, Lightbulb, ShieldCheck } from 'lucide-react';
+import { Check, RotateCcw } from 'lucide-react';
 
 interface SlitherlinkProps {
   rows?: number;
@@ -94,17 +94,6 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
         onCompleted();
       }, 500);
     }
-  };
-
-  const handleAutoSolve = () => {
-    sound.playCorrect();
-    setHEdges(solutionEdges.h.map((r) => [...r]));
-    setVEdges(solutionEdges.v.map((r) => [...r]));
-    setIsSuccess(true);
-    setTimeout(() => {
-      sound.playStarCollect();
-      onCompleted();
-    }, 500);
   };
 
   return (
@@ -265,14 +254,6 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
         >
           <RotateCcw className="w-4 h-4" />
           Xóa các cạnh
-        </button>
-
-        <button
-          onClick={handleAutoSolve}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm shadow-md"
-        >
-          <Lightbulb className="w-4 h-4" />
-          Xem đường nối chuẩn
         </button>
 
         <button

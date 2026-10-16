@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ALL_LESSONS, LessonQuestion, LessonActivity, TOPICS } from '../data/lessonsData';
 import { sound } from '../utils/soundEffects';
-import { ArrowLeft, ArrowRight, Pencil, Lightbulb, CheckCircle, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Pencil, CheckCircle, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { PictographViewer } from './activities/PictographViewer';
 import { PictographBuilder } from './activities/PictographBuilder';
@@ -299,7 +299,6 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   onOpenScratchpad,
   onLessonCompleted
 }) => {
-  const [showHint, setShowHint] = useState(false);
   const [justFinishedId, setJustFinishedId] = useState<string | null>(null);
 
   const topic = TOPICS.find((t) => t.id === lesson.topicId);
@@ -320,7 +319,6 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
 
   const goTo = (id: string) => {
     sound.playClick();
-    setShowHint(false);
     onLessonChange(id);
   };
 
@@ -370,29 +368,12 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
         <p className="mt-2 text-sm md:text-base font-medium text-white/90">{lesson.instruction}</p>
       </div>
 
-      {/* Mascot speech & hint */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1 flex items-start gap-3 bg-white rounded-3xl border-2 border-slate-100 p-4 shadow-sm">
-          <span className="text-4xl">{lesson.mascot.avatar}</span>
-          <div>
-            <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{lesson.mascot.name}</p>
-            <p className="text-sm md:text-base font-semibold text-slate-800">{lesson.mascot.message}</p>
-          </div>
-        </div>
-
-        <div className="md:w-80 bg-sky-50 rounded-3xl border-2 border-sky-200 p-4">
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              setShowHint((v) => !v);
-            }}
-            className="inline-flex items-center gap-2 text-sm font-bold text-sky-800"
-          >
-            <Lightbulb className="w-4 h-4 text-amber-500" />
-            {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}
-          </button>
-          {showHint && <p className="mt-2 text-sm font-medium text-sky-900">{lesson.hint}</p>}
+      {/* Mascot speech */}
+      <div className="flex items-start gap-3 bg-white rounded-3xl border-2 border-slate-100 p-4 shadow-sm">
+        <span className="text-4xl">{lesson.mascot.avatar}</span>
+        <div>
+          <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{lesson.mascot.name}</p>
+          <p className="text-sm md:text-base font-semibold text-slate-800">{lesson.mascot.message}</p>
         </div>
       </div>
 

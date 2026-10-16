@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, Sparkles, Lightbulb } from 'lucide-react';
+import { Check, RotateCcw, Sparkles } from 'lucide-react';
 
 interface StarBattleProps {
   size?: number;
@@ -108,25 +108,6 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
     }
   };
 
-  const handleAutoSolve = () => {
-    sound.playCorrect();
-    const solutionGrid: ('star' | 'dot' | null)[][] = Array.from({ length: size }, () =>
-      Array(size).fill('dot')
-    );
-    starsSolution.forEach(([r, c]) => {
-      if (r < size && c < size) {
-        solutionGrid[r][c] = 'star';
-      }
-    });
-    setGrid(solutionGrid);
-    sound.playVictory();
-    setIsSuccess(true);
-    setTimeout(() => {
-      sound.playStarCollect();
-      onCompleted();
-    }, 500);
-  };
-
   const currentStarTotal = grid.reduce(
     (acc, row) => acc + row.filter((c) => c === 'star').length,
     0
@@ -206,14 +187,6 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
         >
           <RotateCcw className="w-4 h-4" />
           Xóa hết
-        </button>
-        <button
-          type="button"
-          onClick={handleAutoSolve}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm shadow-md"
-        >
-          <Lightbulb className="w-4 h-4" />
-          Xem vị trí chuẩn
         </button>
         <button
           type="button"

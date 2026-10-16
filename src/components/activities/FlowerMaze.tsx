@@ -118,18 +118,6 @@ export const FlowerMaze: React.FC<FlowerMazeProps> = ({
     setIsSuccess(false);
   };
 
-  const autoSolve = () => {
-    sound.playCorrect();
-    const allKeys = activeTargetPath.map(([r, c]) => `${r}-${c}`);
-    setVisitedCells(allKeys);
-    setIsSuccess(true);
-    setTimeout(() => {
-      sound.playStarCollect();
-      onCompleted();
-    }, 600);
-  };
-
-  const currentPatternStep = pattern[visitedCells.length % pattern.length];
   const numCols = activeGrid[0]?.length || 7;
 
   return (
@@ -154,12 +142,6 @@ export const FlowerMaze: React.FC<FlowerMazeProps> = ({
             ))
           )}
         </div>
-        <p className="text-xs text-pink-700 mt-1 font-bold">
-          Bước tiếp theo cần đi vào:{' '}
-          <span className="text-lg bg-white px-2 py-0.5 rounded-md border border-pink-300 inline-block font-black text-slate-800">
-            {currentPatternStep}
-          </span>
-        </p>
       </div>
 
       {/* Maze Board */}
@@ -220,13 +202,6 @@ export const FlowerMaze: React.FC<FlowerMazeProps> = ({
         >
           <RotateCcw className="w-4 h-4" />
           Đi lại từ đầu
-        </button>
-        <button
-          type="button"
-          onClick={autoSolve}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-pink-500 hover:bg-pink-600 text-white font-bold text-xs md:text-sm shadow-md transition-colors"
-        >
-          💡 Xem đường đi đúng
         </button>
       </div>
 

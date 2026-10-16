@@ -21,58 +21,78 @@ export const CattleFenceViewer: React.FC<CattleFenceProps> = ({ onCompleted }) =
   // User selects which cow cells are safely fenced
   const [fencedCells, setFencedCells] = useState<Record<string, boolean>>({});
   const [isSuccess, setIsSuccess] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const totalCows = 7;
+  const totalCows = initialGrid.flat().filter((c) => c === 'cow').length;
 
   const handleToggleFence = (r: number, c: number) => {
     sound.playClick();
+    setStatusMessage(null);
     const key = `${r}-${c}`;
     const next = { ...fencedCells, [key]: !fencedCells[key] };
     setFencedCells(next);
 
-    // Count fenced cows
+    // Auto-check on toggle
     let safeCows = 0;
     let hitCactus = false;
+    let extraFences = 0;
 
     Object.entries(next).forEach(([k, isFenced]) => {
       if (!isFenced) return;
       const [row, col] = k.split('-').map(Number);
       if (initialGrid[row][col] === 'cow') safeCows++;
-      if (initialGrid[row][col] === 'cactus') hitCactus = true;
+      else if (initialGrid[row][col] === 'cactus') hitCactus = true;
+      else extraFences++;
     });
 
-    if (safeCows === totalCows && !hitCactus) {
+    if (safeCows === totalCows && !hitCactus && extraFences === 0) {
       sound.playVictory();
       setIsSuccess(true);
       setTimeout(() => {
         sound.playStarCollect();
         onCompleted();
-      }, 500);
+      }, 600);
     }
   };
 
-  const handleProtectAll = () => {
-    sound.playCorrect();
-    const solution: Record<string, boolean> = {};
-    initialGrid.forEach((row, r) => {
-      row.forEach((cell, c) => {
-        if (cell === 'cow') {
-          solution[`${r}-${c}`] = true;
-        }
-      });
+  const handleCheckFence = () => {
+    let safeCows = 0;
+    let hitCactus = false;
+    let extraFences = 0;
+
+    Object.entries(fencedCells).forEach(([k, isFenced]) => {
+      if (!isFenced) return;
+      const [row, col] = k.split('-').map(Number);
+      if (initialGrid[row][col] === 'cow') safeCows++;
+      else if (initialGrid[row][col] === 'cactus') hitCactus = true;
+      else extraFences++;
     });
-    setFencedCells(solution);
-    setIsSuccess(true);
-    setTimeout(() => {
-      sound.playStarCollect();
-      onCompleted();
-    }, 500);
+
+    if (safeCows === totalCows && !hitCactus && extraFences === 0) {
+      sound.playVictory();
+      setIsSuccess(true);
+      setStatusMessage(null);
+      setTimeout(() => {
+        sound.playStarCollect();
+        onCompleted();
+      }, 600);
+    } else {
+      sound.playWrong();
+      if (hitCactus) {
+        setStatusMessage('Ôi không! Hàng rào chạm vào cây xương rồng gai nhọn rồi. Hãy gỡ rào ở cây xương rồng nhé!');
+      } else if (safeCows < totalCows) {
+        setStatusMessage(`Bé mới rào được ${safeCows}/${totalCows} chú bò thôi. Hãy tiếp tục tìm và bảo vệ các chú bò còn lại nhé!`);
+      } else if (extraFences > 0) {
+        setStatusMessage('Bé chú ý chỉ dựng rào bảo vệ các chú bò, không rào vào các ô cỏ trống nhé!');
+      }
+    }
   };
 
   const handleReset = () => {
-    sound.playWrong();
+    sound.playClick();
     setFencedCells({});
     setIsSuccess(false);
+    setStatusMessage(null);
   };
 
   return (
@@ -141,17 +161,23 @@ export const CattleFenceViewer: React.FC<CattleFenceProps> = ({ onCompleted }) =
         </button>
 
         <button
-          onClick={handleProtectAll}
+          onClick={handleCheckFence}
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm md:text-base shadow-lg transition-transform active:scale-95"
         >
           <ShieldCheck className="w-5 h-5" />
-          Hoàn thành hàng rào
+          Kiểm Tra Hàng Rào
         </button>
       </div>
 
+      {statusMessage && (
+        <div className="p-3.5 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-900 text-xs md:text-sm font-bold text-center max-w-lg w-full">
+          {statusMessage}
+        </div>
+      )}
+
       {isSuccess && (
-        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Tuyệt vời! Tất cả các chú bò đã được bảo vệ an toàn trong hàng rào, không chạm phải cây xương rồng nào!
+        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow max-w-lg w-full">
+          🎉 Tuyệt vời! Tất cả {totalCows} chú bò đã được bảo vệ an toàn trong hàng rào, không chạm phải cây xương rồng nào!
         </div>
       )}
     </div>
