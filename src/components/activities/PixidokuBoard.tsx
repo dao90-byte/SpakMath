@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, Eraser } from 'lucide-react';
+import { Check, RotateCcw, Eraser, Lightbulb } from 'lucide-react';
 
 interface AnimalSymbol {
   id: string;
@@ -94,6 +94,16 @@ export const PixidokuBoard: React.FC<PixidokuBoardProps> = ({
     }
   };
 
+  const handleAutoSolve = () => {
+    sound.playCorrect();
+    setGrid(solution.map((row) => [...row]));
+    setIsSuccess(true);
+    setTimeout(() => {
+      sound.playVictory();
+      onCompleted();
+    }, 500);
+  };
+
   const getAnimalIcon = (id: string | null) => {
     if (!id) return '';
     const found = animals.find((a) => a.id === id);
@@ -155,15 +165,25 @@ export const PixidokuBoard: React.FC<PixidokuBoardProps> = ({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <button
+          type="button"
           onClick={handleReset}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm border border-slate-300"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs md:text-sm border border-slate-300"
         >
           <RotateCcw className="w-4 h-4" />
           Chơi lại
         </button>
         <button
+          type="button"
+          onClick={handleAutoSolve}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm shadow-md"
+        >
+          <Lightbulb className="w-4 h-4" />
+          Xem gợi ý giải
+        </button>
+        <button
+          type="button"
           onClick={() => checkPixidoku()}
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm md:text-base shadow-lg transition-transform active:scale-95"
         >

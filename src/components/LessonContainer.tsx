@@ -22,6 +22,12 @@ import { CircularMazeViewer } from './activities/CircularMazeViewer';
 import { CattleFenceViewer } from './activities/CattleFenceViewer';
 import { MatrixGrid2x2 } from './activities/MatrixGrid2x2';
 import { NumberMatrixBoard } from './activities/NumberMatrixBoard';
+import { SequencePatternBoard } from './activities/SequencePatternBoard';
+import { BalanceScaleViewer } from './activities/BalanceScaleViewer';
+import { SlitherlinkBoard } from './activities/SlitherlinkBoard';
+import { TreasureVaultViewer } from './activities/TreasureVaultViewer';
+import { CubeCounterViewer } from './activities/CubeCounterViewer';
+import { GrandFinaleViewer } from './activities/GrandFinaleViewer';
 
 interface LessonContainerProps {
   lesson: LessonQuestion;
@@ -106,7 +112,23 @@ const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
         />
       );
     case 'flowerMaze':
-      return <FlowerMaze pattern={activity.pattern} onCompleted={onCompleted} />;
+      return (
+        <FlowerMaze
+          pattern={activity.pattern}
+          grid={activity.grid}
+          targetPath={activity.targetPath}
+          startPos={activity.startPos}
+          goalPos={activity.goalPos}
+          startIcon={activity.startIcon}
+          startLabel={activity.startLabel}
+          goalIcon={activity.goalIcon}
+          goalLabel={activity.goalLabel}
+          ruleTitle={activity.ruleTitle}
+          patternDisplay={activity.patternDisplay}
+          successMessage={activity.successMessage}
+          onCompleted={onCompleted}
+        />
+      );
     case 'starBattle':
       return (
         <StarBattleBoard
@@ -120,10 +142,26 @@ const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
     case 'queueCounter':
       return (
         <QueueCounter
+          mode={activity.mode}
           fromFront={activity.fromFront}
           fromBack={activity.fromBack}
+          totalInQueue={activity.totalInQueue}
+          personA={activity.personA}
+          personB={activity.personB}
           correctTotal={activity.correctTotal}
           formula={activity.formula}
+          options={activity.options}
+          promptTitle={activity.promptTitle}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'balanceScale':
+      return (
+        <BalanceScaleViewer
+          title={activity.title}
+          ruleExplanation={activity.ruleExplanation}
+          scales={activity.scales}
+          targetQuestion={activity.targetQuestion}
           onCompleted={onCompleted}
         />
       );
@@ -193,6 +231,60 @@ const renderActivity = (activity: LessonActivity, onCompleted: () => void) => {
           solution={activity.solution}
           allowedNumbers={activity.allowedNumbers}
           hintFormula={activity.hintFormula}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'sequencePattern':
+      return (
+        <SequencePatternBoard
+          title={activity.title}
+          ruleExplanation={activity.ruleExplanation}
+          sequenceType={activity.sequenceType}
+          items={activity.items}
+          choices={activity.choices}
+          correctChoiceId={activity.correctChoiceId}
+          correctExplanation={activity.correctExplanation}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'slitherlink':
+      return (
+        <SlitherlinkBoard
+          rows={activity.rows}
+          cols={activity.cols}
+          clues={activity.clues}
+          solutionEdges={activity.solutionEdges}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'treasureVault':
+      return (
+        <TreasureVaultViewer
+          title={activity.title}
+          codeLength={activity.codeLength}
+          solutionCode={activity.solutionCode}
+          clues={activity.clues}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'cubeCounter':
+      return (
+        <CubeCounterViewer
+          title={activity.title}
+          instructionText={activity.instructionText}
+          gridHeights={activity.gridHeights}
+          layers={activity.layers}
+          totalCubes={activity.totalCubes}
+          options={activity.options}
+          explanation={activity.explanation}
+          onCompleted={onCompleted}
+        />
+      );
+    case 'grandFinale':
+      return (
+        <GrandFinaleViewer
+          title={activity.title}
+          roundQuestions={activity.roundQuestions}
           onCompleted={onCompleted}
         />
       );

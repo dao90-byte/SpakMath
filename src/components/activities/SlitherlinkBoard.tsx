@@ -58,6 +58,12 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
   };
 
   const checkSolution = (currH = hEdges, currV = vEdges) => {
+    let totalEdges = 0;
+    currH.forEach((row) => row.forEach((e) => { if (e) totalEdges++; }));
+    currV.forEach((row) => row.forEach((e) => { if (e) totalEdges++; }));
+
+    if (totalEdges < 4) return;
+
     let allCluesMatch = true;
 
     // Check each cell's edge count matches its clue

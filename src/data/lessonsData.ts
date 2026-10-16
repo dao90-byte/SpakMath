@@ -83,6 +83,17 @@ export type LessonActivity =
   | {
       type: 'flowerMaze';
       pattern: string[];
+      grid?: string[][];
+      targetPath?: number[][];
+      startPos?: [number, number];
+      goalPos?: [number, number];
+      startIcon?: string;
+      startLabel?: string;
+      goalIcon?: string;
+      goalLabel?: string;
+      ruleTitle?: string;
+      patternDisplay?: { icon: string; name: string }[];
+      successMessage?: string;
     }
   | {
       type: 'starBattle';
@@ -93,14 +104,38 @@ export type LessonActivity =
     }
   | {
       type: 'queueCounter';
-      fromFront: number;
-      fromBack: number;
+      mode?: 'twoEnds' | 'between' | 'circle';
+      fromFront?: number;
+      fromBack?: number;
+      totalInQueue?: number;
+      personA?: { name: string; avatar: string; pos: number };
+      personB?: { name: string; avatar: string; pos: number };
       correctTotal: number;
       formula: string;
+      options?: number[];
+      promptTitle?: string;
+    }
+  | {
+      type: 'balanceScale';
+      title: string;
+      ruleExplanation: string;
+      scales: {
+        leftIcons: string[];
+        leftLabel: string;
+        rightIcons: string[];
+        rightLabel: string;
+      }[];
+      targetQuestion: {
+        targetLeftIcons: string[];
+        targetLeftLabel: string;
+        options: { id: string; count: number; icon: string; label: string }[];
+        correctOptionId: string;
+        explanation: string;
+      };
     }
   | {
       type: 'cornerCross';
-      shape: 'L' | 'T';
+      shape: 'L' | 'T' | '+';
       verticalCount: number;
       horizontalCount: number;
       intersectionPerson: string;
@@ -150,6 +185,71 @@ export type LessonActivity =
       solution: number[][];
       allowedNumbers?: number[];
       hintFormula?: string;
+    }
+  | {
+      type: 'sequencePattern';
+      title: string;
+      ruleExplanation: string;
+      sequenceType: 'numbers' | 'domino' | 'beads' | 'pyramid';
+      items: {
+        id: number;
+        label?: string;
+        subLabel?: string;
+        icon?: string;
+        isMissing?: boolean;
+        stepHint?: string;
+      }[];
+      choices: {
+        id: string;
+        label: string;
+        subLabel?: string;
+        icon?: string;
+      }[];
+      correctChoiceId: string;
+      correctExplanation: string;
+    }
+  | {
+      type: 'slitherlink';
+      rows?: number;
+      cols?: number;
+      clues: (number | null)[][];
+      solutionEdges: {
+        h: boolean[][];
+        v: boolean[][];
+      };
+    }
+  | {
+      type: 'treasureVault';
+      title: string;
+      codeLength: number;
+      solutionCode: number[];
+      clues: {
+        attempt: number[];
+        correctDigits: number;
+        correctPositions: number;
+        description: string;
+      }[];
+    }
+  | {
+      type: 'cubeCounter';
+      title: string;
+      instructionText: string;
+      gridHeights: number[][];
+      layers: { layerName: string; count: number }[];
+      totalCubes: number;
+      options: number[];
+      explanation: string;
+    }
+  | {
+      type: 'grandFinale';
+      title: string;
+      roundQuestions: {
+        id: string;
+        category: string;
+        question: string;
+        options: { id: string; text: string; isCorrect: boolean }[];
+        explanation: string;
+      }[];
     };
 
 export interface LessonQuestion {
@@ -203,8 +303,8 @@ export const TOPICS: Topic[] = [
   {
     id: 'challenge',
     title: 'Đấu Trường Siêu Thử Thách',
-    subtitle: 'Mê cung tròn xoắn ốc, hàng rào nông trại bò, Pixidoku rừng và Star Battle săn sao.',
-    mascotName: 'Biệt đội Spark Math',
+    subtitle: '16 thử thách đỉnh cao: Mê cung tròn, Pixidoku rừng & biển, Hàng rào nông trại, Star Battle, Slitherlink, Mật mã két sắt, Cân đĩa, Khối 3D và Chung kết cúp vàng.',
+    mascotName: 'Biệt đội Spark Math & Thầy Mayle',
     bgGradient: 'from-red-600 to-rose-700'
   }
 ];
@@ -1620,7 +1720,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'pattern',
     topicName: topicName('pattern'),
     title: 'Tìm quy luật đoàn động vật diễu hành',
-    badgeTitle: 'Bài 1 · Trang 53',
+    badgeTitle: 'Bài 1.1 · Trang 53',
     instruction: 'Đoàn diễu hành gồm các con vật lặp lại theo nhóm 4 bạn: 🐥 Vịt con ➔ 🐸 Chú ếch ➔ 🐻 Chú gấu ➔ 🐵 Khỉ con. Hãy tìm con vật trong Hộp 1 và Hộp 2.',
     hint: 'Sau chú gấu số 7 là bạn Khỉ con 🐵, trước bạn khỉ số 12 là Chú gấu 🐻.',
     mascot: { ...ABBY, message: 'Đoàn diễu hành đi theo chu kỳ 4 bạn, cùng đếm nhịp nào!' },
@@ -1646,17 +1746,243 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
+    id: 'pat-beads-1-2',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Chuỗi hạt vòng ngọc của Abby (Chu kỳ 3 hạt)',
+    badgeTitle: 'Bài 1.2 · Trang 53',
+    instruction: 'Abby xâu một chuỗi hạt vòng ngọc lặp lại theo nhịp 3 màu: 🔴 Hạt đỏ ➔ 🟡 Hạt vàng ➔ 🔵 Hạt xanh dương. Hỏi hạt thứ 10 mang màu gì?',
+    hint: 'Chu kỳ gồm 3 hạt: 1 Đỏ, 2 Vàng, 3 Xanh. Ta lấy 10 chia cho 3 được 3 (dư 1). Số dư 1 chính là hạt đầu tiên của chu kỳ: Hạt Đỏ 🔴!',
+    mascot: { ...ABBY, message: 'Dùng phép chia có dư để tìm hạt thứ 10 cực kỳ nhanh chóng!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'CHUỖI HẠT NGỌC CHU KỲ 3 MÀU',
+      ruleExplanation: 'Chuỗi hạt lặp lại theo quy luật: 🔴 Đỏ ➔ 🟡 Vàng ➔ 🔵 Xanh dương',
+      sequenceType: 'beads',
+      items: [
+        { id: 1, icon: '🔴', label: 'Đỏ' },
+        { id: 2, icon: '🟡', label: 'Vàng' },
+        { id: 3, icon: '🔵', label: 'Xanh' },
+        { id: 4, icon: '🔴', label: 'Đỏ' },
+        { id: 5, icon: '🟡', label: 'Vàng' },
+        { id: 6, icon: '🔵', label: 'Xanh' },
+        { id: 7, icon: '🔴', label: 'Đỏ' },
+        { id: 8, icon: '🟡', label: 'Vàng' },
+        { id: 9, icon: '🔵', label: 'Xanh' },
+        { id: 10, isMissing: true, label: '?' }
+      ],
+      choices: [
+        { id: 'red', label: 'Hạt Đỏ (Chính xác)', icon: '🔴' },
+        { id: 'yellow', label: 'Hạt Vàng', icon: '🟡' },
+        { id: 'blue', label: 'Hạt Xanh dương', icon: '🔵' },
+        { id: 'green', label: 'Hạt Xanh lá', icon: '🟢' }
+      ],
+      correctChoiceId: 'red',
+      correctExplanation: 'Chính xác! 10 : 3 = 3 dư 1, vậy hạt thứ 10 là Hạt Đỏ 🔴 mở đầu chu kỳ mới!'
+    }
+  },
+  {
     id: 'pat-maze-2',
     topicId: 'pattern',
     topicName: topicName('pattern'),
     title: 'Vẽ đường hoa dẫn Abby đến gặp Casey',
-    badgeTitle: 'Bài 2 · Trang 54',
+    badgeTitle: 'Bài 2.1 · Trang 54',
     instruction: 'Quy luật bước chân của Abby theo thứ tự 4 loài hoa: 🌸 Tím nhạt ➔ 🌼 Vàng cúc ➔ 🌺 Đỏ tươi ➔ 💠 Xanh biếc. Bấm vào các ô hoa kề cạnh để tạo đường đi!',
     hint: 'Bắt đầu từ mũi tên bạn thỏ Abby ở hàng 1 và đi đúng nhịp 4 màu hoa.',
     mascot: { ...ABBY, message: 'Đi đúng nhịp Tím ➔ Vàng ➔ Đỏ ➔ Xanh mới tới được nhà bạn Casey!' },
     activity: {
       type: 'flowerMaze',
-      pattern: ['🌸', '🌼', '🌺', '💠']
+      pattern: ['🌸', '🌼', '🌺', '💠'],
+      ruleTitle: 'Quy luật bước chân 4 màu hoa',
+      startIcon: '🐰',
+      startLabel: 'Abby xuất phát',
+      goalIcon: '🐹',
+      goalLabel: 'Đến gặp Casey',
+      patternDisplay: [
+        { icon: '🌸', name: 'Tím' },
+        { icon: '🌼', name: 'Vàng' },
+        { icon: '🌺', name: 'Đỏ' },
+        { icon: '💠', name: 'Xanh' }
+      ],
+      successMessage: '🎉 Hoan hô! Abby đã vượt qua mê cung hoa và đến gặp bạn Casey!'
+    }
+  },
+  {
+    id: 'pat-maze-fruits',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê cung hoa quả rừng của Khỉ Benny',
+    badgeTitle: 'Bài 2.2 · Trang 54 Mở rộng',
+    instruction: 'Khỉ Benny tìm nải chuối vàng qua vườn quả nhiệt đới. Hãy đi theo quy luật 4 loại quả: 🍌 Chuối ➔ 🍓 Dâu tây ➔ 🍎 Táo ➔ 🍊 Cam.',
+    hint: 'Bắt đầu ở góc trên bên trái [0, 0] là quả Chuối 🍌, bước tiếp sang quả Dâu tây 🍓 kề cạnh!',
+    mascot: { ...BENNY, message: 'Mỗi bước chân phải đúng nhịp Chuối ➔ Dâu ➔ Táo ➔ Cam nhé bạn ơi!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['🍌', '🍓', '🍎', '🍊'],
+      ruleTitle: 'Quy luật 4 loại hoa quả nhiệt đới',
+      startPos: [0, 0],
+      goalPos: [5, 5],
+      startIcon: '🐵',
+      startLabel: 'Benny xuất phát',
+      goalIcon: '🍌',
+      goalLabel: 'Nải chuối vàng',
+      patternDisplay: [
+        { icon: '🍌', name: 'Chuối' },
+        { icon: '🍓', name: 'Dâu tây' },
+        { icon: '🍎', name: 'Táo đỏ' },
+        { icon: '🍊', name: 'Cam ngọt' }
+      ],
+      grid: [
+        ['🍌', '🍓', '🍎', '🍊', '🍌', '🍓'],
+        ['🍓', '🍌', '🍊', '🍎', '🍊', '🍎'],
+        ['🍎', '🍊', '🍌', '🍓', '🍌', '🍊'],
+        ['🍊', '🍌', '🍊', '🍎', '🍓', '🍌'],
+        ['🍌', '🍓', '🍎', '🍊', '🍌', '🍓'],
+        ['🍓', '🍎', '🍊', '🍌', '🍓', '🍌']
+      ],
+      targetPath: [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 2],
+        [2, 2],
+        [2, 3],
+        [3, 3],
+        [4, 3],
+        [4, 4],
+        [5, 4],
+        [5, 5]
+      ],
+      successMessage: '🎉 Tuyệt vời! Khỉ Benny đã nhặt được nải chuối vàng thơm ngon!'
+    }
+  },
+  {
+    id: 'pat-maze-numbers',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê cung chữ số chu kỳ 1-2-3-4 của Casey',
+    badgeTitle: 'Bài 2.3 · Mê Cung Số',
+    instruction: 'Chuột Casey đi tìm miếng phô mai thơm ngon qua mê cung số theo đúng chu kỳ: 1 ➔ 2 ➔ 3 ➔ 4 ➔ 1 ➔ 2 ➔ 3 ➔ 4.',
+    hint: 'Bắt đầu từ ô số 1 ở góc trên trái, bước sang số 2, số 3, số 4 kề cạnh!',
+    mascot: { ...CASEY, message: 'Nhớ chu kỳ đếm từ 1 đến 4 không được nhảy cóc nha!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['1️⃣', '2️⃣', '3️⃣', '4️⃣'],
+      ruleTitle: 'Quy luật đếm chu kỳ 1 ➔ 2 ➔ 3 ➔ 4',
+      startPos: [0, 0],
+      goalPos: [5, 5],
+      startIcon: '🐹',
+      startLabel: 'Casey xuất phát',
+      goalIcon: '🧀',
+      goalLabel: 'Miếng phô mai',
+      patternDisplay: [
+        { icon: '1️⃣', name: 'Số 1' },
+        { icon: '2️⃣', name: 'Số 2' },
+        { icon: '3️⃣', name: 'Số 3' },
+        { icon: '4️⃣', name: 'Số 4' }
+      ],
+      grid: [
+        ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '1️⃣', '2️⃣'],
+        ['4️⃣', '1️⃣', '4️⃣', '1️⃣', '2️⃣', '3️⃣'],
+        ['3️⃣', '4️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣'],
+        ['2️⃣', '3️⃣', '4️⃣', '3️⃣', '4️⃣', '1️⃣'],
+        ['1️⃣', '2️⃣', '3️⃣', '2️⃣', '1️⃣', '2️⃣'],
+        ['4️⃣', '1️⃣', '4️⃣', '1️⃣', '2️⃣', '🧀']
+      ],
+      targetPath: [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 2],
+        [2, 2],
+        [2, 3],
+        [2, 4],
+        [3, 4],
+        [4, 4],
+        [5, 4],
+        [5, 5]
+      ],
+      successMessage: '🎉 Hoan hô! Chuột Casey đã tìm được miếng phô mai béo ngậy!'
+    }
+  },
+  {
+    id: 'pat-maze-shapes',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê cung hình khối kỳ diệu của Spark Math',
+    badgeTitle: 'Bài 2.4 · Mê Cung Hình',
+    instruction: 'Đi qua mê cung hình khối theo chu kỳ: 🔺 Tam giác ➔ 🟢 Hình tròn ➔ 🟧 Hình vuông ➔ ⭐ Ngôi sao.',
+    hint: 'Bắt đầu từ Tam giác 🔺, tiếp theo phải là Hình tròn 🟢!',
+    mascot: { ...MAYLE, message: 'Nhận biết hình khối và đi đúng chu kỳ để mở kho báu!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['🔺', '🟢', '🟧', '⭐'],
+      ruleTitle: 'Quy luật hình khối: 🔺 ➔ 🟢 ➔ 🟧 ➔ ⭐',
+      startPos: [0, 0],
+      goalPos: [5, 5],
+      startIcon: '🐰',
+      startLabel: 'Abby xuất phát',
+      goalIcon: '🏆',
+      goalLabel: 'Cúp vàng',
+      patternDisplay: [
+        { icon: '🔺', name: 'Tam giác' },
+        { icon: '🟢', name: 'Tròn' },
+        { icon: '🟧', name: 'Vuông' },
+        { icon: '⭐', name: 'Sao' }
+      ],
+      grid: [
+        ['🔺', '🟢', '🟧', '⭐', '🔺', '🟢'],
+        ['⭐', '🔺', '⭐', '🔺', '🟢', '🟧'],
+        ['🟧', '🟢', '🔺', '⭐', '🟧', '⭐'],
+        ['🟢', '🟧', '🟢', '🟧', '🔺', '🔺'],
+        ['🔺', '⭐', '🔺', '⭐', '🟢', '🟧'],
+        ['⭐', '🔺', '🟢', '🔺', '🟢', '🏆']
+      ],
+      targetPath: [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [1, 2],
+        [2, 2],
+        [3, 2],
+        [3, 3],
+        [4, 3],
+        [5, 3],
+        [5, 4],
+        [5, 5]
+      ],
+      successMessage: '🎉 Xuất sắc! Bạn đã giành được chiếc Cúp Vàng Spark Math!'
+    }
+  },
+  {
+    id: 'pat-domino-3',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Chuỗi quân cờ Domino hai nửa đối xứng',
+    badgeTitle: 'Bài 3 · Trang 55',
+    instruction: 'Quan sát các quân cờ Domino: Nửa trên có các số 1, 2, 3, 4. Nửa dưới có các số 6, 5, 4, 3. Hãy tìm quân Domino tiếp theo ở vị trí số 5!',
+    hint: 'Nửa trên tăng thêm 1 đơn vị (1, 2, 3, 4 -> 5). Nửa dưới giảm đi 1 đơn vị (6, 5, 4, 3 -> 2). Tổng hai nửa luôn bằng 7! Đáp án là quân [5 | 2]!',
+    mascot: { ...BENNY, message: 'Nửa trên đi lên, nửa dưới đi xuống, tổng 2 nửa luôn bằng 7 đấy!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'QUY LUẬT QUÂN CỜ DOMINO',
+      ruleExplanation: 'Nửa trên tăng dần +1, nửa dưới giảm dần -1:',
+      sequenceType: 'domino',
+      items: [
+        { id: 1, label: '1', subLabel: '6' },
+        { id: 2, label: '2', subLabel: '5' },
+        { id: 3, label: '3', subLabel: '4' },
+        { id: 4, label: '4', subLabel: '3' },
+        { id: 5, isMissing: true }
+      ],
+      choices: [
+        { id: 'opt52', label: '5', subLabel: '2' },
+        { id: 'opt51', label: '5', subLabel: '1' },
+        { id: 'opt42', label: '4', subLabel: '2' },
+        { id: 'opt61', label: '6', subLabel: '1' }
+      ],
+      correctChoiceId: 'opt52',
+      correctExplanation: 'Rất chính xác! Quân cờ tiếp theo là [5 | 2] (nửa trên là 5, nửa dưới là 2, tổng bằng 7)!'
     }
   },
   {
@@ -1685,6 +2011,71 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
+    id: 'pat-seq-add3',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy số tăng dần cách đều (+3 mỗi bước)',
+    badgeTitle: 'Bài 5.1 · Trang 57',
+    instruction: 'Quan sát các viên đá bước chân nhảy qua suối: 2 ➔ 5 ➔ 8 ➔ 11 ➔ [ ? ] ➔ 17 ➔ 20. Hãy tìm con số trên viên đá bí mật!',
+    hint: 'Mỗi bước con số tăng thêm 3 đơn vị: 2 + 3 = 5; 5 + 3 = 8; 8 + 3 = 11; 11 + 3 = 14!',
+    mascot: { ...BENNY, message: 'Chú ếch nhảy mỗi lần đúng 3 bước, cộng thêm 3 là ra ngay!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'DÃY SỐ TĂNG DẦN CÁCH ĐỀU',
+      ruleExplanation: 'Mỗi số bằng số liền trước cộng thêm 3 (+3):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '2' },
+        { id: 2, label: '5', stepHint: '+3' },
+        { id: 3, label: '8', stepHint: '+3' },
+        { id: 4, label: '11', stepHint: '+3' },
+        { id: 5, isMissing: true, stepHint: '+3' },
+        { id: 6, label: '17', stepHint: '+3' },
+        { id: 7, label: '20', stepHint: '+3' }
+      ],
+      choices: [
+        { id: '13', label: '13' },
+        { id: '14', label: '14 (Đúng)' },
+        { id: '15', label: '15' },
+        { id: '16', label: '16' }
+      ],
+      correctChoiceId: '14',
+      correctExplanation: 'Tuyệt vời! 11 + 3 = 14 và 14 + 3 = 17, quy luật tăng 3 hoàn toàn khớp!'
+    }
+  },
+  {
+    id: 'pat-seq-fib',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy số nhân đôi tăng tốc (×2 mỗi bước)',
+    badgeTitle: 'Bài 5.2 · Trang 57',
+    instruction: 'Quan sát dãy số tên lửa tăng tốc: 1 ➔ 2 ➔ 4 ➔ 8 ➔ 16 ➔ [ ? ]. Tìm con số bí mật tiếp theo!',
+    hint: 'Mỗi số gấp 2 lần số trước đó: 1 × 2 = 2; 2 × 2 = 4; 4 × 2 = 8; 8 × 2 = 16; 16 × 2 = 32!',
+    mascot: { ...MAYLE, message: 'Số phía sau gấp đôi số phía trước, phép nhân 2 thật kỳ diệu!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'DÃY SỐ TĂNG TỐC GẤP ĐÔI',
+      ruleExplanation: 'Mỗi số bằng số liền trước nhân với 2 (×2):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1' },
+        { id: 2, label: '2', stepHint: '×2' },
+        { id: 3, label: '4', stepHint: '×2' },
+        { id: 4, label: '8', stepHint: '×2' },
+        { id: 5, label: '16', stepHint: '×2' },
+        { id: 6, isMissing: true, stepHint: '×2' }
+      ],
+      choices: [
+        { id: '24', label: '24' },
+        { id: '30', label: '30' },
+        { id: '32', label: '32 (Đúng)' },
+        { id: '36', label: '36' }
+      ],
+      correctChoiceId: '32',
+      correctExplanation: 'Chính xác! 16 × 2 = 32, con số tiếp theo là 32!'
+    }
+  },
+  {
     id: 'pat-shapes-6',
     topicId: 'pattern',
     topicName: topicName('pattern'),
@@ -1709,6 +2100,33 @@ export const ALL_LESSONS: LessonQuestion[] = [
       correctChoiceId: 'B'
     }
   },
+  {
+    id: 'pat-pyramid-7',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Kim tự tháp số thông minh (Number Pyramid)',
+    badgeTitle: 'Bài 7 · Trang 58 Mở rộng',
+    instruction: 'Trong kim tự tháp số, mỗi viên gạch ở tầng trên bằng TỔNG CỦA HAI VIÊN GẠCH ngay dưới nó. Tầng 1 gồm 3, 4, 4. Tầng 2 gồm 7 và 8. Hỏi viên gạch ở ĐỈNH là số mấy?',
+    hint: 'Tầng 2: 3 + 4 = 7; 4 + 4 = 8. Viên gạch ở đỉnh bằng tổng tầng 2: 7 + 8 = 15!',
+    mascot: { ...MAYLE, message: 'Cộng dồn hai viên gạch bên dưới để tìm ra viên gạch bên trên!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'KIM TỰ THÁP SỐ TỔNG CỘNG',
+      ruleExplanation: 'Viên gạch tầng trên = Tổng hai viên gạch kề nhau ở tầng dưới (7 + 8 = ?):',
+      sequenceType: 'pyramid',
+      items: [
+        { id: 1, label: '15' }
+      ],
+      choices: [
+        { id: '14', label: '14' },
+        { id: '15', label: '15 (Chính xác)' },
+        { id: '16', label: '16' },
+        { id: '17', label: '17' }
+      ],
+      correctChoiceId: '15',
+      correctExplanation: 'Xuất sắc! 7 + 8 = 15, số trên đỉnh kim tự tháp là 15!'
+    }
+  },
 
   // ==========================================
   // TRẠM 5: VỊ TRÍ HÀNG NGŨ & SUY LUẬN (Trang 59 - Trang 72)
@@ -1724,6 +2142,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     mascot: { ...ABBY, message: 'Vì tớ đứng ở cả hai đầu đếm nên phải trừ đi 1 để không bị đếm trùng nhé!' },
     activity: {
       type: 'queueCounter',
+      mode: 'twoEnds',
       fromFront: 2,
       fromBack: 3,
       correctTotal: 4,
@@ -1735,16 +2154,38 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'logic',
     topicName: topicName('logic'),
     title: 'Xếp hàng tính từ đầu và cuối',
-    badgeTitle: 'Bài 2 · Trang 62',
+    badgeTitle: 'Bài 2.1 · Trang 62',
     instruction: 'Abby đứng thứ hai tính từ đầu hàng. Bạn ấy đứng thứ tư tính từ cuối hàng. Hỏi có tất cả bao nhiêu bạn?',
     hint: 'Công thức toán tư duy: (Đầu) + (Cuối) - 1. Ta có: 2 + 4 - 1 = 5 bạn!',
     mascot: { ...ABBY, message: 'Lần này hàng dài hơn một chút, áp dụng đúng công thức là ra ngay!' },
     activity: {
       type: 'queueCounter',
+      mode: 'twoEnds',
       fromFront: 2,
       fromBack: 4,
       correctTotal: 5,
       formula: '2 + 4 - 1 = 5'
+    }
+  },
+  {
+    id: 'log-queue-between-2b',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Tìm số bạn đứng ở giữa Benny và Abby',
+    badgeTitle: 'Bài 2.2 · Trang 62 Mở rộng',
+    instruction: 'Trong một hàng có tất cả 10 bạn. Benny đứng thứ 3 tính từ đầu hàng. Abby đứng thứ 2 tính từ cuối hàng. Hỏi có bao nhiêu bạn đứng Ở GIỮA Benny và Abby?',
+    hint: 'Lấy tổng số bạn trừ đi vị trí của Benny và Abby: 10 - 3 - 2 = 5 bạn ở giữa!',
+    mascot: { ...CASEY, message: 'Muốn tìm số bạn ở giữa, lấy cả hàng trừ đi hai đầu nhé!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'between',
+      totalInQueue: 10,
+      personA: { name: 'Benny', avatar: '🐵', pos: 3 },
+      personB: { name: 'Abby', avatar: '🐰', pos: 2 },
+      correctTotal: 5,
+      formula: '10 - 3 - 2 = 5',
+      options: [4, 5, 6, 7],
+      promptTitle: 'Hỏi có bao nhiêu bạn đứng Ở GIỮA Benny và Abby?'
     }
   },
   {
@@ -1802,6 +2243,86 @@ export const ALL_LESSONS: LessonQuestion[] = [
       intersectionPerson: 'Abby',
       options: ['7 bạn', '8 bạn', '9 bạn', '10 bạn'],
       correctAnswer: '8 bạn'
+    }
+  },
+  {
+    id: 'log-cross-6-1',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Hàng người đứng thành hình chữ thập (+)',
+    badgeTitle: 'Bài 6.1 · Trang 66',
+    instruction: 'Có một hàng người đứng thành hình chữ thập (+). Hàng dọc có 5 bạn, hàng ngang có 5 bạn. Benny đứng ở chính giữa điểm giao nhau của hai hàng. Hỏi có tất cả bao nhiêu bạn?',
+    hint: 'Benny ở chính giữa được tính trong cả hàng dọc và hàng ngang: 5 + 5 - 1 = 9 bạn!',
+    mascot: { ...BENNY, message: 'Tớ đứng ngay ở trung tâm chữ thập, ngã tư giao nhau đấy!' },
+    activity: {
+      type: 'cornerCross',
+      shape: '+',
+      verticalCount: 5,
+      horizontalCount: 5,
+      intersectionPerson: 'Benny',
+      options: ['8 bạn', '9 bạn', '10 bạn', '11 bạn'],
+      correctAnswer: '9 bạn'
+    }
+  },
+  {
+    id: 'log-circle-6-2',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đếm hàng vòng tròn nắm tay (Circle Queue)',
+    badgeTitle: 'Bài 6.2 · Trang 67',
+    instruction: 'Các bạn nhỏ nắm tay nhau xếp thành một vòng tròn lớn. Đếm theo chiều kim đồng hồ từ Benny đến Abby là người thứ 4. Đếm ngược chiều kim đồng hồ từ Benny đến Abby là người thứ 5. Hỏi vòng tròn có tất cả bao nhiêu bạn?',
+    hint: 'Vì cả bạn Benny và bạn Abby đều được đếm 2 lần (ở cả 2 chiều), nên ta phải trừ đi 2: 4 + 5 - 2 = 7 bạn!',
+    mascot: { ...MAYLE, message: 'Lưu ý khi đếm vòng tròn giữa 2 người: cả hai bạn đều bị tính 2 lần nên phải trừ đi 2!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'circle',
+      fromFront: 4,
+      fromBack: 5,
+      correctTotal: 7,
+      formula: '4 + 5 - 2 = 7',
+      options: [6, 7, 8, 9],
+      promptTitle: 'Hỏi vòng tròn có tất cả bao nhiêu bạn nhỏ?'
+    }
+  },
+  {
+    id: 'log-scale-balance',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Cân thăng bằng suy luận logic (Balance Scale)',
+    badgeTitle: 'Bài 7 · Trang 68',
+    instruction: 'Quan sát hai chiếc cân bập bênh thăng bằng:\n• Cân 1: 1 Chú gấu 🐻 nặng bằng 2 Chú khỉ 🐵\n• Cân 2: 1 Chú khỉ 🐵 nặng bằng 2 Chú thỏ 🐰\nHỏi: Cần bao nhiêu chú thỏ 🐰 để chiếc cân số 3 thăng bằng với 1 chú gấu 🐻?',
+    hint: '1 gấu = 2 khỉ. Mỗi chú khỉ lại nặng bằng 2 chú thỏ. Vậy 1 gấu = 2 × 2 = 4 chú thỏ 🐰!',
+    mascot: { ...MAYLE, message: 'Dùng phép thế đại lượng: Thay mỗi chú khỉ bằng 2 chú thỏ nhé!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'BÍ ẨN CÂN THĂNG BẰNG ĐẠI LƯỢNG',
+      ruleExplanation: 'Dựa vào 2 chiếc cân đầu tiên để tìm số chú thỏ làm thăng bằng chú gấu:',
+      scales: [
+        {
+          leftIcons: ['🐻'],
+          leftLabel: '1 Chú Gấu',
+          rightIcons: ['🐵', '🐵'],
+          rightLabel: '2 Chú Khỉ'
+        },
+        {
+          leftIcons: ['🐵'],
+          leftLabel: '1 Chú Khỉ',
+          rightIcons: ['🐰', '🐰'],
+          rightLabel: '2 Chú Thỏ'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🐻'],
+        targetLeftLabel: '1 Chú Gấu',
+        options: [
+          { id: '2', count: 2, icon: '🐰', label: '2 Chú Thỏ' },
+          { id: '3', count: 3, icon: '🐰', label: '3 Chú Thỏ' },
+          { id: '4', count: 4, icon: '🐰', label: '4 Chú Thỏ (Đúng)' },
+          { id: '5', count: 5, icon: '🐰', label: '5 Chú Thỏ' }
+        ],
+        correctOptionId: '4',
+        explanation: 'Quá xuất sắc! Vì 1 Gấu = 2 Khỉ và mỗi Khỉ = 2 Thỏ, nên 1 Gấu = 2 × 2 = 4 Chú Thỏ!'
+      }
     }
   },
   {
@@ -1900,6 +2421,28 @@ export const ALL_LESSONS: LessonQuestion[] = [
       allowedCharacters: ['Bác sĩ Mayle', 'Casey', 'Abby', 'Benny', 'Bác Ram']
     }
   },
+  {
+    id: 'log-race-ranking',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Bảng xếp hạng cuộc thi chạy rừng xanh',
+    badgeTitle: 'Bài 5 · Trang 72 Mở rộng',
+    instruction: 'Cuộc thi chạy cự ly rừng xanh có 4 bạn tham gia (Thỏ Abby, Khỉ Benny, Chuột Casey và Chú Rùa):\n• Abby về đích trước Benny.\n• Benny về đích trước Casey.\n• Rùa về đích sau cùng (sau Casey).\nHãy sắp xếp thứ tự về đích từ NGƯỜI CHẠY NHANH NHẤT đến NGƯỜI CHẠY CHẬM NHẤT!',
+    hint: 'Thứ tự từ về nhất đến về cuối: Abby ➔ Benny ➔ Casey ➔ Rùa!',
+    mascot: { ...ABBY, message: 'Abby nhanh chân về nhất, cùng sắp xếp thứ tự bảng vàng nào!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp thứ tự các vận động viên từ về đích đầu tiên đến cuối cùng:',
+      directionLabel: 'Nhanh nhất (Về đích 1) ➔ Chậm nhất (Về đích 4)',
+      items: [
+        { id: 'Abby', label: 'Thỏ Abby', description: 'Về đích trước Benny', icon: '🐰' },
+        { id: 'Benny', label: 'Khỉ Benny', description: 'Về đích trước Casey', icon: '🐵' },
+        { id: 'Casey', label: 'Chuột Casey', description: 'Về đích trước Rùa', icon: '🐹' },
+        { id: 'Rua', label: 'Chú Rùa', description: 'Về đích sau cùng', icon: '🐢' }
+      ],
+      correctOrder: ['Abby', 'Benny', 'Casey', 'Rua']
+    }
+  },
 
   // ==========================================
   // TRẠM 6: ĐẤU TRƯỜNG SIÊU THỬ THÁCH (Trang 73 - Trang 90)
@@ -1909,7 +2452,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'challenge',
     topicName: topicName('challenge'),
     title: 'Mê cung hình tròn xoắn ốc',
-    badgeTitle: 'Thử Thách 1 · Trang 74 & 85',
+    badgeTitle: 'Thử Thách 1.1 · Trang 74',
     instruction: 'Bạn hãy tìm đường nối giữa 2 mũi tên sao cho tạo thành 1 đường đi liền mạch từ cổng ngoài vào tâm mê cung tròn!',
     hint: 'Đi theo các khe hở của từng vòng tròn đồng tâm, cẩn thận không đâm vào vách ngăn.',
     mascot: { ...BENNY, message: 'Mê cung tròn nhìn hoa cả mắt, nhưng bình tĩnh là tìm ra đường ngay!' },
@@ -1918,11 +2461,81 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
+    id: 'chal-pixidoku-1',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Pixidoku 5x5: Động vật rừng nhiệt đới #1',
+    badgeTitle: 'Thử Thách 2.1 · Trang 75',
+    instruction: 'Mỗi hàng và mỗi cột phải chứa đủ 5 loài động vật rừng. Các ô cùng loài thú không được chạm nhau theo bất kỳ hướng nào!',
+    hint: '5 loài động vật: 🐯 Hổ, 🐘 Voi, 🐵 Khỉ, 🦜 Vẹt, 🦌 Hươu.',
+    mascot: { ...CASEY, message: 'Khu rừng rộn ràng muông thú đang chờ chúng mình sắp xếp trật tự nè!' },
+    activity: {
+      type: 'pixidoku',
+      size: 5,
+      animals: [
+        { id: 'tiger', icon: '🐯', name: 'Hổ' },
+        { id: 'elephant', icon: '🐘', name: 'Voi' },
+        { id: 'monkey', icon: '🐵', name: 'Khỉ' },
+        { id: 'parrot', icon: '🦜', name: 'Vẹt' },
+        { id: 'deer', icon: '🦌', name: 'Hươu' }
+      ],
+      initialGrid: [
+        ['tiger', null, 'monkey', null, 'deer'],
+        [null, null, null, 'elephant', null],
+        ['elephant', null, 'parrot', null, null],
+        [null, 'tiger', null, null, null],
+        ['monkey', null, null, null, 'elephant']
+      ],
+      solution: [
+        ['tiger', 'elephant', 'monkey', 'parrot', 'deer'],
+        ['parrot', 'deer', 'tiger', 'elephant', 'monkey'],
+        ['elephant', 'monkey', 'parrot', 'deer', 'tiger'],
+        ['deer', 'tiger', 'elephant', 'monkey', 'parrot'],
+        ['monkey', 'parrot', 'deer', 'tiger', 'elephant']
+      ]
+    }
+  },
+  {
+    id: 'chal-pixidoku-2',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Pixidoku 5x5: Động vật rừng nhiệt đới #2',
+    badgeTitle: 'Thử Thách 2.2 · Trang 76',
+    instruction: 'Mỗi vùng có 5 ô vuông phải chứa tất cả 5 con vật. Các con vật giống hệt nhau không được đặt cạnh nhau dù là theo chiều ngang, chiều dọc hay đường chéo.',
+    hint: '5 loài động vật: 🐻 Gấu, 🐵 Khỉ, 🐺 Sói, 🐮 Bò sữa, 🦄 Kỳ lân.',
+    mascot: { ...BENNY, message: 'Màn Pixidoku cấp độ cao này đòi hỏi tập trung cao độ nè!' },
+    activity: {
+      type: 'pixidoku',
+      size: 5,
+      animals: [
+        { id: 'bear', icon: '🐻', name: 'Gấu' },
+        { id: 'monkey', icon: '🐵', name: 'Khỉ' },
+        { id: 'wolf', icon: '🐺', name: 'Sói' },
+        { id: 'cow', icon: '🐮', name: 'Bò sữa' },
+        { id: 'unicorn', icon: '🦄', name: 'Kỳ lân' }
+      ],
+      initialGrid: [
+        ['wolf', null, null, null, 'wolf'],
+        [null, null, null, null, null],
+        ['bear', null, null, null, 'unicorn'],
+        ['cow', null, 'wolf', 'monkey', null],
+        [null, null, null, 'cow', null]
+      ],
+      solution: [
+        ['wolf', 'monkey', 'bear', 'cow', 'wolf'],
+        ['unicorn', 'cow', 'unicorn', 'monkey', 'bear'],
+        ['bear', 'monkey', 'bear', 'cow', 'unicorn'],
+        ['cow', 'unicorn', 'wolf', 'monkey', 'bear'],
+        ['wolf', 'monkey', 'bear', 'cow', 'unicorn']
+      ]
+    }
+  },
+  {
     id: 'chal-cattle-3',
     topicId: 'challenge',
     topicName: topicName('challenge'),
     title: 'Hàng rào bảo vệ nông trại bò',
-    badgeTitle: 'Thử Thách 3 · Trang 77 & 87',
+    badgeTitle: 'Thử Thách 3.1 · Trang 77',
     instruction: 'Xây dựng một hàng rào khép kín bao quanh tất cả các chú bò sao cho không chứa bất kỳ cây xương rồng nào! Hàng rào không cắt qua chính nó ở bất kỳ điểm nào.',
     hint: 'Bảo vệ đủ 7 chú bò, tuyệt đối không rào phải cây xương rồng.',
     mascot: { ...CASEY, message: 'Các chú bò thích ăn cỏ, ăn phải xương rồng sẽ bị đau bụng đấy!' },
@@ -1934,8 +2547,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     id: 'chal-star-battle',
     topicId: 'challenge',
     topicName: topicName('challenge'),
-    title: 'Săn ngôi sao may mắn (Star Battle 8x8)',
-    badgeTitle: 'Thử Thách 4 · Trang 78 & 88',
+    title: 'Săn ngôi sao may mắn (Star Battle 6x6)',
+    badgeTitle: 'Thử Thách 4.1 · Trang 78',
     instruction: 'Mỗi thử thách được chia thành các khối khác nhau. Mỗi khối, mỗi hàng và mỗi cột chứa DUY NHẤT một ngôi sao may mắn ⭐. Hãy tìm vị trí đặt ngôi sao!',
     hint: 'Bấm 1 lần đặt ⭐ sao, bấm lần nữa đặt dấu chấm • để đánh dấu ô trống.',
     mascot: { ...ABBY, message: 'Những ngôi sao may mắn ẩn chứa kho báu siêu toán học!' },
@@ -1962,38 +2575,373 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
-    id: 'chal-pixidoku-2',
+    id: 'chal-slither-1',
     topicId: 'challenge',
     topicName: topicName('challenge'),
-    title: 'Pixidoku 5x5: Động vật rừng nhiệt đới #2',
-    badgeTitle: 'Thử Thách 2 · Trang 76 & 86',
-    instruction: 'Mỗi vùng có 5 ô vuông phải chứa tất cả 5 con vật. Các con vật giống hệt nhau không được đặt cạnh nhau dù là theo chiều ngang, chiều dọc hay đường chéo.',
-    hint: '5 loài động vật: 🐻 Gấu, 🐵 Khỉ, 🐺 Sói, 🐮 Bò sữa, 🦄 Kỳ lân.',
-    mascot: { ...BENNY, message: 'Màn Pixidoku cấp độ cao này đòi hỏi tập trung cao độ nè!' },
+    title: 'Hàng rào ma trận số khép kín (Slitherlink 4x4)',
+    badgeTitle: 'Thử Thách 5.1 · Trang 79',
+    instruction: 'Nối các chấm tròn thành 1 đường viền khép kín duy nhất sao cho số trong mỗi ô bằng đúng số cạnh có đường viền đi qua!',
+    hint: 'Ô số 2 có 2 cạnh được viền, ô số 1 có 1 cạnh được viền. Đường nối phải tạo thành một vòng khép kín!',
+    mascot: { ...BENNY, message: 'Cẩn thận tính số cạnh xung quanh từng ô số để dựng hàng rào chuẩn nhé!' },
+    activity: {
+      type: 'slitherlink',
+      rows: 4,
+      cols: 4,
+      clues: [
+        [2, 2, 0, null],
+        [1, 1, null, null],
+        [2, 2, null, null],
+        [null, null, null, null]
+      ],
+      solutionEdges: {
+        h: [
+          [true, true, false, false],
+          [false, false, false, false],
+          [false, false, false, false],
+          [true, true, false, false],
+          [false, false, false, false]
+        ],
+        v: [
+          [true, false, true, false, false],
+          [true, false, true, false, false],
+          [true, false, true, false, false],
+          [false, false, false, false, false]
+        ]
+      }
+    }
+  },
+  {
+    id: 'chal-balance-scale',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đấu trường cân đĩa thăng bằng siêu logic',
+    badgeTitle: 'Thử Thách 6.1 · Trang 80',
+    instruction: 'Dựa vào hai chiếc cân thăng bằng đã cho, hãy suy luận xem 1 Ngôi sao ⭐ nặng bằng bao nhiêu Khối cầu xanh 🔵?',
+    hint: 'Thay thế: Cân 2 cho biết ⭐ = 🔺 + 🔵. Hãy thay biểu thức này vào vị trí ⭐ ở Cân 1 để tìm cân nặng của 🔺 theo 🔵!',
+    mascot: { ...MAYLE, message: 'Phương pháp đại lượng thế bằng hình ảnh sẽ giúp em tìm ra đáp án chỉ trong nháy mắt!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'Thử Thách Cân Đĩa Thăng Bằng',
+      ruleExplanation: 'Quan sát các cân thăng bằng và tìm giá trị tương đương của hình Ngôi sao ⭐!',
+      scales: [
+        {
+          leftIcons: ['⭐', '🔺'],
+          leftLabel: '1 Sao + 1 Tam giác',
+          rightIcons: ['🔵', '🔵', '🔵'],
+          rightLabel: '3 Khối cầu xanh'
+        },
+        {
+          leftIcons: ['⭐'],
+          leftLabel: '1 Sao',
+          rightIcons: ['🔺', '🔵'],
+          rightLabel: '1 Tam giác + 1 Cầu'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['⭐'],
+        targetLeftLabel: '1 Ngôi sao ⭐',
+        options: [
+          { id: 'opt-1', count: 1, icon: '🔵', label: '1 Khối cầu' },
+          { id: 'opt-2', count: 2, icon: '🔵', label: '2 Khối cầu' },
+          { id: 'opt-3', count: 3, icon: '🔵', label: '3 Khối cầu' },
+          { id: 'opt-4', count: 4, icon: '🔵', label: '4 Khối cầu' }
+        ],
+        correctOptionId: 'opt-2',
+        explanation: 'Thay ⭐ = 🔺 + 🔵 vào Cân 1 ta được: (🔺 + 🔵) + 🔺 = 3 🔵 => 2 🔺 = 2 🔵 => 1 🔺 = 1 🔵. Do đó 1 ⭐ = 1 🔺 + 1 🔵 = 1 🔵 + 1 🔵 = 2 🔵.'
+      }
+    }
+  },
+  {
+    id: 'chal-treasure-vault',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Giải mã két sắt mật mã số bí ẩn',
+    badgeTitle: 'Thử Thách 6.2 · Trang 81',
+    instruction: 'Đọc kỹ 5 manh mối của cuốn sổ tay thám tử để xoay các chữ số mở chiếc két sắt chứa huy hiệu quán quân!',
+    hint: 'Manh mối 4 cho biết [7, 3, 8] không có số nào đúng, hãy gạch bỏ ngay 7, 3, 8. Sau đó kết hợp manh mối 1 và 5 để tìm vị trí số 0 và số 2!',
+    mascot: { ...ABBY, message: 'Em hãy làm thám tử tư duy tài ba để mở khóa chiếc két sắt bí mật này nhé!' },
+    activity: {
+      type: 'treasureVault',
+      title: 'Mật Mã Két Sắt Spark Math',
+      codeLength: 3,
+      solutionCode: [0, 4, 2],
+      clues: [
+        {
+          attempt: [6, 8, 2],
+          correctDigits: 1,
+          correctPositions: 1,
+          description: '1 số đúng và đúng vị trí'
+        },
+        {
+          attempt: [6, 1, 4],
+          correctDigits: 1,
+          correctPositions: 0,
+          description: '1 số đúng nhưng sai vị trí'
+        },
+        {
+          attempt: [2, 0, 6],
+          correctDigits: 2,
+          correctPositions: 0,
+          description: '2 số đúng nhưng đều sai vị trí'
+        },
+        {
+          attempt: [7, 3, 8],
+          correctDigits: 0,
+          correctPositions: 0,
+          description: 'Không có số nào đúng'
+        },
+        {
+          attempt: [7, 8, 0],
+          correctDigits: 1,
+          correctPositions: 0,
+          description: '1 số đúng nhưng sai vị trí'
+        }
+      ]
+    }
+  },
+  {
+    id: 'chal-circle-seats',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Vòng tròn bạn bè: Suy luận chỗ ngồi dã ngoại',
+    badgeTitle: 'Thử Thách 7.1 · Trang 82',
+    instruction: '4 bạn Abby, Benny, Casey, Thầy Mayle ngồi quanh chiếc bàn tròn. Casey ngồi đối diện Benny; Abby ngồi bên phải Casey. Hãy xếp đúng thứ tự!',
+    hint: 'Bắt đầu xếp từ Abby -> Benny -> Casey -> Thầy Mayle theo chiều kim đồng hồ.',
+    mascot: { ...CASEY, message: 'Buổi dã ngoại thật vui khi cả nhóm ngồi đúng vị trí yêu thích!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 4,
+      allowedCharacters: ['Abby', 'Benny', 'Casey', 'Mayle'],
+      correctOrder: ['Abby', 'Benny', 'Casey', 'Mayle']
+    }
+  },
+  {
+    id: 'chal-magic-cross',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Ma trận số chữ thập & Kim cương kỳ diệu',
+    badgeTitle: 'Thử Thách 8.1 · Trang 83',
+    instruction: 'Điền các chữ số còn thiếu từ 1 đến 9 sao cho tổng các số trên mỗi hàng ngang, hàng dọc và đường chéo đều bằng đúng 15!',
+    hint: 'Hàng 1 có: ? + 1 + 6 = 15 => ? = 8. Hàng 3 có: 4 + 9 + ? = 15 => ? = 2.',
+    mascot: { ...BENNY, message: 'Ma trận 15 thần kỳ này là bài toán cổ kim cương cực kỳ nổi tiếng!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Trận Số Chữ Thập Kỳ Diệu',
+      subtitle: 'Tổng mỗi hàng và mỗi cột đều bằng 15',
+      targetSum: 15,
+      allowedNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      hintFormula: 'Hàng 1: 8 + 1 + 6 = 15 | Hàng 2: 3 + 5 + 7 = 15 | Hàng 3: 4 + 9 + 2 = 15',
+      initialGrid: [
+        [null, 1, 6],
+        [3, 5, 7],
+        [4, 9, null]
+      ],
+      solution: [
+        [8, 1, 6],
+        [3, 5, 7],
+        [4, 9, 2]
+      ]
+    }
+  },
+  {
+    id: 'chal-cube-counter',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đếm hình khối lập phương 3D xếp chồng',
+    badgeTitle: 'Thử Thách 9.1 · Trang 84',
+    instruction: 'Quan sát mô hình không gian 3 chiều và đếm chính xác tổng số khối lập phương, bao gồm cả những khối bị che khuất ở các tầng dưới!',
+    hint: 'Đếm theo từng tầng: Tầng 1 (đáy) có 8 khối, Tầng 2 có 4 khối, Tầng 3 có 1 khối!',
+    mascot: { ...MAYLE, message: 'Toán học không gian giúp phát triển tư duy hình học và trí tưởng tượng siêu việt!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'Đếm Khối Lập Phương Không Gian 3D',
+      instructionText: 'Đếm tổng số khối lập phương đơn vị cấu tạo nên khối kiến trúc dưới đây:',
+      gridHeights: [
+        [3, 2, 1],
+        [2, 2, 1],
+        [1, 1, 0]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (Đáy dưới cùng)', count: 8 },
+        { layerName: 'Tầng 2 (Tầng giữa)', count: 4 },
+        { layerName: 'Tầng 3 (Tầng đỉnh cao nhất)', count: 1 }
+      ],
+      totalCubes: 13,
+      options: [11, 12, 13, 14],
+      explanation: 'Phân tích: Hàng 1 có các cột cao 3, 2, 1 (tổng 6 khối); Hàng 2 có các cột cao 2, 2, 1 (tổng 5 khối); Hàng 3 có các cột cao 1, 1, 0 (tổng 2 khối). Tổng cộng = 6 + 5 + 2 = 13 khối lập phương.'
+    }
+  },
+  {
+    id: 'chal-ocean-pixidoku',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Pixidoku 5x5: Đại dương kỳ bí',
+    badgeTitle: 'Thử Thách 2.3 · Trang 86',
+    instruction: 'Sắp xếp 5 sinh vật biển vào bảng 5x5 sao cho mỗi hàng, mỗi cột có đủ 5 sinh vật và không có 2 con vật giống nhau nào đứng cạnh nhau!',
+    hint: '5 sinh vật biển: 🐬 Cá heo, 🐢 Rùa biển, 🐙 Bạch tuộc, ⭐ Sao biển, 🐠 Cá hề.',
+    mascot: { ...ABBY, message: 'Đại dương xanh bao la với những người bạn biển đáng yêu đang đợi em!' },
     activity: {
       type: 'pixidoku',
       size: 5,
       animals: [
-        { id: 'bear', icon: '🐻', name: 'Gấu' },
-        { id: 'monkey', icon: '🐵', name: 'Khỉ' },
-        { id: 'wolf', icon: '🐺', name: 'Sói' },
-        { id: 'cow', icon: '🐮', name: 'Bò sữa' },
-        { id: 'unicorn', icon: '🦄', name: 'Kỳ lân' }
+        { id: 'dolphin', icon: '🐬', name: 'Cá heo' },
+        { id: 'seaTurtle', icon: '🐢', name: 'Rùa biển' },
+        { id: 'octopus', icon: '🐙', name: 'Bạch tuộc' },
+        { id: 'starfish', icon: '⭐', name: 'Sao biển' },
+        { id: 'clownfish', icon: '🐠', name: 'Cá hề' }
       ],
       initialGrid: [
-        ['wolf', null, null, null, 'wolf'],
-        [null, null, null, null, null],
-        ['bear', null, null, null, 'unicorn'],
-        ['cow', null, 'wolf', 'monkey', null],
-        [null, null, null, 'cow', null]
+        ['dolphin', null, 'octopus', null, 'clownfish'],
+        [null, 'clownfish', null, 'seaTurtle', null],
+        ['seaTurtle', null, 'starfish', null, 'dolphin'],
+        [null, 'dolphin', null, 'octopus', null],
+        ['octopus', null, 'clownfish', null, 'seaTurtle']
       ],
-      // Solution from page 86 (Pixidoku Jungle #2)
       solution: [
-        ['wolf', 'monkey', 'bear', 'cow', 'wolf'],
-        ['unicorn', 'cow', 'unicorn', 'monkey', 'bear'],
-        ['bear', 'monkey', 'bear', 'cow', 'unicorn'],
-        ['cow', 'unicorn', 'wolf', 'monkey', 'bear'],
-        ['wolf', 'monkey', 'bear', 'cow', 'unicorn']
+        ['dolphin', 'seaTurtle', 'octopus', 'starfish', 'clownfish'],
+        ['starfish', 'clownfish', 'dolphin', 'seaTurtle', 'octopus'],
+        ['seaTurtle', 'octopus', 'starfish', 'clownfish', 'dolphin'],
+        ['clownfish', 'dolphin', 'seaTurtle', 'octopus', 'starfish'],
+        ['octopus', 'starfish', 'clownfish', 'dolphin', 'seaTurtle']
+      ]
+    }
+  },
+  {
+    id: 'chal-cattle-sheep',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Hàng rào bảo vệ nông trại bò & cừu mở rộng',
+    badgeTitle: 'Thử Thách 3.2 · Trang 87',
+    instruction: 'Nông trại mở rộng thêm nhiều chú bò cần được bảo vệ trước các bụi cây xương rồng gai nhọn. Hãy khoanh vùng bảo vệ trọn vẹn nông trại!',
+    hint: 'Tìm đường bao an toàn cho tất cả 7 chú bò, không chạm vào bất kỳ cây xương rồng nào.',
+    mascot: { ...CASEY, message: 'Đồng cỏ xanh tươi tốt đã sẵn sàng để các chú bò vui chơi an toàn!' },
+    activity: {
+      type: 'cattleFence'
+    }
+  },
+  {
+    id: 'chal-star-battle-8',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Săn sao may mắn Đỉnh Cao (Star Battle 8x8)',
+    badgeTitle: 'Thử Thách 4.2 · Trang 88',
+    instruction: 'Bảng mở rộng 8x8 gồm 8 vùng màu sắc độc lập. Mỗi hàng, mỗi cột và mỗi vùng màu sắc chỉ được chứa DUY NHẤT một ngôi sao may mắn ⭐!',
+    hint: 'Quan sát các vùng màu hẹp trước để tìm ô đặt sao duy nhất, sau đó loại trừ hàng và cột tương ứng.',
+    mascot: { ...ABBY, message: 'Màn Star Battle 8x8 đỉnh cao này là bài toán tư duy tầm cỡ Olympic Toán tuổi thơ!' },
+    activity: {
+      type: 'starBattle',
+      size: 8,
+      targetStarCount: 8,
+      regions: [
+        [0, 0, 0, 1, 1, 2, 2, 2],
+        [0, 0, 1, 1, 1, 2, 2, 3],
+        [0, 0, 1, 1, 1, 2, 3, 3],
+        [4, 4, 1, 5, 5, 2, 3, 3],
+        [4, 4, 4, 5, 5, 6, 3, 3],
+        [4, 4, 5, 5, 6, 6, 3, 3],
+        [7, 4, 5, 6, 6, 6, 7, 7],
+        [7, 7, 7, 6, 6, 7, 7, 7]
+      ],
+      starsSolution: [
+        [0, 1],
+        [1, 3],
+        [2, 5],
+        [3, 7],
+        [4, 0],
+        [5, 2],
+        [6, 4],
+        [7, 6]
+      ]
+    }
+  },
+  {
+    id: 'chal-slither-2',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Siêu Slitherlink Bậc Thầy 5x5',
+    badgeTitle: 'Thử Thách 5.2 · Trang 89',
+    instruction: 'Nối các cạnh giữa các chấm tròn để tạo thành 1 vòng tròn khép kín bao quanh các ô số, thỏa mãn chính xác số cạnh quy định!',
+    hint: 'Ô số 0 tuyệt đối không có cạnh nào đi qua! Ô số 2 có đúng 2 cạnh bao quanh.',
+    mascot: { ...BENNY, message: 'Đường bao khép kín 5x5 này đòi hỏi sự kiên nhẫn và logic cực kỳ sắc bén!' },
+    activity: {
+      type: 'slitherlink',
+      rows: 5,
+      cols: 5,
+      clues: [
+        [null, null, 0, null, null],
+        [null, 2, 1, 2, null],
+        [null, 1, 0, 1, null],
+        [null, 2, 1, 2, null],
+        [null, null, 0, null, null]
+      ],
+      solutionEdges: {
+        h: [
+          [false, false, false, false, false],
+          [false, true, true, true, false],
+          [false, false, false, false, false],
+          [false, false, false, false, false],
+          [false, true, true, true, false],
+          [false, false, false, false, false]
+        ],
+        v: [
+          [false, false, false, false, false, false],
+          [false, true, false, false, true, false],
+          [false, true, false, false, true, false],
+          [false, true, false, false, true, false],
+          [false, false, false, false, false, false]
+        ]
+      }
+    }
+  },
+  {
+    id: 'chal-grand-finale',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đấu trường Chung kết - Vương miện Quán quân',
+    badgeTitle: 'Thử Thách 10 · Trang 90',
+    instruction: 'Vượt qua 3 thử thách tư duy đỉnh cao tích hợp để nhận Cúp Vàng Quán Quân và Chứng Nhận Hiệp Sĩ Toán Tư Duy Lớp 3!',
+    hint: 'Vận dụng toàn bộ kiến thức về biểu đồ, thể tích lít, suy luận hàng ngũ và quy luật ma trận!',
+    mascot: { ...MAYLE, message: 'Thầy rất tự hào về em! Hãy tự tin chinh phục vương miện quán quân hôm nay nhé!' },
+    activity: {
+      type: 'grandFinale',
+      title: 'Đấu Trường Chung Kết Quán Quân',
+      roundQuestions: [
+        {
+          id: 'fin-q1',
+          category: 'Vị Trí Hàng Ngũ & Bù Trừ',
+          question: 'Trong một hàng dọc có 15 bạn học sinh đang xếp hàng vào lớp. Bạn Nam đứng ở vị trí thứ 6 tính từ trên xuống. Hỏi có bao nhiêu bạn đứng ở phía sau bạn Nam?',
+          options: [
+            { id: 'q1-a', text: '8 bạn', isCorrect: false },
+            { id: 'q1-b', text: '9 bạn', isCorrect: true },
+            { id: 'q1-c', text: '10 bạn', isCorrect: false },
+            { id: 'q1-d', text: '11 bạn', isCorrect: false }
+          ],
+          explanation: 'Vì Nam đứng thứ 6 nên tính cả Nam trở lên trước có 6 bạn. Số bạn đứng phía sau Nam là: 15 - 6 = 9 bạn.'
+        },
+        {
+          id: 'fin-q2',
+          category: 'Thể Tích & Đơn Vị Lít',
+          question: 'Một can lớn đựng đầy 12 lít nước khoáng. Người ta rót đều toàn bộ lượng nước này vào 4 chiếc bình nhỏ giống hệt nhau thì vừa hết. Hỏi dung tích mỗi chiếc bình nhỏ là bao nhiêu lít?',
+          options: [
+            { id: 'q2-a', text: '2 lít', isCorrect: false },
+            { id: 'q2-b', text: '3 lít', isCorrect: true },
+            { id: 'q2-c', text: '4 lít', isCorrect: false },
+            { id: 'q2-d', text: '6 lít', isCorrect: false }
+          ],
+          explanation: 'Lấy 12 lít chia đều cho 4 bình: 12 : 4 = 3 lít. Mỗi chiếc bình nhỏ chứa 3 lít nước.'
+        },
+        {
+          id: 'fin-q3',
+          category: 'Quy Luật Số Học & Ma Trận',
+          question: 'Một viên kim cương số học có quy luật: Tổng của hai số ở hai đỉnh đối diện luôn bằng 20. Biết đỉnh trên là 7, đỉnh dưới là 13; đỉnh bên trái là 8. Hỏi số ở đỉnh bên phải là bao nhiêu?',
+          options: [
+            { id: 'q3-a', text: '10', isCorrect: false },
+            { id: 'q3-b', text: '11', isCorrect: false },
+            { id: 'q3-c', text: '12', isCorrect: true },
+            { id: 'q3-d', text: '14', isCorrect: false }
+          ],
+          explanation: 'Kiểm tra cặp đỉnh trên - dưới: 7 + 13 = 20. Áp dụng quy luật cho cặp đỉnh trái - phải: 8 + ? = 20 => ? = 20 - 8 = 12.'
+        }
       ]
     }
   }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, Sparkles } from 'lucide-react';
+import { Check, RotateCcw, Sparkles, Lightbulb } from 'lucide-react';
 
 interface StarBattleProps {
   size?: number;
@@ -23,14 +23,18 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
   );
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Region pastel colors
+  // Region pastel colors (supporting up to 8+ regions)
   const regionColors = [
     'bg-sky-100/70',
     'bg-amber-100/70',
     'bg-emerald-100/70',
     'bg-purple-100/70',
     'bg-rose-100/70',
-    'bg-teal-100/70'
+    'bg-teal-100/70',
+    'bg-indigo-100/70',
+    'bg-orange-100/70',
+    'bg-lime-100/70',
+    'bg-cyan-100/70'
   ];
 
   const handleCellClick = (r: number, c: number) => {
@@ -104,6 +108,25 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
     }
   };
 
+  const handleAutoSolve = () => {
+    sound.playCorrect();
+    const solutionGrid: ('star' | 'dot' | null)[][] = Array.from({ length: size }, () =>
+      Array(size).fill('dot')
+    );
+    starsSolution.forEach(([r, c]) => {
+      if (r < size && c < size) {
+        solutionGrid[r][c] = 'star';
+      }
+    });
+    setGrid(solutionGrid);
+    sound.playVictory();
+    setIsSuccess(true);
+    setTimeout(() => {
+      sound.playStarCollect();
+      onCompleted();
+    }, 500);
+  };
+
   const currentStarTotal = grid.reduce(
     (acc, row) => acc + row.filter((c) => c === 'star').length,
     0
@@ -128,8 +151,11 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
       </div>
 
       {/* Board */}
-      <div className="bg-white p-4 md:p-6 rounded-3xl border-4 border-slate-700 shadow-xl inline-block">
-        <div className="grid grid-cols-6 gap-1.5 md:gap-2">
+      <div className="bg-white p-3 sm:p-5 md:p-6 rounded-3xl border-4 border-slate-700 shadow-xl inline-block max-w-full overflow-x-auto">
+        <div
+          className="grid gap-1 md:gap-1.5"
+          style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
+        >
           {grid.map((row, r) =>
             row.map((cell, c) => {
               const regId = regions[r]?.[c] ?? 0;
@@ -146,12 +172,14 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
               const borderLeftClass = hasBorderLeft ? 'border-l-3 border-l-slate-800' : '';
               const borderRightClass = hasBorderRight ? 'border-r-3 border-r-slate-800' : '';
 
+              const cellDimension = size > 6 ? 'w-9 h-9 sm:w-11 sm:h-11 text-xl sm:text-2xl' : 'w-11 h-11 sm:w-13 sm:h-13 md:w-15 md:h-15 text-2xl sm:text-3xl';
+
               return (
                 <button
                   key={`${r}-${c}`}
                   type="button"
                   onClick={() => handleCellClick(r, c)}
-                  className={`w-11 h-11 sm:w-13 sm:h-13 md:w-15 md:h-15 rounded-xl flex items-center justify-center text-2xl transition-all border border-slate-300 ${regionColor} ${borderTopClass} ${borderBottomClass} ${borderLeftClass} ${borderRightClass} hover:opacity-80 active:scale-95`}
+                  className={`${cellDimension} rounded-xl flex items-center justify-center transition-all border border-slate-300 ${regionColor} ${borderTopClass} ${borderBottomClass} ${borderLeftClass} ${borderRightClass} hover:opacity-80 active:scale-95`}
                 >
                   {cell === 'star' ? (
                     <span className="drop-shadow-sm animate-in zoom-in-75 duration-150">⭐</span>
@@ -170,15 +198,25 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <button
+          type="button"
           onClick={handleReset}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm border border-slate-300"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs md:text-sm border border-slate-300"
         >
           <RotateCcw className="w-4 h-4" />
           Xóa hết
         </button>
         <button
+          type="button"
+          onClick={handleAutoSolve}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm shadow-md"
+        >
+          <Lightbulb className="w-4 h-4" />
+          Xem vị trí chuẩn
+        </button>
+        <button
+          type="button"
           onClick={() => checkStars()}
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm md:text-base shadow-lg transition-transform active:scale-95"
         >
@@ -189,7 +227,7 @@ export const StarBattleBoard: React.FC<StarBattleProps> = ({
 
       {isSuccess && (
         <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Tuyệt đỉnh! 6 ngôi sao may mắn đã nằm đúng vị trí phong ấn kho báu!
+          🎉 Tuyệt đỉnh! {targetStarCount} ngôi sao may mắn đã nằm đúng vị trí phong ấn kho báu!
         </div>
       )}
     </div>

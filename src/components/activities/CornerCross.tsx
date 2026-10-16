@@ -3,7 +3,7 @@ import { sound } from '../../utils/soundEffects';
 import { CheckCircle2, XCircle, Info } from 'lucide-react';
 
 interface CornerCrossProps {
-  shape: 'L' | 'T';
+  shape: 'L' | 'T' | '+';
   verticalCount: number;
   horizontalCount: number;
   intersectionPerson: string;
@@ -46,10 +46,10 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
       {/* Visual Canvas Representation */}
       <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-100 shadow-md w-full max-w-xl flex flex-col items-center">
         <div className="text-xs font-bold text-slate-500 uppercase mb-4">
-          Hàng người đứng thành hình chữ {shape}
+          Hàng người đứng thành hình chữ {shape === '+' ? 'thập (+)' : shape}
         </div>
 
-        {/* Shape SVG Diagram */}
+        {/* Shape Diagram */}
         <div className="relative p-6 bg-slate-50 rounded-2xl border border-slate-200 w-full flex items-center justify-center">
           {shape === 'L' ? (
             <div className="flex flex-col items-start space-y-1">
@@ -84,7 +84,7 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                 ))}
               </div>
             </div>
-          ) : (
+          ) : shape === 'T' ? (
             /* T shape */
             <div className="flex flex-col items-center space-y-1">
               {/* Top Horizontal bar */}
@@ -123,6 +123,58 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                   className="w-8 h-8 rounded-full bg-sky-200 border-2 border-sky-400 flex items-center justify-center text-xs font-bold text-sky-800"
                 >
                   {i + 1}
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* + shape (Cross) */
+            <div className="flex flex-col items-center space-y-1">
+              {/* Vertical top */}
+              {Array.from({ length: Math.floor((verticalCount - 1) / 2) }).map((_, i) => (
+                <div
+                  key={`vtop-${i}`}
+                  className="w-8 h-8 rounded-full bg-sky-200 border-2 border-sky-400 flex items-center justify-center text-xs font-bold text-sky-800"
+                >
+                  {i + 1}
+                </div>
+              ))}
+
+              {/* Center row */}
+              <div className="flex items-center space-x-1">
+                {Array.from({ length: Math.floor((horizontalCount - 1) / 2) }).map((_, i) => (
+                  <div
+                    key={`hleft-${i}`}
+                    className="w-8 h-8 rounded-full bg-emerald-200 border-2 border-emerald-400 flex items-center justify-center text-xs font-bold text-emerald-800"
+                  >
+                    {i + 1}
+                  </div>
+                ))}
+
+                {/* Intersection Benny */}
+                <div
+                  className="w-10 h-10 rounded-2xl bg-amber-300 border-3 border-amber-600 ring-4 ring-amber-300 flex items-center justify-center text-xl shadow-md"
+                  title={`Điểm giao: ${intersectionPerson}`}
+                >
+                  🐵
+                </div>
+
+                {Array.from({ length: Math.ceil((horizontalCount - 1) / 2) }).map((_, i) => (
+                  <div
+                    key={`hright-${i}`}
+                    className="w-8 h-8 rounded-full bg-emerald-200 border-2 border-emerald-400 flex items-center justify-center text-xs font-bold text-emerald-800"
+                  >
+                    {i + 3}
+                  </div>
+                ))}
+              </div>
+
+              {/* Vertical bottom */}
+              {Array.from({ length: Math.ceil((verticalCount - 1) / 2) }).map((_, i) => (
+                <div
+                  key={`vbot-${i}`}
+                  className="w-8 h-8 rounded-full bg-sky-200 border-2 border-sky-400 flex items-center justify-center text-xs font-bold text-sky-800"
+                >
+                  {i + 3}
                 </div>
               ))}
             </div>
