@@ -558,6 +558,40 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
+    id: 'pic-5-2',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Khảo sát hoa quả yêu thích của lớp 3A',
+    badgeTitle: 'Bài 5.2 · Trang 11',
+    instruction: 'Biểu đồ cho thấy loại trái cây yêu thích của các bạn nhỏ lớp 3A. Lưu ý: Mỗi hình vuông 🟩 = 1 bạn nhỏ bình chọn.',
+    hint: 'Chuối có 8 ô vuông, Táo có 6 ô, Cam có 5 ô, Nho có 4 ô!',
+    mascot: { ...CASEY, message: 'Hoa quả vừa ngon vừa cung cấp nhiều vitamin giúp chúng mình khỏe mạnh!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Mỗi ô vuông 🟩 = 1 bạn nhỏ bình chọn',
+      items: [
+        { id: 'banana', label: 'Chuối 🍌', icon: '🟩', count: 8 },
+        { id: 'apple', label: 'Táo 🍎', icon: '🟩', count: 6 },
+        { id: 'orange', label: 'Cam 🍊', icon: '🟩', count: 5 },
+        { id: 'grape', label: 'Nho 🍇', icon: '🟩', count: 4 }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Loại trái cây nào được NHIỀU bạn yêu thích nhất?',
+          options: ['Chuối', 'Táo', 'Cam', 'Nho'],
+          correctAnswer: 'Chuối'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Số bạn thích Chuối nhiều hơn số bạn thích Nho bao nhiêu bạn?',
+          options: ['2 bạn', '3 bạn', '4 bạn', '5 bạn'],
+          correctAnswer: '4 bạn'
+        }
+      ]
+    }
+  },
+  {
     id: 'pic-6-1',
     topicId: 'pictograph',
     topicName: topicName('pictograph'),
@@ -820,6 +854,76 @@ export const ALL_LESSONS: LessonQuestion[] = [
       ]
     }
   },
+  {
+    id: 'pic-11',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Ống heo tiết kiệm của Benny, Abby, Casey & Rory',
+    badgeTitle: 'Bài 11 · Trang 17',
+    instruction: 'Biểu đồ cho thấy số đồng xu tiết kiệm được trong ống heo của 4 bạn nhỏ. Lưu ý tỉ lệ nhân: Mỗi đồng xu 🪙 thể hiện 5 xu thật.',
+    hint: 'Abby có 6 đồng xu = 6 × 5 = 30 xu. Casey có 3 đồng xu = 3 × 5 = 15 xu. Chênh lệch là: 30 - 15 = 15 xu!',
+    mascot: { ...BENNY, message: 'Nhớ nhân với 5 nhé: Mỗi biểu tượng đồng xu = 5 xu thật đấy!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý: Mỗi 🪙 = 5 xu tiết kiệm',
+      multiplier: 5,
+      items: [
+        { id: 'abby', label: 'Abby 🐰', icon: '🪙', count: 6, actualValue: 30, unit: 'xu' },
+        { id: 'rory', label: 'Rory 🐻', icon: '🪙', count: 5, actualValue: 25, unit: 'xu' },
+        { id: 'benny', label: 'Benny 🐵', icon: '🪙', count: 4, actualValue: 20, unit: 'xu' },
+        { id: 'casey', label: 'Casey 🐹', icon: '🪙', count: 3, actualValue: 15, unit: 'xu' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Bạn Abby đã tiết kiệm được tất cả bao nhiêu xu?',
+          options: ['20 xu', '25 xu', '30 xu', '35 xu'],
+          correctAnswer: '30 xu'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Bạn Abby tiết kiệm nhiều hơn bạn Casey bao nhiêu xu?',
+          options: ['10 xu', '15 xu', '20 xu', '25 xu'],
+          correctAnswer: '15 xu'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-12',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Tổng kết Ngôi Sao Thi Đua của 4 Tổ',
+    badgeTitle: 'Bài 12 · Trang 18',
+    instruction: 'Biểu đồ hình ảnh tổng kết số ngôi sao thi đua đạt được của 4 tổ học tập trong tháng. Lưu ý: Mỗi ngôi sao ⭐ thể hiện 4 điểm thi đua.',
+    hint: 'Tổ 2 có 7 sao = 7 × 4 = 28 điểm; Tổ 1 có 5 sao = 5 × 4 = 20 điểm. Tổng điểm của Tổ 1 và Tổ 3 = 20 + 16 = 36 điểm!',
+    mascot: { ...MAYLE, message: 'Cả 4 tổ đều thi đua học tập rất chăm chỉ và giành nhiều ngôi sao sáng!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý: Mỗi ⭐ = 4 điểm thi đua',
+      multiplier: 4,
+      items: [
+        { id: 'group1', label: 'Tổ 1 🌟', icon: '⭐', count: 5, actualValue: 20, unit: 'điểm' },
+        { id: 'group2', label: 'Tổ 2 🚀', icon: '⭐', count: 7, actualValue: 28, unit: 'điểm' },
+        { id: 'group3', label: 'Tổ 3 🍀', icon: '⭐', count: 4, actualValue: 16, unit: 'điểm' },
+        { id: 'group4', label: 'Tổ 4 🎯', icon: '⭐', count: 6, actualValue: 24, unit: 'điểm' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Tổ có số điểm thi đua cao nhất là tổ nào?',
+          options: ['Tổ 1', 'Tổ 2', 'Tổ 3', 'Tổ 4'],
+          correctAnswer: 'Tổ 2'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Tổng số điểm thi đua của Tổ 1 và Tổ 3 là bao nhiêu?',
+          options: ['32 điểm', '36 điểm', '40 điểm', '44 điểm'],
+          correctAnswer: '36 điểm'
+        }
+      ]
+    }
+  },
 
   // ==========================================
   // TRẠM 2: THỂ TÍCH & ĐƠN VỊ LÍT (Trang 21 - Trang 40)
@@ -877,6 +981,69 @@ export const ALL_LESSONS: LessonQuestion[] = [
           prompt: 'c) Thể tích nước trong chai A BẰNG thể tích chai nào?',
           options: ['Chai B', 'Chai C', 'Chai D'],
           correctAnswer: 'Chai D'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-preserve-2-2',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Bảo toàn thể tích: Bình cao thon & Bình lùn bè',
+    badgeTitle: 'Bài 2.2 · Trang 26',
+    instruction: 'Benny đổ toàn bộ nước từ Bình cao thon A sang Bình lùn đáy rộng B mà không làm rơi rớt giọt nào. Hãy quan sát và rút ra kết luận về thể tích nước.',
+    hint: 'Vì lượng nước không đổi nên thể tích nước trong Bình A và Bình B là HOÀN TOÀN BẰNG NHAU!',
+    mascot: { ...BENNY, message: 'Dù hình dạng bình chứa có khác nhau, nhưng thể tích nước vẫn giữ nguyên đấy!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'tall', label: 'Bình A (Cao thon)', levelPercent: 80, color: '#38bdf8' },
+        { id: 'wide', label: 'Bình B (Lùn đáy rộng)', levelPercent: 40, color: '#38bdf8' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) So sánh thể tích nước giữa Bình A và Bình B:',
+          options: ['Bình A nhiều hơn', 'Bình B nhiều hơn', 'Bằng nhau', 'Không thể biết'],
+          correctAnswer: 'Bằng nhau'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Hình dạng của khối nước có bị biến đổi theo hình dạng của bình chứa không?',
+          options: ['Có biến đổi theo bình', 'Giữ nguyên không đổi', 'Biến mất'],
+          correctAnswer: 'Có biến đổi theo bình'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-scale-3-1',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Đo thể tích nước trong 3 ca có vạch chia Lít',
+    badgeTitle: 'Bài 3.1 · Trang 27',
+    instruction: 'Ba ca nước A, B, C có các vạch chia đơn vị Lít bằng nhau. Hãy quan sát mực nước và so sánh thể tích giữa các ca.',
+    hint: 'Ca A đạt vạch 3L, Ca B đạt vạch 7L, Ca C đạt vạch 5L. Ca B nhiều hơn Ca A: 7 - 3 = 4L!',
+    mascot: { ...ABBY, message: 'Nhìn vào các vạch chia số Lít là chúng mình biết ngay mỗi ca có bao nhiêu lít nước!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'A', label: 'Ca A (3 Lít)', levelPercent: 30, color: '#06b6d4' },
+        { id: 'B', label: 'Ca B (7 Lít)', levelPercent: 70, color: '#06b6d4' },
+        { id: 'C', label: 'Ca C (5 Lít)', levelPercent: 50, color: '#06b6d4' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Ca nước nào chứa thể tích nước LỚN NHẤT?',
+          options: ['Ca A', 'Ca B', 'Ca C'],
+          correctAnswer: 'Ca B'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Ca B chứa nhiều hơn Ca A bao nhiêu lít nước?',
+          options: ['3 Lít', '4 Lít', '5 Lít', '6 Lít'],
+          correctAnswer: '4 Lít'
         }
       ]
     }
@@ -947,6 +1114,70 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
+    id: 'vol-depth-4-2',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Bể nước cùng đáy nhưng khác chiều cao mực nước',
+    badgeTitle: 'Bài 4.2 · Trang 28',
+    instruction: 'Ba bể nước X, Y, Z có kích thước mặt đáy hoàn toàn bằng nhau. Hãy quan sát chiều cao của mực nước và so sánh thể tích nước trong 3 bể.',
+    hint: 'Khi đáy bể bằng nhau, bể nào có mực nước cao nhất thì chứa nhiều nước nhất: Bể Y (8 vạch) > Bể Z (6 vạch) > Bể X (4 vạch)!',
+    mascot: { ...ABBY, message: 'Đáy bể bằng nhau thì nhìn chiều cao mực nước là biết ngay bể nào nhiều hơn!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'X', label: 'Bể X (4 vạch)', levelPercent: 40, color: '#0284c7' },
+        { id: 'Y', label: 'Bể Y (8 vạch - Cao nhất)', levelPercent: 80, color: '#0284c7' },
+        { id: 'Z', label: 'Bể Z (6 vạch)', levelPercent: 60, color: '#0284c7' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Bể nước có thể tích nước LỚN NHẤT là:',
+          options: ['Bể X', 'Bể Y', 'Bể Z'],
+          correctAnswer: 'Bể Y'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Bể nước có thể tích nước NHỎ NHẤT là:',
+          options: ['Bể X', 'Bể Y', 'Bể Z'],
+          correctAnswer: 'Bể X'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-cups-5-1',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Đong dung tích bình nước bằng cốc tiêu chuẩn',
+    badgeTitle: 'Bài 5.1 · Trang 29',
+    instruction: 'Abby đong nước từ 3 bình nước quả ra các cốc tiêu chuẩn cùng kích thước. Bình Trà Đào rót được 4 cốc. Bình Trà Sữa rót được 7 cốc. Bình Trà Chanh rót được 5 cốc.',
+    hint: 'Bình Trà Sữa rót được 7 cốc (nhiều nhất). Bình Trà Sữa hơn Bình Trà Đào: 7 - 4 = 3 cốc!',
+    mascot: { ...BENNY, message: 'Đong ra cốc giúp ta đo lường dung tích các bình chứa một cách dễ dàng!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'peach', label: 'Trà Đào (4 cốc)', levelPercent: 40, color: '#fb923c' },
+        { id: 'milk', label: 'Trà Sữa (7 cốc)', levelPercent: 70, color: '#d97706' },
+        { id: 'lemon', label: 'Trà Chanh (5 cốc)', levelPercent: 50, color: '#facc15' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Bình nước nào có dung tích LỚN NHẤT?',
+          options: ['Bình Trà Đào', 'Bình Trà Sữa', 'Bình Trà Chanh'],
+          correctAnswer: 'Bình Trà Sữa'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Bình Trà Sữa chứa nhiều hơn Bình Trà Đào bao nhiêu cốc?',
+          options: ['2 cốc', '3 cốc', '4 cốc', '5 cốc'],
+          correctAnswer: '3 cốc'
+        }
+      ]
+    }
+  },
+  {
     id: 'vol-compare-5-2',
     topicId: 'volume',
     topicName: topicName('volume'),
@@ -996,6 +1227,39 @@ export const ALL_LESSONS: LessonQuestion[] = [
           prompt: 'b) Tổng thể tích nước của cả Bể A và Bể B là bao nhiêu lít?',
           options: ['12 lít', '15 lít', '18 lít', '21 lít'],
           correctAnswer: '15 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-bucket-6-2',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Thể tích xô nước và ấm đun nước (Đo bằng bình 2 Lít)',
+    badgeTitle: 'Bài 6.2 · Trang 31',
+    instruction: 'Nước từ Xô đổ đầy được 4 can 2 Lít. Nước từ Ấm đổ đầy được 2 can 2 Lít. Lưu ý: Mỗi can thể hiện 2 Lít nước.',
+    hint: 'Xô nước = 4 can × 2L = 8 Lít. Ấm nước = 2 can × 2L = 4 Lít. Xô nhiều hơn ấm: 8 - 4 = 4 Lít!',
+    mascot: { ...MAYLE, message: 'Nhớ nhân với 2 nhé vì mỗi can chứa được 2 Lít nước!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '1 Can 🪣 = 2 Lít nước',
+      multiplier: 2,
+      items: [
+        { id: 'bucket', label: 'Xô Nước Lớn', icon: '🪣', count: 4, actualValue: 8, unit: 'L' },
+        { id: 'kettle', label: 'Ấm Đun Nước', icon: '🫖', count: 2, actualValue: 4, unit: 'L' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Xô nước chứa được tất cả bao nhiêu lít nước?',
+          options: ['6 lít', '8 lít', '10 lít', '12 lít'],
+          correctAnswer: '8 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Xô nước chứa nhiều hơn ấm nước bao nhiêu lít?',
+          options: ['2 lít', '4 lít', '6 lít', '8 lít'],
+          correctAnswer: '4 lít'
         }
       ]
     }
@@ -1262,10 +1526,115 @@ export const ALL_LESSONS: LessonQuestion[] = [
       ]
     }
   },
+  {
+    id: 'vol-bar-11',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Sơ đồ đoạn thẳng 3 thùng nước A, B, C',
+    badgeTitle: 'Bài 11 · Trang 36',
+    instruction: 'Thùng A chứa 12L nước. Thùng B chứa nhiều hơn Thùng A 6L nước. Thùng C có lượng nước bằng Thùng A. Hỏi cả 3 thùng chứa tất cả bao nhiêu lít nước?',
+    hint: 'Thùng B = 12 + 6 = 18L. Thùng C = 12L. Tổng cả 3 thùng = 12 + 18 + 12 = 42L!',
+    mascot: { ...MAYLE, message: 'Dùng sơ đồ 3 đoạn thẳng giúp chúng mình giải quyết bài toán nhiều đối tượng rất dễ dàng!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Thùng A 🪣', lengthVal: 12, display: '12 L', color: 'bg-sky-500' },
+        {
+          label: 'Thùng B 🪣',
+          lengthVal: 18,
+          display: '18 L',
+          parts: [
+            { val: 12, label: '12 L' },
+            { val: 6, label: '+6 L' }
+          ],
+          color: 'bg-emerald-500'
+        },
+        { label: 'Thùng C 🪣', lengthVal: 12, display: '12 L', color: 'bg-indigo-500' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Thùng B chứa bao nhiêu lít nước?',
+          options: ['16 lít', '18 lít', '20 lít', '22 lít'],
+          correctAnswer: '18 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Cả 3 thùng chứa tất cả bao nhiêu lít nước?',
+          options: ['36 lít', '40 lít', '42 lít', '44 lít'],
+          correctAnswer: '42 lít'
+        }
+      ]
+    }
+  },
 
   // ==========================================
-  // TRẠM 3: SUDOKU & MA TRẬN SỐ (Trang 45 - Trang 50)
+  // TRẠM 3: SUDOKU & MA TRẬN SỐ (Trang 45 - Trang 52)
   // ==========================================
+  {
+    id: 'sud-warmup-1',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Khởi động Sudoku 4x4 Động Vật Dễ Thương',
+    badgeTitle: 'Bài Khởi Động 0.1 · Trang 46',
+    instruction: 'Mỗi hàng, mỗi cột và mỗi khối 2x2 đều phải có đủ 4 bạn nhỏ: 🐰 Thỏ Abby, 🐵 Khỉ Benny, 🐹 Chuột Casey, 🐻 Gấu Rory.',
+    hint: 'Nhìn vào hàng hoặc khối 2x2 chỉ còn trống đúng 1 ô để điền bạn còn thiếu vào nhé!',
+    mascot: { ...CASEY, message: 'Chào mừng bạn đến với Thung Lũng Sudoku! Cùng khởi động với các bạn nhỏ nào!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'shape',
+      symbols: [
+        { id: 'rabbit', icon: '🐰', name: 'Thỏ Abby' },
+        { id: 'monkey', icon: '🐵', name: 'Khỉ Benny' },
+        { id: 'mouse', icon: '🐹', name: 'Chuột Casey' },
+        { id: 'bear', icon: '🐻', name: 'Gấu Rory' }
+      ],
+      initialGrid: [
+        ['rabbit', 'monkey', null, 'bear'],
+        ['mouse', 'bear', 'rabbit', null],
+        [null, 'mouse', 'bear', 'monkey'],
+        ['bear', null, 'monkey', 'mouse']
+      ],
+      solution: [
+        ['rabbit', 'monkey', 'mouse', 'bear'],
+        ['mouse', 'bear', 'rabbit', 'monkey'],
+        ['monkey', 'mouse', 'bear', 'rabbit'],
+        ['bear', 'rabbit', 'monkey', 'mouse']
+      ]
+    }
+  },
+  {
+    id: 'sud-warmup-2',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Khởi động Sudoku 4x4 Hoa Quả Rực Rỡ',
+    badgeTitle: 'Bài Khởi Động 0.2 · Trang 46',
+    instruction: 'Điền các loại quả còn thiếu vào ô trống sao cho mỗi hàng, cột và khối 2x2 có đủ: 🍎 Táo, 🍌 Chuối, 🍓 Dâu tây, 🍇 Nho.',
+    hint: 'Hàng 1 đã có Táo, Chuối, Dâu -> chỉ còn thiếu Nho!',
+    mascot: { ...BENNY, message: 'Khởi động nhẹ nhàng với vườn hoa quả ngọt ngào trước khi bước vào các thử thách lớn!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'shape',
+      symbols: [
+        { id: 'apple', icon: '🍎', name: 'Táo' },
+        { id: 'banana', icon: '🍌', name: 'Chuối' },
+        { id: 'berry', icon: '🍓', name: 'Dâu Tây' },
+        { id: 'grape', icon: '🍇', name: 'Nho' }
+      ],
+      initialGrid: [
+        ['apple', 'banana', 'berry', null],
+        [null, 'grape', 'apple', 'banana'],
+        ['banana', 'apple', null, 'berry'],
+        ['grape', null, 'banana', 'apple']
+      ],
+      solution: [
+        ['apple', 'banana', 'berry', 'grape'],
+        ['berry', 'grape', 'apple', 'banana'],
+        ['banana', 'apple', 'grape', 'berry'],
+        ['grape', 'berry', 'banana', 'apple']
+      ]
+    }
+  },
   {
     id: 'sud-shape-1',
     topicId: 'sudoku',
@@ -1515,7 +1884,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'sudoku',
     topicName: topicName('sudoku'),
     title: 'Ma trận số 2x2 xoay quy luật kim đồng hồ',
-    badgeTitle: 'Bài 5.1 · Trang 55',
+    badgeTitle: 'Bài 5.1 · Trang 51',
     instruction: 'Quan sát các con số 1, 2, 3, 4 trong ma trận 2x2 di chuyển xoay tròn theo chiều kim đồng hồ qua Ô 1, Ô 2, Ô 3. Hãy chọn Ô 4 chính xác!',
     hint: 'Số 1 ở Ô 1 nằm ở góc trên trái, sang Ô 2 chuyển sang góc trên phải, sang Ô 3 xuống góc dưới phải. Vậy ở Ô 4, số 1 sẽ ở góc dưới trái!',
     mascot: { ...CASEY, message: 'Hãy theo dõi đường đi của số 1 để tìm ra quy luật xoay tròn!' },
@@ -1588,7 +1957,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'sudoku',
     topicName: topicName('sudoku'),
     title: 'Ma trận số 2x2 quy luật hoán vị đối xứng',
-    badgeTitle: 'Bài 5.2 · Trang 57',
+    badgeTitle: 'Bài 5.2 · Trang 51',
     instruction: 'Các số chẵn 2, 4, 6, 8 biến đổi vị trí theo quy luật hoán vị cột và dòng qua các bước. Hãy tìm ma trận tiếp theo ở Ô 4.',
     hint: 'Bước 1 sang Bước 2 đổi chỗ 2 cột. Bước 2 sang Bước 3 đổi chỗ 2 hàng. Bước 3 sang Bước 4 đổi chỗ 2 cột tiếp tục!',
     mascot: { ...BENNY, message: 'Nhảy đổi chỗ giữa các hàng và cột thật là nhịp nhàng!' },
@@ -1959,7 +2328,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'pattern',
     topicName: topicName('pattern'),
     title: 'Chuỗi quân cờ Domino hai nửa đối xứng',
-    badgeTitle: 'Bài 3 · Trang 55',
+    badgeTitle: 'Bài 3.1 · Trang 55',
     instruction: 'Quan sát các quân cờ Domino: Nửa trên có các số 1, 2, 3, 4. Nửa dưới có các số 6, 5, 4, 3. Hãy tìm quân Domino tiếp theo ở vị trí số 5!',
     hint: 'Nửa trên tăng thêm 1 đơn vị (1, 2, 3, 4 -> 5). Nửa dưới giảm đi 1 đơn vị (6, 5, 4, 3 -> 2). Tổng hai nửa luôn bằng 7! Đáp án là quân [5 | 2]!',
     mascot: { ...BENNY, message: 'Nửa trên đi lên, nửa dưới đi xuống, tổng 2 nửa luôn bằng 7 đấy!' },
@@ -1983,6 +2352,36 @@ export const ALL_LESSONS: LessonQuestion[] = [
       ],
       correctChoiceId: 'opt52',
       correctExplanation: 'Rất chính xác! Quân cờ tiếp theo là [5 | 2] (nửa trên là 5, nửa dưới là 2, tổng bằng 7)!'
+    }
+  },
+  {
+    id: 'pat-dice-3-2',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Quy luật chuỗi chấm xúc xắc xí ngầu',
+    badgeTitle: 'Bài 3.2 · Trang 55',
+    instruction: 'Quan sát số chấm trên các mặt xúc xắc theo hàng ngang: 1 chấm ➔ 3 chấm ➔ 5 chấm ➔ ? Hãy tìm mặt xúc xắc tiếp theo!',
+    hint: 'Mỗi bước số chấm tăng thêm 2 đơn vị: 1 + 2 = 3; 3 + 2 = 5; 5 + 2 = 7 chấm!',
+    mascot: { ...ABBY, message: 'Dãy số chấm lẻ tăng đều 2 đơn vị qua mỗi bước nhảy!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'QUY LUẬT XÚC XẮC TĂNG DẦN',
+      ruleExplanation: 'Số chấm trên mặt xúc xắc tăng thêm 2 qua từng bước (+2):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1 🎲', stepHint: '+2' },
+        { id: 2, label: '3 🎲', stepHint: '+2' },
+        { id: 3, label: '5 🎲', stepHint: '+2' },
+        { id: 4, isMissing: true }
+      ],
+      choices: [
+        { id: 'opt6', label: '6 🎲' },
+        { id: 'opt7', label: '7 🎲 (Chính xác)' },
+        { id: 'opt8', label: '8 🎲' },
+        { id: 'opt9', label: '9 🎲' }
+      ],
+      correctChoiceId: 'opt7',
+      correctExplanation: 'Rất xuất sắc! Số tiếp theo trong chuỗi là 7 vì 5 + 2 = 7 chấm!'
     }
   },
   {
@@ -2330,7 +2729,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicId: 'logic',
     topicName: topicName('logic'),
     title: 'Thám tử đo chiều cao các bạn (Bài 1)',
-    badgeTitle: 'Bài 1 · Trang 69',
+    badgeTitle: 'Bài 1.1 · Trang 69',
     instruction: 'Casey, Abby và Benny đo chiều cao.\n• Casey thấp hơn Benny.\n• Abby thấp hơn Casey.\n• Benny cao hơn Abby.\nHỏi ai là người cao nhất và ai là người thấp nhất trong số họ?',
     hint: 'Abby thấp hơn Casey, Casey thấp hơn Benny. Thứ tự: Benny > Casey > Abby!',
     mascot: { ...BENNY, message: 'So sánh từng cặp rồi xếp thứ tự như que đo nhé!' },
@@ -2355,6 +2754,76 @@ export const ALL_LESSONS: LessonQuestion[] = [
           correctAnswer: 'Abby'
         }
       ]
+    }
+  },
+  {
+    id: 'log-weight-order-1-2',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Thám tử so sánh cân nặng thú cưng',
+    badgeTitle: 'Bài 1.2 · Trang 69',
+    instruction: 'Chó Vàng, Mèo Mướp và Chuột Nhắt cùng bước lên cân:\n• Chó Vàng nặng hơn Mèo Mướp.\n• Mèo Mướp nặng hơn Chuột Nhắt.\nHỏi ai là bạn nặng nhất và ai là bạn nhẹ nhất trong số họ?',
+    hint: 'Chó Vàng > Mèo Mướp > Chuột Nhắt. Vậy Chó Vàng nặng nhất, Chuột Nhắt nhẹ nhất!',
+    mascot: { ...CASEY, message: 'So sánh từng cặp giúp chúng mình tìm ra bạn nặng nhất thật dễ dàng!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'dog', label: 'Chó Vàng 🐕 (Nặng nhất)', levelPercent: 95, color: '#f59e0b' },
+        { id: 'cat', label: 'Mèo Mướp 🐈 (Ở giữa)', levelPercent: 65, color: '#f59e0b' },
+        { id: 'mouse', label: 'Chuột Nhắt 🐭 (Nhẹ nhất)', levelPercent: 35, color: '#f59e0b' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Ai là bạn NẶNG NHẤT trong số họ?',
+          options: ['Chó Vàng', 'Mèo Mướp', 'Chuột Nhắt'],
+          correctAnswer: 'Chó Vàng'
+        },
+        {
+          id: 'q2',
+          prompt: 'Ai là bạn NHẸ NHẤT trong số họ?',
+          options: ['Chó Vàng', 'Mèo Mướp', 'Chuột Nhắt'],
+          correctAnswer: 'Chuột Nhắt'
+        }
+      ]
+    }
+  },
+  {
+    id: 'log-seats',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Xếp chỗ ngồi rạp hát cùng Bác sĩ Mayle',
+    badgeTitle: 'Bài 2.1 · Trang 70',
+    instruction: 'Bác sĩ Mayle, Abby, Benny, Casey và Bác Ram ngồi cạnh nhau từ Ghế 1 (trái) sang Ghế 5 (phải):\n• Bác sĩ Mayle: Tôi ngồi ở bên rìa.\n• Abby: Tôi đang ngồi ở trung tâm.\n• Benny: Tôi đang ngồi ở bên phải của Abby.\n• Bác Ram: Có 2 người ở giữa Bác sĩ Mayle và tôi.',
+    hint: 'Abby ngồi ghế 3. Bác sĩ Mayle ngồi ghế 1. Bác Ram cách Mayle 2 người nên ngồi ghế 4 hoặc 5...',
+    mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối và xếp ghế như một thám tử thực thụ!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 5,
+      correctOrder: ['Bác sĩ Mayle', 'Casey', 'Abby', 'Benny', 'Bác Ram'],
+      allowedCharacters: ['Bác sĩ Mayle', 'Casey', 'Abby', 'Benny', 'Bác Ram']
+    }
+  },
+  {
+    id: 'log-lineup-order-2-2',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Xếp hàng nhận thưởng cùng Thầy Mayle',
+    badgeTitle: 'Bài 2.2 · Trang 70',
+    instruction: 'Bốn bạn Rory, Casey, Abby và Benny xếp thành một hàng dọc trước bục nhận thưởng:\n• Rory đứng ở vị trí cuối cùng (Vị trí 4).\n• Casey đứng ở vị trí đầu tiên (Vị trí 1).\n• Abby đứng ngay sau Benny (Benny trước, Abby sau).\nHãy sắp xếp 4 bạn theo thứ tự từ vị trí 1 đến 4!',
+    hint: 'Vị trí 1 là Casey, Vị trí 2 là Benny, Vị trí 3 là Abby, Vị trí 4 là Rory!',
+    mascot: { ...MAYLE, message: 'Đọc kỹ từng vị trí cố định trước, rồi xếp các bạn còn lại vào nhé!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp 4 bạn theo thứ tự từ vị trí 1 đến vị trí 4:',
+      directionLabel: 'Vị trí 1 (Đầu hàng) ➔ Vị trí 4 (Cuối hàng)',
+      items: [
+        { id: 'Casey', label: 'Casey 🐹', description: 'Đứng đầu tiên (Vị trí 1)', icon: '🐹' },
+        { id: 'Benny', label: 'Benny 🐵', description: 'Đứng trước Abby', icon: '🐵' },
+        { id: 'Abby', label: 'Abby 🐰', description: 'Đứng ngay sau Benny', icon: '🐰' },
+        { id: 'Rory', label: 'Rory 🐻', description: 'Đứng cuối cùng (Vị trí 4)', icon: '🐻' }
+      ],
+      correctOrder: ['Casey', 'Benny', 'Abby', 'Rory']
     }
   },
   {
@@ -2406,22 +2875,6 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
-    id: 'log-seats',
-    topicId: 'logic',
-    topicName: topicName('logic'),
-    title: 'Xếp chỗ ngồi rạp hát cùng Bác sĩ Mayle',
-    badgeTitle: 'Bài 2 · Trang 70',
-    instruction: 'Bác sĩ Mayle, Abby, Benny, Casey và Bác Ram ngồi cạnh nhau từ Ghế 1 (trái) sang Ghế 5 (phải):\n• Bác sĩ Mayle: Tôi ngồi ở bên rìa.\n• Abby: Tôi đang ngồi ở trung tâm.\n• Benny: Tôi đang ngồi ở bên phải của Abby.\n• Bác Ram: Có 2 người ở giữa Bác sĩ Mayle và tôi.',
-    hint: 'Abby ngồi ghế 3. Bác sĩ Mayle ngồi ghế 1. Bác Ram cách Mayle 2 người nên ngồi ghế 4 hoặc 5...',
-    mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối và xếp ghế như một thám tử thực thụ!' },
-    activity: {
-      type: 'logicSeatOrder',
-      seatsCount: 5,
-      correctOrder: ['Bác sĩ Mayle', 'Casey', 'Abby', 'Benny', 'Bác Ram'],
-      allowedCharacters: ['Bác sĩ Mayle', 'Casey', 'Abby', 'Benny', 'Bác Ram']
-    }
-  },
-  {
     id: 'log-race-ranking',
     topicId: 'logic',
     topicName: topicName('logic'),
@@ -2458,6 +2911,48 @@ export const ALL_LESSONS: LessonQuestion[] = [
     mascot: { ...BENNY, message: 'Mê cung tròn nhìn hoa cả mắt, nhưng bình tĩnh là tìm ra đường ngay!' },
     activity: {
       type: 'circularMaze'
+    }
+  },
+  {
+    id: 'chal-maze-star-1-2',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Mê cung hoa quả tinh tú của Khỉ Benny',
+    badgeTitle: 'Thử Thách 1.2 · Trang 74',
+    instruction: 'Tìm đường đi từ Khỉ Benny 🐵 đến Ngôi Sao Vàng ⭐ theo quy luật chu kỳ 3 bước: Chuối 🍌 ➔ Táo 🍎 ➔ Nho 🍇 ➔ Chuối 🍌...',
+    hint: 'Bắt đầu từ ô (0,0) có quả Chuối 🍌, bước tiếp theo phải là Táo 🍎, rồi đến Nho 🍇, rồi lại Chuối 🍌!',
+    mascot: { ...BENNY, message: 'Nhớ quy luật chu kỳ: Chuối ➔ Táo ➔ Nho nhé bạn ơi!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['🍌', '🍎', '🍇'],
+      startPos: [0, 0],
+      goalPos: [3, 3],
+      startIcon: '🐵',
+      startLabel: 'Khỉ Benny',
+      goalIcon: '⭐',
+      goalLabel: 'Sao Vàng',
+      ruleTitle: 'Quy luật hoa quả tinh tú:',
+      patternDisplay: [
+        { icon: '🍌', name: 'Chuối' },
+        { icon: '🍎', name: 'Táo' },
+        { icon: '🍇', name: 'Nho' }
+      ],
+      successMessage: 'Tuyệt vời! Khỉ Benny đã hái được Ngôi Sao Vàng tinh tú!',
+      grid: [
+        ['🍌', '🍎', '🍇', '🍒'],
+        ['🍓', '🍇', '🍌', '🍎'],
+        ['🍋', '🍎', '🍇', '🍇'],
+        ['🍊', '🍌', '🍎', '⭐']
+      ],
+      targetPath: [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 2],
+        [1, 3],
+        [2, 3],
+        [3, 3]
+      ]
     }
   },
   {
@@ -2716,6 +3211,22 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
   {
+    id: 'chal-circle-seats-7-2',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Bàn tiệc sinh nhật tròn 5 bạn của Benny',
+    badgeTitle: 'Thử Thách 7.2 · Trang 82',
+    instruction: 'Năm bạn ngồi quanh bàn tiệc sinh nhật từ Ghế 1 đến Ghế 5:\n• Gấu Rory ngồi ở Ghế 1.\n• Chuột Casey ngồi ở Ghế 5.\n• Thỏ Abby ngồi ở vị trí chính giữa (Ghế 3).\n• Khỉ Benny ngồi bên phải Thỏ Abby (Ghế 4).\n• Bác Ram ngồi ở ghế còn lại (Ghế 2).\nHãy xếp đúng vị trí 5 bạn!',
+    hint: 'Ghế 1: Rory, Ghế 2: Bác Ram, Ghế 3: Thỏ Abby, Ghế 4: Khỉ Benny, Ghế 5: Chuột Casey!',
+    mascot: { ...BENNY, message: 'Bữa tiệc sinh nhật của Benny đông đủ và ấm áp quá!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 5,
+      allowedCharacters: ['Rory', 'Bác Ram', 'Thỏ Abby', 'Khỉ Benny', 'Chuột Casey'],
+      correctOrder: ['Rory', 'Bác Ram', 'Thỏ Abby', 'Khỉ Benny', 'Chuột Casey']
+    }
+  },
+  {
     id: 'chal-magic-cross',
     topicId: 'challenge',
     topicName: topicName('challenge'),
@@ -2740,6 +3251,32 @@ export const ALL_LESSONS: LessonQuestion[] = [
         [8, 1, 6],
         [3, 5, 7],
         [4, 9, 2]
+      ]
+    }
+  },
+  {
+    id: 'chal-magic-triangle-8-2',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Ma trận số đối xứng tổng bằng 10',
+    badgeTitle: 'Thử Thách 8.2 · Trang 85',
+    instruction: 'Điền các số thích hợp vào ô trống sao cho tổng các hàng ngang và cột dọc đều bằng đúng 10!',
+    hint: 'Hàng 1 có: 4 + ? = 10 => ? = 6. Hàng 2 có: ? + 4 = 10 => ? = 6!',
+    mascot: { ...CASEY, message: 'Các số kết hợp với nhau tạo thành tổng 10 thật kỳ diệu!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Trận Số Cặp Đôi Tổng Bằng 10',
+      subtitle: 'Tổng mỗi hàng và mỗi cột đều bằng 10',
+      targetSum: 10,
+      allowedNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      hintFormula: '4 + 6 = 10 và 6 + 4 = 10',
+      initialGrid: [
+        [4, null],
+        [null, 4]
+      ],
+      solution: [
+        [4, 6],
+        [6, 4]
       ]
     }
   },
@@ -2769,6 +3306,34 @@ export const ALL_LESSONS: LessonQuestion[] = [
       totalCubes: 13,
       options: [11, 12, 13, 14],
       explanation: 'Phân tích: Hàng 1 có các cột cao 3, 2, 1 (tổng 6 khối); Hàng 2 có các cột cao 2, 2, 1 (tổng 5 khối); Hàng 3 có các cột cao 1, 1, 0 (tổng 2 khối). Tổng cộng = 6 + 5 + 2 = 13 khối lập phương.'
+    }
+  },
+  {
+    id: 'chal-cube-counter-9-2',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đếm khối lập phương 3D góc khuất nâng cao',
+    badgeTitle: 'Thử Thách 9.2 · Trang 85',
+    instruction: 'Quan sát kiến trúc không gian 3 chiều 3x3 và đếm tổng số khối lập phương đơn vị, bao gồm cả các khối bị che lấp ở tầng dưới.',
+    hint: 'Phân tích từng tầng: Tầng 1 (đáy) có 9 khối, Tầng 2 có 4 khối, Tầng 3 (đỉnh) có 1 khối. Tổng cộng = 9 + 4 + 1 = 14 khối!',
+    mascot: { ...MAYLE, message: 'Đếm cẩn thận từng tầng từ đáy lên đỉnh để không bỏ sót khối nào nhé!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'Đếm Khối Lập Phương 3D Bậc Thầy',
+      instructionText: 'Đếm tổng số khối lập phương đơn vị cấu tạo nên khối kim tự tháp 3D dưới đây:',
+      gridHeights: [
+        [3, 2, 1],
+        [2, 2, 1],
+        [1, 1, 1]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (Đáy 3x3)', count: 9 },
+        { layerName: 'Tầng 2 (Tầng giữa)', count: 4 },
+        { layerName: 'Tầng 3 (Đỉnh cao nhất)', count: 1 }
+      ],
+      totalCubes: 14,
+      options: [12, 13, 14, 15],
+      explanation: 'Cách đếm khoa học theo tầng: Tầng 1 (đáy) có 9 khối, Tầng 2 có 4 khối, Tầng 3 có 1 khối. Tổng cộng: 9 + 4 + 1 = 14 khối lập phương!'
     }
   },
   {

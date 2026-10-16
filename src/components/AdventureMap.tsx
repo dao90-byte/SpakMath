@@ -31,7 +31,7 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
           </h1>
 
           <p className="text-sm md:text-base text-teal-50 font-medium">
-            Cùng Khỉ Benny, Thỏ Abby và Chuột Casey khám phá 5 vùng đất kỳ thú, thu thập đủ các ngôi sao và giải mã các câu đố logic siêu cuốn hút!
+            Cùng Khỉ Benny, Thỏ Abby và Chuột Casey khám phá trọn vẹn 6 vùng đất kỳ thú, thu thập đủ các ngôi sao và giải mã các câu đố logic siêu cuốn hút!
           </p>
 
           {/* Quick Progress Bar */}
@@ -55,12 +55,12 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
         </div>
       </div>
 
-      {/* 5 Island Stations Grid */}
+      {/* 6 Island Stations Grid */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl md:text-2xl font-black font-display text-slate-800">
-              5 Trạm Phiêu Lưu Kỳ Thú
+              6 Trạm Phiêu Lưu Kỳ Thú & Đấu Trường
             </h2>
             <p className="text-xs md:text-sm text-slate-500 font-medium">
               Chạm vào từng trạm để bắt đầu làm quen và luyện tập theo giáo trình
