@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -40,8 +40,16 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Copy index.html to 404.html
-        run: cp dist/index.html dist/404.html
+      - name: Copy index.html to 404.html and ensure .nojekyll
+        run: |
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
