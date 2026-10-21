@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
+import { recordMistake } from '../../utils/mistakeManager';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 interface SubQuestion {
@@ -42,6 +43,17 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
         sound.playCorrect();
       } else {
         sound.playWrong();
+        const currentQ = subQuestions.find((q) => q.id === questionId);
+        if (currentQ) {
+          recordMistake({
+            questionPrompt: `[Quy ước: ${keyNotice}] ${currentQ.prompt}`,
+            userAnswer: option,
+            correctAnswer: correctAnswer,
+            explanation: `Quy ước đề bài ghi rõ: "${keyNotice}". Hãy đếm số lượng hình vẽ rồi nhân với hệ số tương ứng trước khi kết luận!`,
+            options: currentQ.options,
+            category: 'reading'
+          });
+        }
       }
 
       // Check if all questions are answered correctly

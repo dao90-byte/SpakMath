@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
+import { recordMistake } from '../../utils/mistakeManager';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 interface BottleSpec {
@@ -36,6 +37,18 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
         sound.playCorrect();
       } else {
         sound.playWrong();
+        const currentQ = questions.find((q) => q.id === qId);
+        if (currentQ) {
+          recordMistake({
+            questionPrompt: currentQ.prompt,
+            userAnswer: opt,
+            correctAnswer: correct,
+            explanation:
+              'Khi so sánh lượng chất lỏng, phải xem xét cả chiều cao mực nước VÀ độ rộng đáy bình (diện tích đáy) nữa nhé!',
+            options: currentQ.options,
+            category: 'concept'
+          });
+        }
       }
 
       const allRight = questions.every((q) => {

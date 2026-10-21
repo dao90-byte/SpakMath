@@ -6,13 +6,47 @@ import { LessonsCatalog } from './components/LessonsCatalog';
 import { LessonContainer } from './components/LessonContainer';
 import { Scratchpad } from './components/Scratchpad';
 import { SelfAssessmentModal } from './components/SelfAssessmentModal';
+import { MistakeNotebookModal } from './components/MistakeNotebookModal';
+import { DevErrorConsoleModal } from './components/DevErrorConsoleModal';
 import { sound } from './utils/soundEffects';
+import { getMistakesStats } from './utils/mistakeManager';
+import { getProgramErrors } from './utils/devErrorCollector';
+import { Bug } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'assessment'>('map');
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
   const [isScratchpadOpen, setIsScratchpadOpen] = useState(false);
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false);
+  const [isMistakeNotebookOpen, setIsMistakeNotebookOpen] = useState(false);
+  const [isDevConsoleOpen, setIsDevConsoleOpen] = useState(false);
+  const [devConsoleDefaultTab, setDevConsoleDefaultTab] = useState<'list' | 'report'>('list');
+
+  const [unresolvedMistakesCount, setUnresolvedMistakesCount] = useState<number>(() => {
+    return getMistakesStats().unresolved;
+  });
+
+  const [programErrorsCount, setProgramErrorsCount] = useState<number>(() => {
+    return getProgramErrors().length;
+  });
+
+  // Track reactive updates to mistake notebook and programming error collector
+  useEffect(() => {
+    const handleMistakeUpdate = () => {
+      setUnresolvedMistakesCount(getMistakesStats().unresolved);
+    };
+    const handleDevErrorUpdate = () => {
+      setProgramErrorsCount(getProgramErrors().length);
+    };
+
+    window.addEventListener('spark_math_mistakes_updated', handleMistakeUpdate);
+    window.addEventListener('spark_math_dev_error_logged', handleDevErrorUpdate);
+
+    return () => {
+      window.removeEventListener('spark_math_mistakes_updated', handleMistakeUpdate);
+      window.removeEventListener('spark_math_dev_error_logged', handleDevErrorUpdate);
+    };
+  }, []);
 
   // Load progress from localStorage
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>(() => {
@@ -68,7 +102,14 @@ export default function App() {
           }
         }}
         onOpenScratchpad={() => setIsScratchpadOpen(true)}
+        onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
+        onOpenDevConsole={() => {
+          setDevConsoleDefaultTab('list');
+          setIsDevConsoleOpen(true);
+        }}
         starsCount={totalStars}
+        unresolvedMistakesCount={unresolvedMistakesCount}
+        programErrorsCount={programErrorsCount}
       />
 
       {/* Main View Area */}
@@ -80,6 +121,11 @@ export default function App() {
             onLessonChange={(nextId) => setActiveLessonId(nextId)}
             onBackToMap={() => setActiveLessonId(null)}
             onOpenScratchpad={() => setIsScratchpadOpen(true)}
+            onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
+            onOpenDevConsole={(reportMode) => {
+              setDevConsoleDefaultTab(reportMode ? 'report' : 'list');
+              setIsDevConsoleOpen(true);
+            }}
             onLessonCompleted={handleLessonCompleted}
           />
         ) : activeTab === 'map' ? (
@@ -120,13 +166,33 @@ export default function App() {
         totalStars={totalStars}
       />
 
+      {/* Mistake Notebook & Mastery Modal */}
+      <MistakeNotebookModal
+        isOpen={isMistakeNotebookOpen}
+        onClose={() => setIsMistakeNotebookOpen(false)}
+        onSelectLesson={(lessonId) => {
+          setActiveLessonId(lessonId);
+          setIsMistakeNotebookOpen(false);
+        }}
+        currentLessonId={activeLessonId}
+      />
+
+      {/* Developer & Programming Error Console Modal */}
+      <DevErrorConsoleModal
+        isOpen={isDevConsoleOpen}
+        onClose={() => setIsDevConsoleOpen(false)}
+        defaultTab={devConsoleDefaultTab}
+        currentLessonId={activeLessonId}
+        currentLessonTitle={currentLesson?.title}
+      />
+
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="font-semibold">
             ✨ Vương Quốc Toán Tư Duy Lớp 3 · Dựa trên tài liệu Spark Math
           </p>
-          <div className="flex items-center gap-4 font-medium text-slate-400">
+          <div className="flex items-center gap-3 font-medium text-slate-400 flex-wrap justify-center">
             <span>Biểu đồ hình ảnh</span>
             <span>·</span>
             <span>Thể tích (Lít)</span>
@@ -134,6 +200,18 @@ export default function App() {
             <span>Sudoku & Quy luật</span>
             <span>·</span>
             <span>Logic hàng ngũ</span>
+            <span>·</span>
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setIsDevConsoleOpen(true);
+              }}
+              className="text-amber-600 hover:underline font-bold inline-flex items-center gap-1"
+            >
+              <Bug className="w-3 h-3" />
+              <span>Chẩn đoán lỗi code</span>
+            </button>
           </div>
         </div>
       </footer>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
+import { recordMistake } from '../../utils/mistakeManager';
 import { Info, Users } from 'lucide-react';
 
 interface QueueCounterProps {
@@ -47,6 +48,14 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
       }, 500);
     } else {
       sound.playWrong();
+      recordMistake({
+        questionPrompt: `${promptTitle} (Bài toán hàng ngũ: ${formula})`,
+        userAnswer: `${num} bạn`,
+        correctAnswer: `${correctTotal} bạn`,
+        explanation: `Quy tắc hàng ngũ Spark Math: ${formula}. Chú ý xem đối tượng có bị đếm trùng 2 lần hoặc bị bỏ sót không nhé!`,
+        options: options.map((n) => `${n} bạn`),
+        category: 'calculation'
+      });
     }
   };
 

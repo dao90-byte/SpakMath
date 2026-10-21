@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ALL_LESSONS, LessonQuestion, LessonActivity, TOPICS } from '../data/lessonsData';
 import { sound } from '../utils/soundEffects';
-import { ArrowLeft, ArrowRight, Pencil, CheckCircle, Star, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Pencil,
+  CheckCircle,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  BookMarked,
+  BookmarkCheck,
+  Bug
+} from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { setCurrentLessonContext, recordMistake } from '../utils/mistakeManager';
 import { PictographViewer } from './activities/PictographViewer';
 import { PictographBuilder } from './activities/PictographBuilder';
 import { VolumeComparison } from './activities/VolumeComparison';
@@ -35,6 +48,8 @@ interface LessonContainerProps {
   onLessonChange: (nextId: string) => void;
   onBackToMap: () => void;
   onOpenScratchpad: () => void;
+  onOpenMistakes?: () => void;
+  onOpenDevConsole?: (reportMode?: boolean) => void;
   onLessonCompleted: (lessonId: string) => void;
 }
 
@@ -297,9 +312,55 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   onLessonChange,
   onBackToMap,
   onOpenScratchpad,
+  onOpenMistakes,
+  onOpenDevConsole,
   onLessonCompleted
 }) => {
   const [justFinishedId, setJustFinishedId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  // Sync lesson context for automatic mistake recording
+  useEffect(() => {
+    setCurrentLessonContext({
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      topicName: lesson.topicName,
+      topicId: lesson.topicId,
+      mascotAvatar: lesson.mascot.avatar
+    });
+    setIsBookmarked(false);
+  }, [lesson]);
+
+  // Listen to mistake collection toasts
+  useEffect(() => {
+    const handleToast = (e: any) => {
+      if (e.detail?.message) {
+        setToastMessage(e.detail.message);
+        setTimeout(() => setToastMessage(null), 4000);
+      }
+    };
+    window.addEventListener('spark_math_mistake_toast', handleToast);
+    return () => window.removeEventListener('spark_math_mistake_toast', handleToast);
+  }, []);
+
+  const handleBookmarkTricky = () => {
+    sound.playStarCollect();
+    recordMistake({
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      topicName: lesson.topicName,
+      topicId: lesson.topicId,
+      questionPrompt: `[${lesson.badgeTitle}] ${lesson.title}: ${lesson.instruction}`,
+      userAnswer: 'Chủ động lưu để ôn luyện thêm',
+      correctAnswer: 'Hoàn thành thử thách bài học này',
+      explanation: `Bí kíp từ ${lesson.mascot.name}: ${lesson.mascot.message}`,
+      category: 'concept',
+      mascotAvatar: lesson.mascot.avatar,
+      userNote: 'Bài tập tư duy cần xem lại'
+    });
+    setIsBookmarked(true);
+  };
 
   const topic = TOPICS.find((t) => t.id === lesson.topicId);
   const lessonIndex = ALL_LESSONS.findIndex((l) => l.id === lesson.id);
@@ -323,7 +384,27 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   };
 
   return (
-    <div className="space-y-6 pb-28">
+    <div className="space-y-6 pb-28 relative">
+      {/* Toast Notification for Mistake Collection */}
+      {toastMessage && (
+        <div className="fixed top-20 right-4 z-50 bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs md:text-sm font-bold border border-amber-400 animate-in fade-in slide-in-from-top-4">
+          <span className="text-xl">📖</span>
+          <span>{toastMessage}</span>
+          {onOpenMistakes && (
+            <button
+              type="button"
+              onClick={() => {
+                setToastMessage(null);
+                onOpenMistakes();
+              }}
+              className="ml-2 px-2.5 py-1 rounded-xl bg-amber-400 text-amber-950 font-black text-xs hover:bg-amber-300 transition-colors"
+            >
+              Mở sổ
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Top actions bar with immediate navigation */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -366,16 +447,59 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            sound.playClick();
-            onOpenScratchpad();
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 border-2 border-amber-300 text-sm font-bold text-amber-900 hover:bg-amber-200 shadow-xs transition-colors"
-        >
-          <Pencil className="w-4 h-4" /> Giấy nháp
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Collect Mistake / Bookmark button */}
+          <button
+            type="button"
+            onClick={handleBookmarkTricky}
+            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs md:text-sm font-bold shadow-xs transition-all active:scale-95 ${
+              isBookmarked
+                ? 'bg-emerald-100 border-2 border-emerald-300 text-emerald-800'
+                : 'bg-rose-50 border-2 border-rose-200 text-rose-800 hover:bg-rose-100'
+            }`}
+            title="Lưu thử thách này vào Sổ Thu Thập Lỗi để tự ôn luyện"
+          >
+            {isBookmarked ? (
+              <>
+                <BookmarkCheck className="w-4 h-4 text-emerald-600" />
+                <span className="hidden xs:inline">Đã thu thập!</span>
+              </>
+            ) : (
+              <>
+                <BookMarked className="w-4 h-4 text-rose-600" />
+                <span className="hidden xs:inline">Thu thập câu khó</span>
+              </>
+            )}
+          </button>
+
+          {/* Report Exercise Issue button (Logic, Display, Interaction, Code) */}
+          {onOpenDevConsole && (
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                onOpenDevConsole(true);
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs md:text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 shadow-xs transition-colors"
+              title="Báo lỗi bài tập này: Lỗi logic, hiển thị, tương tác hoặc lỗi lập trình"
+            >
+              <Bug className="w-4 h-4 text-rose-500" />
+              <span className="hidden sm:inline">Báo lỗi bài này</span>
+            </button>
+          )}
+
+          {/* Scratchpad button */}
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              onOpenScratchpad();
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 border-2 border-amber-300 text-sm font-bold text-amber-900 hover:bg-amber-200 shadow-xs transition-colors"
+          >
+            <Pencil className="w-4 h-4" /> Giấy nháp
+          </button>
+        </div>
       </div>
 
       {/* Lesson header */}
@@ -413,39 +537,18 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
 
       {/* Immediate In-Situ Completion Card: Visible right below activity without scrolling */}
       {(justFinished || isCompleted) && (
-        <div className="bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 border-2 border-emerald-300 rounded-3xl p-5 md:p-6 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 transition-all">
-          <div className="flex items-center gap-3.5 text-center sm:text-left">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl shrink-0 shadow-inner">
-              ⭐
-            </div>
-            <div>
-              <p className="text-lg md:text-xl font-black flex items-center gap-2 justify-center sm:justify-start">
-                <span>🎉 Xuất sắc! Thử thách đã hoàn thành!</span>
-              </p>
-              <p className="text-xs md:text-sm text-white/90 font-medium mt-0.5">
-                Bạn đã nhận được thêm 3 ngôi sao thông thái!
-              </p>
-            </div>
+        <div className="bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 border-2 border-emerald-300 rounded-3xl p-5 md:p-6 text-white shadow-xl flex items-center gap-4 transition-all">
+          <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl shrink-0 shadow-inner">
+            ⭐
           </div>
-
-          {nextLesson ? (
-            <button
-              type="button"
-              onClick={() => goTo(nextLesson.id)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-sm md:text-base shadow-lg transition-transform active:scale-95 shrink-0 ring-4 ring-amber-300/50"
-            >
-              <span>Bài tiếp theo ngay</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={onBackToMap}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white text-emerald-800 font-black text-sm md:text-base shadow-lg transition-transform active:scale-95 shrink-0"
-            >
-              🏆 Quay lại Bản đồ vinh quang
-            </button>
-          )}
+          <div>
+            <p className="text-lg md:text-xl font-black flex items-center gap-2">
+              <span>🎉 Xuất sắc! Thử thách đã hoàn thành!</span>
+            </p>
+            <p className="text-xs md:text-sm text-white/90 font-medium mt-0.5">
+              Bạn đã nhận được thêm 3 ngôi sao thông thái! Hãy bấm nút &quot;Bài tiếp theo&quot; ở thanh điều hướng bên dưới để tiếp tục hành trình.
+            </p>
+          </div>
         </div>
       )}
 
@@ -462,18 +565,6 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
         <span className="text-xs font-bold text-slate-500">
           Bài {lessonIndex + 1} / {ALL_LESSONS.length}
         </span>
-        <button
-          type="button"
-          disabled={!nextLesson}
-          onClick={() => nextLesson && goTo(nextLesson.id)}
-          className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white shadow-md disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 bg-gradient-to-r ${
-            isCompleted || justFinished
-              ? 'from-amber-500 via-orange-500 to-amber-600 ring-4 ring-amber-200'
-              : topic?.bgGradient ?? 'from-emerald-500 to-teal-600'
-          }`}
-        >
-          Bài tiếp theo <ArrowRight className="w-4 h-4" />
-        </button>
       </div>
 
       {/* Sticky Bottom Floating Dock: Always visible on screen so you never need to scroll */}
