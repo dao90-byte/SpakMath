@@ -7,7 +7,8 @@ interface BottleSpec {
   id: string;
   label: string;
   levelPercent: number;
-  color: string;
+  color?: string;
+  subLabel?: string;
 }
 
 interface QuestionSpec {
@@ -70,10 +71,10 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
     <div className="space-y-6">
       {/* Visual Bottles Grid */}
       <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-100 shadow-md">
-        <div className="grid grid-cols-4 gap-3 md:gap-6 justify-items-center">
+        <div className="flex flex-wrap justify-center items-end gap-6 md:gap-10">
           {bottles.map((b) => (
             <div key={b.id} className="flex flex-col items-center space-y-2">
-              <span className="font-extrabold text-slate-700 text-sm md:text-base">
+              <span className="font-extrabold text-slate-700 text-sm md:text-base text-center max-w-[140px]">
                 {b.label}
               </span>
 
@@ -83,15 +84,18 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-4 bg-slate-800 rounded-t-xs" />
                 {/* Water Level */}
                 <div
-                  style={{ height: `${b.levelPercent}%` }}
-                  className="w-full bg-gradient-to-t from-sky-600 to-sky-400 transition-all relative"
+                  style={{
+                    height: `${Math.min(100, Math.max(0, b.levelPercent))}%`,
+                    backgroundColor: b.color || undefined
+                  }}
+                  className={`w-full ${!b.color ? 'bg-gradient-to-t from-sky-600 to-sky-400' : ''} transition-all relative`}
                 >
-                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-sky-200/80 rounded-full" />
+                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-white/40 rounded-full" />
                 </div>
               </div>
 
-              <span className="text-xs font-semibold text-slate-500">
-                {b.levelPercent}%
+              <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full">
+                {b.subLabel || `${b.levelPercent}%`}
               </span>
             </div>
           ))}

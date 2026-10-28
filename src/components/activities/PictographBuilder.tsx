@@ -22,11 +22,12 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
   totalPeople,
   onCompleted
 }) => {
-  const [counts, setCounts] = useState<Record<string, number>>({
-    spring: 0,
-    summer: 0,
-    autumn: 0,
-    winter: 0
+  const [counts, setCounts] = useState<Record<string, number>>(() => {
+    const init: Record<string, number> = {};
+    categories.forEach((c) => {
+      init[c.id] = 0;
+    });
+    return init;
   });
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -34,7 +35,7 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
     sound.playClick();
     setCounts((prev) => ({
       ...prev,
-      [catId]: Math.min(6, (prev[catId] || 0) + 1)
+      [catId]: Math.min(12, (prev[catId] || 0) + 1)
     }));
   };
 
@@ -48,7 +49,11 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
 
   const handleReset = () => {
     sound.playWrong();
-    setCounts({ spring: 0, summer: 0, autumn: 0, winter: 0 });
+    const resetCounts: Record<string, number> = {};
+    categories.forEach((c) => {
+      resetCounts[c.id] = 0;
+    });
+    setCounts(resetCounts);
     setIsSuccess(false);
   };
 
@@ -112,7 +117,7 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
               <div className="md:w-1/3">
                 <span className="font-bold text-slate-800 text-base">{cat.label}</span>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Đã xếp: <span className="font-bold text-slate-700">{count} ô</span> ({count * multiplier} người)
+                  Đã xếp: <span className="font-bold text-slate-700">{count} ô</span>
                 </p>
               </div>
 
@@ -126,7 +131,7 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
                       key={i}
                       className="w-10 h-10 rounded-lg bg-sky-500 text-white font-bold flex items-center justify-center text-xs shadow-xs animate-in zoom-in-75 duration-150"
                     >
-                      3
+                      {multiplier > 1 ? multiplier : '★'}
                     </div>
                   ))
                 )}

@@ -128,17 +128,10 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
                           }`}
                           title={`Chạm để đếm: ${i + 1}`}
                         >
-                          {multiplier > 1 ? (
-                            <span className="text-xs font-bold text-amber-900">{multiplier}</span>
-                          ) : (
-                            '★'
-                          )}
+                          <span className="text-base md:text-lg select-none">{item.icon}</span>
                         </button>
                       );
                     })}
-                    <span className="ml-2 text-xs font-bold text-slate-400">
-                      ({item.count} {multiplier > 1 ? `× ${multiplier} = ${item.count * multiplier}` : 'lượt'})
-                    </span>
                   </div>
                 </td>
               </tr>

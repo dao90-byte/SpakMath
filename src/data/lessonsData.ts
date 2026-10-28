@@ -38,7 +38,7 @@ export type LessonActivity =
     }
   | {
       type: 'volumeComparison';
-      bottles: { id: string; label: string; levelPercent: number; color: string }[];
+      bottles: { id: string; label: string; levelPercent: number; color?: string; subLabel?: string }[];
       questions: ChoiceQuestion[];
     }
   | {
@@ -324,32 +324,39 @@ export const ALL_LESSONS: LessonQuestion[] = [
     id: 'pic-1',
     topicId: 'pictograph',
     topicName: topicName('pictograph'),
-    title: 'Món ăn trưa yêu thích của bạn Casey',
+    title: 'Món Ăn Trưa Yêu Thích Của Đội Bạn Casey',
     badgeTitle: 'Bài 1 · Trang 6',
-    instruction: 'Biểu đồ hình ảnh bên dưới cho thấy số lượt bình chọn những món ăn trưa yêu thích của bạn Casey. Lưu ý: 1 Phiếu = 1 lượt bình chọn.',
-    hint: 'Em đếm số phiếu của từng món: Pizza có 4 phiếu, Bánh mì kẹp chỉ có 1 phiếu!',
-    mascot: { ...BENNY, message: 'Tớ cứ tưởng tớ làm bánh mì kẹp dở, hóa ra là vì các bạn thích ăn pizza hơn!' },
+    instruction: 'Biểu đồ hình ảnh bên dưới cho thấy số lượt bình chọn những món ăn trưa yêu thích của bạn Casey và các bạn nhỏ. Quy ước: Mỗi biểu tượng thể hiện cho 1 lượt bình chọn.',
+    hint: 'Pizza có 4 chiếc bánh; Bánh mì kẹp có 1 chiếc; Bánh mì xúc xích có 3 chiếc; Canh súp có 2 bát. Em hãy quan sát và thực hiện các phép tính!',
+    mascot: { ...BENNY, message: 'Chào mừng bạn đến với Trạm 1! Hãy quan sát biểu đồ tranh và làm quen với các phép tính thú vị nhé!' },
     activity: {
       type: 'pictographViewer',
-      keyNotice: '1 Phiếu 🎫 = 1 lượt bình chọn',
+      keyNotice: 'Quy ước: Mỗi hình = 1 lượt bình chọn',
+      multiplier: 1,
       items: [
         { id: 'sandwich', label: 'Bánh Mì Kẹp', icon: '🥪', count: 1 },
-        { id: 'pizza', label: 'Pizza', icon: '🍕', count: 4 },
+        { id: 'pizza', label: 'Pizza Thơm Giòn', icon: '🍕', count: 4 },
         { id: 'hotdog', label: 'Bánh Mì Xúc Xích', icon: '🌭', count: 3 },
-        { id: 'soup', label: 'Canh Súp', icon: '🥣', count: 2 }
+        { id: 'soup', label: 'Canh Súp Nóng', icon: '🥣', count: 2 }
       ],
       subQuestions: [
         {
           id: 'q1',
-          prompt: 'A. Món ăn trưa có NHIỀU lượt bình chọn nhất là:',
-          options: ['Bánh Mì Kẹp', 'Pizza', 'Bánh Mì Xúc Xích', 'Canh Súp'],
-          correctAnswer: 'Pizza'
+          prompt: 'a) Tổng số lượt bình chọn cho Pizza và Bánh mì xúc xích là bao nhiêu lượt?',
+          options: ['5 lượt', '6 lượt', '7 lượt', '8 lượt'],
+          correctAnswer: '7 lượt'
         },
         {
           id: 'q2',
-          prompt: 'B. Món ăn trưa có ÍT lượt bình chọn nhất là:',
-          options: ['Bánh Mì Kẹp', 'Pizza', 'Bánh Mì Xúc Xích', 'Canh Súp'],
-          correctAnswer: 'Bánh Mì Kẹp'
+          prompt: 'b) Số bạn thích Pizza nhiều hơn số bạn thích Canh súp bao nhiêu bạn?',
+          options: ['1 bạn', '2 bạn', '3 bạn', '4 bạn'],
+          correctAnswer: '2 bạn'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Cả 4 món ăn trưa nhận được tất cả bao nhiêu lượt bình chọn?',
+          options: ['8 lượt', '9 lượt', '10 lượt', '11 lượt'],
+          correctAnswer: '10 lượt'
         }
       ]
     }
@@ -358,34 +365,22 @@ export const ALL_LESSONS: LessonQuestion[] = [
     id: 'pic-2',
     topicId: 'pictograph',
     topicName: topicName('pictograph'),
-    title: 'Đồ chơi yêu thích của 19 bạn nhỏ',
+    title: 'Sắp xếp thứ tự Đồ chơi yêu thích của 19 bạn nhỏ',
     badgeTitle: 'Bài 2 · Trang 7',
-    instruction: 'Biểu đồ bên dưới cho thấy số lượt bình chọn của 19 bạn nhỏ. Lưu ý: 1 Mặt cười = 1 lượt bình chọn.',
-    hint: 'Hàng ô tô có 3 mặt cười; hàng quả bóng có tới 7 mặt cười!',
-    mascot: { ...CASEY, message: 'Chúng mình có thể dùng biểu đồ tranh để khảo sát mọi sở thích trong lớp!' },
+    instruction: 'Số liệu khảo sát 19 bạn nhỏ: Ô Tô Đồ Chơi có 3 bạn, Búp Bê Vải có 4 bạn, Khối Xếp Hình có 5 bạn, Quả Bóng Đá có 7 bạn. Hãy sắp xếp các món đồ chơi theo thứ tự từ ÍT LƯỢT BÌNH CHỌN NHẤT đến NHIỀU LƯỢT BÌNH CHỌN NHẤT!',
+    hint: 'Xếp từ ít nhất đến nhiều nhất: Ô tô (3) -> Búp bê (4) -> Khối Lego (5) -> Quả bóng (7)!',
+    mascot: { ...CASEY, message: 'Sắp xếp thứ tự giúp chúng mình nắm bắt xu hướng bình chọn nhanh chóng hơn!' },
     activity: {
-      type: 'pictographViewer',
-      keyNotice: '1 Mặt cười 😊 = 1 lượt bình chọn',
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp thứ tự đồ chơi từ ÍT lượt bình chọn nhất đến NHIỀU lượt bình chọn nhất:',
+      directionLabel: 'Từ Ít Nhất ➔ Nhiều Nhất',
       items: [
-        { id: 'doll', label: 'Búp Bê Vải', icon: '🧸', count: 4 },
-        { id: 'car', label: 'Ô Tô Đồ Chơi', icon: '🚗', count: 3 },
-        { id: 'lego', label: 'Khối Xếp Hình', icon: '🧩', count: 5 },
-        { id: 'ball', label: 'Quả Bóng', icon: '⚽', count: 7 }
+        { id: 'car', label: 'Ô Tô Đồ Chơi', description: '3 bạn chọn', icon: '🚗' },
+        { id: 'doll', label: 'Búp Bê Vải', description: '4 bạn chọn', icon: '🧸' },
+        { id: 'lego', label: 'Khối Xếp Hình', description: '5 bạn chọn', icon: '🧩' },
+        { id: 'ball', label: 'Quả Bóng Đá', description: '7 bạn chọn', icon: '⚽' }
       ],
-      subQuestions: [
-        {
-          id: 'q1',
-          prompt: 'A. Đồ chơi được ÍT bạn chọn nhất là:',
-          options: ['Búp Bê Vải', 'Ô Tô Đồ Chơi', 'Khối Xếp Hình', 'Quả Bóng'],
-          correctAnswer: 'Ô Tô Đồ Chơi'
-        },
-        {
-          id: 'q2',
-          prompt: 'B. Đồ chơi được NHIỀU bạn chọn nhất là:',
-          options: ['Búp Bê Vải', 'Ô Tô Đồ Chơi', 'Khối Xếp Hình', 'Quả Bóng'],
-          correctAnswer: 'Quả Bóng'
-        }
-      ]
+      correctOrder: ['car', 'doll', 'lego', 'ball']
     }
   },
   {
@@ -408,15 +403,15 @@ export const ALL_LESSONS: LessonQuestion[] = [
       subQuestions: [
         {
           id: 'q1',
-          prompt: 'a) Món ăn trưa có NHIỀU lượt bình chọn nhất là:',
-          options: ['Mì Ý', 'Bánh Taco', 'Gà rán'],
-          correctAnswer: 'Mì Ý'
+          prompt: 'a) Tổng số bạn bình chọn cho Mì Ý và Bánh Taco là bao nhiêu bạn?',
+          options: ['6 bạn', '7 bạn', '8 bạn', '9 bạn'],
+          correctAnswer: '8 bạn'
         },
         {
           id: 'q2',
-          prompt: 'b) Món ăn trưa có ÍT lượt bình chọn nhất là:',
-          options: ['Mì Ý', 'Bánh Taco', 'Gà rán'],
-          correctAnswer: 'Bánh Taco'
+          prompt: 'b) Số bạn thích Mì Ý nhiều hơn số bạn thích Gà rán bao nhiêu bạn?',
+          options: ['1 bạn', '2 bạn', '3 bạn', '4 bạn'],
+          correctAnswer: '1 bạn'
         }
       ]
     }
@@ -427,9 +422,9 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicName: topicName('pictograph'),
     title: 'Các loài hoa mẹ Casey trồng trong vườn',
     badgeTitle: 'Bài 3.2 · Trang 8',
-    instruction: 'Biểu đồ cho thấy các loại hoa khác nhau mà mẹ Casey đã trồng trong vườn. Lưu ý: Mỗi biểu tượng hoa = 1 lượt bình chọn.',
-    hint: 'Tulip có 5 bông, Hồng có 4 bông, Lily có 2 bông, Cúc có 4 bông.',
-    mascot: { ...CASEY, message: 'Vườn hoa của mẹ mình đẹp tuyệt vời!' },
+    instruction: 'Biểu đồ cho thấy các loại hoa khác nhau mà mẹ Casey đã trồng trong vườn. Lưu ý: Mỗi biểu tượng hoa = 1 cây hoa. Em hãy quan sát biểu đồ và thực hiện phép tính.',
+    hint: 'Tulip có 5 bông, Hồng có 4 bông, Lily có 2 bông, Cúc có 4 bông. Tổng = 5 + 4 + 2 + 4 = 15 bông!',
+    mascot: { ...CASEY, message: 'Vườn hoa của mẹ mình đẹp tuyệt vời! Cùng đếm và tính toán số lượng hoa nhé!' },
     activity: {
       type: 'pictographViewer',
       keyNotice: 'Mỗi biểu tượng hoa 🌸 = 1 cây hoa trong vườn',
@@ -442,15 +437,15 @@ export const ALL_LESSONS: LessonQuestion[] = [
       subQuestions: [
         {
           id: 'q1',
-          prompt: 'a) Loài hoa mẹ Casey trồng NHIỀU nhất là:',
-          options: ['Hoa Tulip', 'Hoa Hồng', 'Hoa Lily', 'Hoa Cúc'],
-          correctAnswer: 'Hoa Tulip'
+          prompt: 'a) Mẹ Casey đã trồng tất cả bao nhiêu bông hoa trong vườn?',
+          options: ['13 bông', '14 bông', '15 bông', '16 bông'],
+          correctAnswer: '15 bông'
         },
         {
           id: 'q2',
-          prompt: 'b) Loài hoa mẹ Casey trồng ÍT nhất là:',
-          options: ['Hoa Tulip', 'Hoa Hồng', 'Hoa Lily', 'Hoa Cúc'],
-          correctAnswer: 'Hoa Lily'
+          prompt: 'b) Số hoa Tulip nhiều hơn số hoa Lily bao nhiêu bông?',
+          options: ['2 bông', '3 bông', '4 bông', '5 bông'],
+          correctAnswer: '3 bông'
         }
       ]
     }
@@ -837,20 +832,40 @@ export const ALL_LESSONS: LessonQuestion[] = [
     id: 'pic-10',
     topicId: 'pictograph',
     topicName: topicName('pictograph'),
-    title: 'Tự vẽ lại biểu đồ bị biến mất cùng Casey',
+    title: 'Khảo Sát 4 Mùa Yêu Thích: Bội Số 3 & Tỉ Lệ',
     badgeTitle: 'Bài 10 · Trang 16',
-    instruction: 'Casey đã hỏi 24 người về mùa yêu thích của họ. Mười hai người nói mùa xuân. Số người nói mùa hè và thu đều giống nhau. Sáu người nói mùa đông. Lưu ý: Mỗi ô vuông thể hiện cho 3 lượt bình chọn. Hãy bấm (+) và (-) để vẽ lại các ô!',
-    hint: 'Tổng 24 người: Xuân 12 người (12:3 = 4 ô); Đông 6 người (6:3 = 2 ô); Còn lại 24 - 12 - 6 = 6 người chia đều cho Hè và Thu (mỗi mùa 3 người = 1 ô)!',
-    mascot: { ...CASEY, message: 'Các ký hiệu trong biểu đồ bị gió thổi mất rồi, bạn giúp mình vẽ lại nhé!' },
+    instruction: 'Casey đã hỏi 24 người về mùa yêu thích của họ. Biểu đồ dưới đây biểu diễn kết quả khảo sát. Lưu ý quy ước: Mỗi bông hoa 🌸 thể hiện cho 3 lượt bình chọn.',
+    hint: 'Mỗi 🌸 = 3 người: Mùa xuân 4 bông = 12 người; Mùa hạ 1 bông = 3 người; Mùa thu 1 bông = 3 người; Mùa đông 2 bông = 6 người. Tổng: 12 + 3 + 3 + 6 = 24 người!',
+    mascot: { ...CASEY, message: 'Nhớ nhân mỗi biểu tượng hoa với 3 để tìm số người thật của từng mùa nhé bạn!' },
     activity: {
-      type: 'pictographBuilder',
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🌸 = 3 người bình chọn',
       multiplier: 3,
-      totalPeople: 24,
-      categories: [
-        { id: 'spring', label: 'Mùa Xuân (12 người)', targetSymbols: 4, symbolColor: 'bg-emerald-500' },
-        { id: 'summer', label: 'Mùa Hạ (3 người)', targetSymbols: 1, symbolColor: 'bg-amber-500' },
-        { id: 'autumn', label: 'Mùa Thu (3 người)', targetSymbols: 1, symbolColor: 'bg-orange-500' },
-        { id: 'winter', label: 'Mùa Đông (6 người)', targetSymbols: 2, symbolColor: 'bg-blue-500' }
+      items: [
+        { id: 'spring', label: 'Mùa Xuân', icon: '🌸', count: 4, actualValue: 12 },
+        { id: 'summer', label: 'Mùa Hạ', icon: '🌸', count: 1, actualValue: 3 },
+        { id: 'autumn', label: 'Mùa Thu', icon: '🌸', count: 1, actualValue: 3 },
+        { id: 'winter', label: 'Mùa Đông', icon: '🌸', count: 2, actualValue: 6 }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Mùa Xuân có số người yêu thích gấp mấy lần Mùa Hạ?',
+          options: ['2 lần', '3 lần', '4 lần', '5 lần'],
+          correctAnswer: '4 lần'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Tổng số người yêu thích Mùa Xuân và Mùa Đông là bao nhiêu người?',
+          options: ['15 người', '18 người', '21 người', '24 người'],
+          correctAnswer: '18 người'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Cả 4 mùa có tất cả bao nhiêu người tham gia khảo sát?',
+          options: ['20 người', '22 người', '24 người', '26 người'],
+          correctAnswer: '24 người'
+        }
       ]
     }
   },
@@ -920,6 +935,430 @@ export const ALL_LESSONS: LessonQuestion[] = [
           prompt: 'b) Tổng số điểm thi đua của Tổ 1 và Tổ 3 là bao nhiêu?',
           options: ['32 điểm', '36 điểm', '40 điểm', '44 điểm'],
           correctAnswer: '36 điểm'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-13',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Nông Trại Trái Cây Hữu Cơ: Bội Số 6 & Hiệu Cực Đại',
+    badgeTitle: 'Bài 13 · Độ khó Cấp 1',
+    instruction: 'Biểu đồ biểu diễn khối lượng 4 loại trái cây thu hoạch được tại nông trại hữu cơ của bạn Benny. Lưu ý quy ước tỉ lệ: Mỗi quả táo đỏ 🍎 đại diện cho 6 kg quả thật.',
+    hint: 'Mỗi 🍎 = 6 kg. Dâu tây: 5 × 6 = 30 kg; Táo ngọt: 8 × 6 = 48 kg; Nho tím: 3 × 6 = 18 kg; Cam vàng: 6 × 6 = 36 kg. Hiệu quả nhiều nhất và ít nhất là: 48 - 18 = 30 kg!',
+    mascot: { ...BENNY, message: 'Chào mừng bạn đến cấp độ nâng cao! Hãy nhớ nhân mỗi biểu tượng với 6 kg nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🍎 = 6 kg quả thu hoạch',
+      multiplier: 6,
+      items: [
+        { id: 'strawberry', label: 'Dâu Tây Mọng 🍓', icon: '🍎', count: 5, actualValue: 30, unit: 'kg' },
+        { id: 'apple', label: 'Táo Ngọt Giòn 🍏', icon: '🍎', count: 8, actualValue: 48, unit: 'kg' },
+        { id: 'grape', label: 'Nho Tím Rừng 🍇', icon: '🍎', count: 3, actualValue: 18, unit: 'kg' },
+        { id: 'orange', label: 'Cam Vàng Mọng 🍊', icon: '🍎', count: 6, actualValue: 36, unit: 'kg' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Loại quả nào thu hoạch được nhiều nhất và nặng bao nhiêu kg?',
+          options: ['Cam vàng (36 kg)', 'Táo ngọt (48 kg)', 'Dâu tây (30 kg)', 'Táo ngọt (42 kg)'],
+          correctAnswer: 'Táo ngọt (48 kg)'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Hiệu khối lượng giữa loại quả nhiều nhất và loại quả ít nhất là bao nhiêu kg?',
+          options: ['24 kg', '28 kg', '30 kg', '36 kg'],
+          correctAnswer: '30 kg'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Tổng khối lượng của cả 4 loại quả thu hoạch được là bao nhiêu kg?',
+          options: ['120 kg', '126 kg', '132 kg', '138 kg'],
+          correctAnswer: '132 kg'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-14',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Khảo Sát Phương Tiện Giờ Cao Điểm: Bội Số 4 & Tìm Ẩn Số',
+    badgeTitle: 'Bài 14 · Độ khó Cấp 2',
+    instruction: 'Đội tuần tra của Casey đếm được tổng cộng 48 phương tiện qua ngã tư giờ cao điểm. Quy ước: Mỗi biểu tượng 🚗 đại diện cho 4 xe thật.',
+    hint: 'Mỗi 🚗 = 4 xe: Xe máy có 4 hình = 16 xe; Ô tô con có 5 hình = 20 xe; Xe buýt có 2 hình = 8 xe; Xe đạp có 1 hình = 4 xe. Tổng = 16 + 20 + 8 + 4 = 48 xe!',
+    mascot: { ...CASEY, message: 'Nhân số biểu tượng với 4 để tìm số xe thật và giải các câu hỏi toán học nhé bạn!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🚗 = 4 xe thật',
+      multiplier: 4,
+      items: [
+        { id: 'motorbike', label: 'Xe máy', icon: '🚗', count: 4, actualValue: 16, unit: 'xe' },
+        { id: 'car', label: 'Ô tô con', icon: '🚗', count: 5, actualValue: 20, unit: 'xe' },
+        { id: 'bus', label: 'Xe buýt', icon: '🚗', count: 2, actualValue: 8, unit: 'xe' },
+        { id: 'bicycle', label: 'Xe đạp', icon: '🚗', count: 1, actualValue: 4, unit: 'xe' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Có bao nhiêu chiếc xe đạp đi qua ngã tư trong giờ cao điểm?',
+          options: ['4 xe', '6 xe', '8 xe', '10 xe'],
+          correctAnswer: '4 xe'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Số ô tô con nhiều hơn số xe buýt bao nhiêu chiếc xe?',
+          options: ['8 xe', '10 xe', '12 xe', '14 xe'],
+          correctAnswer: '12 xe'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Số xe máy gấp mấy lần số xe đạp?',
+          options: ['2 lần', '3 lần', '4 lần', '5 lần'],
+          correctAnswer: '4 lần'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-15',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thư Viện Sách Của Biệt Đội Rừng Xanh: Bội Số 8 & Bài Toán Tỉ Số',
+    badgeTitle: 'Bài 15 · Độ khó Cấp 3',
+    instruction: 'Biểu đồ biểu diễn 4 thể loại sách trong phòng đọc của Thỏ Abby. Lưu ý quy ước tỉ lệ nhân: Mỗi cuốn sách mở 📚 đại diện cho 8 quyển sách thật.',
+    hint: 'Khoa học: 4 × 8 = 32 quyển. Lịch sử: 2 × 8 = 16 quyển. 32 gấp 16 số lần là: 32 : 16 = 2 lần! Thơ ca: 3 × 8 = 24 quyển; Cần thêm 32 - 24 = 8 quyển để bằng Khoa học.',
+    mascot: { ...ABBY, message: 'Ở bài này, chúng mình sẽ so sánh gấp mấy lần và tính số sách cần bổ sung đấy!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 📚 = 8 quyển sách thật',
+      multiplier: 8,
+      items: [
+        { id: 'comics', label: 'Truyện Tranh Thiếu Nhi 🦸', icon: '📚', count: 7, actualValue: 56, unit: 'quyển' },
+        { id: 'science', label: 'Khám Phá Khoa Học 🔬', icon: '📚', count: 4, actualValue: 32, unit: 'quyển' },
+        { id: 'history', label: 'Lịch Sử & Danh Nhân 🏛️', icon: '📚', count: 2, actualValue: 16, unit: 'quyển' },
+        { id: 'poetry', label: 'Văn Học & Thơ Ca 📜', icon: '📚', count: 3, actualValue: 24, unit: 'quyển' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Số sách Khám Phá Khoa Học gấp mấy lần số sách Lịch Sử?',
+          options: ['2 lần', '3 lần', '4 lần', '1,5 lần'],
+          correctAnswer: '2 lần'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Cần bổ sung thêm bao nhiêu quyển sách Thơ Ca để số sách Thơ Ca bằng số sách Khoa Học?',
+          options: ['6 quyển', '8 quyển (1 biểu tượng)', '12 quyển', '16 quyển'],
+          correctAnswer: '8 quyển (1 biểu tượng)'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Tổng số sách của cả 4 thể loại trong thư viện là bao nhiêu quyển?',
+          options: ['112 quyển', '120 quyển', '128 quyển', '136 quyển'],
+          correctAnswer: '128 quyển'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-16',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Dự Án Phủ Xanh 5 Ngọn Đồi: Quy Ước Bội Số 10 & Tính Trung Bình',
+    badgeTitle: 'Bài 16 · Độ khó Cấp 4',
+    instruction: 'Biểu đồ biểu diễn chiến dịch trồng rừng trên 5 ngọn đồi của trường Spark Math. Lưu ý: Mỗi cây xanh 🌲 thể hiện cho đúng 10 cây xanh đã được trồng.',
+    hint: 'Đồi Sao Mai: 60 cây; Đồi Ánh Dương: 90 cây; Đồi Thung Lũng: 40 cây; Đồi Gió Lộng: 70 cây; Đồi Mây Trắng: 40 cây. Tổng = 300 cây. Trung bình mỗi đồi = 300 : 5 = 60 cây!',
+    mascot: { ...MAYLE, message: 'Hãy cộng tổng số cây của cả 5 ngọn đồi rồi chia cho 5 để tìm số cây trung bình nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🌲 = 10 cây xanh đã trồng',
+      multiplier: 10,
+      items: [
+        { id: 'hill1', label: 'Đồi Sao Mai 🌄', icon: '🌲', count: 6, actualValue: 60, unit: 'cây' },
+        { id: 'hill2', label: 'Đồi Ánh Dương ☀️', icon: '🌲', count: 9, actualValue: 90, unit: 'cây' },
+        { id: 'hill3', label: 'Đồi Thung Lũng 🏞️', icon: '🌲', count: 4, actualValue: 40, unit: 'cây' },
+        { id: 'hill4', label: 'Đồi Gió Lộng 🍃', icon: '🌲', count: 7, actualValue: 70, unit: 'cây' },
+        { id: 'hill5', label: 'Đồi Mây Trắng ☁️', icon: '🌲', count: 4, actualValue: 40, unit: 'cây' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Hai ngọn đồi nào có số lượng cây trồng bằng nhau?',
+          options: ['Đồi Sao Mai & Đồi Gió Lộng', 'Đồi Thung Lũng & Đồi Mây Trắng', 'Đồi Ánh Dương & Đồi Sao Mai', 'Đồi Mây Trắng & Đồi Gió Lộng'],
+          correctAnswer: 'Đồi Thung Lũng & Đồi Mây Trắng'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Tổng số cây xanh đã trồng được trên cả 5 ngọn đồi là bao nhiêu cây?',
+          options: ['280 cây', '290 cây', '300 cây', '320 cây'],
+          correctAnswer: '300 cây'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Trung bình mỗi ngọn đồi trồng được bao nhiêu cây xanh?',
+          options: ['50 cây', '55 cây', '60 cây', '65 cây'],
+          correctAnswer: '60 cây'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-17',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Hội Thao Bốn Môn Học Đường: Bội Số 5 & Phân Tích Thống Kê',
+    badgeTitle: 'Bài 17 · Độ khó Cấp 5',
+    instruction: 'Tổng cộng có 65 học sinh đăng ký tham gia 4 môn hội thao: Bóng đá, Cầu lông, Bơi lội, Cờ vua. Quy ước: Mỗi biểu tượng huy chương 🏅 đại diện cho 5 học sinh.',
+    hint: 'Mỗi 🏅 = 5 bạn: Bóng đá 5 hình = 25 bạn; Cầu lông 3 hình = 15 bạn; Bơi lội 2 hình = 10 bạn; Cờ vua 3 hình = 15 bạn. Tổng: 25 + 15 + 10 + 15 = 65 bạn!',
+    mascot: { ...BENNY, message: 'Nhớ nhân mỗi biểu tượng với 5 nhé bạn!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🏅 = 5 học sinh',
+      multiplier: 5,
+      items: [
+        { id: 'soccer', label: 'Bóng đá ⚽', icon: '🏅', count: 5, actualValue: 25, unit: 'bạn' },
+        { id: 'badminton', label: 'Cầu lông 🏸', icon: '🏅', count: 3, actualValue: 15, unit: 'bạn' },
+        { id: 'swimming', label: 'Bơi lội 🏊', icon: '🏅', count: 2, actualValue: 10, unit: 'bạn' },
+        { id: 'chess', label: 'Cờ vua ♟️', icon: '🏅', count: 3, actualValue: 15, unit: 'bạn' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Môn Bóng đá có nhiều hơn môn Bơi lội bao nhiêu bạn học sinh?',
+          options: ['10 bạn', '12 bạn', '15 bạn', '18 bạn'],
+          correctAnswer: '15 bạn'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Hai môn có số lượng học sinh đăng ký bằng nhau là môn nào?',
+          options: [
+            'Bóng đá và Cầu lông',
+            'Cầu lông và Cờ vua',
+            'Bơi lội và Cờ vua',
+            'Bóng đá và Bơi lội'
+          ],
+          correctAnswer: 'Cầu lông và Cờ vua'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Cả 4 môn thể thao có tất cả bao nhiêu học sinh đăng ký tham gia?',
+          options: ['55 bạn', '60 bạn', '65 bạn', '70 bạn'],
+          correctAnswer: '65 bạn'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-18',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thám Tử Suy Luận: Truy Tìm Quy Ước Bị Ẩn (Missing Key Multiplier)',
+    badgeTitle: 'Bài 18 · Độ khó Cấp 6',
+    instruction: 'Bảng khảo sát bóng trong phòng dụng cụ thể dục của trường. Lưu ý: Đề bài KHÔNG cho biết trước 1 biểu tượng 🏀 là bao nhiêu quả! Thầy Mayle cung cấp manh mối: "Tổng số bóng rổ và bóng đá là 40 quả bóng". Em hãy giải mã quy ước và trả lời các câu hỏi.',
+    hint: 'Manh mối: Bóng rổ có 3 hình, bóng đá có 5 hình => Tổng là 3 + 5 = 8 hình. Vì 8 hình = 40 quả nên 1 hình 🏀 = 40 : 8 = 5 quả! Khi đó bóng bàn có 4 hình = 4 × 5 = 20 quả.',
+    mascot: { ...MAYLE, message: 'Dạng toán suy luận tìm ẩn số quy ước: Hãy lấy tổng số quả chia cho tổng số hình để tìm giá trị 1 hình nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Manh mối: Tổng số bóng rổ (3 hình) và bóng đá (5 hình) là 40 quả',
+      multiplier: 5,
+      items: [
+        { id: 'basketball', label: 'Bóng Rổ 🏀', icon: '🏀', count: 3, actualValue: 15, unit: 'quả' },
+        { id: 'soccer', label: 'Bóng Đá ⚽', icon: '🏀', count: 5, actualValue: 25, unit: 'quả' },
+        { id: 'volleyball', label: 'Bóng Chuyền 🏐', icon: '🏀', count: 2, actualValue: 10, unit: 'quả' },
+        { id: 'pingpong', label: 'Bóng Bàn 🏓', icon: '🏀', count: 4, actualValue: 20, unit: 'quả' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Mỗi biểu tượng bóng 🏀 đại diện cho bao nhiêu quả bóng thật?',
+          options: ['4 quả bóng', '5 quả bóng', '6 quả bóng', '8 quả bóng'],
+          correctAnswer: '5 quả bóng'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Trong phòng dụng cụ có tất cả bao nhiêu quả bóng bàn?',
+          options: ['16 quả', '18 quả', '20 quả', '24 quả'],
+          correctAnswer: '20 quả'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Tổng số bóng của cả 4 môn trong phòng thể dục là bao nhiêu quả?',
+          options: ['60 quả', '65 quả', '70 quả', '75 quả'],
+          correctAnswer: '70 quả'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-19',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Bài Toán Chuyển Giao Biểu Tượng (Dạng Toán Cân Bằng Cho - Nhận)',
+    badgeTitle: 'Bài 19 · Độ khó Cấp 7',
+    instruction: 'Biểu đồ biểu diễn số huy chương thi đấu của 4 đội tuyển. Quy ước: Mỗi huy chương vàng 🏅 đại diện cho 6 huy chương thật. Rồng Lửa có 9 hình (54), Hổ Trắng có 5 hình (30), Đại Bàng có 8 hình (48), Sói Xám có 6 hình (36).',
+    hint: 'Rồng Lửa hơn Hổ Trắng: 54 - 30 = 24 huy chương (tương ứng 4 biểu tượng). Để hai đội bằng nhau, Rồng Lửa phải chuyển một nửa số chênh lệch: 4 : 2 = 2 biểu tượng (tức 12 huy chương). Khi đó mỗi đội đều có 7 biểu tượng = 42 huy chương!',
+    mascot: { ...CASEY, message: 'Dạng toán chuyển giao: Muốn hai bên bằng nhau, phải lấy hiệu số chia cho 2 đấy bạn!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🏅 = 6 huy chương thật',
+      multiplier: 6,
+      items: [
+        { id: 'dragon', label: 'Đội Rồng Lửa 🔥', icon: '🏅', count: 9, actualValue: 54, unit: 'huy chương' },
+        { id: 'tiger', label: 'Đội Hổ Trắng 🐯', icon: '🏅', count: 5, actualValue: 30, unit: 'huy chương' },
+        { id: 'eagle', label: 'Đội Đại Bàng 🦅', icon: '🏅', count: 8, actualValue: 48, unit: 'huy chương' },
+        { id: 'wolf', label: 'Đội Sói Xám 🐺', icon: '🏅', count: 6, actualValue: 36, unit: 'huy chương' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Đội Rồng Lửa hiện có nhiều hơn Đội Hổ Trắng bao nhiêu huy chương?',
+          options: ['18 huy chương', '24 huy chương', '30 huy chương', '36 huy chương'],
+          correctAnswer: '24 huy chương'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Đội Rồng Lửa phải chuyển cho Đội Hổ Trắng bao nhiêu biểu tượng 🏅 để số huy chương của hai đội bằng nhau?',
+          options: ['1 biểu tượng (6 huy chương)', '2 biểu tượng (12 huy chương)', '3 biểu tượng (18 huy chương)', '4 biểu tượng (24 huy chương)'],
+          correctAnswer: '2 biểu tượng (12 huy chương)'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Cần thêm bao nhiêu huy chương cho Đội Sói Xám để vươn lên bằng điểm Đội Đại Bàng?',
+          options: ['8 huy chương', '12 huy chương (2 biểu tượng)', '16 huy chương', '18 huy chương'],
+          correctAnswer: '12 huy chương (2 biểu tượng)'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-20',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Hành Trình 5 Trạm Điểm Bí Mật: Bội Số 6 & Phân Tích Đa Tầng',
+    badgeTitle: 'Bài 20 · Độ khó Cấp 8',
+    instruction: 'Tổng số điểm nhiệm vụ tích lũy được qua 5 chặng đua là 72 điểm. Quy ước: Mỗi ngôi sao sáng ⭐ đại diện cho 6 điểm nhiệm vụ.',
+    hint: 'Mỗi ⭐ = 6 điểm: Trạm 1: 3 × 6 = 18 điểm; Trạm 2: 2 × 6 = 12 điểm; Trạm 3: 2 × 6 = 12 điểm; Trạm 4: 1 × 6 = 6 điểm; Trạm 5: 4 × 6 = 24 điểm. Tổng: 18 + 12 + 12 + 6 + 24 = 72 điểm!',
+    mascot: { ...ABBY, message: 'Quan sát các ngôi sao ở 5 trạm và nhân với 6 để trả lời các câu hỏi đa tầng nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi ⭐ = 6 điểm nhiệm vụ',
+      multiplier: 6,
+      items: [
+        { id: 'stage1', label: 'Trạm 1: Khởi động 🌿', icon: '⭐', count: 3, actualValue: 18, unit: 'điểm' },
+        { id: 'stage2', label: 'Trạm 2: Vượt dốc ⛰️', icon: '⭐', count: 2, actualValue: 12, unit: 'điểm' },
+        { id: 'stage3', label: 'Trạm 3: Giải đố 🦇', icon: '⭐', count: 2, actualValue: 12, unit: 'điểm' },
+        { id: 'stage4', label: 'Trạm 4: Cầu khỉ 🌸', icon: '⭐', count: 1, actualValue: 6, unit: 'điểm' },
+        { id: 'stage5', label: 'Trạm 5: Về đích 🏰', icon: '⭐', count: 4, actualValue: 24, unit: 'điểm' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Trạm 5 (Về đích) có số điểm gấp mấy lần Trạm 2?',
+          options: ['2 lần', '3 lần', '4 lần', '5 lần'],
+          correctAnswer: '2 lần'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Hiệu số điểm giữa trạm cao nhất (Trạm 5) và trạm thấp nhất (Trạm 4) là bao nhiêu điểm?',
+          options: ['12 điểm', '15 điểm', '18 điểm', '20 điểm'],
+          correctAnswer: '18 điểm'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Tổng số điểm đạt được ở cả 5 trạm là bao nhiêu điểm?',
+          options: ['60 điểm', '66 điểm', '72 điểm', '78 điểm'],
+          correctAnswer: '72 điểm'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-21',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Tiệm Nước Ép Trái Cây Abby: Biểu Đồ Doanh Thu & Giá Tiền Hai Bước',
+    badgeTitle: 'Bài 21 · Độ khó Cấp 9',
+    instruction: 'Biểu đồ biểu diễn số ly nước ép Abby đã bán trong ngày hội chợ. Quy ước: Mỗi biểu tượng ly nước 🥤 đại diện cho 8 ly nước thật. Bảng giá: Nước Cam (10.000đ/ly), Dưa Hấu (10.000đ/ly), Táo Đặc Biệt (15.000đ/ly), Cà Rốt (10.000đ/ly).',
+    hint: 'Cam: 6 × 8 = 48 ly; Dưa Hấu: 5 × 8 = 40 ly; Táo: 3 × 8 = 24 ly; Cà Rốt: 4 × 8 = 32 ly. Tiền nước ép Táo = 24 ly × 15.000đ = 360.000đ! Trung bình số ly bán được mỗi loại = (48 + 40 + 24 + 32) : 4 = 144 : 4 = 36 ly.',
+    mascot: { ...ABBY, message: 'Bài toán kết hợp số lượng từ biểu đồ tranh với đơn giá để tính tổng doanh thu đấy!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Lưu ý quy ước: Mỗi 🥤 = 8 ly nước ép đã bán',
+      multiplier: 8,
+      items: [
+        { id: 'orange_juice', label: 'Nước Ép Cam Tươi (10.000đ) 🍊', icon: '🥤', count: 6, actualValue: 48, unit: 'ly' },
+        { id: 'watermelon_juice', label: 'Nước Ép Dưa Hấu (10.000đ) 🍉', icon: '🥤', count: 5, actualValue: 40, unit: 'ly' },
+        { id: 'apple_special', label: 'Nước Ép Táo Mật (15.000đ) 🍎', icon: '🥤', count: 3, actualValue: 24, unit: 'ly' },
+        { id: 'carrot_juice', label: 'Nước Ép Cà Rốt (10.000đ) 🥕', icon: '🥤', count: 4, actualValue: 32, unit: 'ly' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Quán của Abby đã bán được tổng cộng bao nhiêu ly Nước Ép Cam và Dưa Hấu?',
+          options: ['80 ly', '84 ly', '88 ly', '92 ly'],
+          correctAnswer: '88 ly'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Tổng số tiền thu được từ việc bán Nước Ép Táo Mật (24 ly giá 15.000đ/ly) là bao nhiêu?',
+          options: ['240.000 đồng', '300.000 đồng', '360.000 đồng', '400.000 đồng'],
+          correctAnswer: '360.000 đồng'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Trung bình mỗi loại nước ép quán bán được bao nhiêu ly?',
+          options: ['32 ly', '36 ly', '40 ly', '44 ly'],
+          correctAnswer: '36 ly'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-22',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'ĐẠI THỬ THÁCH TRẠM 1: Kho Báu 5 Rương Kim Cương Hoàng Gia',
+    badgeTitle: 'Bài 22 · Đỉnh Cao Trạm 1',
+    instruction: 'Thử thách tối thượng của Trạm 1! Biểu đồ biểu diễn số viên kim cương trong 5 rương kho báu hoàng gia. Lưu ý quy ước cấp cao: Mỗi viên kim cương xanh 💎 đại diện cho đúng 12 viên kim cương thật.',
+    hint: 'Mỗi 💎 = 12 viên. Hoàng Kim (7×12=84); Lam Ngọc (5×12=60); Hồng Ngọc (8×12=96); Lục Bảo (4×12=48); Thạch Anh (6×12=72). Hiệu lớn nhất và nhỏ nhất: 96 - 48 = 48 viên (4 biểu tượng). Tổng cả 5 rương = 360 viên. Chia đều 9 hiệp sĩ: 360 : 9 = 40 viên/người!',
+    mascot: { ...MAYLE, message: 'Chúc mừng bạn đã tiến tới bài thi cuối cùng của Trạm 1! Hãy vận dụng toàn bộ tư duy số học để giải mã nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: 'Quy ước tối thượng: Mỗi 💎 = 12 viên kim cương thật',
+      multiplier: 12,
+      items: [
+        { id: 'chest_gold', label: 'Rương Hoàng Kim 👑', icon: '💎', count: 7, actualValue: 84, unit: 'viên' },
+        { id: 'chest_sapphire', label: 'Rương Lam Ngọc 🔷', icon: '💎', count: 5, actualValue: 60, unit: 'viên' },
+        { id: 'chest_ruby', label: 'Rương Hồng Ngọc 🌹', icon: '💎', count: 8, actualValue: 96, unit: 'viên' },
+        { id: 'chest_emerald', label: 'Rương Lục Bảo 🍀', icon: '💎', count: 4, actualValue: 48, unit: 'viên' },
+        { id: 'chest_amethyst', label: 'Rương Thạch Anh 🔮', icon: '💎', count: 6, actualValue: 72, unit: 'viên' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'a) Rương chứa nhiều kim cương nhất hơn rương chứa ít kim cương nhất bao nhiêu viên?',
+          options: ['36 viên (3 biểu tượng)', '44 viên', '48 viên (4 biểu tượng)', '52 viên'],
+          correctAnswer: '48 viên (4 biểu tượng)'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Tổng số kim cương có trong cả 5 rương kho báu là bao nhiêu viên?',
+          options: ['320 viên', '340 viên', '360 viên', '380 viên'],
+          correctAnswer: '360 viên'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Nếu chia đều toàn bộ số kim cương của cả 5 rương cho 9 hiệp sĩ Spark Math, mỗi người nhận được bao nhiêu viên?',
+          options: ['36 viên', '40 viên', '45 viên', '50 viên'],
+          correctAnswer: '40 viên'
+        },
+        {
+          id: 'q4',
+          prompt: 'd) Cần chuyển từ Rương Hồng Ngọc sang Rương Lục Bảo bao nhiêu biểu tượng 💎 để hai rương có số kim cương bằng nhau?',
+          options: ['1 biểu tượng (12 viên)', '2 biểu tượng (24 viên)', '3 biểu tượng (36 viên)', '4 biểu tượng (48 viên)'],
+          correctAnswer: '2 biểu tượng (24 viên)'
         }
       ]
     }
@@ -1563,6 +2002,400 @@ export const ALL_LESSONS: LessonQuestion[] = [
           prompt: 'b) Cả 3 thùng chứa tất cả bao nhiêu lít nước?',
           options: ['36 lít', '40 lít', '42 lít', '44 lít'],
           correctAnswer: '42 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-12',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'San Sẻ Cân Bằng: Rót nước giữa hai bình',
+    badgeTitle: 'Bài 12 · Độ khó Cấp 1',
+    instruction: 'Bình A có 28 Lít nước ép táo. Bình B có 16 Lít nước ép dứa. Hỏi phải rót từ Bình A sang Bình B bao nhiêu lít nước để hai bình có thể tích bằng nhau?',
+    hint: 'Tổng số nước của 2 bình: 28 + 16 = 44 Lít. Khi bằng nhau, mỗi bình sẽ có: 44 : 2 = 22 Lít. Vậy số nước cần rót từ Bình A sang Bình B là: 28 - 22 = 6 Lít (hoặc lấy chênh lệch (28 - 16) : 2 = 6 Lít)!',
+    mascot: { ...BENNY, message: 'Bài toán san sẻ nước: Tổng lượng nước của cả hai bình luôn luôn không đổi bạn nhé!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'A', label: 'Bình A (Táo)', levelPercent: 70, color: '#f97316', subLabel: '28 Lít' },
+        { id: 'B', label: 'Bình B (Dứa)', levelPercent: 40, color: '#eab308', subLabel: '16 Lít' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Tổng số lít nước ép của cả hai bình là bao nhiêu?',
+          options: ['40 Lít', '42 Lít', '44 Lít', '46 Lít'],
+          correctAnswer: '44 Lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Khi hai bình bằng nhau, mỗi bình sẽ có bao nhiêu lít nước?',
+          options: ['20 Lít', '22 Lít', '24 Lít', '26 Lít'],
+          correctAnswer: '22 Lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Cần rót từ Bình A sang Bình B bao nhiêu lít nước để hai bình bằng nhau?',
+          options: ['4 Lít', '5 Lít', '6 Lít', '8 Lít'],
+          correctAnswer: '6 Lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-13',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Sơ Đồ Đoạn Thẳng: Tổng và Tỉ số thể tích',
+    badgeTitle: 'Bài 13 · Độ khó Cấp 2',
+    instruction: 'Bình nước cam và Bình nước chanh có tổng cộng 36 Lít. Biết thể tích bình nước cam gấp 3 lần thể tích bình nước chanh. Tìm thể tích nước của mỗi bình.',
+    hint: 'Nước chanh là 1 phần, Nước cam là 3 phần. Tổng số phần bằng nhau: 1 + 3 = 4 phần. Giá trị 1 phần (Nước chanh): 36 : 4 = 9 Lít. Nước cam: 9 × 3 = 27 Lít!',
+    mascot: { ...ABBY, message: 'Nhìn sơ đồ đoạn thẳng: Nước cam vẽ 3 đoạn, nước chanh vẽ 1 đoạn, tổng là 4 đoạn bằng nhau!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Nước Chanh 🍋 (1 phần)', lengthVal: 9, display: '9 L', color: 'bg-amber-400' },
+        {
+          label: 'Nước Cam 🍊 (3 phần)',
+          lengthVal: 27,
+          display: '27 L',
+          parts: [
+            { val: 9, label: '9 L' },
+            { val: 9, label: '9 L' },
+            { val: 9, label: '9 L' }
+          ],
+          color: 'bg-orange-500'
+        }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Tổng số phần bằng nhau của nước cam và nước chanh là bao nhiêu?',
+          options: ['3 phần', '4 phần', '5 phần', '6 phần'],
+          correctAnswer: '4 phần'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Bình nước chanh chứa bao nhiêu lít nước?',
+          options: ['8 Lít', '9 Lít', '10 Lít', '12 Lít'],
+          correctAnswer: '9 Lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Bình nước cam chứa bao nhiêu lít nước?',
+          options: ['24 Lít', '27 Lít', '30 Lít', '32 Lít'],
+          correctAnswer: '27 Lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-14',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Thực Nghiệm Archimedes: Đo thể tích viên đá phong thủy',
+    badgeTitle: 'Bài 14 · Độ khó Cấp 3',
+    instruction: 'Một bình đo vạch chứa 300 mL nước sạch. Benny nhẹ nhàng thả một viên đá thạch anh chìm hoàn toàn vào bình nước. Mực nước dâng lên tới vạch 480 mL. Hãy tìm thể tích của viên đá.',
+    hint: 'Thể tích của viên đá chìm chính là phần thể tích nước dâng thêm: 480 - 300 = 180 mL!',
+    mascot: { ...BENNY, message: 'Khi vật chìm trong nước, nó chiếm chỗ và đẩy nước dâng lên đúng bằng thể tích của chính nó!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'before', label: 'Trước khi thả đá', levelPercent: 50, color: '#38bdf8', subLabel: '300 mL' },
+        { id: 'after', label: 'Sau khi thả đá 💎', levelPercent: 80, color: '#0284c7', subLabel: '480 mL' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Mực nước trong bình đã dâng lên thêm bao nhiêu mL?',
+          options: ['120 mL', '150 mL', '180 mL', '200 mL'],
+          correctAnswer: '180 mL'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Thể tích của viên đá thạch anh là bao nhiêu?',
+          options: ['180 mL', '300 mL', '480 mL', '780 mL'],
+          correctAnswer: '180 mL'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-15',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Đo Thể Tích Đa Vật Thể: Ba viên bi sắt cùng cỡ',
+    badgeTitle: 'Bài 15 · Độ khó Cấp 4',
+    instruction: 'Một ca đo có sẵn 500 mL nước. Casey thả 3 viên bi sắt có kích thước hoàn toàn bằng nhau vào trong ca, làm nước dâng lên vạch 680 mL. Tính thể tích của mỗi viên bi sắt.',
+    hint: 'Tổng thể tích 3 viên bi sắt = Nước dâng = 680 - 500 = 180 mL. Vì 3 viên bi bằng nhau nên mỗi viên có thể tích là: 180 : 3 = 60 mL!',
+    mascot: { ...CASEY, message: 'Nhớ tính tổng lượng dâng lên trước, sau đó chia đều cho 3 viên bi nhé!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'initial', label: 'Ca ban đầu', levelPercent: 50, color: '#06b6d4', subLabel: '500 mL' },
+        { id: 'withBalls', label: 'Thả 3 bi sắt ⚪⚪⚪', levelPercent: 68, color: '#0891b2', subLabel: '680 mL' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Cả 3 viên bi sắt chiếm thể tích tổng cộng là bao nhiêu?',
+          options: ['150 mL', '160 mL', '180 mL', '200 mL'],
+          correctAnswer: '180 mL'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Thể tích của MỖI VIÊN BI SẮT là bao nhiêu mL?',
+          options: ['50 mL', '60 mL', '70 mL', '80 mL'],
+          correctAnswer: '60 mL'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-16',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Sơ Đồ Đoạn Thẳng: Hiệu và Tỉ số thể tích bể cá',
+    badgeTitle: 'Bài 16 · Độ khó Cấp 5',
+    instruction: 'Bể cá nhà bạn Benny chứa nhiều hơn bể cá nhà bạn Rory 45 Lít nước. Biết thể tích bể cá của Benny gấp 4 lần thể tích bể cá của Rory. Hỏi mỗi bể chứa bao nhiêu lít nước?',
+    hint: 'Bể Benny 4 phần, Bể Rory 1 phần. Hiệu số phần bằng nhau: 4 - 1 = 3 phần. Giá trị 1 phần (Bể Rory): 45 : 3 = 15 Lít. Bể Benny: 15 × 4 = 60 Lít. Tổng cả 2 bể: 60 + 15 = 75 Lít!',
+    mascot: { ...MAYLE, message: 'Bài toán Hiệu - Tỉ: Hãy tìm hiệu số phần trước: 4 phần trừ 1 phần bằng 3 phần tương ứng 45L!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Bể Rory 🐻 (1 phần)', lengthVal: 15, display: '15 L', color: 'bg-emerald-500' },
+        {
+          label: 'Bể Benny 🐵 (4 phần)',
+          lengthVal: 60,
+          display: '60 L',
+          parts: [
+            { val: 15, label: '15 L' },
+            { val: 45, label: '+45 L (Hiệu)' }
+          ],
+          color: 'bg-blue-600'
+        }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Hiệu số phần bằng nhau giữa 2 bể là bao nhiêu phần?',
+          options: ['2 phần', '3 phần', '4 phần', '5 phần'],
+          correctAnswer: '3 phần'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Bể cá nhà Rory chứa bao nhiêu lít nước?',
+          options: ['12 Lít', '15 Lít', '18 Lít', '20 Lít'],
+          correctAnswer: '15 Lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Bể cá nhà Benny chứa bao nhiêu lít nước?',
+          options: ['50 Lít', '55 Lít', '60 Lít', '65 Lít'],
+          correctAnswer: '60 Lít'
+        },
+        {
+          id: 'q4',
+          prompt: 'd) Cả hai bể cá chứa tổng cộng bao nhiêu lít nước?',
+          options: ['70 Lít', '75 Lít', '80 Lít', '85 Lít'],
+          correctAnswer: '75 Lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-17',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'San Sẻ 3 Bình Nước: Đưa về trạng thái cân bằng',
+    badgeTitle: 'Bài 17 · Độ khó Cấp 6',
+    instruction: 'Có ba bình nước: Bình A có 14 Lít, Bình B có 24 Lít, Bình C có 34 Lít. Hỏi cần chuyển nước như thế nào để cả ba bình có số lít nước bằng nhau mà không làm đổ giọt nào?',
+    hint: 'Tổng 3 bình: 14 + 24 + 34 = 72 Lít. Khi 3 bình bằng nhau, mỗi bình sẽ có: 72 : 3 = 24 Lít. Ta thấy Bình B đã có đúng 24 Lít (giữ nguyên). Bình C thừa 34 - 24 = 10 Lít. Rót 10 Lít từ Bình C sang Bình A (14 + 10 = 24 Lít) là xong!',
+    mascot: { ...ABBY, message: 'Tìm số trung bình của cả 3 bình trước: 72 chia cho 3 bằng 24 Lít!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'A', label: 'Bình A', levelPercent: 35, color: '#38bdf8', subLabel: '14 Lít' },
+        { id: 'B', label: 'Bình B', levelPercent: 60, color: '#38bdf8', subLabel: '24 Lít' },
+        { id: 'C', label: 'Bình C', levelPercent: 85, color: '#38bdf8', subLabel: '34 Lít' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Tổng thể tích nước trong cả ba bình là bao nhiêu?',
+          options: ['68 Lít', '70 Lít', '72 Lít', '74 Lít'],
+          correctAnswer: '72 Lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Khi ba bình bằng nhau, mỗi bình sẽ có bao nhiêu lít nước?',
+          options: ['22 Lít', '24 Lít', '26 Lít', '28 Lít'],
+          correctAnswer: '24 Lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Cách san sẻ nước chính xác và nhanh nhất là gì?',
+          options: [
+            'Rót từ Bình C sang Bình A 10 Lít',
+            'Rót từ Bình B sang Bình A 5 Lít',
+            'Rót từ Bình C sang Bình B 6 Lít',
+            'Rót từ Bình A sang Bình C 10 Lít'
+          ],
+          correctAnswer: 'Rót từ Bình C sang Bình A 10 Lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-18',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Vòi Nước Đơn: Tính thời gian đổ đầy bể chứa',
+    badgeTitle: 'Bài 18 · Độ khó Cấp 7',
+    instruction: 'Một bể nước có dung tích 150 Lít, hiện tại trong bể đang có sẵn 30 Lít nước. Người ta mở một vòi nước chảy vào bể với lưu lượng 20 Lít mỗi phút. Hỏi sau bao nhiêu phút thì bể sẽ đầy nước?',
+    hint: 'Lượng nước cần chảy thêm để đầy bể: 150 - 30 = 120 Lít. Mỗi phút vòi chảy 20 Lít, vậy thời gian cần là: 120 : 20 = 6 phút!',
+    mascot: { ...CASEY, message: 'Lấy lượng nước còn thiếu chia cho tốc độ chảy mỗi phút là ra thời gian nhé!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'current', label: 'Nước có sẵn 💧', levelPercent: 20, color: '#67e8f9', subLabel: '30 Lít' },
+        { id: 'needed', label: 'Lượng cần thêm 🚰', levelPercent: 80, color: '#0891b2', subLabel: '120 Lít' },
+        { id: 'full', label: 'Dung tích đầy bể', levelPercent: 100, color: '#0369a1', subLabel: '150 Lít' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Bể cần thêm bao nhiêu lít nước nữa để đầy hoàn toàn?',
+          options: ['110 Lít', '120 Lít', '130 Lít', '140 Lít'],
+          correctAnswer: '120 Lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Sau bao nhiêu phút vòi nước sẽ chảy đầy bể?',
+          options: ['5 phút', '6 phút', '7 phút', '8 phút'],
+          correctAnswer: '6 phút'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-19',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Hai Vòi Cùng Chảy: Hiệp đồng lưu lượng đổ đầy bể rỗng',
+    badgeTitle: 'Bài 19 · Độ khó Cấp 8',
+    instruction: 'Một bể rỗng có dung tích 240 Lít. Có hai vòi nước cùng chảy vào bể: Vòi thứ nhất chảy 18 Lít mỗi phút, Vòi thứ hai chảy 22 Lít mỗi phút. Nếu mở cả hai vòi cùng một lúc, hỏi sau bao lâu thì bể đầy nước?',
+    hint: 'Trong 1 phút, cả hai vòi cùng chảy được: 18 + 22 = 40 Lít. Thời gian để cả 2 vòi đổ đầy bể 240 Lít là: 240 : 40 = 6 phút!',
+    mascot: { ...BENNY, message: 'Cả hai vòi cùng chảy thì chúng mình cộng lưu lượng của hai vòi lại với nhau!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'v1', label: 'Vòi 1 (1 phút) 🚰', levelPercent: 45, color: '#38bdf8', subLabel: '18 Lít/phút' },
+        { id: 'v2', label: 'Vòi 2 (1 phút) 🚰', levelPercent: 55, color: '#6366f1', subLabel: '22 Lít/phút' },
+        { id: 'tank', label: 'Bể nước lớn 🌊', levelPercent: 100, color: '#0284c7', subLabel: '240 Lít' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Trong 1 phút, cả hai vòi chảy vào bể được bao nhiêu lít nước?',
+          options: ['38 Lít', '40 Lít', '42 Lít', '44 Lít'],
+          correctAnswer: '40 Lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Sau bao nhiêu phút thì cả hai vòi đổ đầy bể 240 Lít?',
+          options: ['5 phút', '6 phút', '7 phút', '8 phút'],
+          correctAnswer: '6 phút'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Khi bể vừa đầy, riêng Vòi thứ nhất đã chảy được bao nhiêu lít nước?',
+          options: ['90 Lít', '108 Lít', '120 Lít', '132 Lít'],
+          correctAnswer: '108 Lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-20',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Vòi Bơm & Lỗ Rò Rỉ: Bài toán lưu lượng ròng',
+    badgeTitle: 'Bài 20 · Độ khó Cấp 9',
+    instruction: 'Một bồn chứa nước sạch có dung tích 200 Lít đang cạn rỗng. Người ta mở máy bơm nước vào bồn với tốc độ 30 Lít/phút. Tuy nhiên ở đáy bồn có một van xả rò rỉ làm thất thoát 5 Lít/phút. Hỏi sau bao nhiêu phút bồn nước sẽ đầy?',
+    hint: 'Mỗi phút bơm vào 30L nhưng rò rỉ mất 5L, nên lượng nước thực tế đọng lại trong bồn mỗi phút là: 30 - 5 = 25 Lít. Thời gian để bồn đầy 200 Lít là: 200 : 25 = 8 phút!',
+    mascot: { ...MAYLE, message: 'Lưu lượng ròng = Lượng nước bơm vào TRỪ Lượng nước rò rỉ thất thoát!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'in', label: 'Vòi bơm vào 📥', levelPercent: 75, color: '#10b981', subLabel: '30 Lít/phút' },
+        { id: 'out', label: 'Lỗ rò rỉ đáy 📤', levelPercent: 20, color: '#f43f5e', subLabel: '5 Lít/phút' },
+        { id: 'tank', label: 'Bồn chứa 200L 🛢️', levelPercent: 100, color: '#0ea5e9', subLabel: '200 Lít' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Sau mỗi phút, lượng nước thực tế tăng thêm trong bồn là bao nhiêu?',
+          options: ['20 Lít', '25 Lít', '30 Lít', '35 Lít'],
+          correctAnswer: '25 Lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Sau bao nhiêu phút thì bồn chứa 200 Lít sẽ đầy nước?',
+          options: ['6 phút', '7 phút', '8 phút', '9 phút'],
+          correctAnswer: '8 phút'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Khi bồn đầy, tổng lượng nước đã bị rò rỉ ra ngoài là bao nhiêu?',
+          options: ['30 Lít', '35 Lít', '40 Lít', '45 Lít'],
+          correctAnswer: '40 Lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-21',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Đại Thử Thách Trạm Nước Thần: Hệ thống bể liên hoàn',
+    badgeTitle: 'Bài 21 · Thử Thách Tối Thượng',
+    instruction: 'Tại Tháp Nước Thần, Thầy Mayle giao nhiệm vụ cho đội thám hiểm: Một bể thủy tinh đang chứa 1000 mL nước. Khi nhúng khối kim cương thần, mực nước dâng lên 1450 mL. Tiếp đó, nước được chia theo tỉ lệ vào hai bình dự trữ A và B, trong đó Bình A gấp 2 lần Bình B. Hãy giải quyết chuỗi 4 câu hỏi tư duy tối thượng!',
+    hint: '1) Thể tích kim cương = 1450 - 1000 = 450 mL. 2) Chia 450 mL thành 3 phần bằng nhau (1 + 2 = 3): Mỗi phần = 450 : 3 = 150 mL. Bình B = 150 mL, Bình A = 300 mL. 3) Bơm nước với vòi 50 mL/phút vào bình A cần 300 : 50 = 6 phút!',
+    mascot: { ...MAYLE, message: 'Chúc mừng bạn đã tiến tới thử thách đỉnh cao của Trạm Thể Tích & Lít! Vận dụng toàn bộ tư duy nhé!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'b0', label: 'Bể nước đầu 💧', levelPercent: 50, color: '#38bdf8', subLabel: '1000 mL' },
+        { id: 'b1', label: 'Nhúng Kim Cương 💎', levelPercent: 72, color: '#0284c7', subLabel: '1450 mL' },
+        { id: 'bA', label: 'Bình dự trữ A (2/3)', levelPercent: 60, color: '#8b5cf6', subLabel: '300 mL' },
+        { id: 'bB', label: 'Bình dự trữ B (1/3)', levelPercent: 30, color: '#a855f7', subLabel: '150 mL' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'a) Thể tích của khối kim cương thần là bao nhiêu mL?',
+          options: ['400 mL', '450 mL', '500 mL', '550 mL'],
+          correctAnswer: '450 mL'
+        },
+        {
+          id: 'q2',
+          prompt: 'b) Khi chia 450 mL cho Bình A và Bình B (A gấp đôi B), Bình B có bao nhiêu mL?',
+          options: ['120 mL', '150 mL', '180 mL', '200 mL'],
+          correctAnswer: '150 mL'
+        },
+        {
+          id: 'q3',
+          prompt: 'c) Thể tích nước chia vào Bình dự trữ A là bao nhiêu mL?',
+          options: ['250 mL', '300 mL', '350 mL', '400 mL'],
+          correctAnswer: '300 mL'
+        },
+        {
+          id: 'q4',
+          prompt: 'd) Nếu dùng một vòi rót 50 mL mỗi phút, mất bao lâu để rót đầy lượng nước 300 mL vào Bình A?',
+          options: ['5 phút', '6 phút', '7 phút', '8 phút'],
+          correctAnswer: '6 phút'
         }
       ]
     }
