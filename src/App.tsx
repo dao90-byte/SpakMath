@@ -8,22 +8,28 @@ import { Scratchpad } from './components/Scratchpad';
 import { SelfAssessmentModal } from './components/SelfAssessmentModal';
 import { MistakeNotebookModal } from './components/MistakeNotebookModal';
 import { DevErrorConsoleModal } from './components/DevErrorConsoleModal';
-import { MethodologyAssessmentModal } from './components/MethodologyAssessmentModal';
+import { PeriodicAssessmentRunnerModal } from './components/PeriodicAssessmentRunnerModal';
+import { PeriodicAssessmentHub } from './components/PeriodicAssessmentHub';
+import { TeacherUnlockModal } from './components/TeacherUnlockModal';
 import { PersistentMistakeDock } from './components/PersistentMistakeDock';
 import { sound } from './utils/soundEffects';
 import { getMistakesStats } from './utils/mistakeManager';
 import { getProgramErrors } from './utils/devErrorCollector';
+import { isTeacherUnlocked } from './data/periodicAssessmentsData';
 import { Bug } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'review' | 'assessment'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'periodic' | 'review' | 'assessment'>('map');
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
   const [lastActiveLessonId, setLastActiveLessonId] = useState<string | null>(null);
   const [lastActiveTopicId, setLastActiveTopicId] = useState<string | null>(null);
   const [isScratchpadOpen, setIsScratchpadOpen] = useState(false);
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false);
   const [isMistakeNotebookOpen, setIsMistakeNotebookOpen] = useState(false);
-  const [isMethodologyModalOpen, setIsMethodologyModalOpen] = useState(false);
+  const [isTeacherModalOpen, setIsTeacherModalOpen] = useState(false);
+  const [isTeacherMode, setIsTeacherMode] = useState<boolean>(() => isTeacherUnlocked());
+  const [activePeriodicAssessmentId, setActivePeriodicAssessmentId] = useState<string | null>(null);
+  const [isPeriodicRunnerOpen, setIsPeriodicRunnerOpen] = useState(false);
   const [isDevConsoleOpen, setIsDevConsoleOpen] = useState(false);
   const [devConsoleDefaultTab, setDevConsoleDefaultTab] = useState<'list' | 'report'>('list');
 
@@ -43,13 +49,18 @@ export default function App() {
     const handleDevErrorUpdate = () => {
       setProgramErrorsCount(getProgramErrors().length);
     };
+    const handleTeacherUnlockUpdate = () => {
+      setIsTeacherMode(isTeacherUnlocked());
+    };
 
     window.addEventListener('spark_math_mistakes_updated', handleMistakeUpdate);
     window.addEventListener('spark_math_dev_error_logged', handleDevErrorUpdate);
+    window.addEventListener('spark_math_teacher_unlock_updated', handleTeacherUnlockUpdate);
 
     return () => {
       window.removeEventListener('spark_math_mistakes_updated', handleMistakeUpdate);
       window.removeEventListener('spark_math_dev_error_logged', handleDevErrorUpdate);
+      window.removeEventListener('spark_math_teacher_unlock_updated', handleTeacherUnlockUpdate);
     };
   }, []);
 
@@ -112,7 +123,12 @@ export default function App() {
           setDevConsoleDefaultTab('list');
           setIsDevConsoleOpen(true);
         }}
-        onOpenMethodology={() => setIsMethodologyModalOpen(true)}
+        onOpenTeacherUnlock={() => setIsTeacherModalOpen(true)}
+        isTeacherMode={isTeacherMode}
+        onOpenMethodology={() => {
+          setActivePeriodicAssessmentId('periodic-comparison-bar-model');
+          setIsPeriodicRunnerOpen(true);
+        }}
         starsCount={totalStars}
         unresolvedMistakesCount={unresolvedMistakesCount}
         programErrorsCount={programErrorsCount}
@@ -120,8 +136,8 @@ export default function App() {
 
       {/* Main View Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 pt-6">
-        {/* Prominent Methodology Assessment Test Banner (Direct Access for User Inspection) */}
-        {!activeLessonId && (
+        {/* Prominent Periodic Assessment Banner */}
+        {!activeLessonId && activeTab === 'map' && (
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
             <div className="flex items-center gap-3.5">
               <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0 border border-white/20">
@@ -130,17 +146,17 @@ export default function App() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
-                    BÀI KIỂM TRA PHƯƠNG PHÁP LUẬN MẪU
+                    BÀI KIỂM TRA ĐỊNH KỲ
                   </span>
                   <span className="text-xs text-amber-100 font-bold hidden sm:inline">
-                    · Tự Đánh Giá Sau Khi Hoàn Thành Dạng Bài So Sánh
+                    · Khảo sát phương pháp luận sau cụm bài tập
                   </span>
                 </div>
                 <h3 className="text-sm sm:text-base font-black leading-snug">
-                  Mô Hình Tư Duy: So Sánh Hơn - Kém (Sơ Đồ Thanh & Bản Chất Phép Trừ)
+                  Mô Hình Tư Duy: So Sánh Hơn - Kém (Sơ Đồ Thanh &amp; Bản Chất Phép Trừ)
                 </h3>
                 <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-                  Khảo sát phương pháp luận 5 bước: <em>Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ nước.</em>
+                  Khảo sát định kỳ 5 bước: <em>Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ nước.</em>
                 </p>
               </div>
             </div>
@@ -148,11 +164,12 @@ export default function App() {
               type="button"
               onClick={() => {
                 sound.playClick();
-                setIsMethodologyModalOpen(true);
+                setActivePeriodicAssessmentId('periodic-comparison-bar-model');
+                setIsPeriodicRunnerOpen(true);
               }}
               className="px-5 py-2.5 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center"
             >
-              <span>Làm Bài Kiểm Tra Mẫu</span>
+              <span>Vào Bài Kiểm Tra Định Kỳ</span>
               <span className="text-base">→</span>
             </button>
           </div>
@@ -175,6 +192,11 @@ export default function App() {
             }}
             onOpenScratchpad={() => setIsScratchpadOpen(true)}
             onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
+            onOpenPeriodicAssessment={(id) => {
+              setActivePeriodicAssessmentId(id);
+              setIsPeriodicRunnerOpen(true);
+            }}
+            onOpenTeacherUnlock={() => setIsTeacherModalOpen(true)}
             onOpenDevConsole={(reportMode) => {
               setDevConsoleDefaultTab(reportMode ? 'report' : 'list');
               setIsDevConsoleOpen(true);
@@ -187,7 +209,10 @@ export default function App() {
             totalStars={totalStars}
             initialTopicId={lastActiveTopicId}
             highlightLessonId={lastActiveLessonId}
-            onOpenMethodology={() => setIsMethodologyModalOpen(true)}
+            onOpenPeriodicAssessment={(id) => {
+              setActivePeriodicAssessmentId(id || 'periodic-comparison-bar-model');
+              setIsPeriodicRunnerOpen(true);
+            }}
             onSelectLesson={(lessonId) => {
               const l = ALL_LESSONS.find((item) => item.id === lessonId);
               if (l) {
@@ -205,12 +230,25 @@ export default function App() {
               }
             }}
           />
+        ) : activeTab === 'periodic' ? (
+          <PeriodicAssessmentHub
+            completedLessonIds={completedLessonIds}
+            onStartAssessment={(assessmentId) => {
+              setActivePeriodicAssessmentId(assessmentId);
+              setIsPeriodicRunnerOpen(true);
+            }}
+            onOpenTeacherUnlock={() => setIsTeacherModalOpen(true)}
+            isTeacherMode={isTeacherMode}
+          />
         ) : activeTab === 'review' ? (
           <MistakeNotebookModal
             isOpen={true}
             isFullPageTab={true}
             onClose={() => setActiveTab('map')}
-            onOpenMethodology={() => setIsMethodologyModalOpen(true)}
+            onOpenMethodology={() => {
+              setActivePeriodicAssessmentId('periodic-comparison-bar-model');
+              setIsPeriodicRunnerOpen(true);
+            }}
             onSelectLesson={(lessonId) => {
               const l = ALL_LESSONS.find((item) => item.id === lessonId);
               if (l) {
@@ -254,7 +292,10 @@ export default function App() {
       <MistakeNotebookModal
         isOpen={isMistakeNotebookOpen}
         onClose={() => setIsMistakeNotebookOpen(false)}
-        onOpenMethodology={() => setIsMethodologyModalOpen(true)}
+        onOpenMethodology={() => {
+          setActivePeriodicAssessmentId('periodic-comparison-bar-model');
+          setIsPeriodicRunnerOpen(true);
+        }}
         onSelectLesson={(lessonId) => {
           setActiveLessonId(lessonId);
           setIsMistakeNotebookOpen(false);
@@ -271,17 +312,28 @@ export default function App() {
         currentLessonTitle={currentLesson?.title}
       />
 
-      {/* Methodology Thinking Assessment Modal (Mô hình So Sánh Hơn - Kém Prototype) */}
-      <MethodologyAssessmentModal
-        isOpen={isMethodologyModalOpen}
-        onClose={() => setIsMethodologyModalOpen(false)}
+      {/* Teacher Unlock Mode Modal (Password: 7979) */}
+      <TeacherUnlockModal
+        isOpen={isTeacherModalOpen}
+        onClose={() => setIsTeacherModalOpen(false)}
+        onUnlockedStatusChange={(unlocked) => setIsTeacherMode(unlocked)}
       />
 
-      {/* ALWAYS-VISIBLE Persistent Mistake Notebook & Methodology Floating Quick Access */}
+      {/* Periodic Assessment Runner Modal */}
+      <PeriodicAssessmentRunnerModal
+        isOpen={isPeriodicRunnerOpen}
+        assessmentId={activePeriodicAssessmentId || 'periodic-comparison-bar-model'}
+        onClose={() => setIsPeriodicRunnerOpen(false)}
+      />
+
+      {/* ALWAYS-VISIBLE Persistent Mistake Notebook & Periodic Assessment Floating Quick Access */}
       <PersistentMistakeDock
         unresolvedCount={unresolvedMistakesCount}
         onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
-        onOpenMethodology={() => setIsMethodologyModalOpen(true)}
+        onOpenMethodology={() => {
+          setActivePeriodicAssessmentId('periodic-comparison-bar-model');
+          setIsPeriodicRunnerOpen(true);
+        }}
       />
 
       {/* Footer */}

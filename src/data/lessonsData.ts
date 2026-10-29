@@ -3990,8 +3990,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Bí mật đếm hàng: Tránh đếm trùng 2 lần',
     badgeTitle: 'Bài 1 · Trang 61',
     instruction: 'Abby đứng thứ hai tính từ đầu hàng. Bạn ấy đứng thứ ba tính từ cuối hàng. Hỏi có tất cả bao nhiêu bạn?',
-    hint: 'Abby được đếm 1 lần từ đầu và 1 lần từ cuối, nên bị đếm 2 lần: 2 + 3 - 1 = 4 bạn!',
-    mascot: { ...ABBY, message: 'Vì tớ đứng ở cả hai đầu đếm nên phải trừ đi 1 để không bị đếm trùng nhé!' },
+    hint: '🤔 Em hãy vẽ sơ đồ hàng dọc: Bạn Abby được tính theo mấy hướng? Vị trí của bạn ấy có bị tính lặp lại không?',
+    mascot: { ...ABBY, message: 'Hãy để ý xem có bạn nào được đếm ở cả hai chiều không nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'twoEnds',
@@ -4008,8 +4008,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Xếp hàng tính từ đầu và cuối',
     badgeTitle: 'Bài 2.1 · Trang 62',
     instruction: 'Abby đứng thứ hai tính từ đầu hàng. Bạn ấy đứng thứ tư tính từ cuối hàng. Hỏi có tất cả bao nhiêu bạn?',
-    hint: 'Công thức toán tư duy: (Đầu) + (Cuối) - 1. Ta có: 2 + 4 - 1 = 5 bạn!',
-    mascot: { ...ABBY, message: 'Lần này hàng dài hơn một chút, áp dụng đúng công thức là ra ngay!' },
+    hint: '🤔 Khi cộng thứ tự đếm từ đầu hàng và cuối hàng, bạn Abby đã được tính mấy lần?',
+    mascot: { ...ABBY, message: 'Hãy quan sát bạn đứng ở vị trí giao thoa giữa hai hướng đếm nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'twoEnds',
@@ -4026,8 +4026,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Tìm số bạn đứng ở giữa Benny và Abby',
     badgeTitle: 'Bài 2.2 · Trang 62 Mở rộng',
     instruction: 'Trong một hàng có tất cả 10 bạn. Benny đứng thứ 3 tính từ đầu hàng. Abby đứng thứ 2 tính từ cuối hàng. Hỏi có bao nhiêu bạn đứng Ở GIỮA Benny và Abby?',
-    hint: 'Lấy tổng số bạn trừ đi vị trí của Benny và Abby: 10 - 3 - 2 = 5 bạn ở giữa!',
-    mascot: { ...CASEY, message: 'Muốn tìm số bạn ở giữa, lấy cả hàng trừ đi hai đầu nhé!' },
+    hint: '🤔 Hàng gồm có phần đầu, phần đuôi và phần ở giữa. Làm thế nào để tách biệt phần ở giữa ra khỏi hai đầu?',
+    mascot: { ...CASEY, message: 'Quan sát các bạn ở hai đầu để xác định nhóm bạn ở giữa nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'between',
@@ -4047,8 +4047,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Hàng người đứng thành hình chữ L',
     badgeTitle: 'Bài 3 · Trang 63',
     instruction: 'Có 1 hàng người đứng thành hình chữ L. Có 6 bạn đứng trên hàng dọc. Có 4 bạn đứng trên hàng ngang. Casey đứng ở điểm giao của 2 hàng. Hỏi có tất cả bao nhiêu bạn?',
-    hint: 'Bạn Casey ở góc được tính trong cả 2 hàng: 6 + 4 - 1 = 9 bạn!',
-    mascot: { ...CASEY, message: 'Tớ đứng ngay góc ngã rẽ chữ L nè!' },
+    hint: '🤔 Bạn Casey đứng ở khúc cua chữ L có mặt trong những hàng nào? Làm sao để không tính trùng bạn ấy?',
+    mascot: { ...CASEY, message: 'Tớ đứng ngay khúc cua nối giữa hai hàng đấy!' },
     activity: {
       type: 'cornerCross',
       shape: 'L',
@@ -4066,8 +4066,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Hàng người đứng thành hình chữ T (Bài 4)',
     badgeTitle: 'Bài 4 · Trang 64',
     instruction: 'Có 1 hàng người đứng thành hình chữ T. Có 4 bạn đứng trên hàng dọc. Có 7 bạn đứng trên hàng ngang. Abby đứng ở điểm giao của 2 hàng. Tổng cộng có bao nhiêu bạn?',
-    hint: 'Tổng số bạn = 4 (dọc) + 7 (ngang) - 1 (Abby ở điểm giao) = 10 bạn!',
-    mascot: { ...ABBY, message: 'Tớ đứng ở chính giữa ngã ba chữ T đấy!' },
+    hint: '🤔 Tại ngã ba chữ T, bạn Abby tham gia vào mấy hàng? Điều này ảnh hưởng thế nào khi em tính tổng số bạn?',
+    mascot: { ...ABBY, message: 'Hãy quan sát kỹ vị trí điểm giao cắt giữa hai hàng nhé!' },
     activity: {
       type: 'cornerCross',
       shape: 'T',
@@ -4085,8 +4085,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Hàng người đứng thành hình chữ T (Bài 5)',
     badgeTitle: 'Bài 5 · Trang 65',
     instruction: 'Có 1 hàng người đứng hình chữ T. Có 4 bạn trên hàng dọc, 5 bạn trên hàng ngang. Abby đứng ở điểm giao của 2 hàng. Hỏi có tất cả bao nhiêu bạn?',
-    hint: '4 + 5 - 1 = 8 bạn!',
-    mascot: { ...ABBY, message: 'Bé đã quen với công thức điểm giao nhau chưa nào?' },
+    hint: '🤔 Điểm giao nhau giữa hai hàng được đếm mấy lần nếu em chỉ cộng số lượng của từng hàng lại?',
+    mascot: { ...ABBY, message: 'Hãy suy ngẫm về người đứng ở điểm giao nhau của hai hàng nhé!' },
     activity: {
       type: 'cornerCross',
       shape: 'T',
@@ -4104,8 +4104,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Hàng người đứng thành hình chữ thập (+)',
     badgeTitle: 'Bài 6.1 · Trang 66',
     instruction: 'Có một hàng người đứng thành hình chữ thập (+). Hàng dọc có 5 bạn, hàng ngang có 5 bạn. Benny đứng ở chính giữa điểm giao nhau của hai hàng. Hỏi có tất cả bao nhiêu bạn?',
-    hint: 'Benny ở chính giữa được tính trong cả hàng dọc và hàng ngang: 5 + 5 - 1 = 9 bạn!',
-    mascot: { ...BENNY, message: 'Tớ đứng ngay ở trung tâm chữ thập, ngã tư giao nhau đấy!' },
+    hint: '🤔 Benny đứng ở ngã tư chữ thập, bạn ấy thuộc về hàng dọc hay hàng ngang, hay cả hai hàng?',
+    mascot: { ...BENNY, message: 'Tớ đứng ngay ở trung tâm ngã tư giao nhau đấy!' },
     activity: {
       type: 'cornerCross',
       shape: '+',
@@ -4123,8 +4123,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đếm hàng vòng tròn nắm tay (Circle Queue)',
     badgeTitle: 'Bài 6.2 · Trang 67',
     instruction: 'Các bạn nhỏ nắm tay nhau xếp thành một vòng tròn lớn. Đếm theo chiều kim đồng hồ từ Benny đến Abby là người thứ 4. Đếm ngược chiều kim đồng hồ từ Benny đến Abby là người thứ 5. Hỏi vòng tròn có tất cả bao nhiêu bạn?',
-    hint: 'Vì cả bạn Benny và bạn Abby đều được đếm 2 lần (ở cả 2 chiều), nên ta phải trừ đi 2: 4 + 5 - 2 = 7 bạn!',
-    mascot: { ...MAYLE, message: 'Lưu ý khi đếm vòng tròn giữa 2 người: cả hai bạn đều bị tính 2 lần nên phải trừ đi 2!' },
+    hint: '🤔 Khi đếm theo hai chiều trên một vòng tròn khép kín, những bạn mốc được nhắc tên bị đếm mấy lần?',
+    mascot: { ...MAYLE, message: 'Hãy vẽ vòng tròn ra giấy nháp và quan sát các điểm mốc được đếm nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'circle',
@@ -4143,8 +4143,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Cân thăng bằng suy luận logic (Balance Scale)',
     badgeTitle: 'Bài 7 · Trang 68',
     instruction: 'Quan sát hai chiếc cân bập bênh thăng bằng:\n• Cân 1: 1 Chú gấu 🐻 nặng bằng 2 Chú khỉ 🐵\n• Cân 2: 1 Chú khỉ 🐵 nặng bằng 2 Chú thỏ 🐰\nHỏi: Cần bao nhiêu chú thỏ 🐰 để chiếc cân số 3 thăng bằng với 1 chú gấu 🐻?',
-    hint: '1 gấu = 2 khỉ. Mỗi chú khỉ lại nặng bằng 2 chú thỏ. Vậy 1 gấu = 2 × 2 = 4 chú thỏ 🐰!',
-    mascot: { ...MAYLE, message: 'Dùng phép thế đại lượng: Thay mỗi chú khỉ bằng 2 chú thỏ nhé!' },
+    hint: '🤔 Em hãy quan sát: Mỗi chú khỉ tương ứng với bao nhiêu chú thỏ? Khi đó trên đĩa cân của chú gấu sẽ tương ứng với mấy chú thỏ?',
+    mascot: { ...MAYLE, message: 'Dùng phép thế đại lượng: Thay mỗi chú khỉ bằng số lượng thỏ tương ứng nhé!' },
     activity: {
       type: 'balanceScale',
       title: 'BÍ ẨN CÂN THĂNG BẰNG ĐẠI LƯỢNG',
@@ -4169,7 +4169,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
         options: [
           { id: '2', count: 2, icon: '🐰', label: '2 Chú Thỏ' },
           { id: '3', count: 3, icon: '🐰', label: '3 Chú Thỏ' },
-          { id: '4', count: 4, icon: '🐰', label: '4 Chú Thỏ (Đúng)' },
+          { id: '4', count: 4, icon: '🐰', label: '4 Chú Thỏ' },
           { id: '5', count: 5, icon: '🐰', label: '5 Chú Thỏ' }
         ],
         correctOptionId: '4',
@@ -4184,14 +4184,14 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Thám tử đo chiều cao các bạn (Bài 1)',
     badgeTitle: 'Bài 1.1 · Trang 69',
     instruction: 'Casey, Abby và Benny đo chiều cao.\n• Casey thấp hơn Benny.\n• Abby thấp hơn Casey.\n• Benny cao hơn Abby.\nHỏi ai là người cao nhất và ai là người thấp nhất trong số họ?',
-    hint: 'Abby thấp hơn Casey, Casey thấp hơn Benny. Thứ tự: Benny > Casey > Abby!',
+    hint: '🤔 Em hãy phác thảo ba bạn từ thấp lên cao trên giấy nháp để xem ai ở đỉnh cao nhất và ai ở chân hàng nhé.',
     mascot: { ...BENNY, message: 'So sánh từng cặp rồi xếp thứ tự như que đo nhé!' },
     activity: {
       type: 'volumeComparison',
       bottles: [
-        { id: 'benny', label: 'Benny 🐵 (Cao nhất)', levelPercent: 95, color: '#f59e0b' },
-        { id: 'casey', label: 'Casey 🐹 (Ở giữa)', levelPercent: 65, color: '#f59e0b' },
-        { id: 'abby', label: 'Abby 🐰 (Thấp nhất)', levelPercent: 35, color: '#f59e0b' }
+        { id: 'benny', label: 'Benny 🐵', levelPercent: 95, color: '#f59e0b' },
+        { id: 'casey', label: 'Casey 🐹', levelPercent: 65, color: '#f59e0b' },
+        { id: 'abby', label: 'Abby 🐰', levelPercent: 35, color: '#f59e0b' }
       ],
       questions: [
         {
@@ -4216,14 +4216,14 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Thám tử so sánh cân nặng thú cưng',
     badgeTitle: 'Bài 1.2 · Trang 69',
     instruction: 'Chó Vàng, Mèo Mướp và Chuột Nhắt cùng bước lên cân:\n• Chó Vàng nặng hơn Mèo Mướp.\n• Mèo Mướp nặng hơn Chuột Nhắt.\nHỏi ai là bạn nặng nhất và ai là bạn nhẹ nhất trong số họ?',
-    hint: 'Chó Vàng > Mèo Mướp > Chuột Nhắt. Vậy Chó Vàng nặng nhất, Chuột Nhắt nhẹ nhất!',
+    hint: '🤔 Em hãy sắp xếp ba bạn từ nhẹ đến nặng để xác định bạn ở hai đầu nhé.',
     mascot: { ...CASEY, message: 'So sánh từng cặp giúp chúng mình tìm ra bạn nặng nhất thật dễ dàng!' },
     activity: {
       type: 'volumeComparison',
       bottles: [
-        { id: 'dog', label: 'Chó Vàng 🐕 (Nặng nhất)', levelPercent: 95, color: '#f59e0b' },
-        { id: 'cat', label: 'Mèo Mướp 🐈 (Ở giữa)', levelPercent: 65, color: '#f59e0b' },
-        { id: 'mouse', label: 'Chuột Nhắt 🐭 (Nhẹ nhất)', levelPercent: 35, color: '#f59e0b' }
+        { id: 'dog', label: 'Chó Vàng 🐕', levelPercent: 95, color: '#f59e0b' },
+        { id: 'cat', label: 'Mèo Mướp 🐈', levelPercent: 65, color: '#f59e0b' },
+        { id: 'mouse', label: 'Chuột Nhắt 🐭', levelPercent: 35, color: '#f59e0b' }
       ],
       questions: [
         {
@@ -4248,7 +4248,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Xếp chỗ ngồi rạp hát cùng Bác sĩ Mayle',
     badgeTitle: 'Bài 2.1 · Trang 70',
     instruction: 'Bác sĩ Mayle, Abby, Benny, Casey và Bác Ram ngồi cạnh nhau từ Ghế 1 (trái) sang Ghế 5 (phải):\n• Bác sĩ Mayle: Tôi ngồi ở bên rìa.\n• Abby: Tôi đang ngồi ở trung tâm.\n• Benny: Tôi đang ngồi ở bên phải của Abby.\n• Bác Ram: Có 2 người ở giữa Bác sĩ Mayle và tôi.',
-    hint: 'Abby ngồi ghế 3. Bác sĩ Mayle ngồi ghế 1. Bác Ram cách Mayle 2 người nên ngồi ghế 4 hoặc 5...',
+    hint: '🤔 Em hãy bắt đầu từ bạn có vị trí xác định rõ ràng nhất (ví dụ bạn ở chính giữa), rồi đối chiếu các điều kiện xung quanh nhé.',
     mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối và xếp ghế như một thám tử thực thụ!' },
     activity: {
       type: 'logicSeatOrder',
@@ -4264,7 +4264,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Xếp hàng nhận thưởng cùng Thầy Mayle',
     badgeTitle: 'Bài 2.2 · Trang 70',
     instruction: 'Bốn bạn Rory, Casey, Abby và Benny xếp thành một hàng dọc trước bục nhận thưởng:\n• Rory đứng ở vị trí cuối cùng (Vị trí 4).\n• Casey đứng ở vị trí đầu tiên (Vị trí 1).\n• Abby đứng ngay sau Benny (Benny trước, Abby sau).\nHãy sắp xếp 4 bạn theo thứ tự từ vị trí 1 đến 4!',
-    hint: 'Vị trí 1 là Casey, Vị trí 2 là Benny, Vị trí 3 là Abby, Vị trí 4 là Rory!',
+    hint: '🤔 Em hãy xác định vị trí cố định của bạn đứng đầu và bạn đứng cuối trước, sau đó sắp xếp cặp bạn còn lại nhé.',
     mascot: { ...MAYLE, message: 'Đọc kỹ từng vị trí cố định trước, rồi xếp các bạn còn lại vào nhé!' },
     activity: {
       type: 'itemOrdering',
@@ -4286,8 +4286,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đo chiều cao Bác sĩ Mayle, Bác Ram, Benny & Casey',
     badgeTitle: 'Bài 3 · Trang 71',
     instruction: 'Đọc kỹ các gợi ý:\n• Bác sĩ Mayle thấp hơn Bác Ram.\n• Bác Ram thấp hơn Benny.\n• Benny cao hơn Bác sĩ Mayle.\nHỏi ai là người cao nhất trong số họ?',
-    hint: 'Mayle < Ram < Benny. Vậy Benny là người cao nhất!',
-    mascot: { ...BENNY, message: 'Benny cao hơn cả Bác sĩ Mayle và Bác Ram đấy!' },
+    hint: '🤔 Em hãy so sánh từng cặp đôi một: Ai cao hơn ai? Chuỗi so sánh này dẫn tới ai là người cao nhất?',
+    mascot: { ...BENNY, message: 'Hãy dùng sơ đồ que đo chiều cao để so sánh từng cặp nhé!' },
     activity: {
       type: 'volumeComparison',
       bottles: [
@@ -4312,17 +4312,17 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Sắp xếp độ dài 4 đoạn ruy băng A, B, C, D',
     badgeTitle: 'Bài 4 · Trang 72',
     instruction: 'Một đoạn ruy băng được cắt thành 4 đoạn A, B, C và D có độ dài khác nhau:\n• D dài hơn C.\n• B ngắn hơn D nhưng dài hơn C.\n• A ngắn hơn C.\nHãy sắp xếp các mảnh A, B, C, D theo thứ tự từ DÀI NHẤT tới NGẮN NHẤT.',
-    hint: 'D dài nhất, sau đó đến B, rồi đến C, và A ngắn nhất! Thứ tự là: D, B, C, A!',
-    mascot: { ...ABBY, message: 'Dùng trục so sánh: D dài hơn B, B dài hơn C, C dài hơn A!' },
+    hint: '🤔 Em hãy chọn đoạn ruy băng làm mốc trung gian (như đoạn C) để so sánh các đoạn còn lại dài hơn hay ngắn hơn nhé.',
+    mascot: { ...ABBY, message: 'Dùng trục so sánh: Đối chiếu từng đoạn với mốc chuẩn nhé!' },
     activity: {
       type: 'itemOrdering',
       promptText: 'Sắp xếp các mảnh ruy băng theo thứ tự từ dài nhất tới ngắn nhất:',
-      directionLabel: 'Từ Dài Nhất ➔ Ngắn Nhất (D, B, C, A)',
+      directionLabel: 'Từ Dài Nhất ➔ Ngắn Nhất',
       items: [
         { id: 'A', label: 'Đoạn A', description: 'Ngắn hơn C', icon: '🎀' },
         { id: 'B', label: 'Đoạn B', description: 'Dài hơn C, ngắn hơn D', icon: '🎀' },
-        { id: 'C', label: 'Đoạn C', description: 'Ngắn hơn D', icon: '🎀' },
-        { id: 'D', label: 'Đoạn D', description: 'Dài nhất', icon: '🎀' }
+        { id: 'C', label: 'Đoạn C', description: 'Mốc so sánh', icon: '🎀' },
+        { id: 'D', label: 'Đoạn D', description: 'Dài hơn C', icon: '🎀' }
       ],
       correctOrder: ['D', 'B', 'C', 'A']
     }
@@ -4334,8 +4334,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Bảng xếp hạng cuộc thi chạy rừng xanh',
     badgeTitle: 'Bài 5 · Trang 72 Mở rộng',
     instruction: 'Cuộc thi chạy cự ly rừng xanh có 4 bạn tham gia (Thỏ Abby, Khỉ Benny, Chuột Casey và Chú Rùa):\n• Abby về đích trước Benny.\n• Benny về đích trước Casey.\n• Rùa về đích sau cùng (sau Casey).\nHãy sắp xếp thứ tự về đích từ NGƯỜI CHẠY NHANH NHẤT đến NGƯỜI CHẠY CHẬM NHẤT!',
-    hint: 'Thứ tự từ về nhất đến về cuối: Abby ➔ Benny ➔ Casey ➔ Rùa!',
-    mascot: { ...ABBY, message: 'Abby nhanh chân về nhất, cùng sắp xếp thứ tự bảng vàng nào!' },
+    hint: '🤔 Em hãy lập danh sách theo thứ tự ai về trước ai, sau đó ghép nối các thứ bậc lại từ đầu đến cuối.',
+    mascot: { ...ABBY, message: 'Đọc kỹ từng manh mối về người về trước và người về sau nhé!' },
     activity: {
       type: 'itemOrdering',
       promptText: 'Sắp xếp thứ tự các vận động viên từ về đích đầu tiên đến cuối cùng:',
@@ -4356,8 +4356,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đếm hàng có khoảng cách giữa hai bạn',
     badgeTitle: 'Bài Nâng Cao 6.1 · Trang 72+',
     instruction: 'Trong một hàng dọc: Thỏ Abby đứng thứ 5 tính từ đầu hàng. Chuột Casey đứng thứ 8 tính từ cuối hàng. Giữa Abby và Casey có đúng 3 bạn. Hỏi có tất cả bao nhiêu bạn trong hàng?',
-    hint: 'Cộng lần lượt 3 nhóm: Nhóm từ đầu đến Abby (5 bạn) + Nhóm ở giữa (3 bạn) + Nhóm từ Casey đến cuối (8 bạn): 5 + 3 + 8 = 16 bạn!',
-    mascot: { ...ABBY, message: 'Hai đầu và nhóm ở giữa không bị đếm trùng, em cộng cả ba phần lại nhé!' },
+    hint: '🤔 Em hãy vẽ sơ đồ hàng dọc: Hàng được chia thành mấy phần riêng biệt? Có bạn nào bị tính lặp lại không?',
+    mascot: { ...ABBY, message: 'Hãy phân tích các phần của hàng để xác định tổng số bạn nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'between',
@@ -4378,8 +4378,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Cân thăng bằng bắc cầu 2 bước: Dưa hấu, Dứa & Cam',
     badgeTitle: 'Bài Nâng Cao 6.2 · Trang 72+',
     instruction: 'Quan sát 2 chiếc cân thăng bằng:\n• Cân 1: 1 quả Dưa hấu 🍉 thăng bằng với 2 quả Dứa 🍍.\n• Cân 2: 1 quả Dứa 🍍 thăng bằng với 3 quả Cam 🍊.\nHỏi 1 quả Dưa hấu 🍉 nặng bằng mấy quả Cam 🍊?',
-    hint: '1 quả Dưa = 2 quả Dứa. Mà mỗi quả Dứa = 3 quả Cam, vậy 2 quả Dứa = 2 × 3 = 6 quả Cam!',
-    mascot: { ...BENNY, message: 'Thay thế quả Dứa bằng số quả Cam tương ứng trên đĩa cân nhé!' },
+    hint: '🤔 Em hãy suy ngẫm: Nếu thay thế từng quả dứa bằng số cam tương ứng, chiếc cân của quả dưa sẽ cần bao nhiêu quả cam?',
+    mascot: { ...BENNY, message: 'Quan sát mối liên hệ bắc cầu giữa dưa, dứa và cam nhé!' },
     activity: {
       type: 'balanceScale',
       title: 'CÂN THĂNG BẰNG BẮC CẦU 2 BƯỚC',
@@ -4404,7 +4404,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
         options: [
           { id: 'opt-4', count: 4, icon: '🍊', label: '4 quả Cam' },
           { id: 'opt-5', count: 5, icon: '🍊', label: '5 quả Cam' },
-          { id: 'opt-6', count: 6, icon: '🍊', label: '6 quả Cam (Đúng)' },
+          { id: 'opt-6', count: 6, icon: '🍊', label: '6 quả Cam' },
           { id: 'opt-8', count: 8, icon: '🍊', label: '8 quả Cam' }
         ],
         correctOptionId: 'opt-6',
@@ -4419,8 +4419,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Hàng người đứng thành khung chữ nhật rỗng 4 góc',
     badgeTitle: 'Bài Nâng Cao 7.1 · Trang 72+',
     instruction: 'Các bạn nhỏ xếp hàng tạo thành khung chữ nhật rỗng: Mỗi cạnh có đúng 4 bạn. Hỏi có tất cả bao nhiêu bạn xếp hàng?',
-    hint: 'Hình chữ nhật có 4 cạnh, mỗi cạnh 4 bạn. Nhưng 4 bạn ở 4 góc bị đếm trùng ở cả 2 cạnh: 4 × 4 - 4 = 12 bạn (hoặc 4 + 2 + 4 + 2 = 12 bạn)!',
-    mascot: { ...CASEY, message: 'Các bạn đứng ở 4 góc được tính cho cả 2 cạnh, nhớ trừ đi 4 bạn ở góc nhé!' },
+    hint: '🤔 Khi đếm lần lượt 4 cạnh của khung hình chữ nhật, những bạn đứng ở vị trí góc giao nhau có đặc điểm gì cần lưu ý?',
+    mascot: { ...CASEY, message: 'Hãy chú ý vị trí giao nhau ở các góc của khung chữ nhật nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'twoEnds',
@@ -4439,8 +4439,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Thám tử gia đình: Sắp xếp độ tuổi 5 thành viên',
     badgeTitle: 'Bài Nâng Cao 7.2 · Trang 72+',
     instruction: 'Hãy xếp thứ tự các thành viên trong gia đình từ LỚN TUỔI NHẤT đến NHỎ TUỔI NHẤT dựa vào các manh mối:\n• Ông ngoại là người lớn tuổi nhất trong nhà.\n• Bố lớn tuổi hơn Mẹ.\n• Mẹ lớn tuổi hơn Chị gái.\n• Bé Út là thành viên nhỏ tuổi nhất.',
-    hint: 'Thứ tự từ già đến trẻ: Ông ngoại ➔ Bố ➔ Mẹ ➔ Chị gái ➔ Bé Út!',
-    mascot: { ...MAYLE, message: 'Kéo thả các thành viên theo thứ tự từ người nhiều tuổi nhất đến ít tuổi nhất!' },
+    hint: '🤔 Em hãy xác định người nhiều tuổi nhất và người nhỏ tuổi nhất trước, rồi sắp xếp các thành viên ở giữa nhé.',
+    mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối để xác định mối tương quan độ tuổi!' },
     activity: {
       type: 'itemOrdering',
       promptText: 'Sắp xếp thứ tự từ LỚN TUỔI NHẤT (Trái) đến NHỎ TUỔI NHẤT (Phải):',
@@ -4462,8 +4462,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Cân thăng bằng tổng - hiệu: Cân nặng Chó & Mèo',
     badgeTitle: 'Bài Nâng Cao 8.1 · Trang 72+',
     instruction: 'Hai chú thú cưng lên bàn cân:\n• Cân 1: 1 chú Chó 🐶 và 1 chú Mèo 🐱 nặng tổng cộng 10 kg.\n• Cân 2: 1 chú Chó 🐶 nặng đúng bằng 1 chú Mèo 🐱 cộng thêm quả cân 2 kg.\nHỏi chú Chó 🐶 nặng bao nhiêu kg?',
-    hint: 'Thay Chó = Mèo + 2 kg vào cân 1: 2 chú Mèo + 2 kg = 10 kg => 2 chú Mèo = 8 kg => Mèo = 4 kg. Vậy Chó = 4 + 2 = 6 kg!',
-    mascot: { ...ABBY, message: 'Bài toán tổng - hiệu kinh điển trên bàn cân, tìm Mèo trước rồi ra Chó ngay!' },
+    hint: '🤔 Chú chó nặng hơn chú mèo bao nhiêu kg? Nếu bớt đi phần chênh lệch đó thì hai chú thú cưng sẽ có cân nặng ra sao?',
+    mascot: { ...ABBY, message: 'Phân tích mối liên hệ tổng và hiệu trên bàn cân nhé!' },
     activity: {
       type: 'balanceScale',
       title: 'TÍNH CÂN NẶNG TỔNG - HIỆU THÚ CƯNG',
@@ -4488,7 +4488,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
         options: [
           { id: 'opt-4', count: 4, icon: '⚖️', label: '4 kg' },
           { id: 'opt-5', count: 5, icon: '⚖️', label: '5 kg' },
-          { id: 'opt-6', count: 6, icon: '⚖️', label: '6 kg (Chính xác)' },
+          { id: 'opt-6', count: 6, icon: '⚖️', label: '6 kg' },
           { id: 'opt-8', count: 8, icon: '⚖️', label: '8 kg' }
         ],
         correctOptionId: 'opt-6',
@@ -4503,8 +4503,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đếm hàng chữ thập đôi có 2 điểm giao nhau',
     badgeTitle: 'Bài Nâng Cao 8.2 · Trang 72+',
     instruction: 'Một hàng ngang có 7 bạn. Có hai hàng dọc, mỗi hàng có 5 bạn cắt ngang qua hai vị trí khác nhau trên hàng ngang. Hỏi có tất cả bao nhiêu bạn?',
-    hint: 'Có hai điểm giao nhau nên 2 bạn đứng ở hai giao điểm bị đếm 2 lần: 7 (hàng ngang) + 5 (dọc 1) + 5 (dọc 2) - 2 (hai giao điểm) = 15 bạn!',
-    mascot: { ...BENNY, message: 'Nhớ trừ đi 2 bạn đứng ở 2 giao điểm cắt nhau nhé!' },
+    hint: '🤔 Hai bạn đứng tại các điểm giao cắt của hai hàng có mặt trong bao nhiêu hàng cùng một lúc?',
+    mascot: { ...BENNY, message: 'Hãy quan sát những bạn đứng ở điểm giao cắt của các hàng nhé!' },
     activity: {
       type: 'queueCounter',
       mode: 'twoEnds',
@@ -4523,8 +4523,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Sắp xếp chỗ ngồi 5 bạn trong rạp hát',
     badgeTitle: 'Bài Nâng Cao 9.1 · Trang 72+',
     instruction: 'Năm bạn ngồi ở dãy ghế từ Ghế 1 (trái) đến Ghế 5 (phải):\n• Chuột Casey ngồi ở Ghế 1 ngoài cùng bên trái.\n• Bác sĩ Mayle ngồi ở Ghế 3 chính giữa.\n• Khỉ Benny ngồi ở Ghế 2 bên cạnh Mayle.\n• Thỏ Abby ngồi ở Ghế 4 bên phải Mayle.\n• Bác Ram ngồi ở Ghế 5 ngoài cùng bên phải.\nHãy xếp đúng vị trí cả 5 bạn!',
-    hint: 'Ghế 1: Casey, Ghế 2: Benny, Ghế 3: Bác sĩ Mayle, Ghế 4: Abby, Ghế 5: Bác Ram!',
-    mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối và xếp các bạn vào đúng số ghế nhé!' },
+    hint: '🤔 Em hãy đối chiếu từng bạn với vị trí ghế được mô tả trong đề bài để xếp vào đúng chỗ nhé.',
+    mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối và xếp các bạn vào đúng vị trí ghế nhé!' },
     activity: {
       type: 'logicSeatOrder',
       seatsCount: 5,
@@ -4539,8 +4539,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Cân thăng bằng dây chuyền 3 chặng: Dưa, Bưởi, Táo & Dâu',
     badgeTitle: 'Bài Nâng Cao 9.2 · Trang 72+',
     instruction: 'Chuỗi thăng bằng 3 chặng:\n• Cân 1: 1 quả Dưa hấu 🍉 = 2 quả Bưởi 🍈.\n• Cân 2: 1 quả Bưởi 🍈 = 2 quả Táo 🍎.\n• Cân 3: 1 quả Táo 🍎 = 3 quả Dâu tây 🍓.\nHỏi 1 quả Dưa hấu 🍉 thăng bằng với bao nhiêu quả Dâu tây 🍓?',
-    hint: '1 Dưa = 2 Bưởi = 2 × 2 Táo = 4 Táo. Mà 1 Táo = 3 Dâu nên 4 Táo = 4 × 3 = 12 quả Dâu tây 🍓!',
-    mascot: { ...CASEY, message: 'Nhân liên tiếp 3 chặng: 2 × 2 × 3 là ra số quả dâu ngay!' },
+    hint: '🤔 Em hãy lần theo từng bước quy đổi: Từ dưa hấu qua bưởi, từ bưởi qua táo, và từ táo qua dâu tây nhé.',
+    mascot: { ...CASEY, message: 'Quy đổi từng bước một để tìm ra số dâu tây tương ứng nhé!' },
     activity: {
       type: 'balanceScale',
       title: 'CÂN THĂNG BẰNG DÂY CHUYỀN 3 CHẶNG',
@@ -5270,8 +5270,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Giải mã két sắt mật mã Thần Kỳ 3 chữ số',
     badgeTitle: 'Thử Thách 11.2 · Trang 90+',
     instruction: 'Sử dụng các manh mối suy luận logic loại trừ để tìm mật mã két sắt 3 chữ số chứa Cúp Kim Cương!',
-    hint: 'Manh mối 4: [9, 1, 8] không có số nào đúng => Loại 9, 1, 8! Manh mối 3: [8, 7, 0] có số 7 đúng vị trí giữa (X-7-X). Manh mối 2: [4, 5, 6] có số 4 đúng vị trí đầu (4-7-X). Manh mối 1: [1, 2, 3] có số 2 đúng nhưng sai vị trí => 2 ở vị trí cuối! Mật mã là 472!',
-    mascot: { ...CASEY, message: 'Thử thách thám tử Mastermind: kết hợp loại trừ để mở két sắt!' },
+    hint: '🤔 Em hãy quan sát manh mối nào loại trừ được nhiều chữ số nhất trước, rồi đối chiếu vị trí của các số còn lại trong các manh mối khác nhé.',
+    mascot: { ...CASEY, message: 'Thử thách thám tử Mastermind: kết hợp suy luận loại trừ để mở két sắt!' },
     activity: {
       type: 'treasureVault',
       title: 'KÉT SẮT MẬT MÃ KIM CƯƠNG (3 CHỮ SỐ)',
@@ -5282,25 +5282,25 @@ export const ALL_LESSONS: LessonQuestion[] = [
           attempt: [1, 2, 3],
           correctDigits: 1,
           correctPositions: 0,
-          description: '1 chữ số đúng nhưng SAI vị trí (số 2)'
+          description: '1 chữ số đúng nhưng SAI vị trí'
         },
         {
           attempt: [4, 5, 6],
           correctDigits: 1,
           correctPositions: 1,
-          description: '1 chữ số đúng và ĐÚNG vị trí (số 4)'
+          description: '1 chữ số đúng và ĐÚNG vị trí'
         },
         {
           attempt: [8, 7, 0],
           correctDigits: 1,
           correctPositions: 1,
-          description: '1 chữ số đúng và ĐÚNG vị trí (số 7)'
+          description: '1 chữ số đúng và ĐÚNG vị trí'
         },
         {
           attempt: [9, 1, 8],
           correctDigits: 0,
           correctPositions: 0,
-          description: 'Không có chữ số nào đúng (loại 9, 1, 8)'
+          description: 'Không có chữ số nào đúng trong 3 số này'
         }
       ]
     }
@@ -5312,8 +5312,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đấu trường Cân thăng bằng bốn loài mãnh thú',
     badgeTitle: 'Thử Thách 12.1 · Trang 90+',
     instruction: 'Quan sát chuỗi 3 chiếc cân thăng bằng trong rừng xanh:\n• Cân 1: 1 chú Hổ 🐯 = 2 chú Báo 🐆.\n• Cân 2: 1 chú Báo 🐆 = 2 chú Sói 🐺.\n• Cân 3: 1 chú Sói 🐺 = 3 chú Cáo 🦊.\nHỏi 1 chú Hổ 🐯 nặng bằng bao nhiêu chú Cáo 🦊?',
-    hint: '1 Hổ = 2 Báo = 2 × 2 Sói = 4 Sói. Mà 1 Sói = 3 Cáo => 4 Sói = 4 × 3 = 12 chú Cáo!',
-    mascot: { ...BENNY, message: 'Nhân liên hoàn 3 nấc cân: 2 × 2 × 3 là ra số chú cáo ngay!' },
+    hint: '🤔 Em hãy đi từng bước một: Mỗi chú hổ bằng mấy chú báo? Mỗi chú báo lại bằng mấy chú sói? Và mỗi chú sói bằng mấy chú cáo?',
+    mascot: { ...BENNY, message: 'Dùng tư duy bắc cầu thay thế liên tiếp qua từng nấc cân nhé!' },
     activity: {
       type: 'balanceScale',
       title: 'CÂN THĂNG BẰNG 4 LOÀI MÃNH THÚ',
@@ -5422,8 +5422,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Giải mã két sắt Siêu Cấp 4 chữ số bí ẩn',
     badgeTitle: 'Thử Thách 13.2 · Trang 90+',
     instruction: 'Két sắt bảo mật 4 chữ số tối cao. Sử dụng 3 manh mối để tìm ra dãy 4 số chuẩn xác mở khóa két sắt!',
-    hint: 'Manh mối 2 cho biết số 3 và 8 ở 2 vị trí đầu: [3, 8, ?, ?]. Manh mối 3 cho biết số 1 và 5 ở 2 vị trí cuối: [?, ?, 1, 5]. Ghép lại ta có mật mã: 3815!',
-    mascot: { ...CASEY, message: 'Ghép hai nửa manh mối [3, 8, ?, ?] và [?, ?, 1, 5] là ra chìa khóa vàng!' },
+    hint: '🤔 Em hãy phân tích xem các cặp số ở manh mối 2 và 3 có vị trí cụ thể thế nào để kết hợp lại với nhau nhé.',
+    mascot: { ...CASEY, message: 'Ghép nối các manh mối về vị trí chính xác để tìm ra mật mã két sắt!' },
     activity: {
       type: 'treasureVault',
       title: 'KÉT SẮT BẢO MẬT TỐI CAO (4 CHỮ SỐ)',
@@ -5434,19 +5434,19 @@ export const ALL_LESSONS: LessonQuestion[] = [
           attempt: [1, 2, 3, 4],
           correctDigits: 2,
           correctPositions: 0,
-          description: '2 chữ số đúng nhưng SAI vị trí (số 1 và 3)'
+          description: '2 chữ số đúng nhưng SAI vị trí'
         },
         {
           attempt: [3, 8, 9, 0],
           correctDigits: 2,
           correctPositions: 2,
-          description: '2 chữ số đúng và ĐÚNG vị trí (số 3 và 8)'
+          description: '2 chữ số đúng và ĐÚNG vị trí'
         },
         {
           attempt: [7, 6, 1, 5],
           correctDigits: 2,
           correctPositions: 2,
-          description: '2 chữ số đúng và ĐÚNG vị trí (số 1 và 5)'
+          description: '2 chữ số đúng và ĐÚNG vị trí'
         }
       ]
     }
@@ -5458,8 +5458,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Ma Phương Magic Square 3x3 Đỉnh Cao (Tổng = 27)',
     badgeTitle: 'Thử Thách 14.1 · Trang 90+',
     instruction: 'Sử dụng các số từ 5 đến 13 để điền vào ma phương 3x3 sao cho tổng mỗi hàng, cột và 2 đường chéo đều đúng bằng 27!',
-    hint: 'Số ở chính giữa là 9 (vì 27 : 3 = 9). Hàng 1: 12 + ? + 10 = 27 => Cần điền số 5. Hàng 3: 8 + ? + 6 = 27 => Cần điền số 13!',
-    mascot: { ...BENNY, message: 'Mỗi hàng và mỗi cột đều có tổng đúng bằng 27, kiểm tra số trung tâm là 9 nhé!' },
+    hint: '🤔 Em hãy quan sát các hàng hoặc cột đã có sẵn 2 số để tìm số còn thiếu sao cho tổng đạt đúng 27 nhé.',
+    mascot: { ...BENNY, message: 'Mỗi hàng và mỗi cột đều có tổng đúng bằng 27, tính toán cẩn thận từng hàng nhé!' },
     activity: {
       type: 'numberMatrix',
       title: 'SIÊU MA PHƯƠNG TỔNG 27',
@@ -5485,8 +5485,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đấu trường Cân thăng bằng bài toán Tổng - Tỉ',
     badgeTitle: 'Thử Thách 14.2 · Trang 90+',
     instruction: 'Hai người bạn thân cùng leo lên bàn cân:\n• Cân 1: 1 chú Gấu 🐻 và 1 chú Thỏ 🐰 nặng tổng cộng 12 kg.\n• Cân 2: 1 chú Gấu 🐻 nặng gấp 3 lần 1 chú Thỏ 🐰 (Gấu = 3 Thỏ).\nHỏi chú Gấu 🐻 nặng bao nhiêu kg?',
-    hint: 'Tổng số phần bằng nhau: 3 phần (Gấu) + 1 phần (Thỏ) = 4 phần. Giá trị 1 phần (Thỏ) = 12 : 4 = 3 kg. Vậy Gấu nặng: 3 × 3 = 9 kg!',
-    mascot: { ...MAYLE, message: 'Phương pháp sơ đồ đoạn thẳng giải bài toán tổng tỉ cực kỳ sắc bén!' },
+    hint: '🤔 Nếu coi cân nặng của chú thỏ là 1 phần thì chú gấu chiếm mấy phần? Tổng cân nặng 12 kg tương ứng với tất cả bao nhiêu phần bằng nhau?',
+    mascot: { ...MAYLE, message: 'Dùng sơ đồ đoạn thẳng biểu diễn số phần bằng nhau để giải nhé!' },
     activity: {
       type: 'balanceScale',
       title: 'BÀI TOÁN CÂN TỔNG - TỈ GẤU VÀ THỎ',

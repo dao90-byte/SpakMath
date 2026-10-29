@@ -8,6 +8,7 @@ interface AdventureMapProps {
   totalStars: number;
   onSelectLesson: (lessonId: string) => void;
   onSelectTopic: (topicId: string) => void;
+  onOpenPeriodicAssessment?: (assessmentId?: string) => void;
   onOpenMethodology?: () => void;
   initialTopicId?: string | null;
   highlightLessonId?: string | null;
@@ -18,6 +19,7 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
   totalStars,
   onSelectLesson,
   onSelectTopic,
+  onOpenPeriodicAssessment,
   onOpenMethodology,
   initialTopicId = null,
   highlightLessonId = null
@@ -160,8 +162,8 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
             </div>
           </div>
 
-          {/* Methodology Thinking Checkpoint Card for Comparison stations */}
-          {onOpenMethodology && (selectedTopicId === 'volume' || selectedTopicId === 'pictograph') && (
+          {/* Periodic Assessment Milestone Card for Comparison stations */}
+          {(onOpenPeriodicAssessment || onOpenMethodology) && (selectedTopicId === 'volume' || selectedTopicId === 'pictograph') && (
             <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
               <div className="flex items-center gap-3">
                 <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shrink-0">
@@ -170,14 +172,14 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black uppercase tracking-wider bg-black/20 text-amber-100 px-2 py-0.5 rounded-full">
-                      CỘT MỐC PHƯƠNG PHÁP LUẬN
+                      CHỐT CHẶN ĐỊNH KỲ
                     </span>
                     <span className="text-xs text-amber-100 font-bold hidden sm:inline">
-                      Mô hình tư duy nền tảng
+                      Mô hình tư duy cốt lõi
                     </span>
                   </div>
                   <h3 className="text-sm font-black mt-0.5">
-                    Bài Kiểm Tra Tư Duy: Mô Hình So Sánh Hơn - Kém
+                    Bài Kiểm Tra Định Kỳ: Mô Hình So Sánh Hơn - Kém
                   </h3>
                   <p className="text-xs text-amber-100">
                     Khảo sát sâu: Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ.
@@ -188,11 +190,15 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                 type="button"
                 onClick={() => {
                   sound.playClick();
-                  onOpenMethodology();
+                  if (onOpenPeriodicAssessment) {
+                    onOpenPeriodicAssessment('periodic-comparison-bar-model');
+                  } else if (onOpenMethodology) {
+                    onOpenMethodology();
+                  }
                 }}
                 className="px-4 py-2 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs whitespace-nowrap shadow-sm active:scale-95 transition-transform shrink-0"
               >
-                Làm Bài Kiểm Tra Mẫu →
+                Vào Bài Kiểm Tra Định Kỳ →
               </button>
             </div>
           )}

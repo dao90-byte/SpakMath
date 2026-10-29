@@ -43,6 +43,12 @@ import { TreasureVaultViewer } from './activities/TreasureVaultViewer';
 import { CubeCounterViewer } from './activities/CubeCounterViewer';
 import { GrandFinaleViewer } from './activities/GrandFinaleViewer';
 
+import {
+  PERIODIC_ASSESSMENTS,
+  getCompletedPeriodicIds,
+  isTeacherUnlocked
+} from '../data/periodicAssessmentsData';
+
 interface LessonContainerProps {
   lesson: LessonQuestion;
   isCompleted: boolean;
@@ -51,6 +57,8 @@ interface LessonContainerProps {
   onOpenScratchpad: () => void;
   onOpenMistakes?: () => void;
   onOpenDevConsole?: (reportMode?: boolean) => void;
+  onOpenPeriodicAssessment?: (assessmentId: string) => void;
+  onOpenTeacherUnlock?: () => void;
   onLessonCompleted: (lessonId: string) => void;
 }
 
@@ -315,6 +323,8 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   onOpenScratchpad,
   onOpenMistakes,
   onOpenDevConsole,
+  onOpenPeriodicAssessment,
+  onOpenTeacherUnlock,
   onLessonCompleted
 }) => {
   const [justFinishedId, setJustFinishedId] = useState<string | null>(null);
@@ -373,6 +383,17 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   const justFinished = justFinishedId === lesson.id;
   const isLessonFinished = isCompleted || justFinished;
 
+  // Check if current lesson triggers a periodic assessment checkpoint
+  const matchingAssessment = PERIODIC_ASSESSMENTS.find(
+    (a) => a.prerequisiteLessonIds[a.prerequisiteLessonIds.length - 1] === lesson.id
+  );
+  const isAssessmentPassed = matchingAssessment
+    ? getCompletedPeriodicIds().includes(matchingAssessment.id)
+    : true;
+  const isTeacherModeActive = isTeacherUnlocked();
+  const isNextLockedByAssessment =
+    matchingAssessment && !isAssessmentPassed && !isTeacherModeActive;
+
   const handleCompleted = () => {
     setJustFinishedId(lesson.id);
     onLessonCompleted(lesson.id);
@@ -384,6 +405,13 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   };
 
   const handleNextClick = () => {
+    if (isNextLockedByAssessment && matchingAssessment) {
+      sound.playWrong();
+      if (onOpenPeriodicAssessment) {
+        onOpenPeriodicAssessment(matchingAssessment.id);
+      }
+      return;
+    }
     if (nextLesson) {
       sound.playClick();
       onLessonChange(nextLesson.id);
@@ -558,6 +586,63 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
         {renderActivity(lesson.activity, handleCompleted)}
       </div>
 
+      {/* Mandatory Periodic Assessment Checkpoint Barrier */}
+      {isNextLockedByAssessment && matchingAssessment && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 border-2 border-amber-300 rounded-3xl p-5 md:p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shrink-0 shadow-inner">
+              🔒
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2.5 py-0.5 rounded-full">
+                  CHỐT CHẶN BẮT BUỘC
+                </span>
+                <span className="text-xs text-amber-100 font-bold">
+                  Hoàn thành cụm mô hình tư duy
+                </span>
+              </div>
+              <h3 className="text-base sm:text-lg font-black mt-1">
+                {matchingAssessment.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-amber-100 mt-0.5 leading-relaxed">
+                Bé đã hoàn thành xong cụm bài tập của mô hình này! Hãy làm bài kiểm tra định kỳ để hệ thống hóa kiến thức và mở khóa các bài học tiếp theo nhé.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5 shrink-0 w-full md:w-auto justify-end">
+            {onOpenTeacherUnlock && (
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  onOpenTeacherUnlock();
+                }}
+                className="px-3.5 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold border border-white/30 whitespace-nowrap active:scale-95 transition-all"
+                title="Mở khóa giáo viên (Mật khẩu: 7979)"
+              >
+                Mã 7979
+              </button>
+            )}
+
+            {onOpenPeriodicAssessment && (
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  onOpenPeriodicAssessment(matchingAssessment.id);
+                }}
+                className="px-5 py-2.5 rounded-2xl bg-white text-orange-600 hover:bg-amber-50 font-black text-xs sm:text-sm shadow-md active:scale-95 transition-transform flex items-center gap-2 whitespace-nowrap"
+              >
+                <span>Làm Bài Kiểm Tra Định Kỳ Ngay</span>
+                <span>→</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Immediate In-Situ Completion Card: Visible right below activity without scrolling */}
       {(justFinished || isCompleted) && (
         <div className="bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 border-2 border-emerald-300 rounded-3xl p-5 md:p-6 text-white shadow-xl flex items-center gap-4 transition-all">
@@ -630,7 +715,18 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
 
           {/* Right immediate next button */}
           <div className="flex items-center gap-2 shrink-0">
-            {nextLesson ? (
+            {isNextLockedByAssessment ? (
+              <button
+                type="button"
+                onClick={handleNextClick}
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md transition-all active:scale-95 bg-gradient-to-r from-amber-600 to-orange-600 text-white ring-4 ring-orange-300/60 shadow-orange-200 cursor-pointer hover:opacity-95"
+                title="Cần hoàn thành Bài Kiểm Tra Định Kỳ để mở khóa bài tiếp theo"
+              >
+                <Lock className="w-3.5 h-3.5 text-amber-200" />
+                <span>Kiểm Tra Định Kỳ Để Mở Khóa</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            ) : nextLesson ? (
               <button
                 type="button"
                 onClick={handleNextClick}

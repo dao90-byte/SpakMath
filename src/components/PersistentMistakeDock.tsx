@@ -89,7 +89,7 @@ export const PersistentMistakeDock: React.FC<PersistentMistakeDockProps> = ({
             </div>
           </button>
 
-          {/* Button 2: BÀI KIỂM TRA PHƯƠNG PHÁP LUẬN TƯ DUY (MẪU THỬ CHO NGƯỜI DÙNG) */}
+          {/* Button 2: BÀI KIỂM TRA ĐỊNH KỲ (HỆ THỐNG MÔ HÌNH TƯ DUY) */}
           <button
             type="button"
             onClick={() => {
@@ -101,12 +101,12 @@ export const PersistentMistakeDock: React.FC<PersistentMistakeDockProps> = ({
             <div className="flex items-center gap-2">
               <Brain className="w-4 h-4 text-amber-200 shrink-0" />
               <div className="text-left">
-                <span className="block font-black leading-tight">🧪 Kiểm Tra Phương Pháp Luận</span>
-                <span className="text-[10px] text-amber-100 block font-normal">Mô hình So sánh Hơn - Kém</span>
+                <span className="block font-black leading-tight">🧠 Bài Kiểm Tra Định Kỳ</span>
+                <span className="text-[10px] text-amber-100 block font-normal">Chốt chặn mô hình tư duy</span>
               </div>
             </div>
             <span className="text-[10px] bg-amber-900/40 text-amber-200 px-1.5 py-0.5 rounded font-black shrink-0">
-              MẪU
+              ĐỊNH KỲ
             </span>
           </button>
         </div>

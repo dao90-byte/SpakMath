@@ -98,24 +98,24 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
     const topic = (m.topicName || '').toLowerCase();
 
     if (topic.includes('lít') || topic.includes('thể tích') || prompt.includes('lít') || prompt.includes('bình') || prompt.includes('bể')) {
-      return 'Em hãy đọc kỹ xem bình đang chứa bao nhiêu lít và dung tích tối đa là bao nhiêu. Nếu là bài toán san sẻ hay rót thêm, em hãy thử tính tổng số lít hiện có hoặc lấy sức chứa trừ đi lượng nước nhé!';
+      return '🤔 Gợi mở tư duy: Quan sát lượng nước so với sức chứa của bình gợi cho em điều gì? Khi dịch chuyển nước giữa các bình, tổng thể tích có giữ nguyên không?';
     }
     if (topic.includes('hàng ngũ') || prompt.includes('hàng') || prompt.includes('đứng thứ') || prompt.includes('đầu hàng')) {
-      return 'Hãy vẽ sơ đồ hàng dọc/ngang ra giấy nháp. Chú ý bạn ở vị trí đặc biệt có bị đếm 2 lần (khi cộng hai đầu) hay bị trừ bớt không nhé!';
+      return '🤔 Gợi mở tư duy: Em hãy phác thảo sơ đồ các vị trí: Bạn ở vị trí đặc biệt đang được quan sát theo những hướng nào trong hàng?';
     }
     if (topic.includes('biểu đồ') || prompt.includes('biểu đồ') || prompt.includes('quy ước')) {
-      return 'Em hãy nhìn vào phần Chú thích ở cuối biểu đồ xem 1 biểu tượng tương ứng với mấy đơn vị. Sau đó nhân số biểu tượng với giá trị quy ước để tìm kết quả!';
+      return '🤔 Gợi mở tư duy: Mỗi biểu tượng trên biểu đồ phản ánh điều gì theo quy ước? Mối tương quan giữa hình vẽ và giá trị thực tế là gì?';
     }
     if (topic.includes('sudoku') || prompt.includes('ô trống')) {
-      return 'Em hãy tìm hàng, cột hoặc khối màu nào chỉ còn thiếu 1 hình/số duy nhất để điền trước. Nhớ rằng mỗi hình chỉ được xuất hiện đúng 1 lần trong mỗi hàng và cột!';
+      return '🤔 Gợi mở tư duy: Khu vực nào (hàng, cột hay khối) có nhiều thông tin nhất để suy luận trước? Quy tắc không trùng lặp giúp em loại trừ được gì?';
     }
     if (topic.includes('khối') || prompt.includes('lập phương') || prompt.includes('tầng')) {
-      return 'Em hãy đếm theo từng tầng từ trên cùng xuống dưới đáy. Đừng quên các khối bị khuất nằm ngay dưới các khối ở tầng trên nhé!';
+      return '🤔 Gợi mở tư duy: Khi phân tích mô hình 3D, có những khối nào bị che khuất nhưng bắt buộc phải có để nâng đỡ các tầng phía trên?';
     }
     if (topic.includes('cân') || prompt.includes('thăng bằng')) {
-      return 'Quan sát các đĩa cân đã thăng bằng để tìm tỉ lệ quy đổi (ví dụ: 1 quả táo bằng mấy quả dâu). Sau đó thay thế tương ứng vào đĩa cân cần tìm!';
+      return '🤔 Gợi mở tư duy: Trạng thái thăng bằng của đĩa cân nói lên điều gì về mối tương quan giữa các vật thể? Em có thể liên hệ giữa các đĩa cân ra sao?';
     }
-    return 'Em hãy đọc kỹ câu hỏi, xác định dữ kiện ban đầu và tự vẽ sơ đồ nháp từng bước để tìm ra đáp án nhé!';
+    return '🤔 Gợi mở tư duy: Em hãy đọc kỹ câu hỏi, xác định mối liên hệ cốt lõi giữa các dữ kiện và suy ngẫm: Điều gì thay đổi và điều gì giữ nguyên?';
   };
 
   if (!isOpen) return null;
@@ -321,7 +321,7 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
               }`}
             >
               <Brain className="w-4 h-4 text-amber-500" />
-              <span>Bảo Bối Tư Duy</span>
+              <span>Kiểm Tra Định Kỳ</span>
               <span className="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full">
                 MÔ HÌNH
               </span>
@@ -860,13 +860,13 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
                   </span>
                   <div>
                     <span className="text-[10px] font-black uppercase tracking-wider bg-black/20 text-amber-100 px-2.5 py-0.5 rounded-full">
-                      HỆ THỐNG PHƯƠNG PHÁP LUẬN TƯ DUY
+                      HỆ THỐNG BÀI KIỂM TRA ĐỊNH KỲ TƯ DUY
                     </span>
                     <h3 className="text-base sm:text-lg font-black mt-1">
-                      Bảo Bối Tư Duy: Các Mô Hình Toán Nền Tảng
+                      Kiểm Tra Định Kỳ &amp; Sơ Đồ Mô Hình Toán Lớp 3
                     </h3>
                     <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-                      Giúp bé hiểu bản chất từng dạng toán, thoát khỏi lối mòn ghi nhớ vẹt hay thử sai máy móc.
+                      Giúp bé hiểu bản chất từng dạng toán, vượt qua chốt chặn định kỳ và mở khóa hành trình tiếp theo.
                     </p>
                   </div>
                 </div>
@@ -879,7 +879,7 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
                     }}
                     className="px-5 py-2.5 rounded-2xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform shrink-0"
                   >
-                    Làm Bài Kiểm Tra Mẫu →
+                    Vào Bài Kiểm Tra Định Kỳ →
                   </button>
                 )}
               </div>
@@ -899,7 +899,7 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
                     </div>
                   </div>
                   <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
-                    Có bài kiểm tra mẫu
+                    Chốt chặn định kỳ
                   </span>
                 </div>
 
@@ -941,7 +941,7 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
                       className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs shadow-sm flex items-center gap-2 active:scale-95 transition-all"
                     >
                       <Brain className="w-4 h-4 text-amber-200" />
-                      <span>Mở Bài Kiểm Tra Phương Pháp Luận Mô Hình Này</span>
+                      <span>Mở Bài Kiểm Tra Định Kỳ Mô Hình Này</span>
                       <span>→</span>
                     </button>
                   </div>

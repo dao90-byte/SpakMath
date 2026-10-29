@@ -1,6 +1,6 @@
 {
-  "summary":  "Kế hoạch chi tiết kiểm toán logic Trạm 1 và triển khai nâng cấp 10 bài tập nâng cao tăng dần đều tại Trạm 2 (Thể tích & Lít) theo đúng định hướng đã xác nhận của người dùng.",
-  "updatedAt":  "2026-10-28T11:04:01.215547477Z",
+  "summary":  "Kế hoạch triển khai toàn diện:\n1. Đổi tên toàn bộ 'Kiểm Tra Phương Pháp Luận' thành 'Bài Kiểm Tra Định Kỳ' trên toàn hệ thống.\n2. Xây dựng Thanh / Tab riêng 'Bài Kiểm Tra Định Kỳ' chứa danh mục các bài kiểm tra chuyên đề và bài kiểm tra tổng hợp quy mô lớn.\n3. Thiết lập chốt chặn bắt buộc sau mỗi cụm bài cùng mô hình tư duy, tự động chuyển hướng sang bài kiểm tra định kỳ tương ứng.\n4. Triển khai cơ chế khóa bài tập kế tiếp khi chưa hoàn thành bài kiểm tra định kỳ, tích hợp cổng mở khóa dành cho giáo viên với mật khẩu bí mật '7979'.\n5. Rà soát logic, sửa lỗi chính tả và loại bỏ triệt để toàn bộ gợi ý mớm lời/tiết lộ đáp án; thay thế bằng hệ thống câu hỏi phản tư gợi mở tư duy chiều sâu.",
+  "updatedAt":  "2026-10-29T06:30:54.900644112Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

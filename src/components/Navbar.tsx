@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/soundEffects';
-import { Volume2, VolumeX, Pencil, Star, Award, Compass, BookOpen, BookMarked, Bug, Brain } from 'lucide-react';
+import {
+  Volume2,
+  VolumeX,
+  Pencil,
+  Star,
+  Award,
+  Compass,
+  BookOpen,
+  BookMarked,
+  Bug,
+  Brain,
+  KeyRound,
+  ClipboardCheck
+} from 'lucide-react';
 
 interface NavbarProps {
-  currentTab: 'map' | 'lessons' | 'review' | 'assessment';
-  onSelectTab: (tab: 'map' | 'lessons' | 'review' | 'assessment') => void;
+  currentTab: 'map' | 'lessons' | 'periodic' | 'review' | 'assessment';
+  onSelectTab: (tab: 'map' | 'lessons' | 'periodic' | 'review' | 'assessment') => void;
   onOpenScratchpad: () => void;
   onOpenMistakes?: () => void;
   onOpenDevConsole?: () => void;
   onOpenMethodology?: () => void;
+  onOpenTeacherUnlock?: () => void;
+  isTeacherMode?: boolean;
   starsCount: number;
   unresolvedMistakesCount?: number;
   programErrorsCount?: number;
@@ -21,6 +36,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenMistakes,
   onOpenDevConsole,
   onOpenMethodology,
+  onOpenTeacherUnlock,
+  isTeacherMode = false,
   starsCount,
   unresolvedMistakesCount = 0,
   programErrorsCount = 0
@@ -87,6 +104,24 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BookOpen className="w-4 h-4" />
             <span className="hidden sm:inline">Sách</span> Bài tập
+          </button>
+
+          {/* Dedicated Tab: Bài Kiểm Tra Định Kỳ */}
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              onSelectTab('periodic');
+            }}
+            className={`flex items-center gap-1.5 py-1 transition-colors whitespace-nowrap shrink-0 ${
+              currentTab === 'periodic'
+                ? 'text-amber-600 border-b-2 border-amber-500 font-black'
+                : 'hover:text-slate-900'
+            }`}
+            title="Thanh Bài Kiểm Tra Định Kỳ (Sau Mỗi Cụm Mô Hình Tư Duy)"
+          >
+            <ClipboardCheck className="w-4 h-4 text-amber-600" />
+            <span>Kiểm Tra Định Kỳ</span>
           </button>
 
           {/* Sổ Ôn Tập: Permanent Navigation Tab */}
@@ -172,21 +207,30 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Methodology Checkpoint Prototype Button */}
-          {onOpenMethodology && (
+          {/* Teacher Unlock Mode Button (Password: 7979) */}
+          {onOpenTeacherUnlock && (
             <button
               type="button"
               onClick={() => {
                 sound.playClick();
-                onOpenMethodology();
+                onOpenTeacherUnlock();
               }}
-              className="px-3 py-2 text-xs md:text-sm font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-xl transition-transform active:scale-95 flex items-center gap-1.5 whitespace-nowrap shadow-xs"
-              title="Bài kiểm tra mẫu bằng Phương pháp luận tư duy (Mô hình So sánh Hơn - Kém)"
+              className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 ${
+                isTeacherMode
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300 ring-2 ring-emerald-200 shadow-xs'
+                  : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
+              }`}
+              title="Cổng mở khóa dành cho giáo viên (Mật khẩu: 7979)"
             >
-              <Brain className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
-              <span className="hidden sm:inline">Kiểm Tra:</span>
-              <span>Phương Pháp Luận</span>
-              <span className="bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">MẪU</span>
+              <KeyRound className={`w-3.5 h-3.5 ${isTeacherMode ? 'text-emerald-600' : 'text-amber-600'}`} />
+              <span className="hidden sm:inline">Giáo Viên</span>
+              <span
+                className={`text-[10px] font-black px-1.5 py-0.2 rounded-full ${
+                  isTeacherMode ? 'bg-emerald-600 text-white' : 'bg-amber-200 text-amber-900'
+                }`}
+              >
+                {isTeacherMode ? '7979 ON' : '7979'}
+              </span>
             </button>
           )}
 
