@@ -207,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Teacher Unlock Mode Button (Password: 7979) */}
+          {/* Teacher Unlock Mode Button */}
           {onOpenTeacherUnlock && (
             <button
               type="button"
@@ -220,17 +220,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300 ring-2 ring-emerald-200 shadow-xs'
                   : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
               }`}
-              title="Cổng mở khóa dành cho giáo viên (Mật khẩu: 7979)"
+              title="Cổng dành cho giáo viên"
             >
               <KeyRound className={`w-3.5 h-3.5 ${isTeacherMode ? 'text-emerald-600' : 'text-amber-600'}`} />
               <span className="hidden sm:inline">Giáo Viên</span>
-              <span
-                className={`text-[10px] font-black px-1.5 py-0.2 rounded-full ${
-                  isTeacherMode ? 'bg-emerald-600 text-white' : 'bg-amber-200 text-amber-900'
-                }`}
-              >
-                {isTeacherMode ? '7979 ON' : '7979'}
-              </span>
+              {isTeacherMode && (
+                <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-600 text-white">
+                  ĐÃ MỞ
+                </span>
+              )}
             </button>
           )}
 

@@ -23,44 +23,39 @@ export const PatternAnimals: React.FC<PatternAnimalsProps> = ({
   choices,
   onCompleted
 }) => {
-  const [slot1, setSlot1] = useState<string | null>(null);
-  const [slot2, setSlot2] = useState<string | null>(null);
-  const [activeSlot, setActiveSlot] = useState<1 | 2 | null>(1);
+  const [input1, setInput1] = useState('');
+  const [input2, setInput2] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handlePickChoice = (choice: string) => {
-    sound.playClick();
-    if (activeSlot === 1) {
-      setSlot1(choice);
-      setActiveSlot(2);
-    } else if (activeSlot === 2) {
-      setSlot2(choice);
-      setActiveSlot(null);
-    }
-  };
-
   const checkAnswers = () => {
-    // Slot 1 must be 'Khỉ con' (🐵), Slot 2 must be 'Chú gấu' (🐻)
-    const isSlot1Correct = slot1?.includes('Khỉ');
-    const isSlot2Correct = slot2?.includes('gấu');
+    sound.playClick();
+    const clean1 = input1.trim().toLowerCase();
+    const clean2 = input2.trim().toLowerCase();
+
+    // Slot 1 (#8) must be 'Khỉ' (🐵), Slot 2 (#11) must be 'gấu' (🐻)
+    const isSlot1Correct = clean1.includes('khỉ') || clean1.includes('🐵') || clean1 === 'khi';
+    const isSlot2Correct = clean2.includes('gấu') || clean2.includes('gau') || clean2.includes('🐻');
 
     if (isSlot1Correct && isSlot2Correct) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Chuỗi quy luật lặp lại gồm bao nhiêu con vật theo thứ tự nào? Khi đếm đến vị trí số 8 và số 11, con vật nào sẽ xuất hiện?');
     }
   };
 
   const handleReset = () => {
     sound.playClick();
-    setSlot1(null);
-    setSlot2(null);
-    setActiveSlot(1);
+    setInput1('');
+    setInput2('');
+    setErrorMessage(null);
     setIsSuccess(false);
   };
 
@@ -79,44 +74,34 @@ export const PatternAnimals: React.FC<PatternAnimalsProps> = ({
         <div className="flex items-center gap-3 min-w-[700px] justify-between">
           {sequence.map((item) => {
             if (item.id === 8) {
-              const isSelected = activeSlot === 1;
               return (
-                <button
+                <div
                   key={item.id}
-                  type="button"
-                  onClick={() => { setActiveSlot(1); sound.playClick(); }}
-                  className={`w-14 h-18 rounded-2xl border-3 flex flex-col items-center justify-center transition-all ${
-                    isSelected
-                      ? 'border-amber-500 bg-amber-100 ring-4 ring-amber-300 scale-110 shadow-lg'
-                      : slot1
-                      ? 'border-emerald-400 bg-emerald-50'
-                      : 'border-dashed border-amber-400 bg-amber-50/50 hover:bg-amber-100/50'
+                  className={`w-16 h-20 rounded-2xl border-2 flex flex-col items-center justify-center p-1 transition-all ${
+                    isSuccess
+                      ? 'border-emerald-500 bg-emerald-50'
+                      : 'border-dashed border-amber-400 bg-amber-50/50'
                   }`}
                 >
-                  <span className="text-3xl">{slot1 ? slot1.split(' ')[0] : '❓'}</span>
-                  <span className="text-[10px] font-black text-amber-800 mt-1">Hộp 1</span>
-                </button>
+                  <span className="text-3xl">{isSuccess ? '🐵' : '❓'}</span>
+                  <span className="text-[10px] font-black text-amber-800 mt-1">Hộp 1 (#8)</span>
+                </div>
               );
             }
 
             if (item.id === 11) {
-              const isSelected = activeSlot === 2;
               return (
-                <button
+                <div
                   key={item.id}
-                  type="button"
-                  onClick={() => { setActiveSlot(2); sound.playClick(); }}
-                  className={`w-14 h-18 rounded-2xl border-3 flex flex-col items-center justify-center transition-all ${
-                    isSelected
-                      ? 'border-amber-500 bg-amber-100 ring-4 ring-amber-300 scale-110 shadow-lg'
-                      : slot2
-                      ? 'border-emerald-400 bg-emerald-50'
-                      : 'border-dashed border-amber-400 bg-amber-50/50 hover:bg-amber-100/50'
+                  className={`w-16 h-20 rounded-2xl border-2 flex flex-col items-center justify-center p-1 transition-all ${
+                    isSuccess
+                      ? 'border-emerald-500 bg-emerald-50'
+                      : 'border-dashed border-amber-400 bg-amber-50/50'
                   }`}
                 >
-                  <span className="text-3xl">{slot2 ? slot2.split(' ')[0] : '❓'}</span>
-                  <span className="text-[10px] font-black text-amber-800 mt-1">Hộp 2</span>
-                </button>
+                  <span className="text-3xl">{isSuccess ? '🐻' : '❓'}</span>
+                  <span className="text-[10px] font-black text-amber-800 mt-1">Hộp 2 (#11)</span>
+                </div>
               );
             }
 
@@ -133,46 +118,74 @@ export const PatternAnimals: React.FC<PatternAnimalsProps> = ({
         </div>
       </div>
 
-      {/* Choice picker */}
-      <div className="bg-slate-50 p-5 rounded-3xl border-2 border-slate-200 flex flex-col items-center space-y-3">
-        <span className="text-xs font-bold text-slate-600">
-          Đang chọn cho: <span className="text-amber-700 font-extrabold">{activeSlot ? `Hộp bí mật ${activeSlot}` : 'Cả 2 hộp đã chọn'}</span>
-        </span>
+      {/* Direct Typed Answer Form */}
+      <div className="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm max-w-lg mx-auto space-y-4 text-center">
+        <h4 className="font-black text-slate-800 text-sm md:text-base">
+          Tự tay nhập tên con vật cho Hộp 1 (#8) và Hộp 2 (#11):
+        </h4>
 
-        <div className="flex flex-wrap gap-3 justify-center">
-          {choices.map((c) => (
-            <button
-              key={c}
-              onClick={() => handlePickChoice(c)}
-              className="px-5 py-3 rounded-2xl bg-white hover:bg-amber-50 border-2 border-slate-200 hover:border-amber-300 text-sm md:text-base font-bold text-slate-800 shadow-sm transition-transform active:scale-95"
-            >
-              {c}
-            </button>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-600">Hộp bí mật 1 (Vị trí #8):</label>
+            <input
+              type="text"
+              value={input1}
+              disabled={isSuccess}
+              onChange={(e) => {
+                setInput1(e.target.value);
+                setErrorMessage(null);
+              }}
+              placeholder="VD: Khỉ con..."
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-amber-300 font-bold text-sm text-slate-800 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-600">Hộp bí mật 2 (Vị trí #11):</label>
+            <input
+              type="text"
+              value={input2}
+              disabled={isSuccess}
+              onChange={(e) => {
+                setInput2(e.target.value);
+                setErrorMessage(null);
+              }}
+              placeholder="VD: Chú gấu..."
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-amber-300 font-bold text-sm text-slate-800 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+            />
+          </div>
+        </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2.5 px-3 rounded-xl animate-shake text-left">
+            {errorMessage}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-300"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Nhập lại
+          </button>
+          <button
+            type="button"
+            onClick={checkAnswers}
+            disabled={isSuccess || !input1.trim() || !input2.trim()}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white font-black text-sm shadow-md transition-transform active:scale-95"
+          >
+            <Check className="w-4 h-4" />
+            {isSuccess ? 'Đúng ✓' : 'Kiểm tra quy luật'}
+          </button>
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center justify-center gap-4">
-        <button
-          onClick={handleReset}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm border border-slate-300"
-        >
-          <RotateCcw className="w-4 h-4" />
-          Chọn lại
-        </button>
-        <button
-          onClick={checkAnswers}
-          disabled={!slot1 || !slot2}
-          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-black text-base shadow-lg transition-transform active:scale-95"
-        >
-          <Check className="w-5 h-5" />
-          Kiểm Tra Quy Luật
-        </button>
-      </div>
-
       {isSuccess && (
-        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
+        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow max-w-lg mx-auto">
           🎉 Chính xác! Hộp 1 là Khỉ con 🐵 và Hộp 2 là Chú gấu 🐻!
         </div>
       )}

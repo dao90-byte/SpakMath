@@ -205,9 +205,12 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
               </div>
 
               {isWrong && (
-                <p className="text-xs font-semibold text-rose-600">
-                  Chưa chính xác, em hãy quan sát sơ đồ đoạn thẳng và tính lại nhé!
-                </p>
+                <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 animate-shake">
+                  <p className="font-bold">❌ Chưa chính xác rồi em ơi!</p>
+                  <p className="font-medium text-slate-700 mt-0.5">
+                    🤔 <strong className="text-amber-800">Gợi mở tư duy:</strong> Em hãy nhìn vào phần chênh lệch giữa các đoạn thẳng trên sơ đồ. Đoạn dài hơn đang nhiều hơn đoạn ngắn hơn đại lượng nào?
+                  </p>
+                </div>
               )}
             </div>
           );

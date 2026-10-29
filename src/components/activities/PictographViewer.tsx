@@ -235,9 +235,12 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
                 </div>
 
                 {isWrong && (
-                  <p className="text-xs text-rose-600 font-bold animate-shake">
-                    Chưa đúng rồi! Em hãy quan sát kỹ biểu đồ và đếm lại xem nhé!
-                  </p>
+                  <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 animate-shake">
+                    <p className="font-bold">❌ Chưa chính xác rồi em ơi!</p>
+                    <p className="font-medium text-slate-700 mt-0.5">
+                      🤔 <strong className="text-amber-800">Gợi mở tư duy:</strong> Mỗi biểu tượng trong bảng tương ứng với bao nhiêu đơn vị thực tế? Em hãy quan sát kỹ hàng tương ứng và suy nghĩ về quy ước đề bài nhé!
+                    </p>
+                  </div>
                 )}
                 {isCorrect && (
                   <p className="text-xs text-emerald-700 font-bold">

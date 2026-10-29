@@ -56,7 +56,7 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
       }, 500);
     } else {
       sound.playWrong();
-      setErrorMessage(`Chưa đúng (${parsed}). Bé hãy lập luận lại theo các đĩa cân đã thăng bằng nhé!`);
+      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Em hãy nhìn vào chiếc cân thứ nhất và thứ hai xem một đồ vật này có thể thay thế bằng bao nhiêu đồ vật kia? Thử suy nghĩ về sự cân bằng giữa chúng xem nhé!');
     }
   };
 

@@ -25,26 +25,53 @@ export const MatrixGrid2x2: React.FC<MatrixGrid2x2Props> = ({
   correctChoiceId,
   onCompleted
 }) => {
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
+  const [gridInputs, setGridInputs] = useState<string[][]>([
+    ['', ''],
+    ['', '']
+  ]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSelectChoice = (choiceId: string) => {
-    sound.playClick();
-    setSelectedChoiceId(choiceId);
+  const correctChoice = choices.find((c) => c.id === correctChoiceId);
 
-    if (choiceId === correctChoiceId) {
+  const handleCellChange = (r: number, c: number, val: string) => {
+    if (isSuccess) return;
+    const next = gridInputs.map((row, ri) =>
+      row.map((cell, ci) => (ri === r && ci === c ? val.trim() : cell))
+    );
+    setGridInputs(next);
+    setErrorMessage(null);
+  };
+
+  const handleCheckGrid = () => {
+    sound.playClick();
+    if (!correctChoice) return;
+
+    let allMatch = true;
+    for (let r = 0; r < 2; r++) {
+      for (let c = 0; c < 2; c++) {
+        const expected = (correctChoice.grid[r][c] || '').trim().toLowerCase();
+        const entered = (gridInputs[r][c] || '').trim().toLowerCase();
+        if (expected !== entered) {
+          allMatch = false;
+          break;
+        }
+      }
+    }
+
+    if (allMatch) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Em hãy theo dõi đường đi của từng con số (ví dụ chữ số ở góc trên bên trái) qua các Ô 1, 2, 3 xem nó đang quay theo hướng nào nhé!');
     }
   };
-
-  const selectedChoice = choices.find((c) => c.id === selectedChoiceId);
 
   return (
     <div className="space-y-6 flex flex-col items-center">
@@ -84,91 +111,73 @@ export const MatrixGrid2x2: React.FC<MatrixGrid2x2Props> = ({
             </div>
           ))}
 
-          {/* Missing Step 4 */}
+          {/* Interactive Step 4 (Direct 2x2 Grid Input) */}
           <div
             className={`flex flex-col items-center p-3 rounded-2xl border-3 transition-all ${
-              selectedChoiceId
-                ? selectedChoiceId === correctChoiceId
-                  ? 'bg-emerald-50 border-emerald-500 ring-4 ring-emerald-300'
-                  : 'bg-rose-50 border-rose-400 ring-4 ring-rose-200'
-                : 'bg-amber-50 border-dashed border-amber-400'
+              isSuccess
+                ? 'bg-emerald-50 border-emerald-500 ring-4 ring-emerald-300'
+                : 'bg-purple-50/60 border-purple-300'
             }`}
           >
             <span className="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full mb-2">
-              Ô 4 (?)
+              Ô 4 (Tự tay điền)
             </span>
-            <div className="grid grid-cols-2 gap-1.5 p-2 bg-white rounded-xl border border-slate-300 shadow-xs">
-              {selectedChoice
-                ? selectedChoice.grid.map((row, r) =>
-                    row.map((val, c) => (
-                      <div
-                        key={`${r}-${c}`}
-                        className="w-10 h-10 rounded-lg bg-emerald-100 border border-emerald-300 flex items-center justify-center text-lg font-black text-emerald-900"
-                      >
-                        {val || ''}
-                      </div>
-                    ))
-                  )
-                : Array.from({ length: 4 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-10 h-10 rounded-lg bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center text-xs text-slate-400 font-bold"
-                    >
-                      ?
-                    </div>
-                  ))}
+            <div className="grid grid-cols-2 gap-1.5 p-2 bg-white rounded-xl border-2 border-purple-300 shadow-sm">
+              {[0, 1].map((r) =>
+                [0, 1].map((c) => (
+                  <input
+                    key={`${r}-${c}`}
+                    type="text"
+                    maxLength={3}
+                    disabled={isSuccess}
+                    value={gridInputs[r][c]}
+                    onChange={(e) => handleCellChange(r, c, e.target.value)}
+                    placeholder="?"
+                    className={`w-10 h-10 rounded-lg text-center font-black text-lg outline-none transition-all ${
+                      isSuccess
+                        ? 'bg-emerald-100 text-emerald-900 border border-emerald-400 cursor-default'
+                        : 'bg-purple-50 text-purple-900 border border-purple-200 focus:bg-white focus:ring-2 focus:ring-purple-400'
+                    }`}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Choices to pick */}
-      <div className="space-y-3 text-center w-full max-w-2xl">
-        <h4 className="font-bold text-slate-800 text-sm md:text-base">
-          Chọn ma trận 2x2 tiếp theo:
+      {/* Control Action and Error Feedback */}
+      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
+        <h4 className="font-black text-slate-800 text-sm md:text-base">
+          Tự tay điền các chữ số vào 4 góc của Ô 4:
         </h4>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {choices.map((c) => {
-            const isSelected = selectedChoiceId === c.id;
-            const isCorrect = c.id === correctChoiceId;
-
-            let borderStyle = 'border-slate-300 hover:border-amber-400 bg-white';
-            if (isSelected) {
-              borderStyle = isCorrect
-                ? 'border-emerald-500 ring-4 ring-emerald-300 bg-emerald-50'
-                : 'border-rose-500 ring-4 ring-rose-200 bg-rose-50';
-            }
-
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => handleSelectChoice(c.id)}
-                className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center transition-all active:scale-95 ${borderStyle}`}
-              >
-                <div className="grid grid-cols-2 gap-1 p-1 bg-white rounded-lg border border-slate-200 shadow-xs mb-2">
-                  {c.grid.map((row, r) =>
-                    row.map((val, ci) => (
-                      <div
-                        key={`${r}-${ci}`}
-                        className="w-7 h-7 rounded bg-amber-50 flex items-center justify-center text-xs font-black text-amber-900"
-                      >
-                        {val || ''}
-                      </div>
-                    ))
-                  )}
-                </div>
-                <span className="text-xs font-bold text-slate-700">{c.label}</span>
-              </button>
-            );
-          })}
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={handleCheckGrid}
+            disabled={isSuccess || gridInputs.flat().some((v) => !v.trim())}
+            className={`px-8 py-3 rounded-2xl font-black text-sm shadow-md transition-all active:scale-95 ${
+              isSuccess
+                ? 'bg-emerald-600 text-white cursor-default'
+                : gridInputs.flat().every((v) => v.trim())
+                ? 'bg-purple-600 hover:bg-purple-500 text-white'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            {isSuccess ? 'Đúng ✓' : 'Kiểm tra Ô 4'}
+          </button>
         </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2.5 px-3 rounded-xl animate-shake text-left">
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       {isSuccess && (
-        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Rất chính xác! Bạn đã tìm ra quy luật quay vòng của ma trận 2x2!
+        <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow w-full max-w-md">
+          🎉 Rất chính xác! Bạn đã tự tay tìm ra quy luật quay vòng của ma trận 2x2!
         </div>
       )}
     </div>

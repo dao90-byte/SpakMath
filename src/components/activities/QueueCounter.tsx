@@ -56,7 +56,7 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
       }, 500);
     } else {
       sound.playWrong();
-      setErrorMessage(`Chưa chính xác (${parsed} bạn). Bé hãy tính lại theo công thức nhé!`);
+      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Khi đếm vị trí của một bạn từ hai đầu hàng, bạn đó đã được gọi tên mấy lần trong phép tính của em? Vị trí đó có ảnh hưởng gì tới tổng số bạn không?');
       recordMistake({
         questionPrompt: `${promptTitle} (Bài toán hàng ngũ: ${formula})`,
         userAnswer: `${parsed} bạn`,
@@ -165,7 +165,7 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
           )}
         </div>
 
-        {/* Formula breakdown */}
+        {/* Info breakdown - Hide formula before student solves */}
         <div className="mt-6 p-4 bg-amber-50 rounded-2xl border border-amber-200 flex flex-col md:flex-row items-center justify-between gap-3 text-xs md:text-sm">
           <div className="flex items-center gap-2 text-amber-900 font-semibold">
             <Info className="w-5 h-5 text-amber-600 shrink-0" />
@@ -175,9 +175,15 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
                 : `Tính từ đầu hàng là thứ ${fromFront}, tính từ cuối hàng là thứ ${fromBack}.`}
             </span>
           </div>
-          <span className="bg-amber-200 text-amber-950 font-black px-3 py-1.5 rounded-xl text-xs sm:text-sm whitespace-nowrap">
-            Công thức: {formula}
-          </span>
+          {isSuccess ? (
+            <span className="bg-emerald-200 text-emerald-950 font-black px-3 py-1.5 rounded-xl text-xs sm:text-sm whitespace-nowrap">
+              Công thức: {formula}
+            </span>
+          ) : (
+            <span className="text-amber-800 font-medium text-xs">
+              Quan sát vị trí các bạn và suy luận cẩn thận
+            </span>
+          )}
         </div>
       </div>
 

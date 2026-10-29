@@ -1,6 +1,6 @@
 {
-  "summary":  "Kế hoạch triển khai toàn diện:\n1. Đổi tên toàn bộ 'Kiểm Tra Phương Pháp Luận' thành 'Bài Kiểm Tra Định Kỳ' trên toàn hệ thống.\n2. Xây dựng Thanh / Tab riêng 'Bài Kiểm Tra Định Kỳ' chứa danh mục các bài kiểm tra chuyên đề và bài kiểm tra tổng hợp quy mô lớn.\n3. Thiết lập chốt chặn bắt buộc sau mỗi cụm bài cùng mô hình tư duy, tự động chuyển hướng sang bài kiểm tra định kỳ tương ứng.\n4. Triển khai cơ chế khóa bài tập kế tiếp khi chưa hoàn thành bài kiểm tra định kỳ, tích hợp cổng mở khóa dành cho giáo viên với mật khẩu bí mật '7979'.\n5. Rà soát logic, sửa lỗi chính tả và loại bỏ triệt để toàn bộ gợi ý mớm lời/tiết lộ đáp án; thay thế bằng hệ thống câu hỏi phản tư gợi mở tư duy chiều sâu.",
-  "updatedAt":  "2026-10-29T06:30:54.900644112Z",
+  "summary":  "Kế hoạch rà soát toàn diện các trạm và chuẩn hóa nhập liệu trực tiếp đã được thực thi và nghiệm thu 100%. Toàn bộ câu hỏi trắc nghiệm đã được chuyển sang ô tự tay gõ đáp án, mọi gợi ý lộ đáp án đã được thay bằng câu hỏi gợi mở phản tư, và mã giáo viên 7979 hoàn toàn được ẩn khỏi giao diện.",
+  "updatedAt":  "2026-10-29T14:03:56.335263318Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

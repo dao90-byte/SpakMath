@@ -76,7 +76,8 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
     const isMatch =
       correctChoice &&
       (correctChoice.label.trim().toLowerCase() === clean ||
-        clean.replace(/\D/g, '') === correctChoice.label.trim().replace(/\D/g, ''));
+        clean.replace(/\D/g, '') === correctChoice.label.trim().replace(/\D/g, '') ||
+        (correctChoice.subLabel && correctChoice.subLabel.trim().toLowerCase() === clean));
 
     if (isMatch) {
       setSelectedChoiceId(correctChoiceId);
@@ -89,7 +90,7 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
       }, 500);
     } else {
       sound.playWrong();
-      setErrorMessage(`Chưa đúng (${typedInput}). Em hãy quan sát bước nhảy giữa các số liền kề!`);
+      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Em hãy so sánh sự thay đổi hoặc khoảng cách giữa các số/hình liền kề nhau để nhận ra quy luật nhé!');
     }
   };
 
@@ -241,91 +242,48 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
       </div>
 
       {/* Direct typing input box */}
-      <div className="w-full max-w-md bg-white p-5 rounded-3xl border-2 border-purple-200 shadow-sm space-y-3 text-center">
+      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-purple-200 shadow-sm space-y-4 text-center">
         <h4 className="font-black text-slate-800 text-sm md:text-base">
-          Tự nhập kết quả hoặc chọn đáp án:
+          Tự tay nhập giá trị hoặc con số còn thiếu vào ô:
         </h4>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-3">
           <input
             type="text"
             value={typedInput}
+            disabled={isSuccess}
             onChange={(e) => {
               setTypedInput(e.target.value);
               setErrorMessage(null);
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
-            placeholder="Nhập giá trị còn thiếu..."
-            className="flex-1 max-w-[200px] px-3.5 py-2.5 rounded-xl border-2 border-purple-300 text-base font-bold text-center text-slate-800 focus:outline-none focus:ring-3 focus:ring-purple-200"
+            placeholder="Nhập kết quả của em..."
+            className={`flex-1 px-4 py-3 rounded-2xl border-2 text-base font-bold text-center outline-none transition-all ${
+              isSuccess
+                ? 'bg-emerald-50 border-emerald-400 text-emerald-800 font-black cursor-default'
+                : 'border-purple-300 text-slate-800 focus:ring-4 focus:ring-purple-200 focus:border-purple-500'
+            }`}
           />
           <button
             type="button"
             onClick={handleCheckInput}
-            className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs shadow-md transition-all active:scale-95"
+            disabled={isSuccess || !typedInput.trim()}
+            className={`px-6 py-3 rounded-2xl font-black text-sm shadow-md transition-all active:scale-95 ${
+              isSuccess
+                ? 'bg-emerald-600 text-white cursor-default'
+                : typedInput.trim()
+                ? 'bg-purple-600 hover:bg-purple-500 text-white'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
           >
-            Kiểm tra
+            {isSuccess ? 'Đúng ✓' : 'Kiểm tra'}
           </button>
         </div>
 
         {errorMessage && (
-          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-1.5 px-3 rounded-xl animate-shake">
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2.5 px-3 rounded-xl animate-shake text-left">
             {errorMessage}
           </div>
         )}
-      </div>
-
-      {/* Choice picker */}
-      <div className="space-y-3 text-center w-full">
-        <h4 className="font-bold text-slate-700 text-xs uppercase tracking-wider">
-          Hoặc bấm chọn đáp án tương ứng:
-        </h4>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {choices.map((c) => {
-            const isSelected = selectedChoiceId === c.id;
-            const isCorrect = c.id === correctChoiceId;
-
-            let borderStyle = 'border-slate-300 hover:border-purple-400 bg-white';
-            if (isSelected) {
-              borderStyle = isCorrect
-                ? 'border-emerald-500 ring-4 ring-emerald-300 bg-emerald-50'
-                : 'border-rose-500 ring-4 ring-rose-200 bg-rose-50';
-            }
-
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => handleSelectChoice(c.id)}
-                className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center transition-all active:scale-95 shadow-sm ${borderStyle}`}
-              >
-                {c.subLabel !== undefined ? (
-                  <div className="w-12 h-16 rounded-xl border border-slate-700 bg-slate-900 text-white flex flex-col items-center justify-between p-1 mb-1.5">
-                    <span className="text-base font-black text-amber-300">{c.label}</span>
-                    <div className="w-full h-px bg-slate-600" />
-                    <span className="text-base font-black text-sky-300">{c.subLabel}</span>
-                  </div>
-                ) : (
-                  <span className="text-2xl font-black text-slate-800 mb-1">
-                    {c.icon || c.label}
-                  </span>
-                )}
-                <span className="text-xs font-bold text-slate-600">{c.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Reset button */}
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-300 transition-colors"
-        >
-          <RotateCcw className="w-4 h-4" />
-          Chọn lại
-        </button>
       </div>
 
       {isSuccess && (

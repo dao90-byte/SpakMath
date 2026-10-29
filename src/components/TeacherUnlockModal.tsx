@@ -38,7 +38,7 @@ export const TeacherUnlockModal: React.FC<TeacherUnlockModalProps> = ({
       }, 1400);
     } else {
       sound.playWrong();
-      setErrorMsg('Mật khẩu không chính xác. Mật khẩu chuẩn dành cho giáo viên là: 7979');
+      setErrorMsg('Mật khẩu không chính xác. Vui lòng kiểm tra lại mật mã giáo viên.');
     }
   };
 
@@ -138,7 +138,7 @@ export const TeacherUnlockModal: React.FC<TeacherUnlockModalProps> = ({
                       setPasswordInput(e.target.value);
                       setErrorMsg(null);
                     }}
-                    placeholder="Nhập 7979..."
+                    placeholder="Nhập mật khẩu..."
                     className="w-full px-4 py-3 text-center text-lg tracking-widest font-black rounded-2xl border-2 border-slate-300 focus:border-amber-500 focus:outline-none"
                   />
                   <KeyRound className="w-5 h-5 text-slate-400 absolute right-3 top-3.5 pointer-events-none" />

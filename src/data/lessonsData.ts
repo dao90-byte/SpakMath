@@ -491,7 +491,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Môn học yêu thích & Phép trừ so sánh',
     badgeTitle: 'Bài 4.2 · Trang 9',
     instruction: 'Biểu đồ cho thấy số lượt bình chọn dành cho 4 môn học: Toán, Tiếng Việt, Tiếng Anh, Mỹ Thuật. Lưu ý: Mỗi trái tim = 1 lượt bình chọn.',
-    hint: 'Môn Tiếng Việt có 4 tim. Môn Mỹ thuật có 6 tim, môn Toán có 3 tim. Lấy 6 - 3 = 3!',
+    hint: 'Em hãy quan sát số biểu tượng trái tim của môn Mỹ thuật và môn Toán xem hai môn này chênh lệch nhau bao nhiêu lượt bình chọn nhé!',
     mascot: { ...ABBY, message: 'Toán học và Mỹ thuật đều giúp chúng mình rèn luyện tư duy sáng tạo!' },
     activity: {
       type: 'pictographViewer',
@@ -1391,9 +1391,9 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicName: topicName('volume'),
     title: 'So sánh thể tích 4 chai nước A, B, C, D',
     badgeTitle: 'Bài 2.1 · Trang 26',
-    instruction: 'Quan sát 4 chai nước có cùng kích thước nhưng lượng nước khác nhau và chọn đáp án chính xác.',
-    hint: 'Chai B đầy nước nhất, Chai C ít nước nhất. Chai A và Chai D có mực nước bằng nhau!',
-    mascot: { ...CASEY, message: 'Các chai giống nhau thì nhìn mực nước là biết ngay chai nào nhiều hơn!' },
+    instruction: 'Quan sát 4 chai nước có cùng kích thước nhưng lượng nước khác nhau và tự tay nhập câu trả lời chính xác.',
+    hint: 'Khi các chai có kích thước như nhau, chiều cao mực nước cho em biết điều gì về lượng nước bên trong mỗi chai?',
+    mascot: { ...CASEY, message: 'Hãy quan sát kỹ mực nước của từng chai xem chai nào cao nhất và chai nào thấp nhất nhé!' },
     activity: {
       type: 'volumeComparison',
       bottles: [
@@ -1790,8 +1790,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Nước ép táo của Benny & Abby',
     badgeTitle: 'Bài 8.2 · Trang 33',
     instruction: 'Benny có 37 L nước ép táo. Abby có nhiều hơn Benny 63L nước ép táo.',
-    hint: 'Abby = 37 + 63 = 100L. Cả hai bạn = 37 + 100 = 137L!',
-    mascot: { ...BENNY, message: 'Cộng tròn trăm thật là thích: 37 + 63 = 100 tròn!' },
+    hint: 'Đoạn thẳng biểu diễn số lít nước của Abby gồm phần bằng Benny và phần nhiều hơn. Em hãy suy nghĩ xem cần làm gì để tìm số lít của Abby và tổng của cả hai bạn nhé!',
+    mascot: { ...BENNY, message: 'Hãy nhìn sơ đồ đoạn thẳng: Abby có nhiều hơn Benny bao nhiêu lít nhỉ?' },
     activity: {
       type: 'barModel',
       bars: [
@@ -2324,8 +2324,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Vòi Bơm & Lỗ Rò Rỉ: Bài toán lưu lượng ròng',
     badgeTitle: 'Bài 20 · Độ khó Cấp 9',
     instruction: 'Một bồn chứa nước sạch có dung tích 200 Lít đang cạn rỗng. Người ta mở máy bơm nước vào bồn với tốc độ 30 Lít/phút. Tuy nhiên ở đáy bồn có một van xả rò rỉ làm thất thoát 5 Lít/phút. Hỏi sau bao nhiêu phút bồn nước sẽ đầy?',
-    hint: 'Mỗi phút bơm vào 30L nhưng rò rỉ mất 5L, nên lượng nước thực tế đọng lại trong bồn mỗi phút là: 30 - 5 = 25 Lít. Thời gian để bồn đầy 200 Lít là: 200 : 25 = 8 phút!',
-    mascot: { ...MAYLE, message: 'Lưu lượng ròng = Lượng nước bơm vào TRỪ Lượng nước rò rỉ thất thoát!' },
+    hint: 'Em hãy suy nghĩ xem trong mỗi phút, bồn nước được thêm vào và mất đi lượng nước là bao nhiêu? Vậy thực tế bồn tăng thêm được bao nhiêu nước sau mỗi phút?',
+    mascot: { ...MAYLE, message: 'Hãy phân tích sự thay đổi lượng nước trong bồn sau mỗi phút nhé!' },
     activity: {
       type: 'volumeComparison',
       bottles: [
@@ -2724,9 +2724,9 @@ export const ALL_LESSONS: LessonQuestion[] = [
     topicName: topicName('sudoku'),
     title: 'Ma trận số 2x2 xoay quy luật kim đồng hồ',
     badgeTitle: 'Bài 5.1 · Trang 51',
-    instruction: 'Quan sát các con số 1, 2, 3, 4 trong ma trận 2x2 di chuyển xoay tròn theo chiều kim đồng hồ qua Ô 1, Ô 2, Ô 3. Hãy chọn Ô 4 chính xác!',
-    hint: 'Số 1 ở Ô 1 nằm ở góc trên trái, sang Ô 2 chuyển sang góc trên phải, sang Ô 3 xuống góc dưới phải. Vậy ở Ô 4, số 1 sẽ ở góc dưới trái!',
-    mascot: { ...CASEY, message: 'Hãy theo dõi đường đi của số 1 để tìm ra quy luật xoay tròn!' },
+    instruction: 'Quan sát các con số 1, 2, 3, 4 trong ma trận 2x2 di chuyển xoay tròn theo chiều kim đồng hồ qua Ô 1, Ô 2, Ô 3. Hãy tự tay điền các con số vào 4 góc của Ô 4!',
+    hint: 'Em hãy theo dõi hướng di chuyển của chữ số ở góc trên bên trái qua từng bước xem nó đang xoay vòng như thế nào nhé!',
+    mascot: { ...CASEY, message: 'Hãy theo dõi đường đi của từng con số để tìm ra quy luật xoay tròn!' },
     activity: {
       type: 'matrix2x2',
       title: 'QUY LUẬT MA TRẬN SỐ XOAY 2x2',
@@ -2899,8 +2899,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Ma trận số phép tính cộng theo hàng (Tổng = 10)',
     badgeTitle: 'Bài 6.2 · Trang 52',
     instruction: 'Quan sát các phép tính cộng trong ma trận 3x3 và điền số còn thiếu vào các ô trống để hoàn thành ma trận.',
-    hint: 'Hàng 1: 5 + 4 = 9. Hàng 2: 3 + ? = 10 => ? = 7. Hàng 3: ? + 2 = 10 => ? = 8!',
-    mascot: { ...ABBY, message: 'Nhìn hàng ngang ta có các phép tính cộng: A + B = C!' },
+    hint: 'Ở mỗi hàng ngang, mối liên hệ giữa hai ô đầu tiên và ô thứ ba là gì? Em hãy kiểm tra xem phép tính nào liên kết chúng nhé!',
+    mascot: { ...ABBY, message: 'Quan sát hàng ngang và tìm mối liên hệ giữa các con số nhé!' },
     activity: {
       type: 'numberMatrix',
       title: 'MA TRẬN PHÉP TÍNH CỘNG A + B = C',
@@ -2926,7 +2926,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Ma trận phép tính cộng hai chiều liên hoàn',
     badgeTitle: 'Bài Nâng Cao 7.1 · Trang 52+',
     instruction: 'Điền các số còn thiếu vào ô trống sao cho đúng cả phép cộng hàng ngang (A + B = C) và phép cộng cột dọc (A + D = G)!',
-    hint: 'Hàng 1: 4 + ? = 10 => 6. Hàng 2: 3 + 5 = 8. Cột 1: 4 + 3 = 7!',
+    hint: 'Em hãy quan sát hàng hoặc cột đã có đủ 2 số trước, xem số thứ ba liên hệ với chúng theo mối quan hệ nào nhé!',
     mascot: { ...CASEY, message: 'Thử thách hai chiều: vừa kiểm tra hàng ngang vừa kiểm tra cột dọc nhé!' },
     activity: {
       type: 'numberMatrix',
@@ -3104,8 +3104,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Ma trận số Kim Tự Tháp cộng dồn 3 tầng',
     badgeTitle: 'Bài Nâng Cao 10.1 · Trang 52+',
     instruction: 'Quy luật kim tự tháp: Hai số đầu ở mỗi hàng cộng lại bằng số thứ ba (A + B = C), đồng thời hai hàng trên cộng dồn ra hàng dưới cùng!',
-    hint: 'Hàng 1: 6 + ? = 15 => Cần điền số 9. Hàng 2: ? + 14 = 23 => Cần điền số 9. Hàng 3: 15 + 23 = 38!',
-    mascot: { ...ABBY, message: 'Cộng dồn từ tầng dưới lên tầng đỉnh kim tự tháp thật kỳ ảo!' },
+    hint: 'Em hãy quan sát các ô đã biết ở mỗi hàng và cột để tìm ra mối liên hệ tổng giữa chúng nhé!',
+    mascot: { ...ABBY, message: 'Hãy phân tích mối liên hệ cộng dồn giữa các tầng nhé!' },
     activity: {
       type: 'numberMatrix',
       title: 'KIM TỰ THÁP CỘNG DỒN 3 TẦNG',
@@ -3540,8 +3540,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Dãy số tăng dần cách đều (+3 mỗi bước)',
     badgeTitle: 'Bài 5.1 · Trang 57',
     instruction: 'Quan sát các viên đá bước chân nhảy qua suối: 2 ➔ 5 ➔ 8 ➔ 11 ➔ [ ? ] ➔ 17 ➔ 20. Hãy tìm con số trên viên đá bí mật!',
-    hint: 'Mỗi bước con số tăng thêm 3 đơn vị: 2 + 3 = 5; 5 + 3 = 8; 8 + 3 = 11; 11 + 3 = 14!',
-    mascot: { ...BENNY, message: 'Chú ếch nhảy mỗi lần đúng 3 bước, cộng thêm 3 là ra ngay!' },
+    hint: 'Em hãy so sánh khoảng cách giữa hai viên đá kề nhau xem mỗi bước con số thay đổi như thế nào nhé!',
+    mascot: { ...BENNY, message: 'Quan sát bước nhảy giữa các số liền kề để tìm ra quy luật nhé!' },
     activity: {
       type: 'sequencePattern',
       title: 'DÃY SỐ TĂNG DẦN CÁCH ĐỀU',
@@ -3573,8 +3573,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Dãy số nhân đôi tăng tốc (×2 mỗi bước)',
     badgeTitle: 'Bài 5.2 · Trang 57',
     instruction: 'Quan sát dãy số tên lửa tăng tốc: 1 ➔ 2 ➔ 4 ➔ 8 ➔ 16 ➔ [ ? ]. Tìm con số bí mật tiếp theo!',
-    hint: 'Mỗi số gấp 2 lần số trước đó: 1 × 2 = 2; 2 × 2 = 4; 4 × 2 = 8; 8 × 2 = 16; 16 × 2 = 32!',
-    mascot: { ...MAYLE, message: 'Số phía sau gấp đôi số phía trước, phép nhân 2 thật kỳ diệu!' },
+    hint: 'Em hãy thử so sánh mỗi số với số đứng ngay trước nó xem chúng gấp nhau bao nhiêu lần nhé!',
+    mascot: { ...MAYLE, message: 'Hãy chú ý tỷ lệ tăng tốc giữa các số liền nhau nhé!' },
     activity: {
       type: 'sequencePattern',
       title: 'DÃY SỐ TĂNG TỐC GẤP ĐÔI',
@@ -3605,7 +3605,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Hình gì sẽ xuất hiện tiếp theo? (Hình lồng hình)',
     badgeTitle: 'Bài 6 · Trang 58',
     instruction: 'Quan sát quy luật biến đổi các hình lồng nhau qua các hàng (Vuông lồng tròn, Tam giác lồng chữ nhật, Tròn lồng thoi).',
-    hint: 'Ở hàng 3: Hình tròn lớn chứa hình thoi ở giữa có chấm tròn trên dưới. Đáp án đúng là B (trang 82 đáp án)!',
+    hint: 'Em hãy quan sát sự biến đổi của hình bên ngoài và hình lồng ở bên trong qua từng bước xem chúng thay đổi ra sao nhé!',
     mascot: { ...ABBY, message: 'Nhìn thật kỹ hình bên ngoài và hình lồng bên trong nhé!' },
     activity: {
       type: 'patternMatrix',
@@ -3630,8 +3630,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Kim tự tháp số thông minh (Number Pyramid)',
     badgeTitle: 'Bài 7 · Trang 58 Mở rộng',
     instruction: 'Trong kim tự tháp số, mỗi viên gạch ở tầng trên bằng TỔNG CỦA HAI VIÊN GẠCH ngay dưới nó. Tầng 1 gồm 3, 4, 4. Tầng 2 gồm 7 và 8. Hỏi viên gạch ở ĐỈNH là số mấy?',
-    hint: 'Tầng 2: 3 + 4 = 7; 4 + 4 = 8. Viên gạch ở đỉnh bằng tổng tầng 2: 7 + 8 = 15!',
-    mascot: { ...MAYLE, message: 'Cộng dồn hai viên gạch bên dưới để tìm ra viên gạch bên trên!' },
+    hint: 'Em hãy quan sát quy luật cộng dồn giữa các viên gạch ở tầng dưới để tìm ra số trên đỉnh kim tự tháp nhé!',
+    mascot: { ...MAYLE, message: 'Quan sát hai viên gạch tầng 2 để tìm viên gạch đỉnh chóp nhé!' },
     activity: {
       type: 'sequencePattern',
       title: 'KIM TỰ THÁP SỐ TỔNG CỘNG',
@@ -3657,8 +3657,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Dãy số Fibonacci tự nhiên: Tổng hai số liền trước',
     badgeTitle: 'Bài Nâng Cao 8.1 · Trang 58+',
     instruction: 'Quan sát dãy số vỏ ốc thần kỳ: 1 ➔ 2 ➔ 3 ➔ 5 ➔ 8 ➔ [ ? ] ➔ 21. Hãy tìm con số bí mật tiếp theo!',
-    hint: 'Mỗi số bằng tổng 2 số liền trước nó: 1 + 2 = 3; 2 + 3 = 5; 3 + 5 = 8; 5 + 8 = 13; 8 + 13 = 21!',
-    mascot: { ...ABBY, message: 'Dãy số vỏ ốc Fibonacci kỳ diệu trong thiên nhiên, hai bạn trước cộng lại ra bạn sau!' },
+    hint: 'Em hãy thử cộng hai số đứng kề nhau xem có mối liên hệ gì với số tiếp theo trong dãy không nhé!',
+    mascot: { ...ABBY, message: 'Hãy tìm mối liên hệ giữa các số đứng kề nhau nhé!' },
     activity: {
       type: 'sequencePattern',
       title: 'DÃY SỐ FIBONACCI TỰ NHIÊN',
@@ -3690,8 +3690,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Dãy số khoảng cách bậc hai: Bước nhảy tăng dần',
     badgeTitle: 'Bài Nâng Cao 8.2 · Trang 58+',
     instruction: 'Chú thỏ Abby nhảy qua các mỏm đá với bước nhảy dài hơn sau mỗi lần: 1 ➔ 2 ➔ 4 ➔ 7 ➔ 11 ➔ 16 ➔ [ ? ]. Tìm con số ở mỏm đá tiếp theo!',
-    hint: 'Khoảng cách giữa các mỏm đá tăng dần: +1, +2, +3, +4, +5! Bước tiếp theo nhảy +6: 16 + 6 = 22!',
-    mascot: { ...BENNY, message: 'Bước nhảy dài thêm 1 sau mỗi lần nhảy: +1, +2, +3, +4, +5, rồi đến +6!' },
+    hint: 'Em hãy quan sát độ dài bước nhảy giữa các lần liên tiếp xem khoảng cách đó tăng lên như thế nào nhé!',
+    mascot: { ...BENNY, message: 'Độ dài mỗi bước nhảy thay đổi theo quy luật nào nhỉ?' },
     activity: {
       type: 'sequencePattern',
       title: 'BƯỚC NHẢY TĂNG DẦN BẬC HAI',
@@ -3723,8 +3723,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Dãy số đan xen hai phép tính luân phiên (+5 và -2)',
     badgeTitle: 'Bài Nâng Cao 9.1 · Trang 58+',
     instruction: 'Quan sát nhịp điệu của các nốt nhạc: 3 ➔ 8 ➔ 6 ➔ 11 ➔ 9 ➔ 14 ➔ [ ? ]. Tìm nốt nhạc bí mật tiếp theo!',
-    hint: 'Quy luật đan xen: Cộng 5 rồi Trừ 2! (3 + 5 = 8; 8 - 2 = 6; 6 + 5 = 11; 11 - 2 = 9; 9 + 5 = 14). Tiếp theo là Trừ 2: 14 - 2 = 12!',
-    mascot: { ...CASEY, message: 'Nhảy lên rồi lùi xuống luân phiên như đang khiêu vũ: +5 rồi lại -2!' },
+    hint: 'Em hãy quan sát sự tăng và giảm luân phiên giữa các nốt nhạc để nhận biết bước tiếp theo nhé!',
+    mascot: { ...CASEY, message: 'Dãy số đang nhảy lên rồi lùi xuống luân phiên theo nhịp điệu đấy!' },
     activity: {
       type: 'sequencePattern',
       title: 'DÃY SỐ ĐAN XEN LUÂN PHIÊN (+5 / -2)',
@@ -3860,8 +3860,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Kim tự tháp số 4 tầng cộng dồn đa lớp',
     badgeTitle: 'Bài Nâng Cao 11.1 · Trang 58+',
     instruction: 'Kim tự tháp số 4 tầng khổng lồ: Tầng đáy gồm 2, 3, 5, 4. Tầng 2 gồm 5, 8, 9. Tầng 3 gồm 13, 17. Hỏi viên gạch trên đỉnh chóp là con số mấy?',
-    hint: 'Tầng 3 gồm 13 và 17. Viên gạch ở đỉnh bằng tổng của hai viên gạch tầng 3: 13 + 17 = 30!',
-    mascot: { ...MAYLE, message: 'Kim tự tháp 4 tầng cao vút, tính nhẩm tầng 3: 13 + 17 là ra đỉnh chóp ngay!' },
+    hint: 'Em hãy quan sát hai viên gạch ở tầng 3 để suy luận ra số trên đỉnh chóp kim tự tháp nhé!',
+    mascot: { ...MAYLE, message: 'Quan sát hai viên gạch tầng 3 để tìm ra viên gạch đỉnh chóp nhé!' },
     activity: {
       type: 'sequencePattern',
       title: 'KIM TỰ THÁP SỐ 4 TẦNG',
@@ -3887,8 +3887,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Dãy số mã hóa chữ cái kết hợp số học',
     badgeTitle: 'Bài Nâng Cao 11.2 · Trang 58+',
     instruction: 'Mật mã thông minh kết hợp chữ cái và số lẻ: A1 ➔ B3 ➔ C5 ➔ D7 ➔ [ ? ]. Tìm mật mã tiếp theo!',
-    hint: 'Chữ cái đi theo bảng chữ cái: A, B, C, D ➔ tiếp theo là E. Chữ số tăng theo số lẻ: 1, 3, 5, 7 ➔ tiếp theo là 9. Mật mã là E9!',
-    mascot: { ...CASEY, message: 'Phối hợp chữ cái A, B, C, D, E và số lẻ 1, 3, 5, 7, 9 để giải mã!' },
+    hint: 'Em hãy quan sát quy luật của phần chữ cái trong bảng chữ cái và quy luật tăng của phần chữ số riêng biệt nhé!',
+    mascot: { ...CASEY, message: 'Phối hợp chữ cái và chữ số để giải mã nhé!' },
     activity: {
       type: 'sequencePattern',
       title: 'MẬT MÃ CHỮ CÁI & SỐ LẺ',
@@ -3918,7 +3918,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Chuỗi vòng ngọc đối xứng trục gương (Mirror Symmetry)',
     badgeTitle: 'Bài Nâng Cao 12.1 · Trang 58+',
     instruction: 'Chiếc vòng ngọc đối xứng qua tấm gương ở giữa: 🔴 🔵 🟡 🟢 | GƯƠNG | 🟢 🟡 🔵 [ ? ]. Tìm hạt ngọc cuối cùng để chuỗi đối xứng hoàn hảo!',
-    hint: 'Đối xứng qua gương: 🟢 soi với 🟢, 🟡 soi với 🟡, 🔵 soi với 🔵. Hạt ngoài cùng bên trái là 🔴 nên hạt ngoài cùng bên phải cũng phải là 🔴 Đỏ!',
+    hint: 'Em hãy tưởng tượng soi tấm gương ở giữa: hạt ngọc ở vị trí ngoài cùng bên trái sẽ phản chiếu với hạt ngọc nào ở ngoài cùng bên phải?',
     mascot: { ...ABBY, message: 'Quy luật đối xứng gương: hình ảnh bên phải phản chiếu y hệt bên trái!' },
     activity: {
       type: 'sequencePattern',
@@ -3952,7 +3952,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đại Thử Thách Trạm 4: Dãy số hai tầng sóng lồng nhau',
     badgeTitle: 'Đại Thử Thách Trạm 4 · Trang 58+',
     instruction: 'Đỉnh cao Trạm 4: Dãy số gồm hai quy luật chạy lồng vào nhau: 1, 10, 3, 20, 9, 30, [ ? ], 40. Tìm số bí mật ở vị trí số 7!',
-    hint: 'Vị trí lẻ (1, 3, 5, 7): 1 × 3 = 3; 3 × 3 = 9; 9 × 3 = 27! Vị trí chẵn (2, 4, 6, 8): 10, 20, 30, 40. Vị trí số 7 cần điền là 27!',
+    hint: 'Em hãy tách dãy số thành hai dãy con: các số ở vị trí lẻ (1, 3, 5, 7) và các số ở vị trí chẵn (2, 4, 6, 8) xem mỗi dãy con biến đổi ra sao nhé!',
     mascot: { ...BENNY, message: 'Chúc mừng bạn đã chinh phục đỉnh cao nhất của Thung Lũng Quy Luật & Mê Cung!' },
     activity: {
       type: 'sequencePattern',
@@ -4609,7 +4609,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Đại Thử Thách Trạm 5: Vòng tròn 20 bạn & Vị trí đối diện',
     badgeTitle: 'Đại Thử Thách Trạm 5 · Trang 72+',
     instruction: 'Đỉnh cao Trạm 5: Có 20 bạn nhỏ đứng thành một vòng tròn nắm tay cách đều nhau, được đánh số từ 1 đến 20 theo chiều kim đồng hồ. Hỏi bạn số 3 đứng ĐỐI DIỆN TRỰC TIẾP với bạn số mấy?',
-    hint: 'Một nửa vòng tròn có 20 : 2 = 10 khoảng cách. Bạn đứng đối diện cách bạn số 3 đúng 10 bước: 3 + 10 = 13!',
+    hint: 'Vòng tròn có 20 bạn, vậy một nửa vòng tròn tương ứng với bao nhiêu bạn? Bạn đứng đối diện sẽ cách bạn số 3 bao nhiêu vị trí?',
     mascot: { ...BENNY, message: 'Chúc mừng bạn đã chinh phục đỉnh cao nhất của Thung Lũng Vị Trí Hàng Ngũ & Suy Luận!' },
     activity: {
       type: 'queueCounter',
@@ -4986,7 +4986,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Ma trận số đối xứng tổng bằng 10',
     badgeTitle: 'Thử Thách 8.2 · Trang 85',
     instruction: 'Điền các số thích hợp vào ô trống sao cho tổng các hàng ngang và cột dọc đều bằng đúng 10!',
-    hint: 'Hàng 1 có: 4 + ? = 10 => ? = 6. Hàng 2 có: ? + 4 = 10 => ? = 6!',
+    hint: 'Em hãy suy nghĩ xem số 4 cần kết hợp với số nào để tạo thành tổng bằng 10 nhé!',
     mascot: { ...CASEY, message: 'Các số kết hợp với nhau tạo thành tổng 10 thật kỳ diệu!' },
     activity: {
       type: 'numberMatrix',

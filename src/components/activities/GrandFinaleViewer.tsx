@@ -23,33 +23,51 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
   onCompleted
 }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [typedInput, setTypedInput] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isAnsweredCorrect, setIsAnsweredCorrect] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const [showExplanation, setShowExplanation] = useState(false);
   const [isCompletedAll, setIsCompletedAll] = useState(false);
 
   const currentQ = roundQuestions[currentIdx];
   const totalRounds = roundQuestions.length;
-  const currentAnswer = selectedAnswers[currentQ?.id];
 
-  const handleSelectOption = (optId: string) => {
-    if (currentAnswer) return; // already answered this question
-    const opt = currentQ.options.find((o) => o.id === optId);
-    if (!opt) return;
+  const checkAnswerMatch = (input: string, correctText: string): boolean => {
+    const cleanIn = input.trim().toLowerCase();
+    const cleanCor = correctText.trim().toLowerCase();
+    if (cleanIn === cleanCor) return true;
+    const inDigits = cleanIn.match(/\d+/)?.[0];
+    const corDigits = cleanCor.match(/\d+/)?.[0];
+    if (inDigits && corDigits && inDigits === corDigits) return true;
+    return cleanCor.includes(cleanIn) || cleanIn.includes(cleanCor);
+  };
 
-    setSelectedAnswers((prev) => ({ ...prev, [currentQ.id]: optId }));
-    setShowExplanation(true);
+  const handleCheckAnswer = () => {
+    if (!typedInput.trim() || isAnsweredCorrect) return;
+    const correctOpt = currentQ.options.find((o) => o.isCorrect);
+    if (!correctOpt) return;
 
-    if (opt.isCorrect) {
+    sound.playClick();
+    if (checkAnswerMatch(typedInput, correctOpt.text)) {
       sound.playCorrect();
       sound.playStarCollect();
+      setIsAnsweredCorrect(true);
+      setShowExplanation(true);
+      setErrorMessage(null);
+      setSelectedAnswers((prev) => ({ ...prev, [currentQ.id]: correctOpt.id }));
     } else {
       sound.playWrong();
+      setErrorMessage('Chưa chính xác. Em hãy phân tích đề bài và kiểm tra lại phép tính nhé!');
     }
   };
 
   const handleNextRound = () => {
     sound.playClick();
     setShowExplanation(false);
+    setTypedInput('');
+    setErrorMessage(null);
+    setIsAnsweredCorrect(false);
 
     if (currentIdx < totalRounds - 1) {
       setCurrentIdx((prev) => prev + 1);
@@ -71,6 +89,9 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
   const handleRestart = () => {
     sound.playWrong();
     setCurrentIdx(0);
+    setTypedInput('');
+    setErrorMessage(null);
+    setIsAnsweredCorrect(false);
     setSelectedAnswers({});
     setShowExplanation(false);
     setIsCompletedAll(false);
@@ -125,37 +146,49 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
             {currentQ.question}
           </h3>
 
-          {/* Options */}
-          <div className="space-y-2.5">
-            {currentQ.options.map((opt) => {
-              const isSelected = currentAnswer === opt.id;
-              let style = 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800';
+          {/* Typed Answer Input */}
+          <div className="space-y-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <input
+                type="text"
+                placeholder="Tự tay nhập câu trả lời của em..."
+                value={typedInput}
+                disabled={isAnsweredCorrect}
+                onChange={(e) => {
+                  setTypedInput(e.target.value);
+                  setErrorMessage(null);
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleCheckAnswer()}
+                className={`flex-1 px-4 py-3.5 rounded-2xl border-2 font-bold text-sm md:text-base outline-none transition-all ${
+                  isAnsweredCorrect
+                    ? 'bg-emerald-50 border-emerald-400 text-emerald-800'
+                    : 'bg-slate-50 border-slate-300 text-slate-800 focus:border-amber-500 focus:bg-white'
+                }`}
+              />
+              <button
+                type="button"
+                onClick={handleCheckAnswer}
+                disabled={isAnsweredCorrect || !typedInput.trim()}
+                className={`px-6 py-3.5 rounded-2xl font-black text-sm md:text-base transition-all shadow-sm shrink-0 ${
+                  isAnsweredCorrect
+                    ? 'bg-emerald-600 text-white cursor-default'
+                    : typedInput.trim()
+                    ? 'bg-amber-500 hover:bg-amber-600 text-white active:scale-95'
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                }`}
+              >
+                {isAnsweredCorrect ? 'Đúng ✓' : 'Kiểm tra'}
+              </button>
+            </div>
 
-              if (currentAnswer) {
-                if (opt.isCorrect) {
-                  style = 'bg-emerald-100 border-emerald-500 text-emerald-900 font-black shadow-xs';
-                } else if (isSelected && !opt.isCorrect) {
-                  style = 'bg-rose-100 border-rose-400 text-rose-900 line-through';
-                } else {
-                  style = 'bg-slate-50/50 border-slate-200 text-slate-400 opacity-60';
-                }
-              }
-
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => handleSelectOption(opt.id)}
-                  disabled={Boolean(currentAnswer)}
-                  className={`w-full text-left p-4 rounded-2xl border-2 transition-all font-bold text-sm md:text-base flex items-center justify-between ${style}`}
-                >
-                  <span>{opt.text}</span>
-                  {currentAnswer && opt.isCorrect && (
-                    <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
-                  )}
-                </button>
-              );
-            })}
+            {errorMessage && (
+              <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs md:text-sm text-rose-800 space-y-1 animate-shake">
+                <p className="font-bold">❌ Chưa chính xác rồi em ơi!</p>
+                <p className="font-medium text-slate-700">
+                  🤔 <strong className="text-amber-800">Gợi mở tư duy:</strong> Em hãy đọc lại đề bài xem đại lượng nào đã biết và đại lượng nào đang cần tìm? Thử suy nghĩ về mối quan hệ giữa các dữ kiện xem nhé!
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Explanation & Next */}

@@ -13,7 +13,8 @@ import {
   BookMarked,
   BookmarkCheck,
   Bug,
-  Lock
+  Lock,
+  KeyRound
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { setCurrentLessonContext, recordMistake } from '../utils/mistakeManager';
@@ -619,10 +620,11 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
                   sound.playClick();
                   onOpenTeacherUnlock();
                 }}
-                className="px-3.5 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold border border-white/30 whitespace-nowrap active:scale-95 transition-all"
-                title="Mở khóa giáo viên (Mật khẩu: 7979)"
+                className="px-3.5 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold border border-white/30 whitespace-nowrap active:scale-95 transition-all flex items-center gap-1.5"
+                title="Cổng dành cho giáo viên"
               >
-                Mã 7979
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>Giáo Viên</span>
               </button>
             )}
 

@@ -312,7 +312,7 @@ export default function App() {
         currentLessonTitle={currentLesson?.title}
       />
 
-      {/* Teacher Unlock Mode Modal (Password: 7979) */}
+      {/* Teacher Unlock Mode Modal */}
       <TeacherUnlockModal
         isOpen={isTeacherModalOpen}
         onClose={() => setIsTeacherModalOpen(false)}

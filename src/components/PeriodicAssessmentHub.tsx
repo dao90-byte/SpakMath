@@ -78,7 +78,7 @@ export const PeriodicAssessmentHub: React.FC<PeriodicAssessmentHubProps> = ({
               }`}
             >
               <KeyRound className="w-3.5 h-3.5" />
-              <span>{isTeacherMode ? 'Chế độ Giáo Viên (7979: Đang Bật)' : 'Mở Khóa Giáo Viên (7979)'}</span>
+              <span>{isTeacherMode ? 'Chế độ Giáo Viên (Đang Bật)' : 'Dành Cho Giáo Viên'}</span>
             </button>
           </div>
 
@@ -164,7 +164,7 @@ export const PeriodicAssessmentHub: React.FC<PeriodicAssessmentHubProps> = ({
                 ) : (
                   <>
                     <Lock className="w-4 h-4 text-white" />
-                    <span>Cần hoàn thành các trạm trước (Hoặc mở mã 7979)</span>
+                    <span>Cần hoàn thành các trạm tiên quyết</span>
                   </>
                 )}
               </button>

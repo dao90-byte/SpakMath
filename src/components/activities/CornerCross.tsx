@@ -49,7 +49,7 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
       }, 500);
     } else {
       sound.playWrong();
-      setErrorMessage(`Chưa đúng. Em hãy chú ý bạn ${intersectionPerson} ở điểm giao được tính mấy lần nhé!`);
+      setErrorMessage(`Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Bạn ${intersectionPerson} đang đứng ở vị trí giao nhau của hai hàng. Vị trí này được tính bao nhiêu lần khi em đếm từng hàng riêng biệt?`);
     }
   };
 

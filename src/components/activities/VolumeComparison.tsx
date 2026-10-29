@@ -197,9 +197,12 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
                 </div>
 
                 {isWrong && (
-                  <p className="text-xs text-rose-600 font-bold animate-shake">
-                    Chưa đúng rồi! Em hãy quan sát kỹ dung tích các bình và tính lại nhé!
-                  </p>
+                  <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 animate-shake">
+                    <p className="font-bold">❌ Chưa chính xác rồi em ơi!</p>
+                    <p className="font-medium text-slate-700 mt-0.5">
+                      🤔 <strong className="text-amber-800">Gợi mở tư duy:</strong> Khi so sánh lượng nước, em hãy quan sát cả chiều cao của mực nước và độ rộng của bình xem bình nào thực sự chứa nhiều hơn nhé!
+                    </p>
+                  </div>
                 )}
                 {isCorrect && (
                   <p className="text-xs text-emerald-700 font-bold">

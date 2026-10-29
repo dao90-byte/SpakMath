@@ -51,7 +51,7 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
       }, 600);
     } else {
       sound.playWrong();
-      setErrorMessage(`Chưa đúng (${parsed} khối). Em hãy đếm kỹ lại từng tầng từ trên xuống dưới nhé!`);
+      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Những khối lập phương ở tầng trên đang đứng tựa vào đâu? Em hãy quan sát xem có khối nào bị che khuất ở các tầng bên dưới không nhé!');
     }
   };
 
