@@ -42,9 +42,12 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
   onCompleted
 }) => {
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
+  const [typedInput, setTypedInput] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const selectedChoice = choices.find((c) => c.id === selectedChoiceId);
+  const correctChoice = choices.find((c) => c.id === correctChoiceId);
 
   const handleSelectChoice = (choiceId: string) => {
     sound.playClick();
@@ -53,12 +56,40 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
     if (choiceId === correctChoiceId) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage('Chưa chính xác, em hãy quan sát kỹ quy luật tăng/giảm hoặc lặp lại nhé!');
+    }
+  };
+
+  const handleCheckInput = () => {
+    sound.playClick();
+    const clean = typedInput.trim().toLowerCase();
+    if (!clean) return;
+
+    // Check if matches label, sublabel, or id of correctChoice
+    const isMatch =
+      correctChoice &&
+      (correctChoice.label.trim().toLowerCase() === clean ||
+        clean.replace(/\D/g, '') === correctChoice.label.trim().replace(/\D/g, ''));
+
+    if (isMatch) {
+      setSelectedChoiceId(correctChoiceId);
+      sound.playCorrect();
+      setIsSuccess(true);
+      setErrorMessage(null);
+      setTimeout(() => {
+        sound.playVictory();
+        onCompleted();
+      }, 500);
+    } else {
+      sound.playWrong();
+      setErrorMessage(`Chưa đúng (${typedInput}). Em hãy quan sát bước nhảy giữa các số liền kề!`);
     }
   };
 
@@ -209,10 +240,43 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
         )}
       </div>
 
+      {/* Direct typing input box */}
+      <div className="w-full max-w-md bg-white p-5 rounded-3xl border-2 border-purple-200 shadow-sm space-y-3 text-center">
+        <h4 className="font-black text-slate-800 text-sm md:text-base">
+          Tự nhập kết quả hoặc chọn đáp án:
+        </h4>
+        <div className="flex items-center justify-center gap-2">
+          <input
+            type="text"
+            value={typedInput}
+            onChange={(e) => {
+              setTypedInput(e.target.value);
+              setErrorMessage(null);
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
+            placeholder="Nhập giá trị còn thiếu..."
+            className="flex-1 max-w-[200px] px-3.5 py-2.5 rounded-xl border-2 border-purple-300 text-base font-bold text-center text-slate-800 focus:outline-none focus:ring-3 focus:ring-purple-200"
+          />
+          <button
+            type="button"
+            onClick={handleCheckInput}
+            className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs shadow-md transition-all active:scale-95"
+          >
+            Kiểm tra
+          </button>
+        </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-1.5 px-3 rounded-xl animate-shake">
+            {errorMessage}
+          </div>
+        )}
+      </div>
+
       {/* Choice picker */}
       <div className="space-y-3 text-center w-full">
-        <h4 className="font-bold text-slate-800 text-sm md:text-base">
-          Chọn đáp án tiếp theo phù hợp với quy luật:
+        <h4 className="font-bold text-slate-700 text-xs uppercase tracking-wider">
+          Hoặc bấm chọn đáp án tương ứng:
         </h4>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

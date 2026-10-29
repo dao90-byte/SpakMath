@@ -30,30 +30,38 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
   promptTitle = 'Hỏi cả hàng có tất cả bao nhiêu bạn?',
   onCompleted
 }) => {
-  const [selectedTotal, setSelectedTotal] = useState<number | null>(null);
+  const [inputValue, setInputValue] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const totalSlots = mode === 'between' ? totalInQueue : correctTotal;
   const abbyIndex = fromFront - 1;
 
-  const handleSelectOption = (num: number) => {
+  const handleCheck = () => {
     sound.playClick();
-    setSelectedTotal(num);
-    if (num === correctTotal) {
+    const parsed = parseInt(inputValue.trim(), 10);
+    if (isNaN(parsed)) {
+      setErrorMessage('Bé hãy nhập một số nguyên nhé!');
+      sound.playWrong();
+      return;
+    }
+
+    if (parsed === correctTotal) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage(`Chưa chính xác (${parsed} bạn). Bé hãy tính lại theo công thức nhé!`);
       recordMistake({
         questionPrompt: `${promptTitle} (Bài toán hàng ngũ: ${formula})`,
-        userAnswer: `${num} bạn`,
+        userAnswer: `${parsed} bạn`,
         correctAnswer: `${correctTotal} bạn`,
         explanation: `Quy tắc hàng ngũ Spark Math: ${formula}. Chú ý xem đối tượng có bị đếm trùng 2 lần hoặc bị bỏ sót không nhé!`,
-        options: options.map((n) => `${n} bạn`),
         category: 'calculation'
       });
     }
@@ -173,36 +181,47 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
         </div>
       </div>
 
-      {/* Question Choices */}
-      <div className="space-y-3 text-center">
-        <h4 className="font-bold text-slate-800 text-sm md:text-base">
+      {/* Direct Input Answer Form */}
+      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
+        <h4 className="font-black text-slate-800 text-base">
           {promptTitle}
         </h4>
+        <p className="text-xs text-slate-500">
+          Bé hãy tự tính toán và nhập con số chính xác vào ô dưới đây (không đoán mò):
+        </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          {options.map((opt) => {
-            const isSelected = selectedTotal === opt;
-            const isCorrect = opt === correctTotal;
+        <div className="flex items-center justify-center gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setErrorMessage(null);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+              placeholder="Nhập số bạn..."
+              className="w-40 px-4 py-3 rounded-2xl border-2 border-amber-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200 shadow-inner"
+            />
+            <span className="absolute right-3 top-3.5 text-xs font-bold text-slate-400 pointer-events-none">
+              bạn
+            </span>
+          </div>
 
-            let btnStyle = 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300';
-            if (isSelected) {
-              btnStyle = isCorrect
-                ? 'bg-emerald-500 text-white border-emerald-600 shadow-md font-bold'
-                : 'bg-rose-500 text-white border-rose-600 font-bold';
-            }
-
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => handleSelectOption(opt)}
-                className={`px-5 py-2.5 rounded-2xl text-base font-bold border-2 transition-all active:scale-95 ${btnStyle}`}
-              >
-                {opt} bạn
-              </button>
-            );
-          })}
+          <button
+            type="button"
+            onClick={handleCheck}
+            className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-black text-sm shadow-md transition-all active:scale-95"
+          >
+            Kiểm tra
+          </button>
         </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2 px-3 rounded-xl animate-shake">
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       {isSuccess && (

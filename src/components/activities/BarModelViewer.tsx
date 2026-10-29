@@ -33,32 +33,53 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
   questions,
   onCompleted
 }) => {
+  const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [feedback, setFeedback] = useState<Record<string, 'correct' | 'wrong' | null>>({});
 
   const maxLength = Math.max(...bars.map((b) => b.lengthVal));
 
-  const handleSelect = (qId: string, opt: string, correct: string) => {
-    setAnswers((prev) => {
-      const next = { ...prev, [qId]: opt };
-      if (opt === correct) {
-        sound.playCorrect();
-      } else {
-        sound.playWrong();
-      }
+  const checkAnswerMatch = (input: string, correct: string) => {
+    const cleanIn = input.trim().toLowerCase();
+    const cleanCor = correct.trim().toLowerCase();
+    if (cleanIn === cleanCor) return true;
 
-      const allCorrect = questions.every((q) => {
-        const a = q.id === qId ? opt : next[q.id];
-        return a === q.correctAnswer;
+    // Compare pure digits if both have numbers
+    const inDigits = cleanIn.replace(/\D/g, '');
+    const corDigits = cleanCor.replace(/\D/g, '');
+    if (inDigits && corDigits && inDigits === corDigits) return true;
+
+    // Check if correct answer contains the input or starts with it
+    return cleanCor.includes(cleanIn) || cleanIn.includes(cleanCor);
+  };
+
+  const handleCheck = (qId: string, correct: string) => {
+    sound.playClick();
+    const entered = inputValues[qId] || '';
+    if (!entered.trim()) return;
+
+    const isMatch = checkAnswerMatch(entered, correct);
+    if (isMatch) {
+      sound.playCorrect();
+      setFeedback((prev) => ({ ...prev, [qId]: 'correct' }));
+      setAnswers((prev) => {
+        const next = { ...prev, [qId]: entered };
+        const allCorrect = questions.every((q) => {
+          return q.id === qId ? true : prev[q.id] && checkAnswerMatch(prev[q.id], q.correctAnswer);
+        });
+
+        if (allCorrect) {
+          setTimeout(() => {
+            sound.playStarCollect();
+            onCompleted();
+          }, 500);
+        }
+        return next;
       });
-
-      if (allCorrect) {
-        setTimeout(() => {
-          sound.playStarCollect();
-          onCompleted();
-        }, 500);
-      }
-      return next;
-    });
+    } else {
+      sound.playWrong();
+      setFeedback((prev) => ({ ...prev, [qId]: 'wrong' }));
+    }
   };
 
   return (
@@ -120,29 +141,29 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
         </div>
       </div>
 
-      {/* Sub questions */}
+      {/* Sub questions with direct input typing */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {questions.map((q) => {
-          const selected = answers[q.id];
-          const isCorrect = selected === q.correctAnswer;
-          const hasAnswered = !!selected;
+          const status = feedback[q.id];
+          const isCorrect = status === 'correct';
+          const isWrong = status === 'wrong';
 
           return (
             <div
               key={q.id}
-              className={`p-5 rounded-3xl border-2 transition-all ${
+              className={`p-5 rounded-3xl border-2 transition-all space-y-3 ${
                 isCorrect
                   ? 'bg-emerald-50/70 border-emerald-400'
-                  : hasAnswered
+                  : isWrong
                   ? 'bg-rose-50/60 border-rose-300'
                   : 'bg-white border-slate-200'
               }`}
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between">
                 <span className="font-bold text-slate-800 text-sm md:text-base">
                   {q.prompt}
                 </span>
-                {hasAnswered && (
+                {status && (
                   isCorrect ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                   ) : (
@@ -151,27 +172,43 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                {q.options.map((opt) => {
-                  const isThisSelected = selected === opt;
-                  let style = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
-                  if (isThisSelected) {
-                    style = isCorrect
-                      ? 'bg-emerald-500 text-white font-bold shadow-md'
-                      : 'bg-rose-500 text-white font-bold';
-                  }
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={inputValues[q.id] || ''}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setInputValues((prev) => ({ ...prev, [q.id]: val }));
+                    if (feedback[q.id] === 'wrong') {
+                      setFeedback((prev) => ({ ...prev, [q.id]: null }));
+                    }
+                  }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCheck(q.id, q.correctAnswer)}
+                  placeholder="Nhập kết quả..."
+                  disabled={isCorrect}
+                  className={`flex-1 px-3.5 py-2.5 rounded-xl border-2 text-sm font-bold text-slate-800 focus:outline-none transition-all ${
+                    isCorrect
+                      ? 'bg-emerald-100/60 border-emerald-400 text-emerald-950 font-black'
+                      : 'border-slate-200 focus:border-amber-400'
+                  }`}
+                />
 
-                  return (
-                    <button
-                      key={opt}
-                      onClick={() => handleSelect(q.id, opt, q.correctAnswer)}
-                      className={`px-4 py-2.5 rounded-2xl font-semibold text-xs md:text-sm border transition-all active:scale-95 ${style}`}
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
+                {!isCorrect && (
+                  <button
+                    type="button"
+                    onClick={() => handleCheck(q.id, q.correctAnswer)}
+                    className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-white font-bold text-xs shadow-xs transition-transform active:scale-95 shrink-0"
+                  >
+                    Kiểm tra
+                  </button>
+                )}
               </div>
+
+              {isWrong && (
+                <p className="text-xs font-semibold text-rose-600">
+                  Chưa chính xác, em hãy quan sát sơ đồ đoạn thẳng và tính lại nhé!
+                </p>
+              )}
             </div>
           );
         })}

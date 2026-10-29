@@ -8,17 +8,22 @@ import { Scratchpad } from './components/Scratchpad';
 import { SelfAssessmentModal } from './components/SelfAssessmentModal';
 import { MistakeNotebookModal } from './components/MistakeNotebookModal';
 import { DevErrorConsoleModal } from './components/DevErrorConsoleModal';
+import { MethodologyAssessmentModal } from './components/MethodologyAssessmentModal';
+import { PersistentMistakeDock } from './components/PersistentMistakeDock';
 import { sound } from './utils/soundEffects';
 import { getMistakesStats } from './utils/mistakeManager';
 import { getProgramErrors } from './utils/devErrorCollector';
 import { Bug } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'assessment'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'review' | 'assessment'>('map');
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
+  const [lastActiveLessonId, setLastActiveLessonId] = useState<string | null>(null);
+  const [lastActiveTopicId, setLastActiveTopicId] = useState<string | null>(null);
   const [isScratchpadOpen, setIsScratchpadOpen] = useState(false);
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false);
   const [isMistakeNotebookOpen, setIsMistakeNotebookOpen] = useState(false);
+  const [isMethodologyModalOpen, setIsMethodologyModalOpen] = useState(false);
   const [isDevConsoleOpen, setIsDevConsoleOpen] = useState(false);
   const [devConsoleDefaultTab, setDevConsoleDefaultTab] = useState<'list' | 'report'>('list');
 
@@ -107,6 +112,7 @@ export default function App() {
           setDevConsoleDefaultTab('list');
           setIsDevConsoleOpen(true);
         }}
+        onOpenMethodology={() => setIsMethodologyModalOpen(true)}
         starsCount={totalStars}
         unresolvedMistakesCount={unresolvedMistakesCount}
         programErrorsCount={programErrorsCount}
@@ -114,12 +120,59 @@ export default function App() {
 
       {/* Main View Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 pt-6">
+        {/* Prominent Methodology Assessment Test Banner (Direct Access for User Inspection) */}
+        {!activeLessonId && (
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
+            <div className="flex items-center gap-3.5">
+              <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0 border border-white/20">
+                🧠
+              </span>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
+                    BÀI KIỂM TRA PHƯƠNG PHÁP LUẬN MẪU
+                  </span>
+                  <span className="text-xs text-amber-100 font-bold hidden sm:inline">
+                    · Tự Đánh Giá Sau Khi Hoàn Thành Dạng Bài So Sánh
+                  </span>
+                </div>
+                <h3 className="text-sm sm:text-base font-black leading-snug">
+                  Mô Hình Tư Duy: So Sánh Hơn - Kém (Sơ Đồ Thanh & Bản Chất Phép Trừ)
+                </h3>
+                <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
+                  Khảo sát phương pháp luận 5 bước: <em>Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ nước.</em>
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setIsMethodologyModalOpen(true);
+              }}
+              className="px-5 py-2.5 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center"
+            >
+              <span>Làm Bài Kiểm Tra Mẫu</span>
+              <span className="text-base">→</span>
+            </button>
+          </div>
+        )}
         {activeLessonId && currentLesson ? (
           <LessonContainer
             lesson={currentLesson}
             isCompleted={completedLessonIds.includes(currentLesson.id)}
-            onLessonChange={(nextId) => setActiveLessonId(nextId)}
-            onBackToMap={() => setActiveLessonId(null)}
+            onLessonChange={(nextId) => {
+              const next = ALL_LESSONS.find((l) => l.id === nextId);
+              if (next) {
+                setLastActiveTopicId(next.topicId);
+              }
+              setLastActiveLessonId(nextId);
+              setActiveLessonId(nextId);
+            }}
+            onBackToMap={() => {
+              // Return directly to the last execution station, not the default top home screen
+              setActiveLessonId(null);
+            }}
             onOpenScratchpad={() => setIsScratchpadOpen(true)}
             onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
             onOpenDevConsole={(reportMode) => {
@@ -132,20 +185,51 @@ export default function App() {
           <AdventureMap
             completedLessonIds={completedLessonIds}
             totalStars={totalStars}
+            initialTopicId={lastActiveTopicId}
+            highlightLessonId={lastActiveLessonId}
+            onOpenMethodology={() => setIsMethodologyModalOpen(true)}
             onSelectLesson={(lessonId) => {
+              const l = ALL_LESSONS.find((item) => item.id === lessonId);
+              if (l) {
+                setLastActiveTopicId(l.topicId);
+              }
+              setLastActiveLessonId(lessonId);
               setActiveLessonId(lessonId);
             }}
             onSelectTopic={(topicId) => {
+              setLastActiveTopicId(topicId);
               const firstInTopic = ALL_LESSONS.find((l) => l.topicId === topicId);
               if (firstInTopic) {
+                setLastActiveLessonId(firstInTopic.id);
                 setActiveLessonId(firstInTopic.id);
               }
             }}
+          />
+        ) : activeTab === 'review' ? (
+          <MistakeNotebookModal
+            isOpen={true}
+            isFullPageTab={true}
+            onClose={() => setActiveTab('map')}
+            onOpenMethodology={() => setIsMethodologyModalOpen(true)}
+            onSelectLesson={(lessonId) => {
+              const l = ALL_LESSONS.find((item) => item.id === lessonId);
+              if (l) {
+                setLastActiveTopicId(l.topicId);
+              }
+              setLastActiveLessonId(lessonId);
+              setActiveLessonId(lessonId);
+            }}
+            currentLessonId={activeLessonId}
           />
         ) : (
           <LessonsCatalog
             completedLessonIds={completedLessonIds}
             onSelectLesson={(lessonId) => {
+              const l = ALL_LESSONS.find((item) => item.id === lessonId);
+              if (l) {
+                setLastActiveTopicId(l.topicId);
+              }
+              setLastActiveLessonId(lessonId);
               setActiveLessonId(lessonId);
             }}
           />
@@ -170,6 +254,7 @@ export default function App() {
       <MistakeNotebookModal
         isOpen={isMistakeNotebookOpen}
         onClose={() => setIsMistakeNotebookOpen(false)}
+        onOpenMethodology={() => setIsMethodologyModalOpen(true)}
         onSelectLesson={(lessonId) => {
           setActiveLessonId(lessonId);
           setIsMistakeNotebookOpen(false);
@@ -184,6 +269,19 @@ export default function App() {
         defaultTab={devConsoleDefaultTab}
         currentLessonId={activeLessonId}
         currentLessonTitle={currentLesson?.title}
+      />
+
+      {/* Methodology Thinking Assessment Modal (Mô hình So Sánh Hơn - Kém Prototype) */}
+      <MethodologyAssessmentModal
+        isOpen={isMethodologyModalOpen}
+        onClose={() => setIsMethodologyModalOpen(false)}
+      />
+
+      {/* ALWAYS-VISIBLE Persistent Mistake Notebook & Methodology Floating Quick Access */}
+      <PersistentMistakeDock
+        unresolvedCount={unresolvedMistakesCount}
+        onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
+        onOpenMethodology={() => setIsMethodologyModalOpen(true)}
       />
 
       {/* Footer */}

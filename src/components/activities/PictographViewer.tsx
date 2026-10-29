@@ -33,43 +33,69 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
   multiplier = 1,
   onAllCompleted
 }) => {
+  const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [answeredStatus, setAnsweredStatus] = useState<Record<string, 'correct' | 'wrong' | null>>({});
   const [activeCell, setActiveCell] = useState<{ itemId: string; index: number } | null>(null);
 
-  const handleSelectOption = (questionId: string, option: string, correctAnswer: string) => {
-    setSelectedAnswers((prev) => {
-      const next = { ...prev, [questionId]: option };
-      if (option === correctAnswer) {
-        sound.playCorrect();
-      } else {
-        sound.playWrong();
-        const currentQ = subQuestions.find((q) => q.id === questionId);
-        if (currentQ) {
-          recordMistake({
-            questionPrompt: `[Quy ước: ${keyNotice}] ${currentQ.prompt}`,
-            userAnswer: option,
-            correctAnswer: correctAnswer,
-            explanation: `Quy ước đề bài ghi rõ: "${keyNotice}". Hãy đếm số lượng hình vẽ rồi nhân với hệ số tương ứng trước khi kết luận!`,
-            options: currentQ.options,
-            category: 'reading'
-          });
+  const checkAnswerMatch = (userInput: string, correctAnswer: string): boolean => {
+    if (!userInput || !correctAnswer) return false;
+    const cleanUser = userInput.trim().toLowerCase();
+    const cleanCorrect = correctAnswer.trim().toLowerCase();
+
+    if (cleanUser === cleanCorrect) return true;
+
+    // Compare extracted numbers (e.g. user typed "12", answer is "12 chiếc" or "12 học sinh")
+    const userNum = cleanUser.match(/\d+/)?.[0];
+    const correctNum = cleanCorrect.match(/\d+/)?.[0];
+    if (userNum && correctNum && userNum === correctNum) return true;
+
+    // Substring match for non-numbers
+    if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+
+    return false;
+  };
+
+  const handleCheckAnswer = (questionId: string, correctAnswer: string) => {
+    const rawVal = inputValues[questionId] || '';
+    if (!rawVal.trim()) return;
+
+    const isMatch = checkAnswerMatch(rawVal, correctAnswer);
+
+    if (isMatch) {
+      sound.playCorrect();
+      setAnsweredStatus((prev) => ({ ...prev, [questionId]: 'correct' }));
+      setSelectedAnswers((prev) => {
+        const next = { ...prev, [questionId]: correctAnswer };
+        // Check if all questions are answered correctly
+        const allCorrect = subQuestions.every((q) => {
+          const ans = q.id === questionId ? correctAnswer : next[q.id];
+          return ans === q.correctAnswer;
+        });
+
+        if (allCorrect) {
+          setTimeout(() => {
+            sound.playStarCollect();
+            onAllCompleted();
+          }, 500);
         }
-      }
-
-      // Check if all questions are answered correctly
-      const allCorrect = subQuestions.every((q) => {
-        const ans = q.id === questionId ? option : next[q.id];
-        return ans === q.correctAnswer;
+        return next;
       });
-
-      if (allCorrect) {
-        setTimeout(() => {
-          sound.playStarCollect();
-          onAllCompleted();
-        }, 500);
+    } else {
+      sound.playWrong();
+      setAnsweredStatus((prev) => ({ ...prev, [questionId]: 'wrong' }));
+      const currentQ = subQuestions.find((q) => q.id === questionId);
+      if (currentQ) {
+        recordMistake({
+          questionPrompt: `[Quy ước: ${keyNotice}] ${currentQ.prompt}`,
+          userAnswer: rawVal,
+          correctAnswer: correctAnswer,
+          explanation: `Quy ước đề bài ghi rõ: "${keyNotice}". Hãy đếm số lượng hình vẽ rồi nhân với hệ số tương ứng trước khi kết luận!`,
+          options: currentQ.options,
+          category: 'reading'
+        });
       }
-      return next;
-    });
+    }
   };
 
   const handleSymbolClick = (itemId: string, index: number) => {
@@ -140,12 +166,12 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
         </table>
       </div>
 
-      {/* Sub Questions & Option Choices */}
+      {/* Sub Questions with Direct Input Boxes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {subQuestions.map((q) => {
-          const userAns = selectedAnswers[q.id];
-          const isCorrect = userAns === q.correctAnswer;
-          const hasAnswered = !!userAns;
+          const status = answeredStatus[q.id];
+          const isCorrect = status === 'correct';
+          const isWrong = status === 'wrong';
 
           return (
             <div
@@ -153,44 +179,71 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
               className={`p-5 rounded-3xl border-2 transition-all ${
                 isCorrect
                   ? 'bg-emerald-50/70 border-emerald-400 shadow-xs'
-                  : hasAnswered
+                  : isWrong
                   ? 'bg-rose-50/60 border-rose-300'
                   : 'bg-white border-slate-200'
               }`}
             >
-              <h4 className="font-bold text-slate-900 text-sm md:text-base mb-3 flex items-start justify-between">
-                <span>{q.prompt}</span>
-                {hasAnswered && (
-                  isCorrect ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  ) : (
-                    <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
-                  )
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <h4 className="font-bold text-slate-900 text-sm md:text-base leading-snug">
+                  {q.prompt}
+                </h4>
+                {isCorrect && <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />}
+                {isWrong && <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />}
+              </div>
+
+              {/* Direct Input Form */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    inputMode="text"
+                    placeholder="Tự nhập kết quả của em..."
+                    value={inputValues[q.id] || ''}
+                    disabled={isCorrect}
+                    onChange={(e) => {
+                      setInputValues({ ...inputValues, [q.id]: e.target.value });
+                      if (answeredStatus[q.id] === 'wrong') {
+                        setAnsweredStatus({ ...answeredStatus, [q.id]: null });
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleCheckAnswer(q.id, q.correctAnswer);
+                      }
+                    }}
+                    className={`flex-1 px-4 py-2.5 rounded-2xl border-2 text-sm md:text-base font-bold outline-none transition-all shadow-inner ${
+                      isCorrect
+                        ? 'bg-emerald-100/60 border-emerald-500 text-emerald-950 font-black cursor-not-allowed'
+                        : isWrong
+                        ? 'bg-rose-50 border-rose-400 text-rose-950 focus:border-rose-500 focus:ring-3 focus:ring-rose-200'
+                        : 'bg-slate-50 border-slate-300 text-slate-800 focus:border-amber-500 focus:ring-3 focus:ring-amber-200 focus:bg-white'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleCheckAnswer(q.id, q.correctAnswer)}
+                    disabled={isCorrect || !inputValues[q.id]?.trim()}
+                    className={`px-4 py-2.5 rounded-2xl font-black text-xs md:text-sm transition-all shadow-xs shrink-0 active:scale-95 flex items-center gap-1.5 ${
+                      isCorrect
+                        ? 'bg-emerald-500 text-white cursor-default'
+                        : 'bg-amber-500 hover:bg-amber-600 text-white disabled:opacity-40 disabled:cursor-not-allowed'
+                    }`}
+                  >
+                    {isCorrect ? 'Đúng ✓' : 'Kiểm tra'}
+                  </button>
+                </div>
+
+                {isWrong && (
+                  <p className="text-xs text-rose-600 font-bold animate-shake">
+                    Chưa đúng rồi! Em hãy quan sát kỹ biểu đồ và đếm lại xem nhé!
+                  </p>
                 )}
-              </h4>
-
-              <div className="grid grid-cols-2 gap-2">
-                {q.options.map((opt) => {
-                  const isSelected = userAns === opt;
-                  const isThisCorrect = opt === q.correctAnswer;
-
-                  let btnStyle = 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200';
-                  if (isSelected) {
-                    btnStyle = isThisCorrect
-                      ? 'bg-emerald-500 text-white border-emerald-600 shadow-md font-bold'
-                      : 'bg-rose-500 text-white border-rose-600 font-bold';
-                  }
-
-                  return (
-                    <button
-                      key={opt}
-                      onClick={() => handleSelectOption(q.id, opt, q.correctAnswer)}
-                      className={`px-3 py-2.5 rounded-2xl text-xs md:text-sm font-semibold border-2 transition-transform active:scale-95 ${btnStyle}`}
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
+                {isCorrect && (
+                  <p className="text-xs text-emerald-700 font-bold">
+                    ✓ Rất chính xác! Em đã tự tay tìm ra câu trả lời xuất sắc!
+                  </p>
+                )}
               </div>
             </div>
           );

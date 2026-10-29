@@ -30,24 +30,33 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
   targetQuestion,
   onCompleted
 }) => {
-  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const selectedOption = targetQuestion.options.find((o) => o.id === selectedOptionId);
+  const correctOption = targetQuestion.options.find((o) => o.id === targetQuestion.correctOptionId);
+  const selectedOption = isSuccess ? correctOption : undefined;
 
-  const handleSelectOption = (optId: string) => {
+  const handleCheck = () => {
     sound.playClick();
-    setSelectedOptionId(optId);
+    const parsed = parseInt(inputValue.trim(), 10);
+    if (isNaN(parsed)) {
+      setErrorMessage('Bé hãy nhập một số nguyên nhé!');
+      sound.playWrong();
+      return;
+    }
 
-    if (optId === targetQuestion.correctOptionId) {
+    if (correctOption && parsed === correctOption.count) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage(`Chưa đúng (${parsed}). Bé hãy lập luận lại theo các đĩa cân đã thăng bằng nhé!`);
     }
   };
 
@@ -141,7 +150,7 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
             <div
               className={`min-w-16 min-h-16 rounded-2xl border-2 flex items-center justify-center p-2 text-2xl flex-wrap gap-1 transition-all ${
                 selectedOption
-                  ? selectedOptionId === targetQuestion.correctOptionId
+                  ? isSuccess
                     ? 'bg-emerald-100 border-emerald-500 ring-4 ring-emerald-300'
                     : 'bg-rose-100 border-rose-400 ring-4 ring-rose-200'
                   : 'bg-amber-100 border-dashed border-amber-400 animate-pulse text-sm font-bold text-amber-800'
@@ -152,7 +161,7 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
                   <span key={i}>{selectedOption.icon}</span>
                 ))
               ) : (
-                'Chọn đĩa cân'
+                'Chờ nhập số...'
               )}
             </div>
             <span className="text-xs font-bold text-slate-500 mt-1">
@@ -162,40 +171,47 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
         </div>
       </div>
 
-      {/* Option Buttons */}
-      <div className="space-y-3 text-center w-full">
-        <h4 className="font-bold text-slate-800 text-sm md:text-base">
-          Chọn số lượng thích hợp:
+      {/* Direct Input Answer Form */}
+      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
+        <h4 className="font-black text-slate-800 text-base">
+          Cần bao nhiêu {correctOption?.icon || 'vật phẩm'} để đĩa cân thăng bằng?
         </h4>
+        <p className="text-xs text-slate-500">
+          Bé hãy suy luận quy đổi từ các đĩa cân mẫu và tự nhập con số chính xác:
+        </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {targetQuestion.options.map((opt) => {
-            const isSelected = selectedOptionId === opt.id;
-            const isCorrect = opt.id === targetQuestion.correctOptionId;
+        <div className="flex items-center justify-center gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setErrorMessage(null);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+              placeholder="Nhập số lượng..."
+              className="w-40 px-4 py-3 rounded-2xl border-2 border-rose-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-rose-200 shadow-inner"
+            />
+            <span className="absolute right-3 top-3.5 text-xs font-bold text-slate-400 pointer-events-none">
+              {correctOption?.icon || 'quả'}
+            </span>
+          </div>
 
-            let borderStyle = 'border-slate-300 hover:border-rose-400 bg-white';
-            if (isSelected) {
-              borderStyle = isCorrect
-                ? 'border-emerald-500 ring-4 ring-emerald-300 bg-emerald-50'
-                : 'border-rose-500 ring-4 ring-rose-200 bg-rose-50';
-            }
-
-            return (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => handleSelectOption(opt.id)}
-                className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center transition-all active:scale-95 shadow-sm ${borderStyle}`}
-              >
-                <div className="flex items-center gap-1 text-xl mb-1">
-                  <span className="font-black text-rose-900">{opt.count}</span>
-                  <span>{opt.icon}</span>
-                </div>
-                <span className="text-xs font-bold text-slate-600">{opt.label}</span>
-              </button>
-            );
-          })}
+          <button
+            type="button"
+            onClick={handleCheck}
+            className="px-6 py-3 rounded-2xl bg-rose-500 hover:bg-rose-400 text-white font-black text-sm shadow-md transition-all active:scale-95"
+          >
+            Kiểm tra
+          </button>
         </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2 px-3 rounded-xl animate-shake">
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       {isSuccess && (

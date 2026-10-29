@@ -28,22 +28,30 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
   explanation,
   onCompleted
 }) => {
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [inputValue, setInputValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSelectOption = (count: number) => {
+  const handleCheck = () => {
     sound.playClick();
-    setSelectedOption(count);
+    const parsed = parseInt(inputValue.trim(), 10);
+    if (isNaN(parsed)) {
+      setErrorMessage('Bé hãy nhập một số nguyên nhé!');
+      sound.playWrong();
+      return;
+    }
 
-    if (count === totalCubes) {
+    if (parsed === totalCubes) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 600);
     } else {
       sound.playWrong();
+      setErrorMessage(`Chưa đúng (${parsed} khối). Em hãy đếm kỹ lại từng tầng từ trên xuống dưới nhé!`);
     }
   };
 
@@ -135,39 +143,47 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
         </span>
       </div>
 
-      {/* Options Selection */}
-      <div className="w-full space-y-3">
-        <h4 className="text-center text-xs font-black uppercase text-slate-500 tracking-wider">
-          Chọn số lượng khối lập phương chính xác:
+      {/* Direct Input Answer Form */}
+      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
+        <h4 className="font-black text-slate-800 text-base">
+          Có tất cả bao nhiêu khối lập phương?
         </h4>
+        <p className="text-xs text-slate-500">
+          Bé hãy phân tích theo từng tầng và nhập tổng số khối:
+        </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto">
-          {options.map((opt) => {
-            const isSelected = selectedOption === opt;
-            const isCorrectOpt = opt === totalCubes;
+        <div className="flex items-center justify-center gap-3">
+          <div className="relative">
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setErrorMessage(null);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+              placeholder="Nhập số khối..."
+              className="w-40 px-4 py-3 rounded-2xl border-2 border-indigo-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-indigo-200 shadow-inner"
+            />
+            <span className="absolute right-3 top-3.5 text-xs font-bold text-slate-400 pointer-events-none">
+              khối
+            </span>
+          </div>
 
-            let btnStyle = 'bg-white border-2 border-slate-200 text-slate-800 hover:border-indigo-400';
-            if (isSelected) {
-              if (isSuccess && isCorrectOpt) {
-                btnStyle = 'bg-emerald-500 border-2 border-emerald-600 text-white shadow-lg ring-2 ring-emerald-300';
-              } else if (!isCorrectOpt) {
-                btnStyle = 'bg-rose-100 border-2 border-rose-400 text-rose-800';
-              }
-            }
-
-            return (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => handleSelectOption(opt)}
-                className={`py-3.5 px-4 rounded-2xl font-black text-xl transition-all active:scale-95 flex items-center justify-center gap-1 shadow-xs ${btnStyle}`}
-              >
-                <span>{opt}</span>
-                <span className="text-xs font-bold text-slate-400">khối</span>
-              </button>
-            );
-          })}
+          <button
+            type="button"
+            onClick={handleCheck}
+            className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm shadow-md transition-all active:scale-95"
+          >
+            Kiểm tra
+          </button>
         </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2 px-3 rounded-xl animate-shake">
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       {/* Celebratory result and explanation (only visible after solving correctly) */}

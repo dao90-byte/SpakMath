@@ -12,7 +12,8 @@ import {
   Sparkles,
   BookMarked,
   BookmarkCheck,
-  Bug
+  Bug,
+  Lock
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { setCurrentLessonContext, recordMistake } from '../utils/mistakeManager';
@@ -363,10 +364,14 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   };
 
   const topic = TOPICS.find((t) => t.id === lesson.topicId);
-  const lessonIndex = ALL_LESSONS.findIndex((l) => l.id === lesson.id);
-  const prevLesson = lessonIndex > 0 ? ALL_LESSONS[lessonIndex - 1] : undefined;
-  const nextLesson = lessonIndex < ALL_LESSONS.length - 1 ? ALL_LESSONS[lessonIndex + 1] : undefined;
+  // Navigation scoped strictly within the current Station/Topic
+  const stationLessons = ALL_LESSONS.filter((l) => l.topicId === lesson.topicId);
+  const stationIndex = stationLessons.findIndex((l) => l.id === lesson.id);
+  const prevLesson = stationIndex > 0 ? stationLessons[stationIndex - 1] : undefined;
+  const nextLesson = stationIndex < stationLessons.length - 1 ? stationLessons[stationIndex + 1] : undefined;
+  const isStationFinal = stationIndex === stationLessons.length - 1;
   const justFinished = justFinishedId === lesson.id;
+  const isLessonFinished = isCompleted || justFinished;
 
   const handleCompleted = () => {
     setJustFinishedId(lesson.id);
@@ -376,6 +381,16 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
       spread: 70,
       origin: { y: 0.6 }
     });
+  };
+
+  const handleNextClick = () => {
+    if (nextLesson) {
+      sound.playClick();
+      onLessonChange(nextLesson.id);
+    } else {
+      sound.playVictory();
+      onBackToMap();
+    }
   };
 
   const goTo = (id: string) => {
@@ -415,34 +430,42 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
               onBackToMap();
             }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border-2 border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors"
+            title={`Quay về ${lesson.topicName}`}
           >
-            <ArrowLeft className="w-4 h-4" /> Về bản đồ
+            <ArrowLeft className="w-4 h-4 text-emerald-600" />
+            <span>Về {lesson.topicName || 'bản đồ'}</span>
           </button>
 
-          {/* Quick previous button */}
+          {/* Quick previous button within station */}
           <button
             type="button"
             disabled={!prevLesson}
             onClick={() => prevLesson && goTo(prevLesson.id)}
             className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed shadow-xs transition-colors"
-            title="Bài trước"
+            title="Bài trước trong trạm"
           >
             <ChevronLeft className="w-4 h-4" /> Trước
           </button>
 
-          {/* Quick next button at top */}
-          {nextLesson && (
+          {/* Quick next button at top - unlocked for inspection */}
+          {nextLesson ? (
             <button
               type="button"
-              onClick={() => goTo(nextLesson.id)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold shadow-xs transition-all active:scale-95 ${
-                isCompleted || justFinished
-                  ? 'bg-amber-400 hover:bg-amber-300 text-amber-950 font-black ring-2 ring-amber-300'
-                  : 'bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50'
-              }`}
-              title="Bài tiếp theo"
+              onClick={handleNextClick}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold shadow-xs transition-all active:scale-95 bg-amber-400 hover:bg-amber-300 text-amber-950 font-black ring-2 ring-amber-300"
+              title="Chuyển sang bài tiếp theo trong trạm"
             >
-              Tiếp <ChevronRight className="w-4 h-4" />
+              <span>Tiếp</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onBackToMap}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-black bg-emerald-100 border border-emerald-300 text-emerald-800 shadow-xs"
+              title="Đã là bài cuối cùng trong trạm này"
+            >
+              <span>Trạm hoàn tất 🏆</span>
             </button>
           )}
         </div>
@@ -563,7 +586,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
           <ArrowLeft className="w-4 h-4" /> Bài trước
         </button>
         <span className="text-xs font-bold text-slate-500">
-          Bài {lessonIndex + 1} / {ALL_LESSONS.length}
+          Bài {stationIndex + 1} / {stationLessons.length} · {lesson.topicName}
         </span>
       </div>
 
@@ -579,16 +602,17 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
                 onBackToMap();
               }}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition-colors"
+              title={`Quay về ${lesson.topicName}`}
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline">Bản đồ</span>
+              <ArrowLeft className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="hidden xs:inline">Về {lesson.topicName || 'bản đồ'}</span>
             </button>
             <button
               type="button"
               disabled={!prevLesson}
               onClick={() => prevLesson && goTo(prevLesson.id)}
               className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-              title="Bài trước"
+              title="Bài trước trong trạm"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Bài trước</span>
@@ -597,9 +621,11 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
 
           {/* Center progress pill */}
           <div className="flex items-center gap-2 text-xs font-bold text-slate-600 truncate max-w-[180px] sm:max-w-xs md:max-w-md">
-            <span className={`w-2 h-2 rounded-full shrink-0 ${isCompleted || justFinished ? 'bg-amber-400 animate-ping' : 'bg-emerald-500'}`} />
+            <span className={`w-2 h-2 rounded-full shrink-0 ${isLessonFinished ? 'bg-amber-400 animate-ping' : 'bg-slate-400'}`} />
             <span className="truncate">{lesson.title}</span>
-            <span className="text-slate-400 shrink-0 text-[11px]">({lessonIndex + 1}/{ALL_LESSONS.length})</span>
+            <span className="text-amber-800 font-extrabold bg-amber-100 px-2 py-0.5 rounded-full shrink-0 text-[11px]">
+              Trạm: {stationIndex + 1}/{stationLessons.length}
+            </span>
           </div>
 
           {/* Right immediate next button */}
@@ -607,33 +633,23 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
             {nextLesson ? (
               <button
                 type="button"
-                onClick={() => goTo(nextLesson.id)}
-                className={`inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md transition-all active:scale-95 ${
-                  isCompleted || justFinished
-                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 ring-4 ring-amber-300/60 animate-bounce-slow shadow-amber-200'
-                    : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                }`}
+                onClick={handleNextClick}
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md transition-all active:scale-95 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 ring-4 ring-amber-300/60 shadow-amber-200 cursor-pointer hover:opacity-95"
+                title="Chuyển sang bài tiếp theo trong trạm"
               >
-                {isCompleted || justFinished ? (
-                  <>
-                    <Sparkles className="w-3.5 h-3.5 text-amber-900 fill-amber-900" />
-                    <span>Bài tiếp theo</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    <span>Bài tiếp theo</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </>
-                )}
+                <Sparkles className="w-3.5 h-3.5 text-amber-900 fill-amber-900" />
+                <span>Bài tiếp theo</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={onBackToMap}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black bg-emerald-600 text-white shadow-md"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-95 transition-all"
+                title="Bé đã hoàn thành xuất sắc tất cả bài tập trong trạm này!"
               >
-                🏆 Hoàn thành!
+                <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-amber-200" />
+                <span>Hoàn thành Trạm! 🏆</span>
               </button>
             )}
           </div>

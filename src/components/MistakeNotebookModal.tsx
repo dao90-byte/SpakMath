@@ -15,7 +15,9 @@ import {
   Edit2,
   Check,
   Award,
-  Filter
+  Filter,
+  Brain,
+  Sliders
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/soundEffects';
@@ -38,23 +40,27 @@ interface MistakeNotebookModalProps {
   onClose: () => void;
   onSelectLesson?: (lessonId: string) => void;
   currentLessonId?: string | null;
+  isFullPageTab?: boolean;
+  onOpenMethodology?: () => void;
 }
 
 export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
   isOpen,
   onClose,
   onSelectLesson,
-  currentLessonId
+  currentLessonId,
+  isFullPageTab = false,
+  onOpenMethodology
 }) => {
   const [mistakes, setMistakes] = useState<CollectedMistake[]>([]);
   const [bugs, setBugs] = useState<ReportedBug[]>([]);
-  const [activeSubTab, setActiveSubTab] = useState<'notebook' | 'report' | 'add'>('notebook');
+  const [activeSubTab, setActiveSubTab] = useState<'notebook' | 'report' | 'add' | 'methodology'>('notebook');
   const [filterStatus, setFilterStatus] = useState<'all' | 'unresolved' | 'mastered'>('all');
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [tempNote, setTempNote] = useState('');
 
-  // Retake interactive mini-quiz states
-  const [selectedRetakeAnswer, setSelectedRetakeAnswer] = useState<Record<string, string>>({});
+  // Retake direct typed answers state
+  const [retakeInputs, setRetakeInputs] = useState<Record<string, string>>({});
   const [retakeFeedback, setRetakeFeedback] = useState<Record<string, 'correct' | 'wrong' | null>>({});
 
   // Manual Add Mistake Form
@@ -86,6 +92,31 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
     window.addEventListener('spark_math_mistakes_updated', handleUpdate);
     return () => window.removeEventListener('spark_math_mistakes_updated', handleUpdate);
   }, []);
+
+  const getThinkingGuidance = (m: CollectedMistake): string => {
+    const prompt = (m.questionPrompt || '').toLowerCase();
+    const topic = (m.topicName || '').toLowerCase();
+
+    if (topic.includes('lít') || topic.includes('thể tích') || prompt.includes('lít') || prompt.includes('bình') || prompt.includes('bể')) {
+      return 'Em hãy đọc kỹ xem bình đang chứa bao nhiêu lít và dung tích tối đa là bao nhiêu. Nếu là bài toán san sẻ hay rót thêm, em hãy thử tính tổng số lít hiện có hoặc lấy sức chứa trừ đi lượng nước nhé!';
+    }
+    if (topic.includes('hàng ngũ') || prompt.includes('hàng') || prompt.includes('đứng thứ') || prompt.includes('đầu hàng')) {
+      return 'Hãy vẽ sơ đồ hàng dọc/ngang ra giấy nháp. Chú ý bạn ở vị trí đặc biệt có bị đếm 2 lần (khi cộng hai đầu) hay bị trừ bớt không nhé!';
+    }
+    if (topic.includes('biểu đồ') || prompt.includes('biểu đồ') || prompt.includes('quy ước')) {
+      return 'Em hãy nhìn vào phần Chú thích ở cuối biểu đồ xem 1 biểu tượng tương ứng với mấy đơn vị. Sau đó nhân số biểu tượng với giá trị quy ước để tìm kết quả!';
+    }
+    if (topic.includes('sudoku') || prompt.includes('ô trống')) {
+      return 'Em hãy tìm hàng, cột hoặc khối màu nào chỉ còn thiếu 1 hình/số duy nhất để điền trước. Nhớ rằng mỗi hình chỉ được xuất hiện đúng 1 lần trong mỗi hàng và cột!';
+    }
+    if (topic.includes('khối') || prompt.includes('lập phương') || prompt.includes('tầng')) {
+      return 'Em hãy đếm theo từng tầng từ trên cùng xuống dưới đáy. Đừng quên các khối bị khuất nằm ngay dưới các khối ở tầng trên nhé!';
+    }
+    if (topic.includes('cân') || prompt.includes('thăng bằng')) {
+      return 'Quan sát các đĩa cân đã thăng bằng để tìm tỉ lệ quy đổi (ví dụ: 1 quả táo bằng mấy quả dâu). Sau đó thay thế tương ứng vào đĩa cân cần tìm!';
+    }
+    return 'Em hãy đọc kỹ câu hỏi, xác định dữ kiện ban đầu và tự vẽ sơ đồ nháp từng bước để tìm ra đáp án nhé!';
+  };
 
   if (!isOpen) return null;
 
@@ -122,13 +153,20 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
     setEditingNoteId(null);
   };
 
-  const handleRetakeOptionClick = (m: CollectedMistake, option: string) => {
-    setSelectedRetakeAnswer((prev) => ({ ...prev, [m.id]: option }));
+  const handleRetakeSubmit = (m: CollectedMistake) => {
+    sound.playClick();
+    const entered = (retakeInputs[m.id] || '').trim().toLowerCase();
+    if (!entered) return;
 
-    // Check if correct (either matches full answer or starts with option)
+    const target = (m.correctAnswer || '').trim().toLowerCase();
+    const enteredDigits = entered.replace(/\D/g, '');
+    const targetDigits = target.replace(/\D/g, '');
+
     const isCorrect =
-      option.trim().toLowerCase() === m.correctAnswer.trim().toLowerCase() ||
-      m.correctAnswer.trim().toLowerCase().startsWith(option.trim().toLowerCase());
+      (enteredDigits && targetDigits && enteredDigits === targetDigits) ||
+      entered === target ||
+      target.includes(entered) ||
+      entered.includes(target);
 
     if (isCorrect) {
       sound.playCorrect();
@@ -183,9 +221,10 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
     setTimeout(() => setBugSuccess(false), 3000);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 md:p-6 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+  const content = (
+    <div className={`bg-white rounded-3xl shadow-2xl border-4 border-amber-400 w-full flex flex-col overflow-hidden animate-in fade-in duration-200 ${
+      isFullPageTab ? 'max-w-5xl mx-auto shadow-xl' : 'max-w-4xl max-h-[92vh]'
+    }`}>
         {/* Header */}
         <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 px-6 py-4.5 flex items-center justify-between text-white shadow-md">
           <div className="flex items-center gap-3">
@@ -267,6 +306,25 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
             >
               <AlertCircle className="w-4 h-4 text-rose-500" />
               <span>Báo Lỗi Đề Bài ({bugs.length})</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                setActiveSubTab('methodology');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${
+                activeSubTab === 'methodology'
+                  ? 'bg-amber-600 text-white shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-amber-50 border border-amber-200'
+              }`}
+            >
+              <Brain className="w-4 h-4 text-amber-500" />
+              <span>Bảo Bối Tư Duy</span>
+              <span className="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full">
+                MÔ HÌNH
+              </span>
             </button>
           </div>
 
@@ -439,82 +497,71 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
                           </p>
                         </div>
 
-                        {/* Comparison Panels */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-                          <div className="bg-rose-50/70 border border-rose-200 rounded-2xl p-3">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-rose-700 block flex items-center gap-1">
-                              <span>❌</span> Câu trả lời trước đây:
-                            </span>
-                            <p className="text-sm font-bold text-rose-950 mt-1">
-                              {m.userAnswer}
-                            </p>
-                          </div>
+                        {/* Student's previous mistake record */}
+                        <div className="bg-rose-50/70 border border-rose-200 rounded-2xl p-3 mt-3">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-rose-700 block flex items-center gap-1">
+                            <span>❌</span> Câu trả lời chưa chính xác trước đây:
+                          </span>
+                          <p className="text-sm font-bold text-rose-950 mt-1">
+                            {m.userAnswer}
+                          </p>
+                        </div>
 
-                          <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block flex items-center gap-1">
-                              <span>✅</span> Đáp án chuẩn xác:
+                        {/* Spark Math Pedagogical Thinking Guidance (No spoilers) */}
+                        <div className="mt-3 bg-amber-50/80 border border-amber-200 rounded-2xl p-3.5 flex items-start gap-2.5">
+                          <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                          <div className="text-xs md:text-sm text-slate-800 font-medium">
+                            <span className="font-extrabold text-amber-900 block mb-1">
+                              💡 Gợi ý tự tư duy (Không đưa sẵn lời giải):
                             </span>
-                            <p className="text-sm font-bold text-emerald-950 mt-1">
-                              {m.correctAnswer}
-                            </p>
+                            {getThinkingGuidance(m)}
                           </div>
                         </div>
 
-                        {/* Spark Math Pedagogical Explanation */}
-                        {m.explanation && (
-                          <div className="mt-3 bg-amber-50/60 border border-amber-200/80 rounded-2xl p-3.5 flex items-start gap-2.5">
-                            <Lightbulb className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                            <div className="text-xs md:text-sm text-slate-700 font-medium">
-                              <span className="font-bold text-amber-900 block mb-0.5">
-                                Bí kíp tư duy Spark Math:
+                        {/* Interactive In-Place Direct Typed Retake Section */}
+                        <div className="mt-4 bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-2xs space-y-2.5">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <span className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                              Thử thách tự tay nhập đáp án đúng:
+                            </span>
+                            {feedback === 'correct' && (
+                              <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                                <Check className="w-4 h-4" /> Chính xác tuyệt đối! Đã làm chủ bài toán ⭐
                               </span>
-                              {m.explanation}
-                            </div>
+                            )}
+                            {feedback === 'wrong' && (
+                              <span className="text-xs font-bold text-rose-600 flex items-center gap-1">
+                                Chưa chính xác, em hãy suy ngẫm theo gợi ý tự tư duy nhé!
+                              </span>
+                            )}
                           </div>
-                        )}
 
-                        {/* Interactive In-Place Retake Section */}
-                        {m.options && m.options.length > 0 && (
-                          <div className="mt-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                                Thử thách sửa sai trực tiếp:
-                              </span>
-                              {feedback === 'correct' && (
-                                <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                                  <Check className="w-4 h-4" /> Chính xác tuyệt đối! 🎉
-                                </span>
-                              )}
-                              {feedback === 'wrong' && (
-                                <span className="text-xs font-bold text-rose-600 flex items-center gap-1">
-                                  Chưa đúng, bé hãy suy nghĩ lại nhé!
-                                </span>
-                              )}
-                            </div>
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                              {m.options.map((opt) => {
-                                const isSelected = selectedRetakeAnswer[m.id] === opt;
-                                return (
-                                  <button
-                                    key={opt}
-                                    type="button"
-                                    onClick={() => handleRetakeOptionClick(m, opt)}
-                                    className={`py-2 px-3 rounded-xl text-xs md:text-sm font-bold transition-all text-center border-2 ${
-                                      isSelected && feedback === 'correct'
-                                        ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
-                                        : isSelected && feedback === 'wrong'
-                                        ? 'bg-rose-50 text-rose-700 border-rose-300 animate-shake'
-                                        : 'bg-slate-50 hover:bg-amber-100 text-slate-700 border-slate-200'
-                                    }`}
-                                  >
-                                    {opt}
-                                  </button>
-                                );
-                              })}
-                            </div>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="text"
+                              value={retakeInputs[m.id] || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setRetakeInputs((prev) => ({ ...prev, [m.id]: val }));
+                                if (retakeFeedback[m.id] === 'wrong') {
+                                  setRetakeFeedback((prev) => ({ ...prev, [m.id]: null }));
+                                }
+                              }}
+                              onKeyDown={(e) => e.key === 'Enter' && handleRetakeSubmit(m)}
+                              placeholder="Tự tay gõ câu trả lời của em vào đây..."
+                              disabled={isMastered && feedback === 'correct'}
+                              className="flex-1 px-4 py-2.5 rounded-xl border-2 border-slate-300 text-sm font-bold text-slate-800 focus:border-amber-400 focus:outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRetakeSubmit(m)}
+                              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-white font-black text-xs shadow-sm transition-all active:scale-95 shrink-0"
+                            >
+                              Kiểm tra
+                            </button>
                           </div>
-                        )}
+                        </div>
 
                         {/* User Personal Notes */}
                         <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs">
@@ -802,6 +849,106 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
               )}
             </div>
           )}
+
+          {/* SubTab 4: Methodology Thinking Models & Mindmaps */}
+          {activeSubTab === 'methodology' && (
+            <div className="space-y-6 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner shrink-0">
+                    🧠
+                  </span>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-black/20 text-amber-100 px-2.5 py-0.5 rounded-full">
+                      HỆ THỐNG PHƯƠNG PHÁP LUẬN TƯ DUY
+                    </span>
+                    <h3 className="text-base sm:text-lg font-black mt-1">
+                      Bảo Bối Tư Duy: Các Mô Hình Toán Nền Tảng
+                    </h3>
+                    <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
+                      Giúp bé hiểu bản chất từng dạng toán, thoát khỏi lối mòn ghi nhớ vẹt hay thử sai máy móc.
+                    </p>
+                  </div>
+                </div>
+                {onOpenMethodology && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sound.playClick();
+                      onOpenMethodology();
+                    }}
+                    className="px-5 py-2.5 rounded-2xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform shrink-0"
+                  >
+                    Làm Bài Kiểm Tra Mẫu →
+                  </button>
+                )}
+              </div>
+
+              {/* Model 1: Comparison Bar Model */}
+              <div className="bg-white rounded-3xl border-2 border-amber-300 p-6 shadow-sm space-y-4">
+                <div className="flex items-center justify-between border-b pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">📊</span>
+                    <div>
+                      <h4 className="font-black text-slate-800 text-sm sm:text-base">
+                        Mô Hình 1: So Sánh Hơn - Kém &amp; Bản Chất Phép Trừ
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        Áp dụng ở Trạm 1 (Biểu đồ dữ liệu) &amp; Trạm 2 (Thể tích Lít &amp; Dung tích)
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
+                    Có bài kiểm tra mẫu
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div className="bg-sky-50 rounded-2xl p-4 border border-sky-200 space-y-2">
+                    <div className="font-black text-sky-900 text-sm">
+                      1. Bản Chất 2 Đoạn Thẳng &amp; Định Nghĩa
+                    </div>
+                    <ul className="space-y-1.5 text-slate-700 list-disc list-inside">
+                      <li><strong>Đoạn dài:</strong> Luôn đại diện cho <em>Số Lớn (Nhiều hơn)</em>.</li>
+                      <li><strong>Đoạn ngắn:</strong> Đại diện cho <em>Số Bé (Ít hơn)</em>.</li>
+                      <li><strong>"Nhiều hơn":</strong> Phần dôi ra vượt mức của số bé.</li>
+                      <li><strong>"Ít hơn":</strong> Khoảng còn thiếu để bằng số lớn.</li>
+                      <li><strong>Tính đối xứng:</strong> A hơn B bao nhiêu thì B kém A bấy nhiêu!</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 space-y-2">
+                    <div className="font-black text-amber-900 text-sm">
+                      2. Cơ Chế Phép Trừ &amp; San Sẻ
+                    </div>
+                    <ul className="space-y-1.5 text-slate-700 list-disc list-inside">
+                      <li><strong>Vì sao dùng phép trừ:</strong> Cắt bỏ phần bằng nhau, giữ lại duy nhất phần chênh lệch.</li>
+                      <li><strong>Công thức 1:</strong> <code>Chênh Lệch = Số Lớn － Số Bé</code></li>
+                      <li><strong>Công thức 2:</strong> <code>Số Lớn = Số Bé ＋ Phần Hơn</code></li>
+                      <li><strong>Mô hình san sẻ đều:</strong> Abby rót sang Benny một nửa chênh lệch: <code>Chênh Lệch : 2</code>.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {onOpenMethodology && (
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playClick();
+                        onOpenMethodology();
+                      }}
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs shadow-sm flex items-center gap-2 active:scale-95 transition-all"
+                    >
+                      <Brain className="w-4 h-4 text-amber-200" />
+                      <span>Mở Bài Kiểm Tra Phương Pháp Luận Mô Hình Này</span>
+                      <span>→</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Modal Footer */}
@@ -810,15 +957,26 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
             <Award className="w-4 h-4 text-amber-500" />
             <span>Sổ Thu Thập Lỗi · Spark Math Singapore Pedagogy</span>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 shadow-2xs transition-colors"
-          >
-            Đóng
-          </button>
+          {!isFullPageTab && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-5 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 shadow-2xs transition-colors"
+            >
+              Đóng
+            </button>
+          )}
         </div>
       </div>
+  );
+
+  if (isFullPageTab) {
+    return <div className="w-full pb-12">{content}</div>;
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 md:p-6 overflow-y-auto">
+      {content}
     </div>
   );
 };

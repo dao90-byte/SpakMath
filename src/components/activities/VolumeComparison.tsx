@@ -29,42 +29,68 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
   questions,
   onCompleted
 }) => {
+  const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answeredStatus, setAnsweredStatus] = useState<Record<string, 'correct' | 'wrong' | null>>({});
 
-  const handleSelect = (qId: string, opt: string, correct: string) => {
-    setAnswers((prev) => {
-      const next = { ...prev, [qId]: opt };
-      if (opt === correct) {
-        sound.playCorrect();
-      } else {
-        sound.playWrong();
-        const currentQ = questions.find((q) => q.id === qId);
-        if (currentQ) {
-          recordMistake({
-            questionPrompt: currentQ.prompt,
-            userAnswer: opt,
-            correctAnswer: correct,
-            explanation:
-              'Khi so sánh lượng chất lỏng, phải xem xét cả chiều cao mực nước VÀ độ rộng đáy bình (diện tích đáy) nữa nhé!',
-            options: currentQ.options,
-            category: 'concept'
-          });
+  const checkAnswerMatch = (userInput: string, correctAnswer: string): boolean => {
+    if (!userInput || !correctAnswer) return false;
+    const cleanUser = userInput.trim().toLowerCase();
+    const cleanCorrect = correctAnswer.trim().toLowerCase();
+
+    if (cleanUser === cleanCorrect) return true;
+
+    // Compare extracted numbers (e.g. user typed "200", correct is "200 mL" or "200ml")
+    const userNum = cleanUser.match(/\d+/)?.[0];
+    const correctNum = cleanCorrect.match(/\d+/)?.[0];
+    if (userNum && correctNum && userNum === correctNum) return true;
+
+    // Substring match (e.g. user typed "A" or "Bình A")
+    if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+
+    return false;
+  };
+
+  const handleCheckAnswer = (qId: string, correct: string) => {
+    const rawVal = inputValues[qId] || '';
+    if (!rawVal.trim()) return;
+
+    const isMatch = checkAnswerMatch(rawVal, correct);
+
+    if (isMatch) {
+      sound.playCorrect();
+      setAnsweredStatus((prev) => ({ ...prev, [qId]: 'correct' }));
+      setAnswers((prev) => {
+        const next = { ...prev, [qId]: correct };
+        const allRight = questions.every((q) => {
+          const val = q.id === qId ? correct : next[q.id];
+          return val === q.correctAnswer;
+        });
+
+        if (allRight) {
+          setTimeout(() => {
+            sound.playStarCollect();
+            onCompleted();
+          }, 500);
         }
-      }
-
-      const allRight = questions.every((q) => {
-        const val = q.id === qId ? opt : next[q.id];
-        return val === q.correctAnswer;
+        return next;
       });
-
-      if (allRight) {
-        setTimeout(() => {
-          sound.playStarCollect();
-          onCompleted();
-        }, 500);
+    } else {
+      sound.playWrong();
+      setAnsweredStatus((prev) => ({ ...prev, [qId]: 'wrong' }));
+      const currentQ = questions.find((q) => q.id === qId);
+      if (currentQ) {
+        recordMistake({
+          questionPrompt: currentQ.prompt,
+          userAnswer: rawVal,
+          correctAnswer: correct,
+          explanation:
+            'Khi so sánh lượng chất lỏng, phải xem xét cả chiều cao mực nước VÀ độ rộng đáy bình (diện tích đáy) nữa nhé!',
+          options: currentQ.options,
+          category: 'concept'
+        });
       }
-      return next;
-    });
+    }
   };
 
   return (
@@ -102,57 +128,84 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
         </div>
       </div>
 
-      {/* Sub questions */}
+      {/* Sub questions with Direct Input */}
       <div className="space-y-4">
         {questions.map((q) => {
-          const selected = answers[q.id];
-          const isCorrect = selected === q.correctAnswer;
-          const hasAnswered = !!selected;
+          const status = answeredStatus[q.id];
+          const isCorrect = status === 'correct';
+          const isWrong = status === 'wrong';
 
           return (
             <div
               key={q.id}
               className={`p-5 rounded-3xl border-2 transition-all ${
                 isCorrect
-                  ? 'bg-emerald-50/70 border-emerald-400'
-                  : hasAnswered
+                  ? 'bg-emerald-50/70 border-emerald-400 shadow-xs'
+                  : isWrong
                   ? 'bg-rose-50/60 border-rose-300'
                   : 'bg-white border-slate-200'
               }`}
             >
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-bold text-slate-800 text-sm md:text-base">
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <span className="font-bold text-slate-800 text-sm md:text-base leading-snug">
                   {q.prompt}
                 </span>
-                {hasAnswered && (
-                  isCorrect ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                  ) : (
-                    <XCircle className="w-5 h-5 text-rose-500" />
-                  )
-                )}
+                {isCorrect && <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />}
+                {isWrong && <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />}
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {q.options.map((opt) => {
-                  const isThisSelected = selected === opt;
-                  let style = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
-                  if (isThisSelected) {
-                    style = isCorrect
-                      ? 'bg-emerald-500 text-white font-bold shadow-md'
-                      : 'bg-rose-500 text-white font-bold';
-                  }
+              {/* Direct Input Form */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    inputMode="text"
+                    placeholder="Tự nhập câu trả lời của em..."
+                    value={inputValues[q.id] || ''}
+                    disabled={isCorrect}
+                    onChange={(e) => {
+                      setInputValues({ ...inputValues, [q.id]: e.target.value });
+                      if (answeredStatus[q.id] === 'wrong') {
+                        setAnsweredStatus({ ...answeredStatus, [q.id]: null });
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleCheckAnswer(q.id, q.correctAnswer);
+                      }
+                    }}
+                    className={`flex-1 px-4 py-2.5 rounded-2xl border-2 text-sm md:text-base font-bold outline-none transition-all shadow-inner ${
+                      isCorrect
+                        ? 'bg-emerald-100/60 border-emerald-500 text-emerald-950 font-black cursor-not-allowed'
+                        : isWrong
+                        ? 'bg-rose-50 border-rose-400 text-rose-950 focus:border-rose-500 focus:ring-3 focus:ring-rose-200'
+                        : 'bg-slate-50 border-slate-300 text-slate-800 focus:border-sky-500 focus:ring-3 focus:ring-sky-200 focus:bg-white'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleCheckAnswer(q.id, q.correctAnswer)}
+                    disabled={isCorrect || !inputValues[q.id]?.trim()}
+                    className={`px-4 py-2.5 rounded-2xl font-black text-xs md:text-sm transition-all shadow-xs shrink-0 active:scale-95 flex items-center gap-1.5 ${
+                      isCorrect
+                        ? 'bg-emerald-500 text-white cursor-default'
+                        : 'bg-sky-600 hover:bg-sky-700 text-white disabled:opacity-40 disabled:cursor-not-allowed'
+                    }`}
+                  >
+                    {isCorrect ? 'Đúng ✓' : 'Kiểm tra'}
+                  </button>
+                </div>
 
-                  return (
-                    <button
-                      key={opt}
-                      onClick={() => handleSelect(q.id, opt, q.correctAnswer)}
-                      className={`px-4 py-2.5 rounded-2xl font-semibold text-xs md:text-sm border transition-all active:scale-95 ${style}`}
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
+                {isWrong && (
+                  <p className="text-xs text-rose-600 font-bold animate-shake">
+                    Chưa đúng rồi! Em hãy quan sát kỹ dung tích các bình và tính lại nhé!
+                  </p>
+                )}
+                {isCorrect && (
+                  <p className="text-xs text-emerald-700 font-bold">
+                    ✓ Rất chính xác! Em đã tự tay tìm ra câu trả lời xuất sắc!
+                  </p>
+                )}
               </div>
             </div>
           );

@@ -21,21 +21,35 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
   correctAnswer,
   onCompleted
 }) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSelect = (opt: string) => {
+  const handleCheck = () => {
     sound.playClick();
-    setSelectedOption(opt);
-    if (opt === correctAnswer) {
+    const cleanInput = inputValue.trim().toLowerCase();
+    const cleanTarget = correctAnswer.trim().toLowerCase();
+
+    // Extract numbers to compare flexibly
+    const inputDigits = cleanInput.replace(/\D/g, '');
+    const targetDigits = cleanTarget.replace(/\D/g, '');
+
+    const isMatch =
+      (inputDigits && targetDigits && inputDigits === targetDigits) ||
+      cleanInput === cleanTarget ||
+      cleanTarget.includes(cleanInput);
+
+    if (isMatch) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage(`Chưa đúng. Em hãy chú ý bạn ${intersectionPerson} ở điểm giao được tính mấy lần nhé!`);
     }
   };
 
@@ -197,35 +211,47 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
         </div>
       </div>
 
-      {/* Question Choices */}
-      <div className="space-y-3 text-center">
-        <h4 className="font-bold text-slate-800 text-base">
+      {/* Direct Input Answer Form */}
+      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
+        <h4 className="font-black text-slate-800 text-base">
           Hỏi có tất cả bao nhiêu bạn đang đứng trong hàng?
         </h4>
+        <p className="text-xs text-slate-500">
+          Bé hãy quan sát điểm giao, tự tính toán và nhập đáp án:
+        </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          {options.map((opt) => {
-            const isSelected = selectedOption === opt;
-            const isCorrect = opt === correctAnswer;
+        <div className="flex items-center justify-center gap-3">
+          <div className="relative">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setErrorMessage(null);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+              placeholder="Nhập số bạn..."
+              className="w-40 px-4 py-3 rounded-2xl border-2 border-amber-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200 shadow-inner"
+            />
+            <span className="absolute right-3 top-3.5 text-xs font-bold text-slate-400 pointer-events-none">
+              bạn
+            </span>
+          </div>
 
-            let btnStyle = 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300';
-            if (isSelected) {
-              btnStyle = isCorrect
-                ? 'bg-emerald-500 text-white border-emerald-600 shadow-md font-bold'
-                : 'bg-rose-500 text-white border-rose-600 font-bold';
-            }
-
-            return (
-              <button
-                key={opt}
-                onClick={() => handleSelect(opt)}
-                className={`px-6 py-3 rounded-2xl text-base md:text-lg font-bold border-2 transition-all active:scale-95 ${btnStyle}`}
-              >
-                {opt}
-              </button>
-            );
-          })}
+          <button
+            type="button"
+            onClick={handleCheck}
+            className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-black text-sm shadow-md transition-all active:scale-95"
+          >
+            Kiểm tra
+          </button>
         </div>
+
+        {errorMessage && (
+          <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2 px-3 rounded-xl animate-shake">
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       {isSuccess && (

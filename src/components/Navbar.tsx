@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/soundEffects';
-import { Volume2, VolumeX, Pencil, Star, Award, Compass, BookOpen, BookMarked, Bug } from 'lucide-react';
+import { Volume2, VolumeX, Pencil, Star, Award, Compass, BookOpen, BookMarked, Bug, Brain } from 'lucide-react';
 
 interface NavbarProps {
-  currentTab: 'map' | 'lessons' | 'assessment';
-  onSelectTab: (tab: 'map' | 'lessons' | 'assessment') => void;
+  currentTab: 'map' | 'lessons' | 'review' | 'assessment';
+  onSelectTab: (tab: 'map' | 'lessons' | 'review' | 'assessment') => void;
   onOpenScratchpad: () => void;
-  onOpenMistakes: () => void;
+  onOpenMistakes?: () => void;
   onOpenDevConsole?: () => void;
+  onOpenMethodology?: () => void;
   starsCount: number;
   unresolvedMistakesCount?: number;
   programErrorsCount?: number;
@@ -19,6 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenScratchpad,
   onOpenMistakes,
   onOpenDevConsole,
+  onOpenMethodology,
   starsCount,
   unresolvedMistakesCount = 0,
   programErrorsCount = 0
@@ -87,17 +89,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="hidden sm:inline">Sách</span> Bài tập
           </button>
 
+          {/* Sổ Ôn Tập: Permanent Navigation Tab */}
           <button
             type="button"
             onClick={() => {
               sound.playClick();
-              onOpenMistakes();
+              onSelectTab('review');
             }}
-            className="flex items-center gap-1.5 py-1 text-slate-600 hover:text-amber-600 transition-colors whitespace-nowrap shrink-0 relative"
-            title="Sổ thu thập và sửa lỗi tư duy"
+            className={`flex items-center gap-1.5 py-1 transition-colors whitespace-nowrap shrink-0 relative ${
+              currentTab === 'review'
+                ? 'text-amber-600 border-b-2 border-amber-500'
+                : 'hover:text-slate-900'
+            }`}
+            title="Sổ Ôn Tập & Khắc Phục Lỗi Sai"
           >
             <BookMarked className="w-4 h-4 text-rose-500" />
-            <span>Sổ Thu Thập Lỗi</span>
+            <span>Sổ Ôn Tập</span>
             {unresolvedMistakesCount > 0 && (
               <span className="bg-rose-500 text-white font-black text-[10px] px-1.5 py-0.2 rounded-full leading-tight shrink-0 shadow-xs animate-bounce-slow">
                 {unresolvedMistakesCount}
@@ -162,6 +169,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {programErrorsCount}
                 </span>
               )}
+            </button>
+          )}
+
+          {/* Methodology Checkpoint Prototype Button */}
+          {onOpenMethodology && (
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                onOpenMethodology();
+              }}
+              className="px-3 py-2 text-xs md:text-sm font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-xl transition-transform active:scale-95 flex items-center gap-1.5 whitespace-nowrap shadow-xs"
+              title="Bài kiểm tra mẫu bằng Phương pháp luận tư duy (Mô hình So sánh Hơn - Kém)"
+            >
+              <Brain className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+              <span className="hidden sm:inline">Kiểm Tra:</span>
+              <span>Phương Pháp Luận</span>
+              <span className="bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">MẪU</span>
             </button>
           )}
 

@@ -2919,6 +2919,291 @@ export const ALL_LESSONS: LessonQuestion[] = [
       ]
     }
   },
+  {
+    id: 'sud-15',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận phép tính cộng hai chiều liên hoàn',
+    badgeTitle: 'Bài Nâng Cao 7.1 · Trang 52+',
+    instruction: 'Điền các số còn thiếu vào ô trống sao cho đúng cả phép cộng hàng ngang (A + B = C) và phép cộng cột dọc (A + D = G)!',
+    hint: 'Hàng 1: 4 + ? = 10 => 6. Hàng 2: 3 + 5 = 8. Cột 1: 4 + 3 = 7!',
+    mascot: { ...CASEY, message: 'Thử thách hai chiều: vừa kiểm tra hàng ngang vừa kiểm tra cột dọc nhé!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'MA TRẬN HAI CHIỀU A + B = C',
+      subtitle: 'Hàng ngang: Ô 1 + Ô 2 = Ô 3 | Cột dọc: Ô trên + Ô giữa = Ô dưới',
+      allowedNumbers: [3, 4, 5, 6, 7, 8, 10, 11, 18],
+      hintFormula: '4+6=10 | 3+5=8 | 7+11=18',
+      initialGrid: [
+        [4, null, 10],
+        [3, 5, null],
+        [null, 11, 18]
+      ],
+      solution: [
+        [4, 6, 10],
+        [3, 5, 8],
+        [7, 11, 18]
+      ]
+    }
+  },
+  {
+    id: 'sud-16',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận phép nhân bảng số học 3x3',
+    badgeTitle: 'Bài Nâng Cao 7.2 · Trang 52+',
+    instruction: 'Mỗi hàng ngang trong ma trận là một phép nhân số học: Ô thứ nhất × Ô thứ hai = Ô thứ ba. Hãy điền số thích hợp!',
+    hint: 'Hàng 1: 3 × ? = 12 => Số cần điền là 4. Hàng 2: 5 × 6 = 30. Hàng 3: ? × 8 = 56 => Số 7!',
+    mascot: { ...BENNY, message: 'Nhân nhẩm thật chuẩn xác để tìm ra các ô trống nào!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'MA TRẬN PHÉP NHÂN A × B = C',
+      subtitle: 'Tìm các số còn thiếu theo hàng: Ô thứ nhất × Ô thứ hai = Ô thứ ba',
+      allowedNumbers: [3, 4, 5, 6, 7, 8, 12, 30, 56],
+      hintFormula: '3 × 4 = 12 | 5 × 6 = 30 | 7 × 8 = 56',
+      initialGrid: [
+        [3, null, 12],
+        [5, 6, null],
+        [null, 8, 56]
+      ],
+      solution: [
+        [3, 4, 12],
+        [5, 6, 30],
+        [7, 8, 56]
+      ]
+    }
+  },
+  {
+    id: 'sud-17',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Magic Square 3x3 (Tổng = 18)',
+    badgeTitle: 'Bài Nâng Cao 8.1 · Trang 52+',
+    instruction: 'Điền các số từ 2 đến 10 vào ô trống sao cho tổng các số trên mỗi hàng, mỗi cột và 2 đường chéo đều đúng bằng 18!',
+    hint: 'Số chính giữa là 6! Hàng 1: 9 + ? + 7 = 18 => Cần điền số 2. Hàng 2: 4 + 6 + ? = 18 => Cần điền số 8!',
+    mascot: { ...MAYLE, message: 'Mỗi hàng và mỗi cột đều cộng lại bằng 18, em hãy kiểm tra từng hàng nhé!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ô VUÔNG MA THUẬT (MAGIC SQUARE TỔNG 18)',
+      subtitle: 'Điền số từ 2 đến 10 sao cho tổng mỗi hàng và mỗi cột đều bằng 18',
+      targetSum: 18,
+      allowedNumbers: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      initialGrid: [
+        [9, null, 7],
+        [null, 6, null],
+        [5, null, 3]
+      ],
+      solution: [
+        [9, 2, 7],
+        [4, 6, 8],
+        [5, 10, 3]
+      ]
+    }
+  },
+  {
+    id: 'sud-18',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Killer Sudoku 4x4: Chuồng tổng liên hoàn',
+    badgeTitle: 'Bài Nâng Cao 8.2 · Trang 52+',
+    instruction: 'Điền các số từ 1 đến 4. Mỗi hàng và cột có đủ 1-4 không trùng lặp. Tổng các số trong mỗi khung màu phải bằng con số nhỏ ở góc!',
+    hint: 'Khung màu cam có tổng = 3 gồm 1 và 2 (1+2=3). Khung màu xanh ngọc có tổng = 7 gồm 3 và 4 (3+4=7)!',
+    mascot: { ...ABBY, message: 'Killer Sudoku kết hợp tính nhẩm siêu tốc và tư duy Sudoku đỉnh cao!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      colorBlocks: [
+        ['bg-rose-100', 'bg-rose-100', 'bg-sky-100', 'bg-sky-100'],
+        ['bg-emerald-100', 'bg-amber-100', 'bg-amber-100', 'bg-purple-100'],
+        ['bg-emerald-100', 'bg-teal-100', 'bg-teal-100', 'bg-purple-100'],
+        ['bg-yellow-100', 'bg-yellow-100', 'bg-indigo-100', 'bg-indigo-100']
+      ],
+      sumLabels: [
+        [5, null, 5, null],
+        [5, 3, null, 5],
+        [null, 7, null, null],
+        [5, null, 5, null]
+      ],
+      initialGrid: [
+        [null, 3, null, null],
+        [null, null, 2, null],
+        [1, null, null, null],
+        [null, null, null, 4]
+      ],
+      solution: [
+        [2, 3, 4, 1],
+        [4, 1, 2, 3],
+        [1, 4, 3, 2],
+        [3, 2, 1, 4]
+      ]
+    }
+  },
+  {
+    id: 'sud-19',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku Jigsaw 4x4: Khối đa giác chữ L zic-zac',
+    badgeTitle: 'Bài Nâng Cao 9.1 · Trang 52+',
+    instruction: 'Mỗi hàng, mỗi cột và mỗi khối màu kỳ dị (chữ T hồng, chữ L xanh biển, chữ L xanh lá, chữ T vàng) đều phải chứa đủ các số 1, 2, 3, 4!',
+    hint: 'Nhìn vào khối chữ T màu hồng ở trên: đã có 1, 4 và 2 -> chỉ còn thiếu số 3!',
+    mascot: { ...CASEY, message: 'Khối màu không vuông mà uốn lượn zic-zac, đòi hỏi mắt quan sát thật tinh tường!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      colorBlocks: [
+        ['bg-rose-100', 'bg-rose-100', 'bg-rose-100', 'bg-sky-100'],
+        ['bg-emerald-100', 'bg-rose-100', 'bg-sky-100', 'bg-sky-100'],
+        ['bg-emerald-100', 'bg-emerald-100', 'bg-amber-100', 'bg-sky-100'],
+        ['bg-emerald-100', 'bg-amber-100', 'bg-amber-100', 'bg-amber-100']
+      ],
+      initialGrid: [
+        [1, null, null, 4],
+        [null, 4, 1, null],
+        [null, 1, null, null],
+        [2, null, null, 1]
+      ],
+      solution: [
+        [1, 2, 3, 4],
+        [3, 4, 1, 2],
+        [4, 1, 2, 3],
+        [2, 3, 4, 1]
+      ]
+    }
+  },
+  {
+    id: 'sud-20',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Magic Square 3x3 (Tổng = 21)',
+    badgeTitle: 'Bài Nâng Cao 9.2 · Trang 52+',
+    instruction: 'Điền các số từ 3 đến 11 vào ma trận 3x3 sao cho tổng của mỗi hàng, mỗi cột và hai đường chéo đều đúng bằng 21!',
+    hint: 'Số ở chính giữa là 7. Hàng 1: 10 + ? + 8 = 21 => Cần điền số 3. Hàng 3: 6 + ? + 4 = 21 => Cần điền số 11!',
+    mascot: { ...BENNY, message: 'Số trung tâm là 7 vì 21 chia 3 bằng 7 đấy các bạn nhỏ ơi!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ô VUÔNG MA THUẬT (MAGIC SQUARE TỔNG 21)',
+      subtitle: 'Điền số từ 3 đến 11 sao cho tổng mỗi hàng và mỗi cột đều bằng 21',
+      targetSum: 21,
+      allowedNumbers: [3, 4, 5, 6, 7, 8, 9, 10, 11],
+      initialGrid: [
+        [10, null, 8],
+        [null, 7, null],
+        [6, null, 4]
+      ],
+      solution: [
+        [10, 3, 8],
+        [5, 7, 9],
+        [6, 11, 4]
+      ]
+    }
+  },
+  {
+    id: 'sud-21',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma trận số Kim Tự Tháp cộng dồn 3 tầng',
+    badgeTitle: 'Bài Nâng Cao 10.1 · Trang 52+',
+    instruction: 'Quy luật kim tự tháp: Hai số đầu ở mỗi hàng cộng lại bằng số thứ ba (A + B = C), đồng thời hai hàng trên cộng dồn ra hàng dưới cùng!',
+    hint: 'Hàng 1: 6 + ? = 15 => Cần điền số 9. Hàng 2: ? + 14 = 23 => Cần điền số 9. Hàng 3: 15 + 23 = 38!',
+    mascot: { ...ABBY, message: 'Cộng dồn từ tầng dưới lên tầng đỉnh kim tự tháp thật kỳ ảo!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'KIM TỰ THÁP CỘNG DỒN 3 TẦNG',
+      subtitle: 'Hàng ngang: Ô 1 + Ô 2 = Ô 3 | Cột dọc: Hàng 1 + Hàng 2 = Hàng 3',
+      allowedNumbers: [6, 9, 14, 15, 23, 38],
+      hintFormula: '6 + 9 = 15 | 9 + 14 = 23 | 15 + 23 = 38',
+      initialGrid: [
+        [6, null, 15],
+        [null, 14, 23],
+        [15, 23, null]
+      ],
+      solution: [
+        [6, 9, 15],
+        [9, 14, 23],
+        [15, 23, 38]
+      ]
+    }
+  },
+  {
+    id: 'sud-22',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Magic Square 3x3 (Tổng = 24)',
+    badgeTitle: 'Bài Nâng Cao 10.2 · Trang 52+',
+    instruction: 'Sử dụng các số từ 4 đến 12 để điền vào ma phương sao cho tổng mỗi hàng, cột và đường chéo đều đúng bằng 24!',
+    hint: 'Số trung tâm là 8 (vì 24 : 3 = 8). Hàng 1: ? + 4 + 9 = 24 => Cần điền số 11. Hàng 2: 6 + ? + 10 = 24 => Cần điền số 8!',
+    mascot: { ...MAYLE, message: 'Quy luật ma phương 3x3 luôn có số trung tâm bằng 1/3 tổng mục tiêu!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ô VUÔNG MA THUẬT (MAGIC SQUARE TỔNG 24)',
+      subtitle: 'Điền số từ 4 đến 12 sao cho tổng mỗi hàng và mỗi cột đều bằng 24',
+      targetSum: 24,
+      allowedNumbers: [4, 5, 6, 7, 8, 9, 10, 11, 12],
+      initialGrid: [
+        [null, 4, 9],
+        [6, null, 10],
+        [7, 12, null]
+      ],
+      solution: [
+        [11, 4, 9],
+        [6, 8, 10],
+        [7, 12, 5]
+      ]
+    }
+  },
+  {
+    id: 'sud-23',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku 4x4 Thử thách loại trừ siêu cấp',
+    badgeTitle: 'Bài Nâng Cao 11.1 · Trang 52+',
+    instruction: 'Cấp độ Chuyên gia: Chỉ có 4 manh mối ban đầu! Phải phối hợp suy luận hàng, cột và khối 2x2 để tìm từng số một.',
+    hint: 'Ở hàng 2 đã có 4 và 1, suy luận vị trí của số 3 và 2 bằng cách đối chiếu với cột 1 và cột 4!',
+    mascot: { ...CASEY, message: 'Độ khó cao nhất của Sudoku 4x4, em hãy suy luận cẩn thận từng ô nhé!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [3, null, null, null],
+        [null, 4, null, 1],
+        [null, null, 1, null],
+        [null, null, null, 4]
+      ],
+      solution: [
+        [3, 1, 4, 2],
+        [2, 4, 3, 1],
+        [4, 2, 1, 3],
+        [1, 3, 2, 4]
+      ]
+    }
+  },
+  {
+    id: 'sud-24',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Đại thử thách Ma Phương số chẵn (Tổng = 30)',
+    badgeTitle: 'Đại Thử Thách Trạm 3 · Trang 52+',
+    instruction: 'Đỉnh cao Trạm 3: Điền các số chẵn 2, 4, 6, 8, 10, 12, 14, 16, 18 vào ô trống để tổng mỗi hàng, cột và đường chéo đều bằng 30!',
+    hint: 'Số ở chính giữa là 10. Hàng 1: 16 + ? + 12 = 30 => Cần điền 2. Hàng 3: 8 + ? + 4 = 30 => Cần điền 18!',
+    mascot: { ...BENNY, message: 'Chúc mừng bạn đã chinh phục đỉnh cao nhất của Thung Lũng Sudoku & Ma Trận Số!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'ĐẠI MA PHƯƠNG SỐ CHẴN (TỔNG = 30)',
+      subtitle: 'Điền các số chẵn 2, 4, 6, 8, 10, 12, 14, 16, 18 sao cho tổng mỗi hàng và cột đều bằng 30',
+      targetSum: 30,
+      allowedNumbers: [2, 4, 6, 8, 10, 12, 14, 16, 18],
+      initialGrid: [
+        [16, null, 12],
+        [null, 10, null],
+        [8, null, 4]
+      ],
+      solution: [
+        [16, 2, 12],
+        [6, 10, 14],
+        [8, 18, 4]
+      ]
+    }
+  },
 
   // ==========================================
   // TRẠM 4: QUY LUẬT LẶP LẠI & MÊ CUNG (Trang 51 - Trang 58)
@@ -3365,6 +3650,335 @@ export const ALL_LESSONS: LessonQuestion[] = [
       correctExplanation: 'Xuất sắc! 7 + 8 = 15, số trên đỉnh kim tự tháp là 15!'
     }
   },
+  {
+    id: 'pat-14',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy số Fibonacci tự nhiên: Tổng hai số liền trước',
+    badgeTitle: 'Bài Nâng Cao 8.1 · Trang 58+',
+    instruction: 'Quan sát dãy số vỏ ốc thần kỳ: 1 ➔ 2 ➔ 3 ➔ 5 ➔ 8 ➔ [ ? ] ➔ 21. Hãy tìm con số bí mật tiếp theo!',
+    hint: 'Mỗi số bằng tổng 2 số liền trước nó: 1 + 2 = 3; 2 + 3 = 5; 3 + 5 = 8; 5 + 8 = 13; 8 + 13 = 21!',
+    mascot: { ...ABBY, message: 'Dãy số vỏ ốc Fibonacci kỳ diệu trong thiên nhiên, hai bạn trước cộng lại ra bạn sau!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'DÃY SỐ FIBONACCI TỰ NHIÊN',
+      ruleExplanation: 'Mỗi số bằng tổng của hai số đứng ngay trước nó:',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1' },
+        { id: 2, label: '2' },
+        { id: 3, label: '3', stepHint: '1+2' },
+        { id: 4, label: '5', stepHint: '2+3' },
+        { id: 5, label: '8', stepHint: '3+5' },
+        { id: 6, isMissing: true, stepHint: '5+8' },
+        { id: 7, label: '21', stepHint: '8+?' }
+      ],
+      choices: [
+        { id: '11', label: '11' },
+        { id: '12', label: '12' },
+        { id: '13', label: '13 (Đúng)' },
+        { id: '14', label: '14' }
+      ],
+      correctChoiceId: '13',
+      correctExplanation: 'Chính xác! 5 + 8 = 13 và 8 + 13 = 21. Bạn giải dãy Fibonacci xuất sắc!'
+    }
+  },
+  {
+    id: 'pat-15',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy số khoảng cách bậc hai: Bước nhảy tăng dần',
+    badgeTitle: 'Bài Nâng Cao 8.2 · Trang 58+',
+    instruction: 'Chú thỏ Abby nhảy qua các mỏm đá với bước nhảy dài hơn sau mỗi lần: 1 ➔ 2 ➔ 4 ➔ 7 ➔ 11 ➔ 16 ➔ [ ? ]. Tìm con số ở mỏm đá tiếp theo!',
+    hint: 'Khoảng cách giữa các mỏm đá tăng dần: +1, +2, +3, +4, +5! Bước tiếp theo nhảy +6: 16 + 6 = 22!',
+    mascot: { ...BENNY, message: 'Bước nhảy dài thêm 1 sau mỗi lần nhảy: +1, +2, +3, +4, +5, rồi đến +6!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'BƯỚC NHẢY TĂNG DẦN BẬC HAI',
+      ruleExplanation: 'Khoảng cách tăng đều (+1, +2, +3, +4, +5, +6):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1' },
+        { id: 2, label: '2', stepHint: '+1' },
+        { id: 3, label: '4', stepHint: '+2' },
+        { id: 4, label: '7', stepHint: '+3' },
+        { id: 5, label: '11', stepHint: '+4' },
+        { id: 6, label: '16', stepHint: '+5' },
+        { id: 7, isMissing: true, stepHint: '+6' }
+      ],
+      choices: [
+        { id: '20', label: '20' },
+        { id: '21', label: '21' },
+        { id: '22', label: '22 (Chính xác)' },
+        { id: '24', label: '24' }
+      ],
+      correctChoiceId: '22',
+      correctExplanation: 'Quá đỉnh! 16 + 6 = 22, bạn đã nắm vững quy luật khoảng cách bậc hai!'
+    }
+  },
+  {
+    id: 'pat-16',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy số đan xen hai phép tính luân phiên (+5 và -2)',
+    badgeTitle: 'Bài Nâng Cao 9.1 · Trang 58+',
+    instruction: 'Quan sát nhịp điệu của các nốt nhạc: 3 ➔ 8 ➔ 6 ➔ 11 ➔ 9 ➔ 14 ➔ [ ? ]. Tìm nốt nhạc bí mật tiếp theo!',
+    hint: 'Quy luật đan xen: Cộng 5 rồi Trừ 2! (3 + 5 = 8; 8 - 2 = 6; 6 + 5 = 11; 11 - 2 = 9; 9 + 5 = 14). Tiếp theo là Trừ 2: 14 - 2 = 12!',
+    mascot: { ...CASEY, message: 'Nhảy lên rồi lùi xuống luân phiên như đang khiêu vũ: +5 rồi lại -2!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'DÃY SỐ ĐAN XEN LUÂN PHIÊN (+5 / -2)',
+      ruleExplanation: 'Phép tính luân phiên: Tiến 5 bước rồi lùi 2 bước (+5, -2, +5, -2):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '3' },
+        { id: 2, label: '8', stepHint: '+5' },
+        { id: 3, label: '6', stepHint: '-2' },
+        { id: 4, label: '11', stepHint: '+5' },
+        { id: 5, label: '9', stepHint: '-2' },
+        { id: 6, label: '14', stepHint: '+5' },
+        { id: 7, isMissing: true, stepHint: '-2' }
+      ],
+      choices: [
+        { id: '11', label: '11' },
+        { id: '12', label: '12 (Đúng)' },
+        { id: '13', label: '13' },
+        { id: '19', label: '19' }
+      ],
+      correctChoiceId: '12',
+      correctExplanation: 'Rất chính xác! 14 - 2 = 12, con số tiếp theo là 12!'
+    }
+  },
+  {
+    id: 'pat-17',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Chuỗi quân cờ Domino: Nhân đôi và cộng dồn',
+    badgeTitle: 'Bài Nâng Cao 9.2 · Trang 58+',
+    instruction: 'Quan sát các quân cờ Domino: [1|2] ➔ [2|5] ➔ [4|8] ➔ [8|11] ➔ [ ? | ? ]. Tìm quân Domino tiếp theo ở vị trí số 5!',
+    hint: 'Nửa trên nhân đôi: 1 × 2 = 2; 2 × 2 = 4; 4 × 2 = 8 => Nửa trên tiếp theo là 16! Nửa dưới cộng 3: 2 + 3 = 5; 5 + 3 = 8; 8 + 3 = 11 => Nửa dưới tiếp theo là 14! Quân cần tìm là [16 | 14]!',
+    mascot: { ...MAYLE, message: 'Nửa trên gấp đôi, nửa dưới cộng ba, kết hợp hai quy luật cùng lúc!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'QUÂN CỜ DOMINO ĐA QUY LUẬT',
+      ruleExplanation: 'Nửa trên gấp đôi (×2), nửa dưới cộng ba (+3):',
+      sequenceType: 'domino',
+      items: [
+        { id: 1, label: '1', subLabel: '2' },
+        { id: 2, label: '2', subLabel: '5' },
+        { id: 3, label: '4', subLabel: '8' },
+        { id: 4, label: '8', subLabel: '11' },
+        { id: 5, isMissing: true }
+      ],
+      choices: [
+        { id: 'opt1614', label: '16', subLabel: '14' },
+        { id: 'opt1613', label: '16', subLabel: '13' },
+        { id: 'opt1414', label: '14', subLabel: '14' },
+        { id: 'opt1214', label: '12', subLabel: '14' }
+      ],
+      correctChoiceId: 'opt1614',
+      correctExplanation: 'Tuyệt đỉnh! Quân cờ tiếp theo là [16 | 14] với nửa trên là 16 và nửa dưới là 14!'
+    }
+  },
+  {
+    id: 'pat-18',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê cung ngọc quý chu kỳ 4 sắc màu huyền bí',
+    badgeTitle: 'Bài Nâng Cao 10.1 · Trang 58+',
+    instruction: 'Dẫn bạn nhỏ đi qua mê cung để chạm tay vào Cúp Vàng Spark Math theo đúng chu kỳ 4 viên ngọc: 🟡 Vàng ➔ 🔵 Xanh biển ➔ 🔴 Đỏ ➔ 🟣 Tím.',
+    hint: 'Bắt đầu từ viên Vàng góc trên trái [0,0], lần lượt bước sang Xanh biển [0,1], Đỏ [0,2], Tím [0,3], Vàng [0,4], rồi rẽ xuống theo chu kỳ để tới Cúp Vàng!',
+    mascot: { ...ABBY, message: 'Hãy giữ đúng nhịp 4 màu ngọc quý: Vàng, Lam, Đỏ, Tím trên từng bước đi!' },
+    activity: {
+      type: 'flowerMaze',
+      ruleTitle: 'QUY LUẬT 4 SẮC MÀU HUYỀN BÍ',
+      patternDisplay: [
+        { icon: '🟡', name: 'Vàng' },
+        { icon: '🔵', name: 'Xanh biển' },
+        { icon: '🔴', name: 'Đỏ' },
+        { icon: '🟣', name: 'Tím' }
+      ],
+      pattern: ['🟡', '🔵', '🔴', '🟣'],
+      startPos: [0, 0],
+      goalPos: [4, 4],
+      startIcon: '🐰',
+      startLabel: 'Abby xuất phát',
+      goalIcon: '🏆',
+      goalLabel: 'Cúp Vàng Spark',
+      grid: [
+        ['🟡', '🔵', '🔴', '🟣', '🟡'],
+        ['🟣', '🔴', '🟡', '🟡', '🔵'],
+        ['🟡', '🔵', '🔴', '🟣', '🔴'],
+        ['🔵', '🔴', '🟡', '🟡', '🟣'],
+        ['🔴', '🟣', '🟡', '🔵', '🏆']
+      ],
+      targetPath: [
+        [0, 0],
+        [0, 1],
+        [0, 2],
+        [0, 3],
+        [0, 4],
+        [1, 4],
+        [2, 4],
+        [3, 4],
+        [4, 4]
+      ],
+      successMessage: '🎉 Chúc mừng! Bạn đã chinh phục mê cung 4 sắc màu huyền bí xuất sắc!'
+    }
+  },
+  {
+    id: 'pat-19',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Ma trận biến đổi hình học: Quy luật số cạnh đa giác',
+    badgeTitle: 'Bài Nâng Cao 10.2 · Trang 58+',
+    instruction: 'Quan sát quy luật tăng số đoạn thẳng và số cạnh: 1 đoạn thẳng ➔ 2 đoạn cắt nhau (dấu cộng) ➔ Tam giác (3 cạnh) ➔ Hình vuông (4 cạnh). Hình tiếp theo là gì?',
+    hint: 'Số cạnh tăng dần: 1 cạnh ➔ 2 cạnh ➔ 3 cạnh (tam giác) ➔ 4 cạnh (hình vuông) ➔ Hình tiếp theo phải có 5 cạnh (Hình ngũ giác)!',
+    mascot: { ...BENNY, message: 'Đếm số cạnh của từng hình: 1, 2, 3, 4... Tiếp theo là hình có mấy cạnh nhỉ?' },
+    activity: {
+      type: 'patternMatrix',
+      ruleDescription: 'Quy luật tăng dần số cạnh của đa giác (+1 cạnh):',
+      steps: [
+        { stepNum: 1, content: '➖', note: '1 đoạn thẳng' },
+        { stepNum: 2, content: '➕', note: '2 đoạn thẳng vuông góc' },
+        { stepNum: 3, content: '🔺', note: 'Tam giác (3 cạnh)' },
+        { stepNum: 4, content: '🔲', note: 'Hình vuông (4 cạnh)' }
+      ],
+      choices: [
+        { id: 'A', label: 'Hình A (Đúng)', content: '⬟ Ngũ giác (5 cạnh)' },
+        { id: 'B', label: 'Hình B', content: '⚪ Hình tròn (0 cạnh)' },
+        { id: 'C', label: 'Hình C', content: '⭐ Ngôi sao (10 cạnh)' },
+        { id: 'D', label: 'Hình D', content: '➖ Đoạn thẳng' }
+      ],
+      correctChoiceId: 'A'
+    }
+  },
+  {
+    id: 'pat-20',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Kim tự tháp số 4 tầng cộng dồn đa lớp',
+    badgeTitle: 'Bài Nâng Cao 11.1 · Trang 58+',
+    instruction: 'Kim tự tháp số 4 tầng khổng lồ: Tầng đáy gồm 2, 3, 5, 4. Tầng 2 gồm 5, 8, 9. Tầng 3 gồm 13, 17. Hỏi viên gạch trên đỉnh chóp là con số mấy?',
+    hint: 'Tầng 3 gồm 13 và 17. Viên gạch ở đỉnh bằng tổng của hai viên gạch tầng 3: 13 + 17 = 30!',
+    mascot: { ...MAYLE, message: 'Kim tự tháp 4 tầng cao vút, tính nhẩm tầng 3: 13 + 17 là ra đỉnh chóp ngay!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'KIM TỰ THÁP SỐ 4 TẦNG',
+      ruleExplanation: 'Viên gạch đỉnh chóp = Tổng hai viên gạch tầng 3 (13 + 17 = ?):',
+      sequenceType: 'pyramid',
+      items: [
+        { id: 1, label: '30' }
+      ],
+      choices: [
+        { id: '28', label: '28' },
+        { id: '29', label: '29' },
+        { id: '30', label: '30 (Chính xác)' },
+        { id: '32', label: '32' }
+      ],
+      correctChoiceId: '30',
+      correctExplanation: 'Xuất sắc! 13 + 17 = 30, viên gạch trên đỉnh chóp kim tự tháp là 30!'
+    }
+  },
+  {
+    id: 'pat-21',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy số mã hóa chữ cái kết hợp số học',
+    badgeTitle: 'Bài Nâng Cao 11.2 · Trang 58+',
+    instruction: 'Mật mã thông minh kết hợp chữ cái và số lẻ: A1 ➔ B3 ➔ C5 ➔ D7 ➔ [ ? ]. Tìm mật mã tiếp theo!',
+    hint: 'Chữ cái đi theo bảng chữ cái: A, B, C, D ➔ tiếp theo là E. Chữ số tăng theo số lẻ: 1, 3, 5, 7 ➔ tiếp theo là 9. Mật mã là E9!',
+    mascot: { ...CASEY, message: 'Phối hợp chữ cái A, B, C, D, E và số lẻ 1, 3, 5, 7, 9 để giải mã!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'MẬT MÃ CHỮ CÁI & SỐ LẺ',
+      ruleExplanation: 'Chữ cái tiếp theo trong bảng chữ cái + Số lẻ tăng dần (+2):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: 'A1' },
+        { id: 2, label: 'B3', stepHint: '+2' },
+        { id: 3, label: 'C5', stepHint: '+2' },
+        { id: 4, label: 'D7', stepHint: '+2' },
+        { id: 5, isMissing: true, stepHint: '+2' }
+      ],
+      choices: [
+        { id: 'E8', label: 'E8' },
+        { id: 'E9', label: 'E9 (Chính xác)' },
+        { id: 'F9', label: 'F9' },
+        { id: 'E11', label: 'E11' }
+      ],
+      correctChoiceId: 'E9',
+      correctExplanation: 'Rất thông minh! Sau D là chữ E, sau số 7 là số 9, mật mã đúng là E9!'
+    }
+  },
+  {
+    id: 'pat-22',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Chuỗi vòng ngọc đối xứng trục gương (Mirror Symmetry)',
+    badgeTitle: 'Bài Nâng Cao 12.1 · Trang 58+',
+    instruction: 'Chiếc vòng ngọc đối xứng qua tấm gương ở giữa: 🔴 🔵 🟡 🟢 | GƯƠNG | 🟢 🟡 🔵 [ ? ]. Tìm hạt ngọc cuối cùng để chuỗi đối xứng hoàn hảo!',
+    hint: 'Đối xứng qua gương: 🟢 soi với 🟢, 🟡 soi với 🟡, 🔵 soi với 🔵. Hạt ngoài cùng bên trái là 🔴 nên hạt ngoài cùng bên phải cũng phải là 🔴 Đỏ!',
+    mascot: { ...ABBY, message: 'Quy luật đối xứng gương: hình ảnh bên phải phản chiếu y hệt bên trái!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'VÒNG NGỌC ĐỐI XỨNG TRỤC GƯƠNG',
+      ruleExplanation: 'Hai nửa đối xứng nhau qua gương (🔴 🔵 🟡 🟢 🪞 🟢 🟡 🔵 🔴):',
+      sequenceType: 'beads',
+      items: [
+        { id: 1, icon: '🔴', label: '1' },
+        { id: 2, icon: '🔵', label: '2' },
+        { id: 3, icon: '🟡', label: '3' },
+        { id: 4, icon: '🟢', label: '4' },
+        { id: 5, icon: '🟢', label: '5' },
+        { id: 6, icon: '🟡', label: '6' },
+        { id: 7, icon: '🔵', label: '7' },
+        { id: 8, isMissing: true, label: '?' }
+      ],
+      choices: [
+        { id: 'red', icon: '🔴', label: 'Hạt Đỏ 🔴 (Đúng)' },
+        { id: 'blue', icon: '🔵', label: 'Hạt Xanh 🔵' },
+        { id: 'yellow', icon: '🟡', label: 'Hạt Vàng 🟡' },
+        { id: 'green', icon: '🟢', label: 'Hạt Lục 🟢' }
+      ],
+      correctChoiceId: 'red',
+      correctExplanation: 'Tuyệt vời! Hạt Đỏ 🔴 hoàn thành bức tranh đối xứng gương tuyệt đẹp!'
+    }
+  },
+  {
+    id: 'pat-23',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Đại Thử Thách Trạm 4: Dãy số hai tầng sóng lồng nhau',
+    badgeTitle: 'Đại Thử Thách Trạm 4 · Trang 58+',
+    instruction: 'Đỉnh cao Trạm 4: Dãy số gồm hai quy luật chạy lồng vào nhau: 1, 10, 3, 20, 9, 30, [ ? ], 40. Tìm số bí mật ở vị trí số 7!',
+    hint: 'Vị trí lẻ (1, 3, 5, 7): 1 × 3 = 3; 3 × 3 = 9; 9 × 3 = 27! Vị trí chẵn (2, 4, 6, 8): 10, 20, 30, 40. Vị trí số 7 cần điền là 27!',
+    mascot: { ...BENNY, message: 'Chúc mừng bạn đã chinh phục đỉnh cao nhất của Thung Lũng Quy Luật & Mê Cung!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'DÃY SỐ HAI TẦNG SÓNG LỒNG NHAU',
+      ruleExplanation: 'Vị trí lẻ nhân 3 (1, 3, 9, 27) | Vị trí chẵn cộng 10 (10, 20, 30, 40):',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1' },
+        { id: 2, label: '10' },
+        { id: 3, label: '3', stepHint: '1×3' },
+        { id: 4, label: '20', stepHint: '+10' },
+        { id: 5, label: '9', stepHint: '3×3' },
+        { id: 6, label: '30', stepHint: '+10' },
+        { id: 7, isMissing: true, stepHint: '9×3' },
+        { id: 8, label: '40', stepHint: '+10' }
+      ],
+      choices: [
+        { id: '21', label: '21' },
+        { id: '24', label: '24' },
+        { id: '27', label: '27 (Chính xác)' },
+        { id: '36', label: '36' }
+      ],
+      correctChoiceId: '27',
+      correctExplanation: 'Kỳ tài toán học! 9 × 3 = 27. Bạn đã hoàn thành xuất sắc toàn bộ thử thách Trạm 4!'
+    }
+  },
 
   // ==========================================
   // TRẠM 5: VỊ TRÍ HÀNG NGŨ & SUY LUẬN (Trang 59 - Trang 72)
@@ -3733,6 +4347,278 @@ export const ALL_LESSONS: LessonQuestion[] = [
         { id: 'Rua', label: 'Chú Rùa', description: 'Về đích sau cùng', icon: '🐢' }
       ],
       correctOrder: ['Abby', 'Benny', 'Casey', 'Rua']
+    }
+  },
+  {
+    id: 'log-17',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đếm hàng có khoảng cách giữa hai bạn',
+    badgeTitle: 'Bài Nâng Cao 6.1 · Trang 72+',
+    instruction: 'Trong một hàng dọc: Thỏ Abby đứng thứ 5 tính từ đầu hàng. Chuột Casey đứng thứ 8 tính từ cuối hàng. Giữa Abby và Casey có đúng 3 bạn. Hỏi có tất cả bao nhiêu bạn trong hàng?',
+    hint: 'Cộng lần lượt 3 nhóm: Nhóm từ đầu đến Abby (5 bạn) + Nhóm ở giữa (3 bạn) + Nhóm từ Casey đến cuối (8 bạn): 5 + 3 + 8 = 16 bạn!',
+    mascot: { ...ABBY, message: 'Hai đầu và nhóm ở giữa không bị đếm trùng, em cộng cả ba phần lại nhé!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'between',
+      fromFront: 5,
+      fromBack: 8,
+      promptTitle: 'TÍNH TỔNG SỐ BẠN TRONG HÀNG',
+      personA: { name: 'Thỏ Abby', avatar: '🐰', pos: 5 },
+      personB: { name: 'Chuột Casey', avatar: '🐹', pos: 8 },
+      correctTotal: 16,
+      formula: '5 (đầu đến Abby) + 3 (ở giữa) + 8 (Casey đến cuối) = 16 bạn',
+      options: [14, 15, 16, 17]
+    }
+  },
+  {
+    id: 'log-18',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Cân thăng bằng bắc cầu 2 bước: Dưa hấu, Dứa & Cam',
+    badgeTitle: 'Bài Nâng Cao 6.2 · Trang 72+',
+    instruction: 'Quan sát 2 chiếc cân thăng bằng:\n• Cân 1: 1 quả Dưa hấu 🍉 thăng bằng với 2 quả Dứa 🍍.\n• Cân 2: 1 quả Dứa 🍍 thăng bằng với 3 quả Cam 🍊.\nHỏi 1 quả Dưa hấu 🍉 nặng bằng mấy quả Cam 🍊?',
+    hint: '1 quả Dưa = 2 quả Dứa. Mà mỗi quả Dứa = 3 quả Cam, vậy 2 quả Dứa = 2 × 3 = 6 quả Cam!',
+    mascot: { ...BENNY, message: 'Thay thế quả Dứa bằng số quả Cam tương ứng trên đĩa cân nhé!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'CÂN THĂNG BẰNG BẮC CẦU 2 BƯỚC',
+      ruleExplanation: 'Sử dụng tính chất bắc cầu: 1 Dưa = 2 Dứa | 1 Dứa = 3 Cam:',
+      scales: [
+        {
+          leftIcons: ['🍉'],
+          leftLabel: '1 Dưa hấu',
+          rightIcons: ['🍍', '🍍'],
+          rightLabel: '2 quả Dứa'
+        },
+        {
+          leftIcons: ['🍍'],
+          leftLabel: '1 quả Dứa',
+          rightIcons: ['🍊', '🍊', '🍊'],
+          rightLabel: '3 quả Cam'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🍉'],
+        targetLeftLabel: '1 quả Dưa hấu = ? quả Cam',
+        options: [
+          { id: 'opt-4', count: 4, icon: '🍊', label: '4 quả Cam' },
+          { id: 'opt-5', count: 5, icon: '🍊', label: '5 quả Cam' },
+          { id: 'opt-6', count: 6, icon: '🍊', label: '6 quả Cam (Đúng)' },
+          { id: 'opt-8', count: 8, icon: '🍊', label: '8 quả Cam' }
+        ],
+        correctOptionId: 'opt-6',
+        explanation: 'Chính xác! 1 Dưa hấu = 2 Dứa = 2 × 3 = 6 quả Cam!'
+      }
+    }
+  },
+  {
+    id: 'log-19',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Hàng người đứng thành khung chữ nhật rỗng 4 góc',
+    badgeTitle: 'Bài Nâng Cao 7.1 · Trang 72+',
+    instruction: 'Các bạn nhỏ xếp hàng tạo thành khung chữ nhật rỗng: Mỗi cạnh có đúng 4 bạn. Hỏi có tất cả bao nhiêu bạn xếp hàng?',
+    hint: 'Hình chữ nhật có 4 cạnh, mỗi cạnh 4 bạn. Nhưng 4 bạn ở 4 góc bị đếm trùng ở cả 2 cạnh: 4 × 4 - 4 = 12 bạn (hoặc 4 + 2 + 4 + 2 = 12 bạn)!',
+    mascot: { ...CASEY, message: 'Các bạn đứng ở 4 góc được tính cho cả 2 cạnh, nhớ trừ đi 4 bạn ở góc nhé!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'twoEnds',
+      fromFront: 4,
+      fromBack: 4,
+      promptTitle: 'ĐẾM HÀNG KHUNG CHỮ NHẬT RỖNG 4 GÓC',
+      correctTotal: 12,
+      formula: '4 cạnh × 4 bạn - 4 bạn ở 4 góc = 12 bạn',
+      options: [12, 14, 16, 18]
+    }
+  },
+  {
+    id: 'log-20',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Thám tử gia đình: Sắp xếp độ tuổi 5 thành viên',
+    badgeTitle: 'Bài Nâng Cao 7.2 · Trang 72+',
+    instruction: 'Hãy xếp thứ tự các thành viên trong gia đình từ LỚN TUỔI NHẤT đến NHỎ TUỔI NHẤT dựa vào các manh mối:\n• Ông ngoại là người lớn tuổi nhất trong nhà.\n• Bố lớn tuổi hơn Mẹ.\n• Mẹ lớn tuổi hơn Chị gái.\n• Bé Út là thành viên nhỏ tuổi nhất.',
+    hint: 'Thứ tự từ già đến trẻ: Ông ngoại ➔ Bố ➔ Mẹ ➔ Chị gái ➔ Bé Út!',
+    mascot: { ...MAYLE, message: 'Kéo thả các thành viên theo thứ tự từ người nhiều tuổi nhất đến ít tuổi nhất!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp thứ tự từ LỚN TUỔI NHẤT (Trái) đến NHỎ TUỔI NHẤT (Phải):',
+      directionLabel: 'Nhiều tuổi nhất ➔ Ít tuổi nhất',
+      items: [
+        { id: 'Ong', label: 'Ông ngoại', description: 'Lớn tuổi nhất nhà', icon: '👴' },
+        { id: 'Bo', label: 'Bố', description: 'Lớn tuổi hơn Mẹ', icon: '👨' },
+        { id: 'Me', label: 'Mẹ', description: 'Lớn tuổi hơn Chị gái', icon: '👩' },
+        { id: 'Chi', label: 'Chị gái', description: 'Lớn tuổi hơn Bé Út', icon: '👧' },
+        { id: 'BeUt', label: 'Bé Út', description: 'Nhỏ tuổi nhất nhà', icon: '👶' }
+      ],
+      correctOrder: ['Ong', 'Bo', 'Me', 'Chi', 'BeUt']
+    }
+  },
+  {
+    id: 'log-21',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Cân thăng bằng tổng - hiệu: Cân nặng Chó & Mèo',
+    badgeTitle: 'Bài Nâng Cao 8.1 · Trang 72+',
+    instruction: 'Hai chú thú cưng lên bàn cân:\n• Cân 1: 1 chú Chó 🐶 và 1 chú Mèo 🐱 nặng tổng cộng 10 kg.\n• Cân 2: 1 chú Chó 🐶 nặng đúng bằng 1 chú Mèo 🐱 cộng thêm quả cân 2 kg.\nHỏi chú Chó 🐶 nặng bao nhiêu kg?',
+    hint: 'Thay Chó = Mèo + 2 kg vào cân 1: 2 chú Mèo + 2 kg = 10 kg => 2 chú Mèo = 8 kg => Mèo = 4 kg. Vậy Chó = 4 + 2 = 6 kg!',
+    mascot: { ...ABBY, message: 'Bài toán tổng - hiệu kinh điển trên bàn cân, tìm Mèo trước rồi ra Chó ngay!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'TÍNH CÂN NẶNG TỔNG - HIỆU THÚ CƯNG',
+      ruleExplanation: 'Chó + Mèo = 10 kg | Chó = Mèo + 2 kg:',
+      scales: [
+        {
+          leftIcons: ['🐶', '🐱'],
+          leftLabel: 'Chó + Mèo',
+          rightIcons: ['⚖️', '⚖️'],
+          rightLabel: '10 kg'
+        },
+        {
+          leftIcons: ['🐶'],
+          leftLabel: '1 chú Chó',
+          rightIcons: ['🐱', '⚖️'],
+          rightLabel: '1 Mèo + 2 kg'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🐶'],
+        targetLeftLabel: '1 chú Chó = ? kg',
+        options: [
+          { id: 'opt-4', count: 4, icon: '⚖️', label: '4 kg' },
+          { id: 'opt-5', count: 5, icon: '⚖️', label: '5 kg' },
+          { id: 'opt-6', count: 6, icon: '⚖️', label: '6 kg (Chính xác)' },
+          { id: 'opt-8', count: 8, icon: '⚖️', label: '8 kg' }
+        ],
+        correctOptionId: 'opt-6',
+        explanation: 'Xuất sắc! Mèo nặng 4 kg, Chó nặng 6 kg (6 + 4 = 10 kg và 6 - 4 = 2 kg)!'
+      }
+    }
+  },
+  {
+    id: 'log-22',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đếm hàng chữ thập đôi có 2 điểm giao nhau',
+    badgeTitle: 'Bài Nâng Cao 8.2 · Trang 72+',
+    instruction: 'Một hàng ngang có 7 bạn. Có hai hàng dọc, mỗi hàng có 5 bạn cắt ngang qua hai vị trí khác nhau trên hàng ngang. Hỏi có tất cả bao nhiêu bạn?',
+    hint: 'Có hai điểm giao nhau nên 2 bạn đứng ở hai giao điểm bị đếm 2 lần: 7 (hàng ngang) + 5 (dọc 1) + 5 (dọc 2) - 2 (hai giao điểm) = 15 bạn!',
+    mascot: { ...BENNY, message: 'Nhớ trừ đi 2 bạn đứng ở 2 giao điểm cắt nhau nhé!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'twoEnds',
+      fromFront: 7,
+      fromBack: 8,
+      promptTitle: 'ĐẾM HÀNG CHỮ THẬP ĐÔI (2 GIAO ĐIỂM)',
+      correctTotal: 15,
+      formula: '7 (ngang) + 5 (dọc 1) + 5 (dọc 2) - 2 giao điểm = 15 bạn',
+      options: [14, 15, 16, 17]
+    }
+  },
+  {
+    id: 'log-23',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Sắp xếp chỗ ngồi 5 bạn trong rạp hát',
+    badgeTitle: 'Bài Nâng Cao 9.1 · Trang 72+',
+    instruction: 'Năm bạn ngồi ở dãy ghế từ Ghế 1 (trái) đến Ghế 5 (phải):\n• Chuột Casey ngồi ở Ghế 1 ngoài cùng bên trái.\n• Bác sĩ Mayle ngồi ở Ghế 3 chính giữa.\n• Khỉ Benny ngồi ở Ghế 2 bên cạnh Mayle.\n• Thỏ Abby ngồi ở Ghế 4 bên phải Mayle.\n• Bác Ram ngồi ở Ghế 5 ngoài cùng bên phải.\nHãy xếp đúng vị trí cả 5 bạn!',
+    hint: 'Ghế 1: Casey, Ghế 2: Benny, Ghế 3: Bác sĩ Mayle, Ghế 4: Abby, Ghế 5: Bác Ram!',
+    mascot: { ...MAYLE, message: 'Đọc kỹ từng manh mối và xếp các bạn vào đúng số ghế nhé!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 5,
+      allowedCharacters: ['Casey', 'Benny', 'Bác sĩ Mayle', 'Abby', 'Bác Ram'],
+      correctOrder: ['Casey', 'Benny', 'Bác sĩ Mayle', 'Abby', 'Bác Ram']
+    }
+  },
+  {
+    id: 'log-24',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Cân thăng bằng dây chuyền 3 chặng: Dưa, Bưởi, Táo & Dâu',
+    badgeTitle: 'Bài Nâng Cao 9.2 · Trang 72+',
+    instruction: 'Chuỗi thăng bằng 3 chặng:\n• Cân 1: 1 quả Dưa hấu 🍉 = 2 quả Bưởi 🍈.\n• Cân 2: 1 quả Bưởi 🍈 = 2 quả Táo 🍎.\n• Cân 3: 1 quả Táo 🍎 = 3 quả Dâu tây 🍓.\nHỏi 1 quả Dưa hấu 🍉 thăng bằng với bao nhiêu quả Dâu tây 🍓?',
+    hint: '1 Dưa = 2 Bưởi = 2 × 2 Táo = 4 Táo. Mà 1 Táo = 3 Dâu nên 4 Táo = 4 × 3 = 12 quả Dâu tây 🍓!',
+    mascot: { ...CASEY, message: 'Nhân liên tiếp 3 chặng: 2 × 2 × 3 là ra số quả dâu ngay!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'CÂN THĂNG BẰNG DÂY CHUYỀN 3 CHẶNG',
+      ruleExplanation: '1 Dưa = 2 Bưởi | 1 Bưởi = 2 Táo | 1 Táo = 3 Dâu:',
+      scales: [
+        {
+          leftIcons: ['🍉'],
+          leftLabel: '1 Dưa hấu',
+          rightIcons: ['🍈', '🍈'],
+          rightLabel: '2 quả Bưởi'
+        },
+        {
+          leftIcons: ['🍈'],
+          leftLabel: '1 quả Bưởi',
+          rightIcons: ['🍎', '🍎'],
+          rightLabel: '2 quả Táo'
+        },
+        {
+          leftIcons: ['🍎'],
+          leftLabel: '1 quả Táo',
+          rightIcons: ['🍓', '🍓', '🍓'],
+          rightLabel: '3 quả Dâu tây'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🍉'],
+        targetLeftLabel: '1 Dưa hấu = ? quả Dâu tây',
+        options: [
+          { id: 'opt-8', count: 8, icon: '🍓', label: '8 quả Dâu' },
+          { id: 'opt-10', count: 10, icon: '🍓', label: '10 quả Dâu' },
+          { id: 'opt-12', count: 12, icon: '🍓', label: '12 quả Dâu (Đúng)' },
+          { id: 'opt-16', count: 16, icon: '🍓', label: '16 quả Dâu' }
+        ],
+        correctOptionId: 'opt-12',
+        explanation: 'Quá đỉnh! 1 Dưa = 2 Bưởi = 4 Táo = 4 × 3 = 12 quả Dâu tây!'
+      }
+    }
+  },
+  {
+    id: 'log-25',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Thám tử thời gian: Sắp xếp 5 bạn nộp bài thi sớm nhất',
+    badgeTitle: 'Bài Nâng Cao 10.1 · Trang 72+',
+    instruction: 'Xếp thứ tự 5 bạn hoàn thành bài thi từ SỚM NHẤT đến MUỘN NHẤT:\n• Thầy Mayle hoàn thành bài đầu tiên (sớm nhất).\n• Thỏ Abby hoàn thành trước Khỉ Benny.\n• Khỉ Benny nộp bài trước Chuột Casey.\n• Gấu Rory nộp bài sau cùng (muộn nhất).',
+    hint: 'Thứ tự từ sớm nhất đến muộn nhất: Thầy Mayle ➔ Thỏ Abby ➔ Khỉ Benny ➔ Chuột Casey ➔ Gấu Rory!',
+    mascot: { ...ABBY, message: 'Quan sát các mốc thời gian trước sau để sắp xếp thật chuẩn xác!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp thứ tự nộp bài từ SỚM NHẤT (Trái) đến MUỘN NHẤT (Phải):',
+      directionLabel: 'Nộp sớm nhất ➔ Nộp muộn nhất',
+      items: [
+        { id: 'Mayle', label: 'Thầy Mayle', description: 'Nộp bài đầu tiên', icon: '👨‍🏫' },
+        { id: 'Abby', label: 'Thỏ Abby', description: 'Nộp trước Benny', icon: '🐰' },
+        { id: 'Benny', label: 'Khỉ Benny', description: 'Nộp trước Casey', icon: '🐵' },
+        { id: 'Casey', label: 'Chuột Casey', description: 'Nộp trước Rory', icon: '🐹' },
+        { id: 'Rory', label: 'Gấu Rory', description: 'Nộp bài sau cùng', icon: '🐻' }
+      ],
+      correctOrder: ['Mayle', 'Abby', 'Benny', 'Casey', 'Rory']
+    }
+  },
+  {
+    id: 'log-26',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đại Thử Thách Trạm 5: Vòng tròn 20 bạn & Vị trí đối diện',
+    badgeTitle: 'Đại Thử Thách Trạm 5 · Trang 72+',
+    instruction: 'Đỉnh cao Trạm 5: Có 20 bạn nhỏ đứng thành một vòng tròn nắm tay cách đều nhau, được đánh số từ 1 đến 20 theo chiều kim đồng hồ. Hỏi bạn số 3 đứng ĐỐI DIỆN TRỰC TIẾP với bạn số mấy?',
+    hint: 'Một nửa vòng tròn có 20 : 2 = 10 khoảng cách. Bạn đứng đối diện cách bạn số 3 đúng 10 bước: 3 + 10 = 13!',
+    mascot: { ...BENNY, message: 'Chúc mừng bạn đã chinh phục đỉnh cao nhất của Thung Lũng Vị Trí Hàng Ngũ & Suy Luận!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'circle',
+      totalInQueue: 20,
+      promptTitle: 'TÌM BẠN ĐỨNG ĐỐI DIỆN TRONG VÒNG TRÒN 20 BẠN',
+      correctTotal: 13,
+      formula: '3 + (20 : 2) = 13 (Bạn số 13 đối diện bạn số 3)',
+      options: [11, 12, 13, 14]
     }
   },
 
@@ -4345,6 +5231,371 @@ export const ALL_LESSONS: LessonQuestion[] = [
             { id: 'q3-d', text: '14', isCorrect: false }
           ],
           explanation: 'Kiểm tra cặp đỉnh trên - dưới: 7 + 13 = 20. Áp dụng quy luật cho cặp đỉnh trái - phải: 8 + ? = 20 => ? = 20 - 8 = 12.'
+        }
+      ]
+    }
+  },
+  {
+    id: 'chal-21',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đếm khối lập phương 3D tháp bậc thang đa tầng',
+    badgeTitle: 'Thử Thách 11.1 · Trang 90+',
+    instruction: 'Quan sát mô hình kim tự tháp bậc thang 3 tầng được ghép từ các khối lập phương đơn vị giống hệt nhau. Hỏi có tất cả bao nhiêu khối lập phương?',
+    hint: 'Đếm theo từng tầng: Tầng 1 (đáy) có 9 khối; Tầng 2 có 4 khối; Tầng 3 (đỉnh) có 1 khối: 9 + 4 + 1 = 14 khối!',
+    mascot: { ...ABBY, message: 'Đếm theo từng tầng từ dưới lên trên hoặc cộng các cột trụ lại nhé!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'ĐẾM KHỐI LẬP PHƯƠNG THÁP BẬC THANG',
+      instructionText: 'Đếm tổng số khối lập phương đơn vị tạo nên mô hình tháp bậc thang 3 tầng:',
+      gridHeights: [
+        [3, 2, 1],
+        [2, 2, 1],
+        [1, 1, 1]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (Đáy 3x3)', count: 9 },
+        { layerName: 'Tầng 2 (Bậc 2x2)', count: 4 },
+        { layerName: 'Tầng 3 (Đỉnh chóp)', count: 1 }
+      ],
+      totalCubes: 14,
+      options: [12, 13, 14, 15],
+      explanation: 'Tổng số khối lập phương là: 9 (tầng đáy) + 4 (tầng 2) + 1 (tầng 3) = 14 khối!'
+    }
+  },
+  {
+    id: 'chal-22',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Giải mã két sắt mật mã Thần Kỳ 3 chữ số',
+    badgeTitle: 'Thử Thách 11.2 · Trang 90+',
+    instruction: 'Sử dụng các manh mối suy luận logic loại trừ để tìm mật mã két sắt 3 chữ số chứa Cúp Kim Cương!',
+    hint: 'Manh mối 4: [9, 1, 8] không có số nào đúng => Loại 9, 1, 8! Manh mối 3: [8, 7, 0] có số 7 đúng vị trí giữa (X-7-X). Manh mối 2: [4, 5, 6] có số 4 đúng vị trí đầu (4-7-X). Manh mối 1: [1, 2, 3] có số 2 đúng nhưng sai vị trí => 2 ở vị trí cuối! Mật mã là 472!',
+    mascot: { ...CASEY, message: 'Thử thách thám tử Mastermind: kết hợp loại trừ để mở két sắt!' },
+    activity: {
+      type: 'treasureVault',
+      title: 'KÉT SẮT MẬT MÃ KIM CƯƠNG (3 CHỮ SỐ)',
+      codeLength: 3,
+      solutionCode: [4, 7, 2],
+      clues: [
+        {
+          attempt: [1, 2, 3],
+          correctDigits: 1,
+          correctPositions: 0,
+          description: '1 chữ số đúng nhưng SAI vị trí (số 2)'
+        },
+        {
+          attempt: [4, 5, 6],
+          correctDigits: 1,
+          correctPositions: 1,
+          description: '1 chữ số đúng và ĐÚNG vị trí (số 4)'
+        },
+        {
+          attempt: [8, 7, 0],
+          correctDigits: 1,
+          correctPositions: 1,
+          description: '1 chữ số đúng và ĐÚNG vị trí (số 7)'
+        },
+        {
+          attempt: [9, 1, 8],
+          correctDigits: 0,
+          correctPositions: 0,
+          description: 'Không có chữ số nào đúng (loại 9, 1, 8)'
+        }
+      ]
+    }
+  },
+  {
+    id: 'chal-23',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đấu trường Cân thăng bằng bốn loài mãnh thú',
+    badgeTitle: 'Thử Thách 12.1 · Trang 90+',
+    instruction: 'Quan sát chuỗi 3 chiếc cân thăng bằng trong rừng xanh:\n• Cân 1: 1 chú Hổ 🐯 = 2 chú Báo 🐆.\n• Cân 2: 1 chú Báo 🐆 = 2 chú Sói 🐺.\n• Cân 3: 1 chú Sói 🐺 = 3 chú Cáo 🦊.\nHỏi 1 chú Hổ 🐯 nặng bằng bao nhiêu chú Cáo 🦊?',
+    hint: '1 Hổ = 2 Báo = 2 × 2 Sói = 4 Sói. Mà 1 Sói = 3 Cáo => 4 Sói = 4 × 3 = 12 chú Cáo!',
+    mascot: { ...BENNY, message: 'Nhân liên hoàn 3 nấc cân: 2 × 2 × 3 là ra số chú cáo ngay!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'CÂN THĂNG BẰNG 4 LOÀI MÃNH THÚ',
+      ruleExplanation: '1 Hổ = 2 Báo | 1 Báo = 2 Sói | 1 Sói = 3 Cáo:',
+      scales: [
+        {
+          leftIcons: ['🐯'],
+          leftLabel: '1 chú Hổ',
+          rightIcons: ['🐆', '🐆'],
+          rightLabel: '2 chú Báo'
+        },
+        {
+          leftIcons: ['🐆'],
+          leftLabel: '1 chú Báo',
+          rightIcons: ['🐺', '🐺'],
+          rightLabel: '2 chú Sói'
+        },
+        {
+          leftIcons: ['🐺'],
+          leftLabel: '1 chú Sói',
+          rightIcons: ['🦊', '🦊', '🦊'],
+          rightLabel: '3 chú Cáo'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🐯'],
+        targetLeftLabel: '1 chú Hổ = ? chú Cáo',
+        options: [
+          { id: 'opt-8', count: 8, icon: '🦊', label: '8 chú Cáo' },
+          { id: 'opt-10', count: 10, icon: '🦊', label: '10 chú Cáo' },
+          { id: 'opt-12', count: 12, icon: '🦊', label: '12 chú Cáo (Đúng)' },
+          { id: 'opt-16', count: 16, icon: '🦊', label: '16 chú Cáo' }
+        ],
+        correctOptionId: 'opt-12',
+        explanation: 'Tuyệt đỉnh! 1 Hổ = 2 Báo = 4 Sói = 4 × 3 = 12 chú Cáo 🦊!'
+      }
+    }
+  },
+  {
+    id: 'chal-24',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Pixidoku 5x5: Vương Quốc Thần Thoại',
+    badgeTitle: 'Thử Thách 12.2 · Trang 90+',
+    instruction: 'Điền các linh thú thần thoại vào ô trống sao cho mỗi hàng và mỗi cột đều có đủ 5 linh thú: 🦄 Kỳ Lân, 🐉 Rồng Vàng, 🦅 Đại Bàng, 🦁 Sư Tử, 🐬 Cá Heo.',
+    hint: 'Tìm hàng hoặc cột chỉ còn thiếu đúng 1 bạn linh thú để điền trước nhé!',
+    mascot: { ...MAYLE, message: 'Pixidoku 5x5 thần thoại đòi hỏi sự tập trung tuyệt đối của một kiện tướng!' },
+    activity: {
+      type: 'pixidoku',
+      size: 5,
+      animals: [
+        { id: 'unicorn', icon: '🦄', name: 'Kỳ Lân' },
+        { id: 'dragon', icon: '🐉', name: 'Rồng Vàng' },
+        { id: 'eagle', icon: '🦅', name: 'Đại Bàng' },
+        { id: 'lion', icon: '🦁', name: 'Sư Tử' },
+        { id: 'dolphin', icon: '🐬', name: 'Cá Heo' }
+      ],
+      initialGrid: [
+        ['unicorn', 'dragon', 'eagle', null, 'dolphin'],
+        ['dragon', null, 'dolphin', 'unicorn', 'eagle'],
+        ['eagle', 'dolphin', null, 'dragon', 'unicorn'],
+        ['lion', 'unicorn', 'dragon', 'dolphin', null],
+        [null, 'eagle', 'unicorn', 'lion', 'dragon']
+      ],
+      solution: [
+        ['unicorn', 'dragon', 'eagle', 'lion', 'dolphin'],
+        ['dragon', 'lion', 'dolphin', 'unicorn', 'eagle'],
+        ['eagle', 'dolphin', 'lion', 'dragon', 'unicorn'],
+        ['lion', 'unicorn', 'dragon', 'dolphin', 'eagle'],
+        ['dolphin', 'eagle', 'unicorn', 'lion', 'dragon']
+      ]
+    }
+  },
+  {
+    id: 'chal-25',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đếm khối lập phương 3D khuyết hầm chữ U',
+    badgeTitle: 'Thử Thách 13.1 · Trang 90+',
+    instruction: 'Quan sát khối kiến trúc 3D đặc biệt: Hình vuông 3x3 nhưng ở chính giữa bị đục rỗng thành đường hầm xuyên suốt. Mỗi cột xung quanh cao 3 khối. Hỏi có tất cả bao nhiêu khối lập phương?',
+    hint: 'Có 8 cột xung quanh, mỗi cột cao đúng 3 khối lập phương: 8 × 3 = 24 khối!',
+    mascot: { ...ABBY, message: 'Chú ý ô chính giữa cao bằng 0 vì đã bị khoét thành đường hầm rỗng nhé!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'ĐẾM KHỐI LẬP PHƯƠNG KHUYẾT HẦM XUYÊN TÂM',
+      instructionText: 'Đếm tổng số khối lập phương tạo nên tòa tháp hầm rỗng xuyên tâm:',
+      gridHeights: [
+        [3, 3, 3],
+        [3, 0, 3],
+        [3, 3, 3]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (8 khối bao quanh)', count: 8 },
+        { layerName: 'Tầng 2 (8 khối bao quanh)', count: 8 },
+        { layerName: 'Tầng 3 (8 khối bao quanh)', count: 8 }
+      ],
+      totalCubes: 24,
+      options: [21, 22, 24, 27],
+      explanation: 'Có 8 cột, mỗi cột cao 3 khối: 8 × 3 = 24 khối lập phương!'
+    }
+  },
+  {
+    id: 'chal-26',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Giải mã két sắt Siêu Cấp 4 chữ số bí ẩn',
+    badgeTitle: 'Thử Thách 13.2 · Trang 90+',
+    instruction: 'Két sắt bảo mật 4 chữ số tối cao. Sử dụng 3 manh mối để tìm ra dãy 4 số chuẩn xác mở khóa két sắt!',
+    hint: 'Manh mối 2 cho biết số 3 và 8 ở 2 vị trí đầu: [3, 8, ?, ?]. Manh mối 3 cho biết số 1 và 5 ở 2 vị trí cuối: [?, ?, 1, 5]. Ghép lại ta có mật mã: 3815!',
+    mascot: { ...CASEY, message: 'Ghép hai nửa manh mối [3, 8, ?, ?] và [?, ?, 1, 5] là ra chìa khóa vàng!' },
+    activity: {
+      type: 'treasureVault',
+      title: 'KÉT SẮT BẢO MẬT TỐI CAO (4 CHỮ SỐ)',
+      codeLength: 4,
+      solutionCode: [3, 8, 1, 5],
+      clues: [
+        {
+          attempt: [1, 2, 3, 4],
+          correctDigits: 2,
+          correctPositions: 0,
+          description: '2 chữ số đúng nhưng SAI vị trí (số 1 và 3)'
+        },
+        {
+          attempt: [3, 8, 9, 0],
+          correctDigits: 2,
+          correctPositions: 2,
+          description: '2 chữ số đúng và ĐÚNG vị trí (số 3 và 8)'
+        },
+        {
+          attempt: [7, 6, 1, 5],
+          correctDigits: 2,
+          correctPositions: 2,
+          description: '2 chữ số đúng và ĐÚNG vị trí (số 1 và 5)'
+        }
+      ]
+    }
+  },
+  {
+    id: 'chal-27',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Ma Phương Magic Square 3x3 Đỉnh Cao (Tổng = 27)',
+    badgeTitle: 'Thử Thách 14.1 · Trang 90+',
+    instruction: 'Sử dụng các số từ 5 đến 13 để điền vào ma phương 3x3 sao cho tổng mỗi hàng, cột và 2 đường chéo đều đúng bằng 27!',
+    hint: 'Số ở chính giữa là 9 (vì 27 : 3 = 9). Hàng 1: 12 + ? + 10 = 27 => Cần điền số 5. Hàng 3: 8 + ? + 6 = 27 => Cần điền số 13!',
+    mascot: { ...BENNY, message: 'Mỗi hàng và mỗi cột đều có tổng đúng bằng 27, kiểm tra số trung tâm là 9 nhé!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'SIÊU MA PHƯƠNG TỔNG 27',
+      subtitle: 'Điền các số từ 5 đến 13 sao cho tổng mỗi hàng và mỗi cột đều bằng 27',
+      targetSum: 27,
+      allowedNumbers: [5, 6, 7, 8, 9, 10, 11, 12, 13],
+      initialGrid: [
+        [12, null, 10],
+        [null, 9, null],
+        [8, null, 6]
+      ],
+      solution: [
+        [12, 5, 10],
+        [7, 9, 11],
+        [8, 13, 6]
+      ]
+    }
+  },
+  {
+    id: 'chal-28',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đấu trường Cân thăng bằng bài toán Tổng - Tỉ',
+    badgeTitle: 'Thử Thách 14.2 · Trang 90+',
+    instruction: 'Hai người bạn thân cùng leo lên bàn cân:\n• Cân 1: 1 chú Gấu 🐻 và 1 chú Thỏ 🐰 nặng tổng cộng 12 kg.\n• Cân 2: 1 chú Gấu 🐻 nặng gấp 3 lần 1 chú Thỏ 🐰 (Gấu = 3 Thỏ).\nHỏi chú Gấu 🐻 nặng bao nhiêu kg?',
+    hint: 'Tổng số phần bằng nhau: 3 phần (Gấu) + 1 phần (Thỏ) = 4 phần. Giá trị 1 phần (Thỏ) = 12 : 4 = 3 kg. Vậy Gấu nặng: 3 × 3 = 9 kg!',
+    mascot: { ...MAYLE, message: 'Phương pháp sơ đồ đoạn thẳng giải bài toán tổng tỉ cực kỳ sắc bén!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'BÀI TOÁN CÂN TỔNG - TỈ GẤU VÀ THỎ',
+      ruleExplanation: 'Gấu + Thỏ = 12 kg | Gấu = 3 Thỏ:',
+      scales: [
+        {
+          leftIcons: ['🐻', '🐰'],
+          leftLabel: 'Gấu + Thỏ',
+          rightIcons: ['⚖️', '⚖️'],
+          rightLabel: '12 kg'
+        },
+        {
+          leftIcons: ['🐻'],
+          leftLabel: '1 chú Gấu',
+          rightIcons: ['🐰', '🐰', '🐰'],
+          rightLabel: '3 chú Thỏ'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🐻'],
+        targetLeftLabel: '1 chú Gấu = ? kg',
+        options: [
+          { id: 'opt-6', count: 6, icon: '⚖️', label: '6 kg' },
+          { id: 'opt-8', count: 8, icon: '⚖️', label: '8 kg' },
+          { id: 'opt-9', count: 9, icon: '⚖️', label: '9 kg (Chính xác)' },
+          { id: 'opt-10', count: 10, icon: '⚖️', label: '10 kg' }
+        ],
+        correctOptionId: 'opt-9',
+        explanation: 'Rất xuất sắc! Thỏ nặng 3 kg, Gấu nặng 9 kg (9 + 3 = 12 kg và 9 = 3 × 3)!'
+      }
+    }
+  },
+  {
+    id: 'chal-29',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đếm khối lập phương 3D Tòa Lâu Đài 4 tầng',
+    badgeTitle: 'Thử Thách 15.1 · Trang 90+',
+    instruction: 'Mô hình Tòa Lâu Đài kiên cố gồm 4 tháp góc cao 4 tầng, tường bao cao 2 tầng và tháp trung tâm cao 3 tầng. Hỏi cần tất cả bao nhiêu khối lập phương để xây dựng?',
+    hint: 'Cộng chiều cao các cột: 4 góc cao 4 tầng (4 × 4 = 16); 4 tường bao cao 2 tầng (4 × 2 = 8); 1 tháp trung tâm cao 3 tầng (1 × 3 = 3): 16 + 8 + 3 = 27 khối!',
+    mascot: { ...ABBY, message: 'Kiểm tra từng tháp: 4 tháp góc, 4 tường và 1 tháp giữa!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'ĐẾM KHỐI LẬP PHƯƠNG TÒA LÂU ĐÀI 4 TẦNG',
+      instructionText: 'Đếm tổng số khối lập phương tạo nên tòa lâu đài hoàng gia:',
+      gridHeights: [
+        [4, 2, 4],
+        [2, 3, 2],
+        [4, 2, 4]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (9 khối đáy đầy đủ)', count: 9 },
+        { layerName: 'Tầng 2 (9 khối tường & tháp)', count: 9 },
+        { layerName: 'Tầng 3 (5 khối tháp chính & góc)', count: 5 },
+        { layerName: 'Tầng 4 (4 khối đỉnh tháp góc)', count: 4 }
+      ],
+      totalCubes: 27,
+      options: [24, 25, 27, 30],
+      explanation: 'Tổng số khối lập phương là: (4 × 4) + (4 × 2) + 3 = 16 + 8 + 3 = 27 khối!'
+    }
+  },
+  {
+    id: 'chal-30',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'ĐẠI CHUNG KẾT VÔ ĐỊCH TOÁN TƯ DUY LỚP 3',
+    badgeTitle: 'ĐẠI CHUNG KẾT · HUY CHƯƠNG VÀNG',
+    instruction: 'Vượt qua 3 câu hỏi tích hợp đỉnh cao liên trạm để bước lên bục vinh quang, nhận HUY CHƯƠNG VÀNG QUỐC GIA và Cúp Vô Địch Spark Math!',
+    hint: 'Vận dụng toàn diện: biểu đồ hình ảnh, bài toán thể tích rót nước cân bằng và quy luật số trung tâm ma phương!',
+    mascot: { ...MAYLE, message: 'Chúc mừng em đã đi đến trận chung kết tối cao! Em là niềm tự hào của cả học viện!' },
+    activity: {
+      type: 'grandFinale',
+      title: 'Đại Chung Kết Vô Địch Spark Math',
+      roundQuestions: [
+        {
+          id: 'super-q1',
+          category: 'Biểu Đồ Hình Ảnh & Tỷ Lệ Nhân',
+          question: 'Một biểu đồ tranh có 3 cột: Cột A có 3 ngôi sao ⭐, Cột B có 5 ngôi sao ⭐, Cột C có 4 ngôi sao ⭐. Biết mỗi ngôi sao thể hiện cho 6 điểm số. Hỏi cả 3 cột có tất cả bao nhiêu điểm?',
+          options: [
+            { id: 'sq1-a', text: '60 điểm', isCorrect: false },
+            { id: 'sq1-b', text: '66 điểm', isCorrect: false },
+            { id: 'sq1-c', text: '72 điểm', isCorrect: true },
+            { id: 'sq1-d', text: '78 điểm', isCorrect: false }
+          ],
+          explanation: 'Tổng số ngôi sao: 3 + 5 + 4 = 12 ngôi sao. Mỗi ngôi sao ứng với 6 điểm: 12 × 6 = 72 điểm!'
+        },
+        {
+          id: 'super-q2',
+          category: 'Thể Tích & San Sẻ Nước Cân Bằng',
+          question: 'Có 3 can nước A, B, C chứa tổng cộng 27 lít nước. Nếu rót từ can A sang can B đúng 2 lít thì lượng nước ở cả 3 can bằng nhau. Hỏi lúc đầu can A có bao nhiêu lít nước?',
+          options: [
+            { id: 'sq2-a', text: '9 lít', isCorrect: false },
+            { id: 'sq2-b', text: '10 lít', isCorrect: false },
+            { id: 'sq2-c', text: '11 lít', isCorrect: true },
+            { id: 'sq2-d', text: '12 lít', isCorrect: false }
+          ],
+          explanation: 'Khi lượng nước bằng nhau, mỗi can có: 27 : 3 = 9 lít. Vì can A đã bớt đi 2 lít mới còn 9 lít nên lúc đầu can A có: 9 + 2 = 11 lít nước!'
+        },
+        {
+          id: 'super-q3',
+          category: 'Sudoku & Ma Phương Số Học',
+          question: 'Một ô vuông ma thuật (Magic Square 3x3) có tổng các số trên mỗi hàng, mỗi cột và mỗi đường chéo đều bằng 36. Hỏi con số nằm ở Ô CHÍNH GIỮA ma trận là số bao nhiêu?',
+          options: [
+            { id: 'sq3-a', text: '10', isCorrect: false },
+            { id: 'sq3-b', text: '11', isCorrect: false },
+            { id: 'sq3-c', text: '12', isCorrect: true },
+            { id: 'sq3-d', text: '14', isCorrect: false }
+          ],
+          explanation: 'Theo quy luật toán học ma phương 3x3, số ở ô chính giữa luôn bằng 1/3 tổng mục tiêu: 36 : 3 = 12!'
         }
       ]
     }
