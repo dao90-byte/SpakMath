@@ -1,6 +1,6 @@
 {
-  "summary":  "Kế hoạch rà soát toàn diện các trạm và chuẩn hóa nhập liệu trực tiếp đã được thực thi và nghiệm thu 100%. Toàn bộ câu hỏi trắc nghiệm đã được chuyển sang ô tự tay gõ đáp án, mọi gợi ý lộ đáp án đã được thay bằng câu hỏi gợi mở phản tư, và mã giáo viên 7979 hoàn toàn được ẩn khỏi giao diện.",
-  "updatedAt":  "2026-10-29T14:03:56.335263318Z",
-  "requestFeedback":  true,
-  "userFacing":  true
+  "summary": "Đã hoàn thành rà soát và kiểm thử 3 vòng lặp cho tất cả 17 bài Sudoku & Pixidoku trên toàn ứng dụng. Sửa triệt để các lỗi về ma trận nghiệm, lỗi trùng lặp cột tại chal-24, lỗi đa nghiệm và lỗi hiển thị chuồng tính tổng Killer Sudoku. Bổ sung phản hồi phản tư sư phạm khi làm sai.",
+  "updatedAt": "2026-11-04T02:49:32.956282689Z",
+  "requestFeedback": true,
+  "userFacing": true
 }

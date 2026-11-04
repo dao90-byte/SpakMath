@@ -2519,7 +2519,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
         { id: 'clover', icon: '🍀', name: 'Cỏ may mắn' }
       ],
       initialGrid: [
-        [null, 'star', 'moon', null],
+        ['flower', 'star', 'moon', null],
         ['moon', null, null, 'star'],
         ['star', null, null, 'moon'],
         [null, 'moon', 'star', null]
@@ -2571,7 +2571,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
       type: 'sudoku',
       sudokuType: 'number',
       initialGrid: [
-        [1, null, null, 4],
+        [1, null, 3, 4],
         [null, 4, 1, null],
         [null, 1, 4, null],
         [4, null, null, 1]
@@ -2655,7 +2655,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Sudoku tính tổng (Killer Sudoku Mini)',
     badgeTitle: 'Bài 4.1 · Trang 50',
     instruction: 'Điền số thích hợp từ 1 đến 4. Mỗi hàng và cột có số 1-4. Tổng các số trong mỗi khung hai ô phải bằng số màu đỏ ở góc trái trên cùng.',
-    hint: 'Khung có số 7 ở góc trên gồm 2 ô: 3 và 4 (3+4=7). Khung có số 3 gồm 1 và 2 (1+2=3). Khung có số 5 gồm 1 và 4 hoặc 2 và 3!',
+    hint: 'Em hãy suy nghĩ xem trong các số từ 1 đến 4, hai số nào có thể kết hợp với nhau để tạo thành các tổng đặc biệt như 7 hoặc 3 nhé!',
     mascot: { ...MAYLE, message: 'Vừa giải Sudoku vừa rèn luyện phép cộng nhẩm rất tuyệt vời!' },
     activity: {
       type: 'sudoku',
@@ -2663,8 +2663,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
       colorBlocks: [
         ['bg-rose-100', 'bg-rose-100', 'bg-sky-100', 'bg-sky-100'],
         ['bg-amber-100', 'bg-amber-100', 'bg-emerald-100', 'bg-emerald-100'],
-        ['bg-sky-100', 'bg-sky-100', 'bg-rose-100', 'bg-rose-100'],
-        ['bg-emerald-100', 'bg-emerald-100', 'bg-amber-100', 'bg-amber-100']
+        ['bg-teal-100', 'bg-teal-100', 'bg-purple-100', 'bg-purple-100'],
+        ['bg-yellow-100', 'bg-yellow-100', 'bg-indigo-100', 'bg-indigo-100']
       ],
       sumLabels: [
         [7, null, 3, null],
@@ -2693,16 +2693,22 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Killer Sudoku mini: Khung tổng nâng cao',
     badgeTitle: 'Bài 4.2 · Trang 50',
     instruction: 'Điền các số 1 đến 4 vào lưới. Tổng hai ô trong cùng một khung màu phải đúng bằng con số nhỏ ở góc trên!',
-    hint: 'Khung góc trên bên trái có tổng = 6 (4 + 2 = 6). Khung có tổng = 4 (3 + 1 = 4)!',
+    hint: 'Em hãy quan sát các khung màu có tổng lớn nhất hoặc nhỏ nhất trước xem chỉ có những cặp số nào thỏa mãn nhé!',
     mascot: { ...ABBY, message: 'Thử thách Killer Sudoku giúp tính nhẩm siêu nhanh!' },
     activity: {
       type: 'sudoku',
       sudokuType: 'number',
+      colorBlocks: [
+        ['bg-rose-100', 'bg-rose-100', 'bg-sky-100', 'bg-sky-100'],
+        ['bg-emerald-100', 'bg-amber-100', 'bg-amber-100', 'bg-purple-100'],
+        ['bg-emerald-100', 'bg-teal-100', 'bg-teal-100', 'bg-purple-100'],
+        ['bg-yellow-100', 'bg-yellow-100', 'bg-indigo-100', 'bg-indigo-100']
+      ],
       sumLabels: [
         [6, null, 4, null],
-        [null, 7, null, null],
-        [null, 5, null, 7],
-        [4, null, null, null]
+        [3, 7, null, 5],
+        [null, 5, null, null],
+        [4, null, 6, null]
       ],
       initialGrid: [
         [4, null, 3, null],
@@ -3007,7 +3013,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
     title: 'Killer Sudoku 4x4: Chuồng tổng liên hoàn',
     badgeTitle: 'Bài Nâng Cao 8.2 · Trang 52+',
     instruction: 'Điền các số từ 1 đến 4. Mỗi hàng và cột có đủ 1-4 không trùng lặp. Tổng các số trong mỗi khung màu phải bằng con số nhỏ ở góc!',
-    hint: 'Khung màu cam có tổng = 3 gồm 1 và 2 (1+2=3). Khung màu xanh ngọc có tổng = 7 gồm 3 và 4 (3+4=7)!',
+    hint: 'Em hãy ưu tiên quan sát chuồng tổng 3 hoặc chuồng tổng 7 xem mỗi chuồng chỉ có thể tạo thành từ hai số nào nhé!',
     mascot: { ...ABBY, message: 'Killer Sudoku kết hợp tính nhẩm siêu tốc và tư duy Sudoku đỉnh cao!' },
     activity: {
       type: 'sudoku',
@@ -4701,7 +4707,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
       ],
       initialGrid: [
         ['tiger', null, 'monkey', null, 'deer'],
-        [null, null, null, 'elephant', null],
+        [null, 'deer', null, 'elephant', null],
         ['elephant', null, 'parrot', null, null],
         [null, 'tiger', null, null, null],
         ['monkey', null, null, null, 'elephant']
@@ -5372,18 +5378,18 @@ export const ALL_LESSONS: LessonQuestion[] = [
         { id: 'dolphin', icon: '🐬', name: 'Cá Heo' }
       ],
       initialGrid: [
-        ['unicorn', 'dragon', 'eagle', null, 'dolphin'],
-        ['dragon', null, 'dolphin', 'unicorn', 'eagle'],
-        ['eagle', 'dolphin', null, 'dragon', 'unicorn'],
-        ['lion', 'unicorn', 'dragon', 'dolphin', null],
-        [null, 'eagle', 'unicorn', 'lion', 'dragon']
+        ['unicorn', 'dragon', null, null, 'dolphin'],
+        [null, 'eagle', 'lion', null, null],
+        ['eagle', null, null, 'unicorn', null],
+        [null, 'dolphin', null, null, 'eagle'],
+        ['dolphin', null, 'dragon', 'eagle', null]
       ],
       solution: [
         ['unicorn', 'dragon', 'eagle', 'lion', 'dolphin'],
-        ['dragon', 'lion', 'dolphin', 'unicorn', 'eagle'],
-        ['eagle', 'dolphin', 'lion', 'dragon', 'unicorn'],
-        ['lion', 'unicorn', 'dragon', 'dolphin', 'eagle'],
-        ['dolphin', 'eagle', 'unicorn', 'lion', 'dragon']
+        ['dragon', 'eagle', 'lion', 'dolphin', 'unicorn'],
+        ['eagle', 'lion', 'dolphin', 'unicorn', 'dragon'],
+        ['lion', 'dolphin', 'unicorn', 'dragon', 'eagle'],
+        ['dolphin', 'unicorn', 'dragon', 'eagle', 'lion']
       ]
     }
   },

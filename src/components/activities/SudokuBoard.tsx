@@ -75,6 +75,8 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
     setIsSuccess(false);
   };
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const checkGrid = (currentGrid = grid) => {
     let allMatch = true;
     for (let r = 0; r < 4; r++) {
@@ -89,12 +91,16 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
     if (allMatch) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage(
+        'Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Em hãy rà soát lại từng hàng, từng cột hoặc từng khối xem có ô nào bị trùng lặp phần tử hoặc chưa thỏa mãn quy tắc của đề bài không nhé!'
+      );
     }
   };
 
@@ -195,7 +201,10 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
       {/* Actions */}
       <div className="flex items-center gap-4">
         <button
-          onClick={handleReset}
+          onClick={() => {
+            handleReset();
+            setErrorMessage(null);
+          }}
           className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm border border-slate-300 transition-colors"
         >
           <RotateCcw className="w-4 h-4" />
@@ -209,6 +218,15 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
           Kiểm Tra Sudoku
         </button>
       </div>
+
+      {errorMessage && (
+        <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs md:text-sm text-rose-800 animate-shake max-w-md text-left">
+          <p className="font-bold">❌ Chưa chính xác rồi em ơi!</p>
+          <p className="font-medium text-slate-700 mt-0.5">
+            {errorMessage.replace('Chưa chính xác rồi em ơi! ', '')}
+          </p>
+        </div>
+      )}
 
       {isSuccess && (
         <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
