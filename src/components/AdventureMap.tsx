@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TOPICS, ALL_LESSONS } from '../data/lessonsData';
 import { sound } from '../utils/soundEffects';
-import { Star, CheckCircle, Play, Sparkles, Trophy, ArrowLeft, Grid, Compass, Brain } from 'lucide-react';
+import { Star, CheckCircle, Play, Sparkles, Trophy, ArrowLeft, Grid, Compass, Brain, Lock, CheckCircle2 } from 'lucide-react';
+import { PERIODIC_ASSESSMENTS, getCompletedPeriodicIds, isTeacherUnlocked } from '../data/periodicAssessmentsData';
 
 interface AdventureMapProps {
   completedLessonIds: string[];
@@ -162,45 +163,92 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
             </div>
           </div>
 
-          {/* Periodic Assessment Milestone Card for Comparison stations */}
-          {(onOpenPeriodicAssessment || onOpenMethodology) && (selectedTopicId === 'volume' || selectedTopicId === 'pictograph') && (
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
-              <div className="flex items-center gap-3">
-                <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shrink-0">
-                  🧠
-                </span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-wider bg-black/20 text-amber-100 px-2 py-0.5 rounded-full">
-                      CHỐT CHẶN ĐỊNH KỲ
-                    </span>
-                    <span className="text-xs text-amber-100 font-bold hidden sm:inline">
-                      Mô hình tư duy cốt lõi
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-black mt-0.5">
-                    Bài Kiểm Tra Định Kỳ: Mô Hình So Sánh Hơn - Kém
-                  </h3>
-                  <p className="text-xs text-amber-100">
-                    Khảo sát sâu: Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ.
-                  </p>
+          {/* Dynamic Station Periodic Assessment Milestone Cards */}
+          {onOpenPeriodicAssessment && (
+            (() => {
+              const stationAssessments = PERIODIC_ASSESSMENTS.filter(
+                (a) => a.stationId === selectedTopicId || (selectedTopicId === 'challenge' && a.isComprehensive)
+              );
+              if (stationAssessments.length === 0) return null;
+
+              const completedPeriodicIds = getCompletedPeriodicIds();
+              const teacherMode = isTeacherUnlocked();
+
+              return (
+                <div className="space-y-3">
+                  {stationAssessments.map((pa) => {
+                    const isCompleted = completedPeriodicIds.includes(pa.id);
+                    const isUnlocked =
+                      teacherMode || pa.prerequisiteLessonIds.every((id) => completedLessonIds.includes(id));
+
+                    return (
+                      <div
+                        key={pa.id}
+                        className={`p-4 rounded-2xl text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4 border-2 transition-all animate-fade-in ${
+                          isCompleted
+                            ? 'bg-gradient-to-r from-teal-600 to-emerald-600 border-emerald-300'
+                            : isUnlocked
+                            ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 border-amber-300 ring-2 ring-amber-300/60'
+                            : 'bg-gradient-to-r from-slate-700 to-slate-800 border-slate-600 opacity-90'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-xl shrink-0">
+                            {pa.icon || '🧠'}
+                          </span>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
+                                {pa.code} · CHỐT CHẶN ĐỊNH KỲ
+                              </span>
+                              {isCompleted && (
+                                <span className="text-[10px] font-black bg-emerald-500/80 text-white px-2 py-0.5 rounded-full flex items-center gap-1">
+                                  <CheckCircle2 className="w-3 h-3" /> ĐÃ ĐẠT CHUẨN
+                                </span>
+                              )}
+                              {!isCompleted && !isUnlocked && (
+                                <span className="text-[10px] font-bold bg-slate-600 text-slate-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                  <Lock className="w-3 h-3" /> Cần hoàn thành các bài tiên quyết
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="text-sm font-black mt-0.5 text-white">{pa.title}</h3>
+                            <p className="text-xs text-amber-100 line-clamp-1">{pa.description}</p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            sound.playClick();
+                            onOpenPeriodicAssessment(pa.id);
+                          }}
+                          disabled={!isUnlocked}
+                          className={`px-4 py-2 rounded-xl font-black text-xs whitespace-nowrap shadow-sm active:scale-95 transition-transform shrink-0 flex items-center gap-1.5 ${
+                            isCompleted
+                              ? 'bg-white text-emerald-700 hover:bg-emerald-50 cursor-pointer'
+                              : isUnlocked
+                              ? 'bg-white text-orange-600 hover:bg-orange-50 cursor-pointer shadow-md'
+                              : 'bg-slate-600 text-slate-300 cursor-not-allowed opacity-75'
+                          }`}
+                        >
+                          {isCompleted ? (
+                            <span>Ôn Luyện Lại →</span>
+                          ) : isUnlocked ? (
+                            <span>Vào Bài Kiểm Tra Định Kỳ →</span>
+                          ) : (
+                            <>
+                              <Lock className="w-3 h-3" />
+                              <span>Chưa Mở Khóa</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  if (onOpenPeriodicAssessment) {
-                    onOpenPeriodicAssessment('periodic-comparison-bar-model');
-                  } else if (onOpenMethodology) {
-                    onOpenMethodology();
-                  }
-                }}
-                className="px-4 py-2 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs whitespace-nowrap shadow-sm active:scale-95 transition-transform shrink-0"
-              >
-                Vào Bài Kiểm Tra Định Kỳ →
-              </button>
-            </div>
+              );
+            })()
           )}
 
           {/* Lessons Grid for Focused Station */}

@@ -331,6 +331,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   const [justFinishedId, setJustFinishedId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showAutoPeriodicModal, setShowAutoPeriodicModal] = useState<boolean>(false);
 
   // Sync lesson context for automatic mistake recording
   useEffect(() => {
@@ -399,18 +400,22 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
     setJustFinishedId(lesson.id);
     onLessonCompleted(lesson.id);
     confetti({
-      particleCount: 80,
+      particleCount: 100,
       spread: 70,
       origin: { y: 0.6 }
     });
+
+    // AUTO-POPUP: Check if this lesson triggers an uncompleted Periodic Assessment for the thinking model
+    if (matchingAssessment && !isAssessmentPassed) {
+      sound.playVictory();
+      setShowAutoPeriodicModal(true);
+    }
   };
 
   const handleNextClick = () => {
     if (isNextLockedByAssessment && matchingAssessment) {
       sound.playWrong();
-      if (onOpenPeriodicAssessment) {
-        onOpenPeriodicAssessment(matchingAssessment.id);
-      }
+      setShowAutoPeriodicModal(true);
       return;
     }
     if (nextLesson) {
@@ -429,6 +434,72 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
 
   return (
     <div className="space-y-6 pb-28 relative">
+      {/* Auto-Appearing Periodic Assessment Milestone Modal */}
+      {showAutoPeriodicModal && matchingAssessment && (
+        <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 max-w-lg w-full p-6 text-center space-y-4 relative overflow-hidden animate-in zoom-in-95">
+            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center text-4xl shadow-lg ring-4 ring-amber-200 animate-bounce-slow">
+              {matchingAssessment.icon || '🏆'}
+            </div>
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-300">
+                CHÚC MỪNG HOÀN THÀNH MÔ HÌNH TƯ DUY! 🎉
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-slate-900 mt-2 leading-snug">
+                {matchingAssessment.thinkingModelName}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+                Bé vừa xuất sắc vượt qua toàn bộ thử thách nền tảng! Hệ thống đã tự động kích hoạt{' '}
+                <strong>{matchingAssessment.title}</strong> để bé chuẩn hóa phương pháp luận và nhận Chứng Nhận Tinh Hoa!
+              </p>
+            </div>
+
+            <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 text-left text-xs space-y-2">
+              <div className="font-black text-amber-950 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+                <span>Nội dung khảo sát phương pháp luận:</span>
+              </div>
+              <ul className="text-slate-700 space-y-1">
+                {matchingAssessment.keyRuleSummary.slice(0, 2).map((rule, idx) => (
+                  <li key={idx} className="flex items-start gap-1.5">
+                    <span className="text-amber-600 font-bold">✓</span>
+                    <span>{rule}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-2 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  setShowAutoPeriodicModal(false);
+                  if (onOpenPeriodicAssessment) {
+                    onOpenPeriodicAssessment(matchingAssessment.id);
+                  }
+                }}
+                className="w-full py-3.5 px-6 rounded-2xl font-black text-sm bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg shadow-orange-300/50 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Bắt Đầu Bài Kiểm Tra Định Kỳ Ngay</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  setShowAutoPeriodicModal(false);
+                }}
+                className="w-full py-2 px-4 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+              >
+                Để sau, em tiếp tục xem lại bài
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Toast Notification for Mistake Collection */}
       {toastMessage && (
         <div className="fixed top-20 right-4 z-50 bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs md:text-sm font-bold border border-amber-400 animate-in fade-in slide-in-from-top-4">
