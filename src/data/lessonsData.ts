@@ -1,6 +1,13 @@
 // Comprehensive Spark Math Grade 3 Curriculum & Interactive Lessons Catalogue
 // Digitized directly from the complete 91-page "Sách Bài tập TOÁN TƯ DUY - Lớp 3" workbook
 
+import { EXTENDED_PICTOGRAPH_LESSONS } from './lessonsExtendedStation1';
+import { EXTENDED_VOLUME_LESSONS } from './lessonsExtendedStation2';
+import { EXTENDED_SUDOKU_LESSONS } from './lessonsExtendedStation3';
+import { EXTENDED_PATTERN_LESSONS } from './lessonsExtendedStation4';
+import { EXTENDED_LOGIC_LESSONS } from './lessonsExtendedStation5';
+import { EXTENDED_CHALLENGE_LESSONS } from './lessonsExtendedStation6';
+
 export interface Topic {
   id: string;
   title: string;
@@ -309,12 +316,12 @@ export const TOPICS: Topic[] = [
   }
 ];
 
-const BENNY: Mascot = { name: 'Khỉ Benny', avatar: '🐵', message: '' };
-const ABBY: Mascot = { name: 'Thỏ Abby', avatar: '🐰', message: '' };
-const CASEY: Mascot = { name: 'Chuột Casey', avatar: '🐹', message: '' };
-const MAYLE: Mascot = { name: 'Thầy Mayle', avatar: '👨‍🏫', message: '' };
+export const BENNY: Mascot = { name: 'Khỉ Benny', avatar: '🐵', message: '' };
+export const ABBY: Mascot = { name: 'Thỏ Abby', avatar: '🐰', message: '' };
+export const CASEY: Mascot = { name: 'Chuột Casey', avatar: '🐹', message: '' };
+export const MAYLE: Mascot = { name: 'Thầy Mayle', avatar: '👨‍🏫', message: '' };
 
-const topicName = (id: string) => TOPICS.find((t) => t.id === id)?.title ?? '';
+export const topicName = (id: string) => TOPICS.find((t) => t.id === id)?.title ?? '';
 
 export const ALL_LESSONS: LessonQuestion[] = [
   // ==========================================
@@ -1364,6 +1371,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
 
+  ...EXTENDED_PICTOGRAPH_LESSONS,
+
   // ==========================================
   // TRẠM 2: THỂ TÍCH & ĐƠN VỊ LÍT (Trang 21 - Trang 40)
   // ==========================================
@@ -2401,6 +2410,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
 
+  ...EXTENDED_VOLUME_LESSONS,
+
   // ==========================================
   // TRẠM 3: SUDOKU & MA TRẬN SỐ (Trang 45 - Trang 52)
   // ==========================================
@@ -3211,6 +3222,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
 
+  ...EXTENDED_SUDOKU_LESSONS,
+
   // ==========================================
   // TRẠM 4: QUY LUẬT LẶP LẠI & MÊ CUNG (Trang 51 - Trang 58)
   // ==========================================
@@ -3986,6 +3999,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
     }
   },
 
+  ...EXTENDED_PATTERN_LESSONS,
+
   // ==========================================
   // TRẠM 5: VỊ TRÍ HÀNG NGŨ & SUY LUẬN (Trang 59 - Trang 72)
   // ==========================================
@@ -4627,6 +4642,8 @@ export const ALL_LESSONS: LessonQuestion[] = [
       options: [11, 12, 13, 14]
     }
   },
+
+  ...EXTENDED_LOGIC_LESSONS,
 
   // ==========================================
   // TRẠM 6: ĐẤU TRƯỜNG SIÊU THỬ THÁCH (Trang 73 - Trang 90)
@@ -5605,5 +5622,7 @@ export const ALL_LESSONS: LessonQuestion[] = [
         }
       ]
     }
-  }
+  },
+
+  ...EXTENDED_CHALLENGE_LESSONS
 ];
