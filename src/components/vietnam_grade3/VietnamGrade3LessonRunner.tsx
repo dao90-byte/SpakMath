@@ -53,12 +53,14 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
   const handleNextSocraticStep = () => {
     if (socraticStepIndex < lesson.socraticDiscovery.length - 1) {
       setSocraticStepIndex((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const handlePrevSocraticStep = () => {
     if (socraticStepIndex > 0) {
       setSocraticStepIndex((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -104,6 +106,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
 
     if (exerciseIndex < lesson.exercises.length - 1) {
       setExerciseIndex((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -114,6 +117,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
     setIsCorrect(false);
     setShowHint(false);
     setShowSolution(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -224,6 +228,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
             onClick={() => {
               sound.playClick();
               setActiveTab('socratic');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className={`py-3 px-4 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
               activeTab === 'socratic'
@@ -240,6 +245,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
             onClick={() => {
               sound.playClick();
               setActiveTab('practice');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className={`py-3 px-4 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
               activeTab === 'practice'
@@ -259,6 +265,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
       {/* PHASE 1: SOCRATIC DISCOVERY */}
       {activeTab === 'socratic' && currentSocraticCard && (
         <SocraticDiscoveryCard
+          key={currentSocraticCard.id}
           card={currentSocraticCard}
           currentStep={socraticStepIndex + 1}
           totalSteps={lesson.socraticDiscovery.length}
@@ -268,6 +275,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
           onCompleteDiscovery={() => {
             sound.playVictory();
             setActiveTab('practice');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         />
       )}
@@ -307,20 +315,20 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
           </div>
 
           {/* Exercise Question Prompt */}
-          <div className="text-base sm:text-lg font-black text-white leading-snug mb-6 relative z-10 drop-shadow-sm">
+          <div className="text-lg sm:text-2xl font-black text-white leading-relaxed mb-6 relative z-10 drop-shadow-sm">
             {currentExercise.prompt}
           </div>
 
           {/* Options List */}
           {currentExercise.options && (
-            <div className="space-y-3 mb-6 relative z-10">
+            <div className="space-y-3.5 mb-6 relative z-10">
               {currentExercise.options.map((opt) => {
                 const isSelected = selectedAnswer === opt.label;
-                let btnStyle = 'bg-slate-900/90 hover:bg-slate-800/90 border-slate-800 text-slate-200 hover:border-cyan-500/50 hover:text-white';
+                let btnStyle = 'bg-slate-900/90 hover:bg-slate-800/90 border-slate-800 text-slate-100 hover:border-cyan-500/50 hover:text-white';
 
                 if (isAnswerSubmitted) {
                   if (opt.label === currentExercise.correctAnswer) {
-                    btnStyle = 'bg-emerald-950/80 border-emerald-400 text-emerald-200 ring-2 ring-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.3)]';
+                    btnStyle = 'bg-emerald-950/80 border-emerald-400 text-emerald-200 ring-2 ring-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.35)]';
                   } else if (isSelected && !isCorrect) {
                     btnStyle = 'bg-rose-950/80 border-rose-500 text-rose-200 ring-2 ring-rose-500/40';
                   }
@@ -334,16 +342,16 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                     type="button"
                     onClick={() => handleSelectAnswer(opt.label)}
                     disabled={isAnswerSubmitted}
-                    className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-xs sm:text-sm transition-all flex items-center justify-between gap-3 active:scale-[0.99] ${btnStyle}`}
+                    className={`w-full p-4 sm:p-5 rounded-2xl border-2 text-left font-bold text-sm sm:text-base transition-all flex items-center justify-between gap-3.5 active:scale-[0.99] leading-relaxed ${btnStyle}`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 text-cyan-300 font-mono text-xs flex items-center justify-center shrink-0">
+                    <div className="flex items-center gap-3.5">
+                      <span className="w-7 h-7 rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 font-mono text-xs sm:text-sm font-black flex items-center justify-center shrink-0">
                         {opt.id.toUpperCase()}
                       </span>
-                      <span>{opt.label}</span>
+                      <span className="leading-relaxed">{opt.label}</span>
                     </div>
                     {isAnswerSubmitted && opt.label === currentExercise.correctAnswer && (
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
                     )}
                   </button>
                 );
@@ -352,14 +360,14 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
           )}
 
           {/* Action Bar: Submit / Hint / Next */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-800 relative z-10">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-slate-800 relative z-10">
             <button
               type="button"
               onClick={() => {
                 sound.playClick();
                 setShowHint(!showHint);
               }}
-              className="text-xs font-bold text-amber-300 hover:text-white flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 transition-colors shadow-xs"
+              className="text-xs sm:text-sm font-bold text-amber-300 hover:text-white flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 transition-colors shadow-xs"
             >
               <Lightbulb className="w-4 h-4 text-amber-400" />
               <span>Gợi ý tư duy</span>
@@ -370,9 +378,9 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                 type="button"
                 onClick={handleSubmitAnswer}
                 disabled={!selectedAnswer}
-                className={`px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 ${
+                className={`px-7 py-3 rounded-2xl font-black text-xs sm:text-sm md:text-base shadow-md transition-all flex items-center gap-2.5 ${
                   selectedAnswer
-                    ? 'bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 active:scale-95 shadow-[0_0_18px_rgba(0,240,255,0.4)]'
+                    ? 'bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 active:scale-95 shadow-[0_0_20px_rgba(0,240,255,0.45)]'
                     : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                 }`}
               >
@@ -380,12 +388,12 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                 <CheckCircle2 className="w-4 h-4" />
               </button>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-3">
                 {!isCorrect && (
                   <button
                     type="button"
                     onClick={handleRetryExercise}
-                    className="px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-bold text-xs sm:text-sm hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+                    className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-bold text-xs sm:text-sm hover:bg-slate-800 transition-colors flex items-center gap-1.5"
                   >
                     <RotateCcw className="w-4 h-4 text-cyan-400" />
                     <span>Thử lại</span>
@@ -396,23 +404,40 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                   <button
                     type="button"
                     onClick={handleNextExercise}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs sm:text-sm shadow-[0_0_18px_rgba(0,240,255,0.35)] active:scale-95 transition-transform flex items-center gap-2"
+                    className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs sm:text-sm md:text-base shadow-[0_0_18px_rgba(0,240,255,0.35)] active:scale-95 transition-transform flex items-center gap-2"
                   >
                     <span>Bài tập tiếp theo</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sound.playVictory();
-                      onBack();
-                    }}
-                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-black text-xs sm:text-sm shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95 transition-transform flex items-center gap-2"
-                  >
-                    <span>Hoàn Thành Hành Tinh Này!</span>
-                    <Sparkles className="w-4 h-4" />
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {onNextLesson && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          sound.playVictory();
+                          onNextLesson();
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs sm:text-sm md:text-base shadow-[0_0_20px_rgba(0,240,255,0.45)] active:scale-95 transition-transform flex items-center gap-2"
+                      >
+                        <span>Tiến Sang Hành Tinh Tiếp Theo</span>
+                        <Rocket className="w-4 h-4 text-slate-950" />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playVictory();
+                        onBack();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="px-5 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm border border-slate-700 transition-colors flex items-center gap-1.5"
+                    >
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <span>Về Bản Đồ Thiên Hà</span>
+                    </button>
+                  </div>
                 )}
               </div>
             )}

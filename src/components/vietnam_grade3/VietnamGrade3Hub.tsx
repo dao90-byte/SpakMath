@@ -56,6 +56,7 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
     const target = lessons.find((l) => l.id === lessonId);
     if (target) {
       onSelectLesson(target);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 

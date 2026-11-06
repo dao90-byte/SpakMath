@@ -217,14 +217,31 @@ export default function App() {
             <VietnamGrade3LessonRunner
               lesson={activeVnLesson}
               isCompleted={vnCompletedLessonIds.includes(activeVnLesson.id)}
-              onBack={() => setActiveVnLesson(null)}
+              onBack={() => {
+                setActiveVnLesson(null);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               onLessonCompleted={handleVnLessonCompleted}
+              onNextLesson={() => {
+                const currentIdx = VIETNAM_GRADE_3_LESSONS.findIndex((l) => l.id === activeVnLesson.id);
+                if (currentIdx >= 0 && currentIdx < VIETNAM_GRADE_3_LESSONS.length - 1) {
+                  const nextL = VIETNAM_GRADE_3_LESSONS[currentIdx + 1];
+                  setActiveVnLesson(nextL);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  setActiveVnLesson(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
             />
           ) : (
             <VietnamGrade3Hub
               completedLessonIds={vnCompletedLessonIds}
               assessmentScore={vnAssessmentScore}
-              onSelectLesson={(lesson) => setActiveVnLesson(lesson)}
+              onSelectLesson={(lesson) => {
+                setActiveVnLesson(lesson);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               onOpenAssessment={() => setIsVnAssessmentOpen(true)}
             />
           )

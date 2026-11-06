@@ -421,15 +421,18 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
     if (nextLesson) {
       sound.playClick();
       onLessonChange(nextLesson.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       sound.playVictory();
       onBackToMap();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const goTo = (id: string) => {
     sound.playClick();
     onLessonChange(id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
