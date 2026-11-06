@@ -1,115 +1,129 @@
-# Kế Hoạch & Báo Cáo Kiểm Tra Hệ Thống Spark Math
+# Kế Hoạch Chuyển Đổi Giao Diện Toán SGK Lớp 3: Phong Cách Vũ Trụ Viễn Tưởng & Bản Đồ Hành Tinh
 
-> **Quy tắc bắt buộc xuyên suốt toàn bộ dự án:**
-> 1. Thiết kế logic xuyên suốt, độ khó tăng dần, chính xác 100%.
-> 2. Kiểm tra lần lượt từng bài tập, phát hiện lỗi và sửa triệt để trước khi chuyển bài.
-> 3. Vòng lặp thực thi và nghiệm thu luôn là **3 VÒNG LẶP (3-Loop Verification)** khép kín.
+Chuyển đổi toàn diện phân hệ **Toán SGK Lớp 3 (Kết Nối Tri Thức)** sang giao diện **Vũ Trụ Viễn Tưởng Công Nghệ Cao (High-Tech Sci-Fi Cosmic)** với hiệu ứng Neon phát sáng tinh tế, hệ thống biểu tượng Hệ Mặt Trời & Chòm Sao Dẫn Đường, Bản đồ Hành tinh Chinh phục tương tác, và cơ chế tự động lưu nhớ tiến trình bài học vào LocalStorage.
 
 ---
 
-## 1. Cơ Chế Tự Động Xuất Hiện Bài Kiểm Tra Định Kỳ (Periodic Assessments)
+## User Review & Critical Decisions
 
-### 1.1. Hiện Trạng & Nguyên Nhân Gốc Rễ Đã Sửa
-- **Lỗi 1 (Sai lệch ID Tiên quyết):** Các ID tiên quyết trong `periodicAssessmentsData.ts` từng bị lệch so với `ALL_LESSONS` khiến bài kiểm tra bị khóa vĩnh viễn. Đã chuẩn hóa 100% ID tiên quyết theo đúng mã thực tế (`pic-4-2`, `pic-8-2`, `vol-compare-5-2`, `sud-killer-4-2`, `log-circle-6-2`).
-- **Lỗi 2 (Thiếu trigger tự động kích hoạt):** Đã tích hợp hàm tự động kiểm tra và bung `Auto-Appearing Milestone Modal` ngay khi học sinh hoàn thành bài học chốt hạ của mô hình tư duy.
-- **Lỗi 3 (Giao diện Runner đa năng):** Đã nâng cấp `PeriodicAssessmentRunnerModal.tsx` với 6 bộ đồ họa SVG trực quan động và 5 giai đoạn tư duy chuẩn hóa phương pháp luận Spark Math.
+> [!IMPORTANT]
+> Toàn bộ các định hướng đã được xác nhận trực tiếp từ người dùng trong Phase 1:
 
----
-
-## 2. Thiết Kế 60 Bài Tập Mở Rộng Ở Cả 6 Trạm (10 Bài/Trạm, Cấp Độ Khó Dần)
-
-Tổng số lượng bài học toàn hệ thống được mở rộng từ **161 bài lên 221 bài học**:
-
-### 🎯 Trạm 1: Biểu Đồ Tranh & Đoạn Thẳng (`pictograph`)
-- **Phạm vi mới (10 bài):** `pic-23` đến `pic-32` (Tổng: 39 bài)
-- **Cấp độ khó dần:**
-  - `pic-23`: Biểu đồ tranh 3 đại lượng tỉ lệ nhân kép (Học sinh 1⭐=3, Sách 1⭐=6, Vở 1⭐=9).
-  - `pic-24`: Sơ đồ đoạn thẳng hiệu - tỉ nâng cao (Số lớn hơn số bé 18 đơn vị, số lớn gấp 4 lần số bé).
-  - `pic-25`: Biểu đồ tranh cột đôi phân tích xu hướng tuần hoàn.
-  - `pic-26`: Mô hình 3 đoạn thẳng liên hoàn A + B + C = 60, quan hệ bắc cầu.
-  - `pic-27`: Biểu đồ phân số trực quan (1/2, 1/4, 3/4) dạng tranh.
-  - `pic-28`: Bài toán chuyển dịch cân bằng 2 kho thóc (Hiệu ban đầu 16, chuyển 8 để bằng nhau).
-  - `pic-29`: Biểu đồ tranh 4 đối tượng kết hợp tỉ lệ nghịch nhẹ nhàng trực quan.
-  - `pic-30`: Mô hình đoạn thẳng tổng - hiệu có 3 điều kiện ràng buộc liên tiếp.
-  - `pic-31`: Biểu đồ tranh phân tích dữ liệu khuyết thiếu (Reverse Deductive Pictograph).
-  - `pic-32`: **ĐẠI THỬ THÁCH TRẠM 1** - Ma trận biểu đồ tổng hợp 5 loài sinh vật biển đại dương.
-
-### 🧪 Trạm 2: Cảm Quan Thể Tích & San Sẻ Nước (`volume`)
-- **Phạm vi mới (10 bài):** `vol-22` đến `vol-31` (Tổng: 39 bài)
-- **Cấp độ khó dần:**
-  - `vol-22`: San sẻ nước 3 bình liên hoàn (14L, 10L, 6L ➡️ Cân bằng 10L mỗi bình).
-  - `vol-23`: Cân đo đòn bẩy thể tích 3 cấp (1 Bình lớn = 2 Bình vừa = 6 Cốc nhỏ).
-  - `vol-24`: Thí nghiệm Archimedes nâng cao (Thả 3 viên bi sắt các kích thước khác nhau).
-  - `vol-25`: Bài toán rót nước đong thể tích 3L bằng 2 bình rỗng 5L và 2L.
-  - `vol-26`: So sánh bình đa giác bậc thang (Đáy rộng ngọn thon vs Hình trụ thẳng đứng).
-  - `vol-27`: San sẻ nước có dung tích tối đa (Tránh tràn bình khi chuyển dịch chất lỏng).
-  - `vol-28`: Hệ thống bình thông nhau 3 nhánh trực quan cơ học chất lỏng.
-  - `vol-29`: Thử nghiệm thả vật thể chìm lơ lửng và vật thể nổi.
-  - `vol-30`: Bài toán đong 4L bằng bình 7L và bình 3L kinh điển.
-  - `vol-31`: **ĐẠI THỬ THÁCH TRẠM 2** - Mạng lưới 4 hồ chứa nước thủy điện cân bằng lưu lượng.
-
-### 🧩 Trạm 3: Sudoku Logic & Ma Phương (`sudoku`)
-- **Phạm vi mới (10 bài):** `sud-25` đến `sud-34` (Tổng: 34 bài)
-- **Cấp độ khó dần:**
-  - `sud-25`: Sudoku Jigsaw 4x4 khối màu zic-zac hình chữ T.
-  - `sud-26`: Killer Sudoku 4x4 khung tổng liên hoàn 3, 7.
-  - `sud-27`: Ma Phương Magic Square 3x3 bội số của 4 (Tổng mỗi hàng/cột/chéo = 36).
-  - `sud-28`: Sudoku Biểu tượng 4x4 Tứ Đại Nguyên Tố (Lửa, Nước, Đất, Gió).
-  - `sud-29`: Sudoku Jigsaw 4x4 khối đa giác chữ Z bất đối xứng.
-  - `sud-30`: Killer Sudoku 4x4 khung tổng đối xứng bậc thầy (Tổng 3 và 7).
-  - `sud-31`: Ma Phương Magic Square 3x3 bội số của 5 (Tổng mỗi hàng/cột/chéo = 45).
-  - `sud-32`: Sudoku 4x4 suy luận tối giản chỉ với 4 gợi ý ban đầu.
-  - `sud-33`: Killer Sudoku 4x4 cực hạn chuồng đôi thử thách (Tổng 4 và 6).
-  - `sud-34`: **ĐẠI THỬ THÁCH TRẠM 3** - Ma Phương Kỳ Ảo 3x3 (Tổng mỗi hàng/cột/chéo = 60).
-
-### 🔍 Trạm 4: Tư Duy Quy Luật & Mê Cung (`pattern`)
-- **Phạm vi mới (10 bài):** `pat-24` đến `pat-33` (Tổng: 33 bài)
-- **Cấp độ khó dần:**
-  - `pat-24`: Dãy số quy luật gia tốc tăng cấp (1, 3, 6, 10, 15, ? -> 21).
-  - `pat-25`: Mê cung hoa đa hướng chu kỳ 5 búp sen tuần hoàn.
-  - `pat-26`: Ma trận biến đổi 2x2 quy luật đối xứng trục chéo.
-  - `pat-27`: Chuỗi quân cờ Domino nhân tỉ lệ kép (Nửa dưới = Nửa trên x 2).
-  - `pat-28`: Mạng lưới số hình tam giác Pascal thu nhỏ (Số trên bằng tổng 2 số dưới).
-  - `pat-29`: Dãy hình học xoay 90 độ kim đồng hồ kết hợp đổi màu âm bản.
-  - `pat-30`: Quy luật hình đa giác tăng số cạnh (Tam giác 3, Tứ giác 4, Ngũ giác 5, Lục giác 6).
-  - `pat-31`: Chuỗi hạt ngọc vòng xuyến 4 hạt lặp (1 Đỏ, 2 Xanh, 1 Vàng).
-  - `pat-32`: Mê cung tinh tú xoay chiều chu kỳ 4 chòm sao vũ trụ.
-  - `pat-33`: **ĐẠI THỬ THÁCH TRẠM 4** - Kim tự tháp thần bí 5 tầng & dãy số đa tầng cực hạn.
-
-### 🧠 Trạm 5: Logic Hàng Ngũ & Điểm Giao (`logic`)
-- **Phạm vi mới (10 bài):** `log-27` đến `log-36` (Tổng: 36 bài)
-- **Cấp độ khó dần:**
-  - `log-27`: Xếp hàng vòng tròn 12 bạn có hướng nhìn vào tâm đối xứng.
-  - `log-28`: Ngã tư giao lộ chữ thập 2 hàng có 2 bạn đứng ở vị trí giao lộ.
-  - `log-29`: Hàng ngũ chữ U ba đoạn gấp khúc tính tổng số người không trùng lặp góc.
-  - `log-30`: Bài toán logic gán nhãn 4 hộp kẹo dán sai nhãn toàn bộ.
-  - `log-31`: Xếp hàng theo chiều cao từ thấp đến cao kết hợp manh mối vị trí tương đối.
-  - `log-32`: Lưới giao điểm ma trận 3x3 tính tổng số điểm giao nhau.
-  - `log-33`: Vòng tròn nhảy cóc quy luật bước nhảy +3 vị trí.
-  - `log-34`: Đội hình diễu hành hình chữ nhật rỗng chu vi tính người ở 4 góc.
-  - `log-35`: Câu đố logic suy luận 4 bạn đua xe đạp và thứ hạng về đích.
-  - `log-36`: **ĐẠI THỬ THÁCH TRẠM 5** - Ma trận giao lộ 5 điểm và bài toán quy nạp hàng ngũ tổng thể.
-
-### 🏆 Trạm 6: Đấu Trường Thử Thách Tinh Hoa (`challenge`)
-- **Phạm vi mới (10 bài):** `chal-31` đến `chal-40` (Tổng: 40 bài)
-- **Cấp độ khó dần:**
-  - `chal-31`: Pixidoku 5x5 Vương triều Ai Cập cổ đại (Latin Square 5x5 hoàn hảo).
-  - `chal-32`: Giải mã két sắt kim cương 4 chữ số bí ẩn với 3 manh mối logic.
-  - `chal-33`: Đếm khối lập phương 3D tòa thành 4 tầng cực hạn có góc khuất bên trong.
-  - `chal-34`: Cân thăng bằng 3 đòn bẩy đa vật thể suy ra tỉ lệ tương đương.
-  - `chal-35`: Mê cung số nguyên tố tìm đường thoát hiểm.
-  - `chal-36`: Pixidoku 5x5 Thần thoại thiên hà vũ trụ.
-  - `chal-37`: Star Battle 6x6 bậc thầy (1 ngôi sao/hàng, cột, vùng không chạm nhau).
-  - `chal-38`: Đếm khối lập phương 3D tháp xoắn ốc 4 tầng.
-  - `chal-39`: Mật mã hòm kho báu cướp biển 4 bước suy luận logic phân tích điều kiện.
-  - `chal-40`: **ĐẠI THỬ THÁCH TOÀN NĂNG TRẠM 6** - Thử thách vinh quang tổng hợp 5 mô hình tư duy Spark Math.
+- **Sắc Thái Giao Diện Vũ Trụ**: Phong cách **Vũ trụ viễn tưởng công nghệ cao (High-Tech Sci-Fi Cosmic)** với tông nền không gian sâu thẳm sang trọng (`#0B0F19` / `#0D1117`), kết hợp dải ánh sáng neon phát sáng xanh điện quang (Electric Cyan `#00F0FF`), tím tinh vân (Cosmic Violet `#818CF8`), và vàng mặt trời (Solar Gold `#FBBF24`). Thiết kế bảo đảm tính thẩm mỹ, độ tương phản cao, dễ nhận diện, kích thích tư duy tích cực mà không gây rối rắm.
+- **Tiến Trình Học Tập & Lưu Trữ (Progress Persistence)**: Tự động lưu tiến trình vào `localStorage` (`grade3_math_cosmic_progress`). Khi học sinh hoàn thành các bước khám phá Socratic hoặc bài tập, hệ thống lưu lại và cập nhật trực quan trên **Bản Đồ Hành Tinh Chinh Phục (Planetary Conquest Map)**.
+- **Hệ Thống Biểu Tượng & Khái Niệm**: Hình tượng **Hệ Mặt Trời & Các Chòm Sao Dẫn Đường**. Mỗi bài học là một hành tinh tri thức quay quanh Mặt Trời Toán Học. Các câu hỏi suy ngẫm là những trạm kích hoạt năng lượng chòm sao.
+- **Áp Dụng Thiết Kế Cho Phần Tử Focus**: Container câu hỏi suy ngẫm tầng 2 (`div:nth-of-type(4)` trong `SocraticDiscoveryCard`) được thiết kế dạng Trạm Kích Hoạt Năng Lượng Chòm Sao với viền neon Cyan/Violet mềm mại, hiệu ứng phát sáng nhẹ, câu hỏi nổi bật và các nút lựa chọn tương tác phong cách buồng lái vũ trụ trực quan.
 
 ---
 
-## 3. Báo Cáo Chu Trình Kiểm Tra 3 Vòng Lặp (3-Loop Verification)
+## 1. Tổng Quan & Trải Nghiệm Cốt Lõi (Core Concept)
 
-| Vòng Lặp | Nội Dung Kiểm Tra | Kết Quả Thực Thi |
-| :--- | :--- | :--- |
-| **Vòng 1 (Loop 1)** | **Kiểm tra Toàn vẹn Cấu trúc & Định dạng:**<br>- Chạy `verify_extensions_loop1.ts`<br>- Kiểm tra 60/60 ID mới, tính duy nhất trong `ALL_LESSONS` (221 bài).<br>- Kiểm tra schema, topicId, mascots, badges, câu hỏi trắc nghiệm, options và correctChoiceId. | **100% ĐẠT** (0 lỗi cấu trúc). |
-| **Vòng 2 (Loop 2)** | **Kiểm tra Tính Chuẩn Xác Logic & Toán Học:**<br>- Chạy `verify_extensions_loop2.ts`<br>- Kiểm tra hàng, cột, khối 2x2 của Sudoku 4x4.<br>- Kiểm tra chuồng và tổng số của Killer Sudoku.<br>- Kiểm tra Ma Phương Magic Squares 3x3 (tổng hàng, cột, đường chéo = targetSum, tâm = targetSum/3).<br>- Kiểm tra Pixidoku 5x5 Latin Squares (5 biểu tượng duy nhất mỗi hàng và cột).<br>- Kiểm tra Star Battle 6x6 (không chạm nhau, đủ mỗi hàng/cột/vùng).<br>- Kiểm tra tính liên tục và khớp chu kỳ của Mê Cung hoa và tinh tú. | **100% ĐẠT** (Sau khi phát hiện và sửa các điểm sai lệch ma trận ở các bản thảo, re-run đạt kết quả hoàn hảo 0 lỗi). |
-| **Vòng 3 (Loop 3)** | **Kiểm tra Biên Dịch & Linting Toàn Diện:**<br>- Thực thi song song `compile_applet` và `lint_applet` theo chuẩn.<br>- Kiểm tra TypeScript strict typing, không có biến undefined, không có circular dependency. | **100% ĐẠT** (`compile_applet` succeeded, `tsc --noEmit` hoàn thành không có bất kỳ lỗi nào). |
+- **Trải nghiệm**: Học sinh hóa thân thành "Nhà Du Hành Toán Học Trẻ Tuổi", điều khiển phi thuyền thám hiểm Hệ Mặt Trời Tri Thức, ghé thăm từng hành tinh (Bài 23: Hành tinh Nhân Nhóm, Bài 24: Hành tinh Gấp Bội, Bài 25: Hành tinh Chia & Số Dư bí ẩn, v.v.).
+- **Giá trị cốt lõi**:
+  - Biến các bài học sách giáo khoa trừu tượng thành cuộc phiêu lưu khai phá vũ trụ kỳ thú.
+  - Vẫn giữ nguyên 100% tính chuẩn xác logic toán học và phương pháp đàm thoại Socratic đã kiểm chứng qua 3 vòng lặp.
+  - Tạo động lực bền vững: Tiến trình thám hiểm được lưu lại vĩnh viễn trong trình duyệt, trẻ có thể nhìn thấy từng hành tinh bừng sáng khi mình chinh phục thành công.
+
+---
+
+## 2. Thiết Kế Trực Quan & Trải Nghiệm Người Dùng (Visual Design & UX)
+
+### 2.1. Bản Đồ Hành Tinh Chinh Phục (Planetary Conquest Map)
+- Nằm ở đầu trang hoặc tab chuyển đổi trong trung tâm học tập Toán 3:
+  - **Mặt Trời Tri Thức Trung Tâm**: Đại diện cho Chủ đề 4 (Phép nhân & Phép chia trong phạm vi 100).
+  - **7 Quỹ Đạo & Hành Tinh (Bài 23 ➡️ Bài 29)**:
+    - *Hành tinh Sao Thủy (Bài 23)*: Nhân số hai chữ số (Ánh sáng Lam ngọc).
+    - *Hành tinh Sao Kim (Bài 24)*: Gấp một số lên nhiều lần (Ánh sáng Vàng kim).
+    - *Hành tinh Trái Đất (Bài 25)*: Phép chia hết & Phép chia có dư (Ánh sáng Lục bảo).
+    - *Hành tinh Sao Hỏa (Bài 26)*: Chia số có hai chữ số (Ánh sáng Đỏ thắm Neon).
+    - *Hành tinh Sao Mộc (Bài 27)*: Giảm đi một số lần (Ánh sáng Cam vũ trụ).
+    - *Hành tinh Sao Thổ (Bài 28)*: Bài toán giải bằng hai bước (Ánh sáng Vàng vành đai).
+    - *Hành tinh Sao Hải Vương (Bài 29)*: Luyện tập chung & Trạm kiểm định Topic 4 (Ánh sáng Xanh biển sâu).
+  - **Trạng thái hành tinh**:
+    - *Chưa khám phá*: Hành tinh mờ ảo trong sương mù không gian kèm biểu tượng ổ khóa năng lượng.
+    - *Đang khám phá*: Vành đai quỹ đạo phát sáng nhấp nháy êm dịu, hiển thị tiến độ % bước Socratic.
+    - *Đã chinh phục hoàn toàn*: Hành tinh bừng sáng toàn bộ với vương miện sao chổi và dấu ấn hoàn thành rực rỡ.
+
+### 2.2. Thẻ Khám Phá Bản Chất Socratic Vũ Trụ (Socratic Discovery Card)
+- **Khung chứa chính**: Nền gradient đêm vũ trụ sâu thẳm (`#0B0F19` phối với xanh đen `#0D1117`), viền vi mô ánh neon Cyan (`#00F0FF/30`), điểm xuyết các hạt sao li ti tinh tế.
+- **Khối Câu hỏi triết lý**: Tựa như thông điệp truyền tín hiệu từ trung tâm vũ trụ, chữ to, rõ nét, font Nunito êm dịu với độ tương phản tuyệt hảo.
+- **Mô hình trực quan trực quan**: Khay bánh, thanh so sánh, que chia quả dâu được tạo hình cách điệu bằng các tinh thể năng lượng và khoang vận chuyển phi thuyền sáng tạo nhưng cực kỳ chân thực về mặt toán học.
+- **Khối Câu hỏi suy ngẫm 2 (Phần tử Focus: `div:nth-of-type(4)`)**:
+  - Hộp viền neon Cyan & Violet với góc bo tròn hiện đại, biểu tượng Chòm Sao Dẫn Đường (`✨ Chòm Sao Suy Ngẫm 2`).
+  - Lựa chọn phương án phong cách trạm điều khiển: Khi bấm sai, chỉ báo viền đỏ sao băng nhẹ kèm lời khuyên Socratic (không để lộ đáp án đúng). Khi bấm đúng, bừng sáng màu xanh ngọc bích neon và kích hoạt phát sáng chìa khóa tri thức.
+- **Hộp Đúc Kết Bản Chất (Key Takeaway)**: Thiết kế như "Lõi Năng Lượng Vũ Trụ" (Cosmic Energy Core). Khi mở khóa, tỏa hào quang vàng kim rực rỡ mang câu đúc kết toán học chân lý.
+
+### 2.3. Trình Làm Bài Tập & Kiểm Tra (Cosmic Runner & Assessment)
+- Bài tập biến thành "Thử Thách Khởi Động Động Cơ Vận Tốc Ánh Sáng".
+- Thanh tiến trình dạng vạch năng lượng lượng tử với các chặng trạm dừng chân.
+- Âm thanh và hiệu ứng chiến thắng thiên hà khi hoàn thành 100%.
+
+---
+
+## 3. Kiến Trúc Kỹ Thuật & Quản Lý Trạng Thái (Technical & State Strategy)
+
+### 3.1. Sơ Đồ Hệ Thống & Luồng Dữ Liệu
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      NAVBAR MODE SWITCH                         │
+│       [ Toán Tư Duy & Sudoku ]  ⇄  [ Toán SGK 3 Vũ Trụ ]        │
+└────────────────────────────────┬────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              VIETNAM GRADE 3 COSMIC HUB & RUNNER                │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │   PLANETARY CONQUEST MAP (Bản đồ Hệ Mặt Trời Tri Thức)    │  │
+│  │   - Hiển thị 7 hành tinh bài học + Trạm Kiểm định Topic 4 │  │
+│  │   - Đọc & Đồng bộ tự động với LocalStorage                │  │
+│  └─────────────────────────────┬─────────────────────────────┘  │
+│                                │                                │
+│       ┌────────────────────────┴───────────────────────┐        │
+│       ▼                                                ▼        │
+│ ┌───────────────────────────┐            ┌───────────────────┐  │
+│ │   SOCRATIC DISCOVERY      │            │  COSMIC EXERCISES │  │
+│ │   - Trạm đàm thoại        │            │  - Vạch năng lượng│  │
+│ │   - Tinh thể trực quan    │            │  - Luyện tập 1-10 │  │
+│ │   - Focus: Chòm sao 2     │            │  - Gợi ý tư duy   │  │
+│ │   - Mở khóa Lõi tri thức  │            │  - Lưu điểm số    │  │
+│ └─────────────┬─────────────┘            └─────────┬─────────┘  │
+│               │                                    │            │
+│               └─────────────────┬──────────────────┘            │
+│                                 ▼                               │
+│              ┌─────────────────────────────────────┐            │
+│              │    LOCALSTORAGE PERSISTENCE STORE   │            │
+│              │    "grade3_math_cosmic_progress"    │            │
+│              │    - Unlocked Lessons & Cards       │            │
+│              │    - Completed Exercise Scores      │            │
+│              │    - Conquered Planet Badges        │            │
+│              └─────────────────────────────────────┘            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 3.2. Cấu Trúc Dữ Liệu Lưu Trữ (LocalStorage Model)
+```typescript
+interface CosmicProgressData {
+  unlockedLessons: string[]; // ['vn3-c4-l23', 'vn3-c4-l24', ...]
+  completedLessons: string[]; // Các bài đã làm xong toàn bộ bài tập
+  socraticCompletedCards: Record<string, boolean>; // id thẻ -> true
+  exerciseScores: Record<string, { completedCount: number; totalCount: number; passed: boolean }>;
+  assessmentResult?: { score: number; maxScore: number; passed: boolean; date: string };
+  lastActiveLessonId: string;
+}
+```
+
+### 3.3. Các Tệp Sẽ Triển Khai
+1. `src/utils/cosmicProgressStorage.ts`: Module chuyên trách đọc/ghi tiến trình LocalStorage, tự động khởi tạo dữ liệu mặc định, cung cấp các hàm `markSocraticCompleted`, `markExerciseCompleted`, `getCosmicProgress`, `resetCosmicProgress`.
+2. `src/components/vietnam_grade3/CosmicPlanetaryMap.tsx`: Component tương tác hiển thị Hệ Mặt Trời với 7 hành tinh tri thức và các quỹ đạo neon phát sáng, cho phép click để bay thẳng tới bài học.
+3. `src/components/vietnam_grade3/SocraticDiscoveryCard.tsx`: Tái hiện giao diện theo phong cách Vũ Trụ Công Nghệ Cao (Sci-Fi Cosmic), tối ưu phần tử focus `div:nth-of-type(4)`, kết nối lưu tiến trình ngay khi mở khóa Lõi tri thức.
+4. `src/components/vietnam_grade3/VietnamGrade3Hub.tsx`: Nhúng Bản đồ Hành tinh lên đầu, chuyển đổi giao diện toàn trang sang phong cách trạm không gian thân thiện cho trẻ em.
+5. `src/components/vietnam_grade3/VietnamGrade3LessonRunner.tsx`: Cập nhật bảng luyện tập vũ trụ, hiển thị thanh tiến độ năng lượng và nút quay về Bản đồ Quỹ đạo.
+6. `scripts/verify_vietnam_grade3.ts`: Bổ sung kiểm thử tự động cho module lưu trữ và đồng bộ tiến trình vũ trụ.
+
+---
+
+## 4. Quy Trình Kiểm Thử 3 Vòng Lặp Bắt Buộc (3-Loop Verification)
+
+- **Vòng 1 (Toàn vẹn Dữ liệu & Lưu trữ LocalStorage)**: Kiểm tra module lưu trữ, đảm bảo tiến trình lưu đúng khóa, không mất dữ liệu khi chuyển bài hoặc tải lại trang.
+- **Vòng 2 (Tính Logic Toán Học & Hiển Thị Vũ Trụ Chuẩn Xác)**: Đảm bảo 100% nội dung toán SGK 3 giữ nguyên sự chuẩn xác, mô hình trực quan vũ trụ thể hiện đúng tỷ lệ toán học.
+- **Vòng 3 (Kiểm tra Biên dịch & Lint song song)**: Co-execute `compile_applet` và `lint_applet` với 0 lỗi TypeScript, 0 cảnh báo linter.

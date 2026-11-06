@@ -17,6 +17,10 @@ import { getMistakesStats } from './utils/mistakeManager';
 import { getProgramErrors } from './utils/devErrorCollector';
 import { isTeacherUnlocked } from './data/periodicAssessmentsData';
 import { Bug } from 'lucide-react';
+import { VietnamGrade3Hub } from './components/vietnam_grade3/VietnamGrade3Hub';
+import { VietnamGrade3LessonRunner } from './components/vietnam_grade3/VietnamGrade3LessonRunner';
+import { VietnamGrade3AssessmentModal } from './components/vietnam_grade3/VietnamGrade3AssessmentModal';
+import { VIETNAM_GRADE_3_LESSONS, VietnamGrade3Lesson } from './data/vietnamGrade3LessonsData';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'periodic' | 'review' | 'assessment'>('map');
@@ -40,6 +44,56 @@ export default function App() {
   const [programErrorsCount, setProgramErrorsCount] = useState<number>(() => {
     return getProgramErrors().length;
   });
+
+  // Dedicated Program Switcher: 'thinking' (Spark Math) vs 'textbook' (Toán SGK Lớp 3)
+  const [programMode, setProgramMode] = useState<'thinking' | 'textbook'>(() => {
+    try {
+      const saved = localStorage.getItem('spark_math_program_mode');
+      return saved === 'textbook' ? 'textbook' : 'thinking';
+    } catch {
+      return 'thinking';
+    }
+  });
+
+  const [activeVnLesson, setActiveVnLesson] = useState<VietnamGrade3Lesson | null>(null);
+  const [isVnAssessmentOpen, setIsVnAssessmentOpen] = useState(false);
+
+  const [vnCompletedLessonIds, setVnCompletedLessonIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('spark_math_vn_completed_lessons');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [vnAssessmentScore, setVnAssessmentScore] = useState<number | null>(() => {
+    try {
+      const saved = localStorage.getItem('spark_math_vn_assessment_score');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('spark_math_program_mode', programMode);
+      localStorage.setItem('spark_math_vn_completed_lessons', JSON.stringify(vnCompletedLessonIds));
+      if (vnAssessmentScore !== null) {
+        localStorage.setItem('spark_math_vn_assessment_score', JSON.stringify(vnAssessmentScore));
+      }
+    } catch {
+      // Ignore
+    }
+  }, [programMode, vnCompletedLessonIds, vnAssessmentScore]);
+
+  const handleVnLessonCompleted = (lessonId: string) => {
+    if (!vnCompletedLessonIds.includes(lessonId)) {
+      setVnCompletedLessonIds((prev) => [...prev, lessonId]);
+      setTotalStars((prev) => prev + 3);
+    }
+  };
 
   // Track reactive updates to mistake notebook and programming error collector
   useEffect(() => {
@@ -117,6 +171,13 @@ export default function App() {
             setActiveLessonId(null);
           }
         }}
+        programMode={programMode}
+        onToggleProgramMode={(m) => {
+          sound.playClick();
+          setProgramMode(m);
+          setActiveLessonId(null);
+          setActiveVnLesson(null);
+        }}
         onOpenScratchpad={() => setIsScratchpadOpen(true)}
         onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
         onOpenDevConsole={() => {
@@ -136,44 +197,68 @@ export default function App() {
 
       {/* Main View Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 pt-6">
-        {/* Prominent Periodic Assessment Banner */}
-        {!activeLessonId && activeTab === 'map' && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
-            <div className="flex items-center gap-3.5">
-              <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0 border border-white/20">
-                🧠
-              </span>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
-                    BÀI KIỂM TRA ĐỊNH KỲ
+        {programMode === 'textbook' ? (
+          /* ======================================================== */
+          /* CHƯƠNG TRÌNH TOÁN LỚP 3 TIỂU HỌC VIỆT NAM (KẾT NỐI TRI THỨC) */
+          /* ======================================================== */
+          activeVnLesson ? (
+            <VietnamGrade3LessonRunner
+              lesson={activeVnLesson}
+              isCompleted={vnCompletedLessonIds.includes(activeVnLesson.id)}
+              onBack={() => setActiveVnLesson(null)}
+              onLessonCompleted={handleVnLessonCompleted}
+            />
+          ) : (
+            <VietnamGrade3Hub
+              completedLessonIds={vnCompletedLessonIds}
+              assessmentScore={vnAssessmentScore}
+              onSelectLesson={(lesson) => setActiveVnLesson(lesson)}
+              onOpenAssessment={() => setIsVnAssessmentOpen(true)}
+            />
+          )
+        ) : (
+          /* ======================================================== */
+          /* CHƯƠNG TRÌNH TOÁN TƯ DUY (SPARK MATH) */
+          /* ======================================================== */
+          <>
+            {/* Prominent Periodic Assessment Banner */}
+            {!activeLessonId && activeTab === 'map' && (
+              <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
+                <div className="flex items-center gap-3.5">
+                  <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0 border border-white/20">
+                    🧠
                   </span>
-                  <span className="text-xs text-amber-100 font-bold hidden sm:inline">
-                    · Khảo sát phương pháp luận sau cụm bài tập
-                  </span>
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
+                        BÀI KIỂM TRA ĐỊNH KỲ
+                      </span>
+                      <span className="text-xs text-amber-100 font-bold hidden sm:inline">
+                        · Khảo sát phương pháp luận sau cụm bài tập
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-base font-black leading-snug">
+                      Mô Hình Tư Duy: So Sánh Hơn - Kém (Sơ Đồ Thanh &amp; Bản Chất Phép Trừ)
+                    </h3>
+                    <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
+                      Khảo sát định kỳ 5 bước: <em>Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ nước.</em>
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-sm sm:text-base font-black leading-snug">
-                  Mô Hình Tư Duy: So Sánh Hơn - Kém (Sơ Đồ Thanh &amp; Bản Chất Phép Trừ)
-                </h3>
-                <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-                  Khảo sát định kỳ 5 bước: <em>Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ nước.</em>
-                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    setActivePeriodicAssessmentId('periodic-comparison-bar-model');
+                    setIsPeriodicRunnerOpen(true);
+                  }}
+                  className="px-5 py-2.5 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center"
+                >
+                  <span>Vào Bài Kiểm Tra Định Kỳ</span>
+                  <span className="text-base">→</span>
+                </button>
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setActivePeriodicAssessmentId('periodic-comparison-bar-model');
-                setIsPeriodicRunnerOpen(true);
-              }}
-              className="px-5 py-2.5 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center"
-            >
-              <span>Vào Bài Kiểm Tra Định Kỳ</span>
-              <span className="text-base">→</span>
-            </button>
-          </div>
-        )}
+            )}
         {activeLessonId && currentLesson ? (
           <LessonContainer
             lesson={currentLesson}
@@ -272,7 +357,19 @@ export default function App() {
             }}
           />
         )}
+        </>
+      )}
       </main>
+
+      {/* Vietnam Grade 3 Periodic Assessment Modal (Topic 4) */}
+      <VietnamGrade3AssessmentModal
+        isOpen={isVnAssessmentOpen}
+        onClose={() => setIsVnAssessmentOpen(false)}
+        onCompletedScore={(score) => {
+          setVnAssessmentScore(score);
+          setTotalStars((prev) => prev + 5);
+        }}
+      />
 
       {/* In-Screen Scratchpad Modal */}
       <Scratchpad

@@ -18,6 +18,8 @@ import {
 interface NavbarProps {
   currentTab: 'map' | 'lessons' | 'periodic' | 'review' | 'assessment';
   onSelectTab: (tab: 'map' | 'lessons' | 'periodic' | 'review' | 'assessment') => void;
+  programMode: 'thinking' | 'textbook';
+  onToggleProgramMode: (mode: 'thinking' | 'textbook') => void;
   onOpenScratchpad: () => void;
   onOpenMistakes?: () => void;
   onOpenDevConsole?: () => void;
@@ -32,6 +34,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   onSelectTab,
+  programMode,
+  onToggleProgramMode,
   onOpenScratchpad,
   onOpenMistakes,
   onOpenDevConsole,
@@ -52,25 +56,71 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-6 px-4 md:px-6 py-2.5">
-        {/* Zone 1: Single text element Brand title */}
-        <button
-          type="button"
-          onClick={() => {
-            sound.playClick();
-            onSelectTab('map');
-          }}
-          className="flex items-center gap-2 text-left shrink-0 hover:opacity-90 transition-opacity"
-        >
-          <span className="text-2xl md:text-3xl">✨</span>
-          <div>
-            <span className="text-base md:text-xl font-black font-display tracking-tight text-amber-600 block leading-tight">
-              Spark Math
+        {/* Zone 1: Single text element Brand title & Program Switcher */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              if (programMode === 'thinking') {
+                onSelectTab('map');
+              }
+            }}
+            className="flex items-center gap-2 text-left shrink-0 hover:opacity-90 transition-opacity"
+          >
+            <span className="text-2xl md:text-3xl">
+              {programMode === 'thinking' ? '✨' : '📖'}
             </span>
-            <span className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider block">
-              Toán Tư Duy Lớp 3
-            </span>
+            <div>
+              <span className="text-base md:text-xl font-black font-display tracking-tight text-amber-600 block leading-tight">
+                {programMode === 'thinking' ? 'Spark Math' : 'Toán SGK Lớp 3'}
+              </span>
+              <span className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                {programMode === 'thinking' ? 'Toán Tư Duy Lớp 3' : 'Kết Nối Tri Thức'}
+              </span>
+            </div>
+          </button>
+
+          {/* Dedicated Program Mode Switcher */}
+          <div className="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-xs font-black">
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                onToggleProgramMode('thinking');
+              }}
+              className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg transition-all flex items-center gap-1 ${
+                programMode === 'thinking'
+                  ? 'bg-white text-amber-700 shadow-xs ring-1 ring-slate-200'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span>🧠</span>
+              <span className="hidden md:inline">Toán Tư Duy</span>
+              <span className="md:hidden">Tư Duy</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                onToggleProgramMode('textbook');
+              }}
+              className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg transition-all flex items-center gap-1 ${
+                programMode === 'textbook'
+                  ? 'bg-amber-500 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <span>📚</span>
+              <span className="hidden md:inline">Toán SGK Lớp 3</span>
+              <span className="md:hidden">SGK Lớp 3</span>
+              <span className="hidden sm:inline text-[9px] font-black bg-rose-500 text-white px-1.5 py-0.2 rounded-full uppercase">
+                Mới
+              </span>
+            </button>
           </div>
-        </button>
+        </div>
 
         {/* Zone 2: Navigation Links */}
         <nav className="flex items-center gap-1.5 sm:gap-3 md:gap-5 text-xs md:text-sm font-bold text-slate-600 overflow-x-auto py-1 scrollbar-none">
