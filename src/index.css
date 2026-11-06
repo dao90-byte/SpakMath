@@ -63,3 +63,63 @@
 .pulse-glow {
   animation: pulseGlow 2s infinite;
 }
+
+/* ========================================================================== */
+/* HIGH-TECH SCI-FI COSMIC NEON ANIMATIONS & GLOW UTILITIES */
+/* ========================================================================== */
+
+@keyframes cosmicTwinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.animate-cosmic-twinkle {
+  animation: cosmicTwinkle 4s ease-in-out infinite;
+}
+
+@keyframes orbitSpinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: orbitSpinSlow 24s linear infinite;
+}
+
+@keyframes neonCyanPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.25), inset 0 0 10px rgba(0, 240, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(0, 240, 255, 0.55), inset 0 0 15px rgba(0, 240, 255, 0.3);
+  }
+}
+
+.neon-glow-cyan {
+  animation: neonCyanPulse 3s ease-in-out infinite;
+}
+
+@keyframes solarPulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.4), 0 0 50px rgba(245, 158, 11, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(251, 191, 36, 0.7), 0 0 80px rgba(245, 158, 11, 0.35);
+    transform: scale(1.03);
+  }
+}
+
+.neon-solar-glow {
+  animation: solarPulse 3.5s ease-in-out infinite;
+}

@@ -95,21 +95,25 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
   const badgeInfo = getCompetencyBadge(finalScore);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-3xl w-full border border-slate-200 shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col animate-scale-in">
+    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto font-sans">
+      <div className="bg-[#0B0F19] rounded-3xl max-w-3xl w-full border-2 border-indigo-500/50 shadow-[0_0_50px_rgba(99,102,241,0.25)] overflow-hidden my-auto max-h-[92vh] flex flex-col animate-scale-in text-white relative">
+        {/* Subtle ambient light */}
+        <div className="absolute -top-20 -right-20 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
+
         {/* Modal Top Bar */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 flex items-center justify-between gap-3 shrink-0">
+        <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white p-5 flex items-center justify-between gap-3 shrink-0 border-b border-indigo-500/30 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center font-black text-lg shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-lg shadow-[0_0_12px_rgba(251,191,36,0.4)]">
               📝
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-400/30">
-                  ĐÁNH GIÁ ĐỊNH KỲ
+                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-400/40 font-mono">
+                  TRẠM ĐÁNH GIÁ ĐỊNH KỲ
                 </span>
-                <span className="text-xs text-amber-100 hidden sm:inline">
-                  10 câu hỏi suy ngẫm &amp; vận dụng
+                <span className="text-xs text-cyan-200 hidden sm:inline font-medium">
+                  10 thử thách suy ngẫm &amp; năng lực
                 </span>
               </div>
               <h2 className="text-base sm:text-lg font-black text-white leading-tight mt-0.5">
@@ -128,13 +132,13 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 sm:p-7 overflow-y-auto flex-1">
+        <div className="p-5 sm:p-7 overflow-y-auto flex-1 relative z-10">
           {!isSubmitted ? (
             <div>
               {/* Question Navigation Bubbles */}
-              <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
-                <span className="text-xs font-bold text-slate-500">
-                  Câu hỏi {currentIdx + 1} / {totalCount}
+              <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                <span className="text-xs font-bold text-cyan-300 font-mono">
+                  CÂU HỎI {currentIdx + 1} / {totalCount}
                 </span>
 
                 <div className="flex items-center gap-1.5 overflow-x-auto py-1">
@@ -146,12 +150,12 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                         key={q.id}
                         type="button"
                         onClick={() => setCurrentIdx(idx)}
-                        className={`w-7 h-7 rounded-lg text-xs font-black transition-all ${
+                        className={`w-7 h-7 rounded-lg text-xs font-black transition-all font-mono ${
                           isCurrent
-                            ? 'bg-slate-900 text-white shadow-xs'
+                            ? 'bg-gradient-to-tr from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_12px_rgba(0,240,255,0.6)] font-black'
                             : isAnswered
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-400/50'
+                            : 'bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800'
                         }`}
                       >
                         {idx + 1}
@@ -163,23 +167,23 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
 
               {/* Cognitive level badge */}
               <div className="flex items-center gap-2 mb-3">
-                <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full ${
-                  currentQ.cognitiveLevel === 'nhan_biet' ? 'bg-sky-100 text-sky-800' :
-                  currentQ.cognitiveLevel === 'thong_hieu' ? 'bg-emerald-100 text-emerald-800' :
-                  currentQ.cognitiveLevel === 'van_dung' ? 'bg-amber-100 text-amber-800' :
-                  'bg-purple-100 text-purple-800'
+                <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border font-mono ${
+                  currentQ.cognitiveLevel === 'nhan_biet' ? 'bg-sky-500/20 text-sky-300 border-sky-400/40' :
+                  currentQ.cognitiveLevel === 'thong_hieu' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40' :
+                  currentQ.cognitiveLevel === 'van_dung' ? 'bg-amber-500/20 text-amber-300 border-amber-400/40' :
+                  'bg-purple-500/20 text-purple-300 border-purple-400/40'
                 }`}>
                   Mức độ: {currentQ.cognitiveLevel === 'nhan_biet' ? '1. Nhận biết' :
                            currentQ.cognitiveLevel === 'thong_hieu' ? '2. Thông hiểu' :
                            currentQ.cognitiveLevel === 'van_dung' ? '3. Vận dụng' : '4. Vận dụng cao'}
                 </span>
-                <span className="text-xs font-bold text-slate-500">
+                <span className="text-xs font-bold text-slate-400">
                   Chủ điểm: {currentQ.topicAspect}
                 </span>
               </div>
 
               {/* Prompt */}
-              <div className="text-base sm:text-lg font-black text-slate-900 leading-snug mb-5">
+              <div className="text-base sm:text-lg font-black text-white leading-snug mb-5 drop-shadow-sm">
                 {currentQ.prompt}
               </div>
 
@@ -194,11 +198,13 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                       onClick={() => handleSelectOption(currentQ.id, opt.label)}
                       className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-xs sm:text-sm transition-all flex items-start gap-3 active:scale-[0.99] ${
                         isSelected
-                          ? 'bg-amber-50 border-amber-500 text-amber-950 ring-2 ring-amber-300 shadow-xs'
-                          : 'bg-slate-50 hover:bg-slate-100/80 border-slate-200 text-slate-800'
+                          ? 'bg-cyan-950/70 border-cyan-400 text-cyan-200 ring-2 ring-cyan-400/50 shadow-[0_0_20px_rgba(0,240,255,0.25)]'
+                          : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 text-slate-200 hover:border-cyan-500/50'
                       }`}
                     >
-                      <span className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center shrink-0 text-xs font-black mt-0.5">
+                      <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 text-xs font-black mt-0.5 font-mono ${
+                        isSelected ? 'border-cyan-300 text-cyan-300' : 'border-slate-500 text-slate-400'
+                      }`}>
                         {opt.id.toUpperCase()}
                       </span>
                       <span className="flex-1 leading-relaxed">{opt.label}</span>
@@ -208,7 +214,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
               </div>
 
               {/* Footer Question Nav */}
-              <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-100">
+              <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => {
@@ -218,8 +224,8 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                   disabled={currentIdx === 0}
                   className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 ${
                     currentIdx === 0
-                      ? 'text-slate-300 cursor-not-allowed'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                      ? 'text-slate-600 cursor-not-allowed'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 >
                   <ArrowLeft className="w-4 h-4" />
@@ -234,7 +240,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                         sound.playClick();
                         setCurrentIdx(currentIdx + 1);
                       }}
-                      className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-sm active:scale-95 transition-transform"
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.35)] active:scale-95 transition-transform"
                     >
                       <span>Câu tiếp theo</span>
                       <ArrowRight className="w-4 h-4" />
@@ -246,8 +252,8 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                       disabled={answeredCount < totalCount}
                       className={`px-6 py-2.5 rounded-xl font-black text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all ${
                         answeredCount === totalCount
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white active:scale-95'
-                          : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                          ? 'bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 active:scale-95 shadow-[0_0_20px_rgba(251,191,36,0.5)]'
+                          : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                       }`}
                     >
                       <span>Nộp bài &amp; Chấm điểm ({answeredCount}/{totalCount})</span>
@@ -259,16 +265,16 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
             </div>
           ) : (
             /* Result Report Screen */
-            <div className="text-center py-4">
-              <div className="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 mx-auto flex items-center justify-center text-3xl shadow-inner mb-3">
+            <div className="text-center py-4 text-white">
+              <div className="w-16 h-16 rounded-3xl bg-amber-400/20 border border-amber-400/40 text-amber-300 mx-auto flex items-center justify-center text-3xl shadow-[0_0_25px_rgba(251,191,36,0.3)] mb-3">
                 🏆
               </div>
 
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
-                Kết Quả Đánh Giá Năng Lực Học Phần
+              <span className="text-xs font-bold uppercase tracking-wider text-cyan-300 block font-mono">
+                KẾT QUẢ ĐÁNH GIÁ NĂNG LỰC HỌC PHẦN
               </span>
-              <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-                Điểm số: <span className="text-amber-600">{finalScore} / {totalCount}</span>
+              <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
+                Điểm số: <span className="text-amber-400">{finalScore} / {totalCount}</span>
               </h3>
 
               <div className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-black border text-center">
@@ -279,89 +285,89 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
 
               {/* Competency Matrix Breakdown */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 my-6 text-left">
-                <div className="p-3 bg-sky-50 rounded-2xl border border-sky-200">
-                  <span className="text-[11px] font-bold text-sky-800 block">1. Nhận biết</span>
-                  <span className="text-xs font-black text-slate-800">Bản chất nhân chia</span>
-                  <div className="text-xs text-sky-700 font-bold mt-1">3/3 câu chuẩn</div>
+                <div className="p-3 bg-slate-900/90 rounded-2xl border border-sky-500/40 shadow-xs">
+                  <span className="text-[11px] font-bold text-sky-400 block font-mono">1. Nhận biết</span>
+                  <span className="text-xs font-black text-white">Bản chất nhân chia</span>
+                  <div className="text-xs text-sky-300 font-bold mt-1 font-mono">3/3 câu chuẩn</div>
                 </div>
-                <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200">
-                  <span className="text-[11px] font-bold text-emerald-800 block">2. Thông hiểu</span>
-                  <span className="text-xs font-black text-slate-800">Gấp/Giảm số lần</span>
-                  <div className="text-xs text-emerald-700 font-bold mt-1">3/3 câu chuẩn</div>
+                <div className="p-3 bg-slate-900/90 rounded-2xl border border-emerald-500/40 shadow-xs">
+                  <span className="text-[11px] font-bold text-emerald-400 block font-mono">2. Thông hiểu</span>
+                  <span className="text-xs font-black text-white">Gấp/Giảm số lần</span>
+                  <div className="text-xs text-emerald-300 font-bold mt-1 font-mono">3/3 câu chuẩn</div>
                 </div>
-                <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200">
-                  <span className="text-[11px] font-bold text-amber-800 block">3. Vận dụng</span>
-                  <span className="text-xs font-black text-slate-800">Bài toán 2 bước</span>
-                  <div className="text-xs text-amber-700 font-bold mt-1">2/2 câu chuẩn</div>
+                <div className="p-3 bg-slate-900/90 rounded-2xl border border-amber-500/40 shadow-xs">
+                  <span className="text-[11px] font-bold text-amber-400 block font-mono">3. Vận dụng</span>
+                  <span className="text-xs font-black text-white">Bài toán 2 bước</span>
+                  <div className="text-xs text-amber-300 font-bold mt-1 font-mono">2/2 câu chuẩn</div>
                 </div>
-                <div className="p-3 bg-purple-50 rounded-2xl border border-purple-200">
-                  <span className="text-[11px] font-bold text-purple-800 block">4. Vận dụng cao</span>
-                  <span className="text-xs font-black text-slate-800">Xếp thuyền &amp; tính ngược</span>
-                  <div className="text-xs text-purple-700 font-bold mt-1">2/2 câu chuẩn</div>
+                <div className="p-3 bg-slate-900/90 rounded-2xl border border-purple-500/40 shadow-xs">
+                  <span className="text-[11px] font-bold text-purple-400 block font-mono">4. Vận dụng cao</span>
+                  <span className="text-xs font-black text-white">Xếp thuyền &amp; tính ngược</span>
+                  <div className="text-xs text-purple-300 font-bold mt-1 font-mono">2/2 câu chuẩn</div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="button"
                   onClick={() => setShowReview(!showReview)}
-                  className="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl border border-cyan-500/40 text-cyan-300 font-bold text-xs sm:text-sm hover:bg-slate-800 transition-colors flex items-center gap-2"
                 >
-                  <BookOpen className="w-4 h-4 text-slate-500" />
+                  <BookOpen className="w-4 h-4 text-cyan-400" />
                   <span>{showReview ? 'Ẩn lời giải chi tiết' : 'Xem lại đáp án & lời giải'}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleRetake}
-                  className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm transition-colors flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm transition-colors flex items-center gap-2 border border-slate-700"
                 >
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-4 h-4 text-cyan-400" />
                   <span>Làm lại bài kiểm tra</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs sm:text-sm shadow-sm transition-transform active:scale-95"
+                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 text-slate-950 font-black text-xs sm:text-sm shadow-[0_0_15px_rgba(251,191,36,0.4)] transition-transform active:scale-95"
                 >
-                  <span>Hoàn tất</span>
+                  <span>Hoàn tất &amp; Đóng</span>
                 </button>
               </div>
 
               {/* Detailed Review Section */}
               {showReview && (
-                <div className="mt-6 pt-6 border-t border-slate-200 text-left space-y-4">
-                  <h4 className="text-sm font-black text-slate-800 uppercase tracking-wider mb-2">
-                    Bảng đối chiếu đáp án &amp; giải thích chi tiết:
+                <div className="mt-6 pt-6 border-t border-slate-800 text-left space-y-4">
+                  <h4 className="text-sm font-black text-cyan-300 uppercase tracking-wider mb-2 font-mono">
+                    BẢNG ĐỐI CHIẾU ĐÁP ÁN &amp; GIẢI THÍCH CHI TIẾT:
                   </h4>
                   {assessment.questions.map((q, idx) => {
                     const userAns = selectedAnswers[q.id];
                     const isRight = userAns && String(userAns).trim() === String(q.correctAnswer).trim();
                     return (
-                      <div key={q.id} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-xs sm:text-sm">
+                      <div key={q.id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/90 text-xs sm:text-sm">
                         <div className="flex items-start justify-between gap-2 mb-1.5">
-                          <span className="font-black text-slate-900">
+                          <span className="font-black text-white">
                             Câu {idx + 1}: {q.prompt}
                           </span>
                           {isRight ? (
-                            <span className="flex items-center gap-1 text-emerald-600 font-black text-xs shrink-0">
+                            <span className="flex items-center gap-1 text-emerald-400 font-black text-xs shrink-0">
                               <CheckCircle2 className="w-4 h-4" /> Đúng
                             </span>
                           ) : (
-                            <span className="flex items-center gap-1 text-rose-600 font-black text-xs shrink-0">
+                            <span className="flex items-center gap-1 text-rose-400 font-black text-xs shrink-0">
                               <XCircle className="w-4 h-4" /> Sai
                             </span>
                           )}
                         </div>
-                        <div className="text-slate-600 mb-1">
+                        <div className="text-slate-300 mb-1">
                           <strong>Đáp án của bạn:</strong> {userAns || '(Chưa chọn)'}
                         </div>
-                        <div className="text-emerald-700 font-bold mb-1">
+                        <div className="text-emerald-400 font-bold mb-1">
                           <strong>Đáp án đúng:</strong> {q.correctAnswer}
                         </div>
-                        <div className="text-slate-500 text-xs leading-relaxed mt-1 pt-1 border-t border-slate-200">
+                        <div className="text-slate-400 text-xs leading-relaxed mt-1 pt-1 border-t border-slate-800">
                           <strong>Giải thích:</strong> {q.explanation}
                         </div>
                       </div>

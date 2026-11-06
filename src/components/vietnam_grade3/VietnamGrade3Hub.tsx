@@ -109,9 +109,9 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
             <span className="text-xs font-bold text-cyan-400 block font-mono uppercase tracking-wider">
               DANH MỤC TRẠM HÀNH TINH
             </span>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-300 drop-shadow-[0_0_15px_rgba(0,240,255,0.3)] flex items-center gap-2">
               <span>Học Phần 1: Phép Nhân & Phép Chia Trong Phạm Vi 100</span>
-              <Rocket className="w-5 h-5 text-cyan-500" />
+              <Rocket className="w-5 h-5 text-cyan-400" />
             </h2>
           </div>
           <span className="text-xs font-bold text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-cyan-500/30 font-mono">

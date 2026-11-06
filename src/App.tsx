@@ -159,7 +159,19 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/40 via-sky-50/20 to-slate-100/50 flex flex-col font-sans">
+    <div className={`min-h-screen flex flex-col font-sans relative transition-colors duration-500 ${
+      programMode === 'textbook'
+        ? 'bg-[#060913] text-white selection:bg-cyan-400 selection:text-slate-950'
+        : 'bg-gradient-to-b from-amber-50/40 via-sky-50/20 to-slate-100/50 text-slate-800'
+    }`}>
+      {/* Ambient Galaxy Glow for Cosmic Mode */}
+      {programMode === 'textbook' && (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute -top-40 left-1/4 w-[500px] h-[500px] bg-cyan-600/15 rounded-full blur-[120px] animate-cosmic-twinkle" />
+          <div className="absolute top-1/3 -right-20 w-[450px] h-[450px] bg-purple-600/15 rounded-full blur-[140px] animate-cosmic-twinkle" style={{ animationDelay: '2s' }} />
+          <div className="absolute -bottom-20 left-1/3 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[160px]" />
+        </div>
+      )}
       {/* Top Bar Navigation */}
       <Navbar
         currentTab={activeTab}
@@ -434,19 +446,45 @@ export default function App() {
       />
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-500">
+      <footer className={`mt-12 py-6 text-center text-xs transition-colors duration-500 ${
+        programMode === 'textbook'
+          ? 'bg-slate-950/80 border-t border-cyan-500/20 text-slate-400 backdrop-blur-md'
+          : 'bg-white border-t border-slate-200 text-slate-500'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-semibold">
-            ✨ Vương Quốc Toán Tư Duy Lớp 3 · Dựa trên tài liệu Spark Math
+          <p className="font-semibold flex items-center gap-2">
+            {programMode === 'textbook' ? (
+              <>
+                <span className="text-cyan-400">🌌</span>
+                <span className="text-slate-300">Vũ Trụ Toán 3 · Kết Nối Tri Thức (Chủ Đề 4: Phép Nhân & Phép Chia)</span>
+              </>
+            ) : (
+              <>
+                <span>✨</span>
+                <span>Vương Quốc Toán Tư Duy Lớp 3 · Dựa trên tài liệu Spark Math</span>
+              </>
+            )}
           </p>
           <div className="flex items-center gap-3 font-medium text-slate-400 flex-wrap justify-center">
-            <span>Biểu đồ hình ảnh</span>
-            <span>·</span>
-            <span>Thể tích (Lít)</span>
-            <span>·</span>
-            <span>Sudoku & Quy luật</span>
-            <span>·</span>
-            <span>Logic hàng ngũ</span>
+            {programMode === 'textbook' ? (
+              <>
+                <span className="text-cyan-300 font-bold">7 Hành Tinh Tri Thức</span>
+                <span>·</span>
+                <span className="text-amber-300 font-bold">Chòm Sao Suy Ngẫm</span>
+                <span>·</span>
+                <span className="text-emerald-300 font-bold">Trạm Vũ Trụ Định Kỳ</span>
+              </>
+            ) : (
+              <>
+                <span>Biểu đồ hình ảnh</span>
+                <span>·</span>
+                <span>Thể tích (Lít)</span>
+                <span>·</span>
+                <span>Sudoku & Quy luật</span>
+                <span>·</span>
+                <span>Logic hàng ngũ</span>
+              </>
+            )}
             <span>·</span>
             <button
               type="button"
@@ -454,7 +492,7 @@ export default function App() {
                 sound.playClick();
                 setIsDevConsoleOpen(true);
               }}
-              className="text-amber-600 hover:underline font-bold inline-flex items-center gap-1"
+              className="text-amber-400 hover:text-amber-300 hover:underline font-bold inline-flex items-center gap-1"
             >
               <Bug className="w-3 h-3" />
               <span>Chẩn đoán lỗi code</span>
