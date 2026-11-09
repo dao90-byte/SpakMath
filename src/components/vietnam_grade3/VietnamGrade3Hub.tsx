@@ -164,14 +164,14 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
                   <h3 className="text-base sm:text-lg font-black text-white group-hover:text-cyan-300 transition-colors leading-snug">
                     {lesson.title}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2 font-medium">
+                  <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium leading-relaxed">
                     {lesson.subtitle}
                   </p>
 
                   {/* Core Socratic Question HUD */}
-                  <div className="mt-3.5 p-3 bg-slate-900/90 border border-cyan-500/30 rounded-2xl flex items-start gap-2.5 shadow-inner">
-                    <span className="text-base shrink-0">💡</span>
-                    <span className="text-cyan-100 font-bold text-xs leading-snug">
+                  <div className="mt-3.5 p-3.5 bg-slate-900/90 border border-cyan-500/30 rounded-2xl flex items-start gap-2.5 shadow-inner">
+                    <span className="text-lg shrink-0">💡</span>
+                    <span className="text-cyan-100 font-bold text-xs sm:text-sm leading-relaxed">
                       {lesson.coreQuestion}
                     </span>
                   </div>
@@ -179,7 +179,7 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
 
                 {/* Card Footer */}
                 <div className="mt-5 pt-3.5 border-t border-slate-800/80 flex items-center justify-between gap-3">
-                  <div className="text-[11px] font-bold text-slate-400 font-mono">
+                  <div className="text-xs font-semibold text-slate-300 font-mono">
                     {lesson.socraticDiscovery.length} trạm khám phá · {lesson.exercises.length} bài tập
                   </div>
 
@@ -187,6 +187,7 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
                     type="button"
                     onClick={() => {
                       sound.playClick();
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                       onSelectLesson(lesson);
                     }}
                     className={`px-4 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all active:scale-95 shadow-sm ${

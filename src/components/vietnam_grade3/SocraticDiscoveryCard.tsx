@@ -547,6 +547,7 @@ export const SocraticDiscoveryCard: React.FC<SocraticDiscoveryCardProps> = ({
 
       default:
         return null;
+    }
   };
 
   return (

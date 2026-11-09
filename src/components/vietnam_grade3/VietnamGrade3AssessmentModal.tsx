@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   TOPIC_4_PERIODIC_ASSESSMENT, 
   AssessmentQuestion 
@@ -32,6 +32,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
   onCompletedScore
 }) => {
   const assessment = TOPIC_4_PERIODIC_ASSESSMENT;
+  const modalBodyRef = useRef<HTMLDivElement>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -132,7 +133,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 sm:p-7 overflow-y-auto flex-1 relative z-10">
+        <div ref={modalBodyRef} className="p-5 sm:p-7 overflow-y-auto flex-1 relative z-10">
           {!isSubmitted ? (
             <div>
               {/* Question Navigation Bubbles */}
@@ -149,7 +150,10 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                       <button
                         key={q.id}
                         type="button"
-                        onClick={() => setCurrentIdx(idx)}
+                        onClick={() => {
+                          setCurrentIdx(idx);
+                          modalBodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className={`w-7 h-7 rounded-lg text-xs font-black transition-all font-mono ${
                           isCurrent
                             ? 'bg-gradient-to-tr from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_12px_rgba(0,240,255,0.6)] font-black'
@@ -183,7 +187,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
               </div>
 
               {/* Prompt */}
-              <div className="text-base sm:text-lg font-black text-white leading-snug mb-5 drop-shadow-sm">
+              <div className="text-base sm:text-xl font-black text-white leading-relaxed mb-5 drop-shadow-sm">
                 {currentQ.prompt}
               </div>
 
@@ -196,13 +200,13 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                       key={opt.id}
                       type="button"
                       onClick={() => handleSelectOption(currentQ.id, opt.label)}
-                      className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-xs sm:text-sm transition-all flex items-start gap-3 active:scale-[0.99] ${
+                      className={`w-full p-4 sm:p-5 rounded-2xl border-2 text-left font-bold text-sm sm:text-base transition-all flex items-start gap-3 active:scale-[0.99] ${
                         isSelected
                           ? 'bg-cyan-950/70 border-cyan-400 text-cyan-200 ring-2 ring-cyan-400/50 shadow-[0_0_20px_rgba(0,240,255,0.25)]'
                           : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 text-slate-200 hover:border-cyan-500/50'
                       }`}
                     >
-                      <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 text-xs font-black mt-0.5 font-mono ${
+                      <span className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 text-xs sm:text-sm font-black mt-0.5 font-mono ${
                         isSelected ? 'border-cyan-300 text-cyan-300' : 'border-slate-500 text-slate-400'
                       }`}>
                         {opt.id.toUpperCase()}
@@ -219,7 +223,10 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                   type="button"
                   onClick={() => {
                     sound.playClick();
-                    if (currentIdx > 0) setCurrentIdx(currentIdx - 1);
+                    if (currentIdx > 0) {
+                      setCurrentIdx(currentIdx - 1);
+                      modalBodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
                   }}
                   disabled={currentIdx === 0}
                   className={`px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5 ${
@@ -239,6 +246,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                       onClick={() => {
                         sound.playClick();
                         setCurrentIdx(currentIdx + 1);
+                        modalBodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
                       className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,240,255,0.35)] active:scale-95 transition-transform"
                     >
