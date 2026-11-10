@@ -387,6 +387,218 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           '3 x 1 = 3 chục. Phải cộng 1 chục nhớ: 3 + 1 = 4 chục.',
           'Kết quả đúng phải là 45. Robot ghi 35 nghĩa là bạn đã "bỏ quên số nhớ"!'
         ]
+      },
+      {
+        id: 'ex-23-4',
+        order: 4,
+        title: 'Quy tắc đặt tính: Nhân từ phải sang trái',
+        prompt: 'Bạn Robot làm phép tính 23 x 3. Robot lấy 3 x 2 chục = 6 chục, sau đó lấy 3 x 3 đơn vị = 9 đơn vị rồi viết thành 69. Theo em, thứ tự nhân của Robot có đúng chuẩn quy tắc không?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: 'Đúng hoàn toàn vì nhân hàng nào trước cũng được', isCorrect: false },
+          { id: 'optB', label: 'Sai quy tắc, bắt buộc phải nhân từ hàng đơn vị sang hàng chục để nếu có nhớ thì mới cộng sang được', isCorrect: true },
+          { id: 'optC', label: 'Phải nhân từ hàng trăm trước', isCorrect: false },
+          { id: 'optD', label: 'Phép nhân này không thể thực hiện được', isCorrect: false }
+        ],
+        correctAnswer: 'Sai quy tắc, bắt buộc phải nhân từ hàng đơn vị sang hàng chục để nếu có nhớ thì mới cộng sang được',
+        hint: 'Nếu gặp phép nhân có nhớ (ví dụ 18 x 4), nếu nhân hàng chục trước thì sẽ không có chỗ để cộng thêm số nhớ từ hàng đơn vị.',
+        solutionSteps: [
+          'Quy tắc vàng: Luôn luôn nhân từ phải sang trái (bắt đầu từ hàng đơn vị).',
+          'Lý do: Khi hàng đơn vị có nhớ sang hàng chục, ta cần cộng thêm số nhớ đó vào kết quả nhân hàng chục.',
+          'Dù với 23 x 3 không có nhớ nên ra cùng kết quả 69, nhưng cách làm của Robot là sai phương pháp chuẩn.'
+        ]
+      },
+      {
+        id: 'ex-23-5',
+        order: 5,
+        title: 'Vận dụng: Nhân có nhớ 1 lần sang hàng chục',
+        prompt: 'Mỗi cuộn dây điện dài 24 m. Người thợ cần dùng 3 cuộn dây điện như thế để lắp điện cho trạm vũ trụ. Hỏi người thợ có tất cả bao nhiêu mét dây điện?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '62 m', isCorrect: false },
+          { id: 'optB', label: '72 m', isCorrect: true },
+          { id: 'optC', label: '64 m', isCorrect: false },
+          { id: 'optD', label: '82 m', isCorrect: false }
+        ],
+        correctAnswer: '72 m',
+        hint: 'Đặt tính: 24 x 3. Hàng đơn vị: 3 x 4 = 12 (viết 2 nhớ 1). Hàng chục: 3 x 2 = 6, thêm 1 bằng mấy?',
+        solutionSteps: [
+          'Số mét dây điện người thợ có là: 24 x 3.',
+          '3 x 4 = 12, viết 2 nhớ 1.',
+          '3 x 2 = 6, thêm 1 bằng 7, viết 7.',
+          'Đáp số: 72 m.'
+        ]
+      },
+      {
+        id: 'ex-23-6',
+        order: 6,
+        title: 'Thực hành tính có nhớ lớn (nhớ 3)',
+        prompt: 'Thực hiện phép tính: 16 x 5 = ?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '80', isCorrect: true },
+          { id: 'optB', label: '50', isCorrect: false },
+          { id: 'optC', label: '75', isCorrect: false },
+          { id: 'optD', label: '85', isCorrect: false }
+        ],
+        correctAnswer: '80',
+        hint: '5 x 6 = 30 (viết 0 nhớ 3). 5 x 1 = 5, cộng thêm 3 bằng mấy?',
+        solutionSteps: [
+          'Lượt 1: 5 x 6 = 30, viết 0 nhớ 3 chục.',
+          'Lượt 2: 5 x 1 = 5, thêm 3 bằng 8, viết 8.',
+          'Kết quả: 16 x 5 = 80.'
+        ]
+      },
+      {
+        id: 'ex-23-7',
+        order: 7,
+        title: 'Phục hồi chữ số hàng đơn vị bị ẩn',
+        prompt: 'Tìm chữ số thích hợp điền vào dấu ?: 1? x 4 = 68.',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '2', isCorrect: false },
+          { id: 'optB', label: '7', isCorrect: true },
+          { id: 'optC', label: '6', isCorrect: false },
+          { id: 'optD', label: '8', isCorrect: false }
+        ],
+        correctAnswer: '7',
+        hint: 'Chữ số nào nhân với 4 có chữ số tận cùng là 8? 4 x 2 = 8 hoặc 4 x 7 = 28. Thử từng số xem 12 x 4 hay 17 x 4 = 68.',
+        solutionSteps: [
+          'Ta có: 1? = 68 : 4 = 17.',
+          'Thử lại: 4 x 7 = 28 (viết 8 nhớ 2); 4 x 1 = 4, thêm 2 bằng 6.',
+          'Vậy chữ số cần điền là 7.'
+        ]
+      },
+      {
+        id: 'ex-23-8',
+        order: 8,
+        title: 'Phục hồi chữ số hàng chục bị ẩn',
+        prompt: 'Tìm chữ số thích hợp điền vào dấu ?: ?6 x 2 = 72.',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '2', isCorrect: false },
+          { id: 'optB', label: '3', isCorrect: true },
+          { id: 'optC', label: '4', isCorrect: false },
+          { id: 'optD', label: '5', isCorrect: false }
+        ],
+        correctAnswer: '3',
+        hint: '2 x 6 = 12 (viết 2 nhớ 1). 2 nhân mấy rồi thêm 1 thì bằng 7?',
+        solutionSteps: [
+          '2 x 6 = 12, viết 2 nhớ 1 chục.',
+          'Ở hàng chục: 2 x ? + 1 = 7, nên 2 x ? = 6, suy ra ? = 3.',
+          'Thử lại: 36 x 2 = 72. Chữ số thích hợp là 3.'
+        ]
+      },
+      {
+        id: 'ex-23-9',
+        order: 9,
+        title: 'Vận dụng thực tế: Khối lượng hàng hóa tàu vũ trụ',
+        prompt: 'Tàu thám hiểm chở 3 thùng pin năng lượng lớn, mỗi thùng nặng 18 kg và 1 thùng thiết bị đo đạc nặng 26 kg. Hỏi tàu thám hiểm chở tất cả bao nhiêu ki-lô-gam?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '70 kg', isCorrect: false },
+          { id: 'optB', label: '80 kg', isCorrect: true },
+          { id: 'optC', label: '74 kg', isCorrect: false },
+          { id: 'optD', label: '84 kg', isCorrect: false }
+        ],
+        correctAnswer: '80 kg',
+        hint: 'Bước 1: Tính khối lượng 3 thùng pin năng lượng (18 x 3). Bước 2: Cộng thêm thùng thiết bị 26 kg.',
+        solutionSteps: [
+          'Bước 1: 3 thùng pin năng lượng nặng: 18 x 3 = 54 (kg).',
+          'Bước 2: Tổng khối lượng tàu chở là: 54 + 26 = 80 (kg).',
+          'Đáp số: 80 kg.'
+        ]
+      },
+      {
+        id: 'ex-23-10',
+        order: 10,
+        title: 'So sánh giá trị hai tích có nhớ',
+        prompt: 'Điền dấu thích hợp vào chỗ chấm: 14 x 4 ... 19 x 3',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '>', isCorrect: false },
+          { id: 'optB', label: '<', isCorrect: true },
+          { id: 'optC', label: '=', isCorrect: false },
+          { id: 'optD', label: 'Không so sánh được', isCorrect: false }
+        ],
+        correctAnswer: '<',
+        hint: 'Tính giá trị của 14 x 4 và 19 x 3 rồi so sánh kết quả.',
+        solutionSteps: [
+          'Tính vế trái: 14 x 4 = 56.',
+          'Tính vế phải: 19 x 3 = 57.',
+          'Vì 56 < 57 nên 14 x 4 < 19 x 3.'
+        ]
+      },
+      {
+        id: 'ex-23-11',
+        order: 11,
+        title: 'Ứng dụng hình học: Chu vi tam giác có cạnh bằng nhau',
+        prompt: 'Khu vườn thí nghiệm hình tam giác có một cạnh dài 15 m, hai cạnh còn lại bằng nhau và mỗi cạnh dài 18 m. Hỏi chu vi khu vườn đó là bao nhiêu mét?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '48 m', isCorrect: false },
+          { id: 'optB', label: '51 m', isCorrect: true },
+          { id: 'optC', label: '54 m', isCorrect: false },
+          { id: 'optD', label: '33 m', isCorrect: false }
+        ],
+        correctAnswer: '51 m',
+        hint: 'Chu vi tam giác là tổng độ dài 3 cạnh. Hai cạnh bằng nhau dài 18 x 2, rồi cộng thêm cạnh 15 m.',
+        solutionSteps: [
+          'Tổng độ dài hai cạnh bằng nhau là: 18 x 2 = 36 (m).',
+          'Chu vi khu vườn là: 36 + 15 = 51 (m).',
+          'Đáp số: 51 m.'
+        ]
+      },
+      {
+        id: 'ex-23-12',
+        order: 12,
+        title: 'Tư duy bất đẳng thức: Tìm hệ số lớn nhất',
+        prompt: 'Cho biểu thức: 13 x a < 60 (với a là một số tự nhiên). Giá trị lớn nhất có thể của a là bao nhiêu?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '3', isCorrect: false },
+          { id: 'optB', label: '4', isCorrect: true },
+          { id: 'optC', label: '5', isCorrect: false },
+          { id: 'optD', label: '6', isCorrect: false }
+        ],
+        correctAnswer: '4',
+        hint: 'Thử nhân 13 với các số: 13 x 4 = ?, 13 x 5 = ?',
+        solutionSteps: [
+          'Thử a = 4: 13 x 4 = 52 (52 < 60, thỏa mãn).',
+          'Thử a = 5: 13 x 5 = 65 (65 > 60, không thỏa mãn).',
+          'Vậy số tự nhiên a lớn nhất thỏa mãn điều kiện là 4.'
+        ]
+      },
+      {
+        id: 'ex-23-13',
+        order: 13,
+        title: 'Thử thách Olympic: Tư duy ngược tìm số bí ẩn',
+        prompt: 'Bạn An nghĩ ra một số có hai chữ số. An lấy số đó nhân với 3 rồi cộng thêm 12 thì được kết quả đúng bằng 78. Hỏi số bạn An nghĩ ban đầu là số nào?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '20', isCorrect: false },
+          { id: 'optB', label: '22', isCorrect: true },
+          { id: 'optC', label: '24', isCorrect: false },
+          { id: 'optD', label: '26', isCorrect: false }
+        ],
+        correctAnswer: '22',
+        hint: 'Đi ngược từ kết quả 78: Bớt đi 12 trước, sau đó chia cho 3 để tìm số ban đầu.',
+        solutionSteps: [
+          'Số nhân với 3 là: 78 - 12 = 66.',
+          'Số bạn An nghĩ ban đầu là: 66 : 3 = 22.',
+          'Thử lại: 22 x 3 = 66; 66 + 12 = 78 (chính xác!).',
+          'Đáp số: 22.'
+        ]
       }
     ]
   },
@@ -593,6 +805,217 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           'Bước 1: Số lít dầu ở thùng B là: 12 x 4 = 48 (lít).',
           'Bước 2: Thùng B nhiều hơn thùng A số lít dầu là: 48 - 12 = 36 (lít).',
           'Cách 2 siêu việt: Thùng B gấp 4 lần thùng A, nghĩa là nhiều hơn 3 phần bằng nhau. 12 x 3 = 36 (lít)!'
+        ]
+      },
+      {
+        id: 'ex-24-4',
+        order: 4,
+        title: 'Tính tổng hai đối tượng từ tỉ lệ gấp',
+        prompt: 'Đoạn dây màu đỏ dài 14 cm. Đoạn dây màu xanh dài gấp 3 lần đoạn dây màu đỏ. Hỏi cả hai đoạn dây dài tất cả bao nhiêu xăng-ti-mét?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '42 cm', isCorrect: false },
+          { id: 'optB', label: '56 cm', isCorrect: true },
+          { id: 'optC', label: '48 cm', isCorrect: false },
+          { id: 'optD', label: '64 cm', isCorrect: false }
+        ],
+        correctAnswer: '56 cm',
+        hint: 'Bước 1: Tính chiều dài đoạn dây xanh (14 x 3). Bước 2: Cộng cả hai đoạn dây.',
+        solutionSteps: [
+          'Đoạn dây màu xanh dài: 14 x 3 = 42 (cm).',
+          'Cả hai đoạn dây dài tất cả: 14 + 42 = 56 (cm).',
+          'Cách khác: Đoạn đỏ là 1 phần, đoạn xanh là 3 phần, cả hai là 4 phần. 14 x 4 = 56 (cm).'
+        ]
+      },
+      {
+        id: 'ex-24-5',
+        order: 5,
+        title: 'Gấp liên tiếp qua ba đối tượng',
+        prompt: 'Luống hoa thứ nhất có 8 bông hoa. Luống thứ hai có số hoa gấp 2 lần luống thứ nhất. Luống thứ ba có số hoa gấp 3 lần luống thứ hai. Hỏi luống thứ ba có bao nhiêu bông hoa?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '32 bông hoa', isCorrect: false },
+          { id: 'optB', label: '48 bông hoa', isCorrect: true },
+          { id: 'optC', label: '40 bông hoa', isCorrect: false },
+          { id: 'optD', label: '54 bông hoa', isCorrect: false }
+        ],
+        correctAnswer: '48 bông hoa',
+        hint: 'Bước 1: Tìm số hoa luống 2 (8 x 2). Bước 2: Lấy số hoa luống 2 nhân với 3.',
+        solutionSteps: [
+          'Số hoa ở luống thứ hai là: 8 x 2 = 16 (bông hoa).',
+          'Số hoa ở luống thứ ba là: 16 x 3 = 48 (bông hoa).',
+          'Đáp số: 48 bông hoa.'
+        ]
+      },
+      {
+        id: 'ex-24-6',
+        order: 6,
+        title: 'Phân biệt "gấp 4 lần" và "nhiều hơn 24 tuổi"',
+        prompt: 'Năm nay Mai 8 tuổi. Tuổi của cô Hoa gấp 4 lần tuổi của Mai. Tuổi của chú Nam nhiều hơn tuổi Mai 24 tuổi. So sánh nào sau đây là chính xác?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: 'Cô Hoa nhiều tuổi hơn chú Nam', isCorrect: false },
+          { id: 'optB', label: 'Cô Hoa và chú Nam bằng tuổi nhau (đều 32 tuổi)', isCorrect: true },
+          { id: 'optC', label: 'Chú Nam nhiều tuổi hơn cô Hoa', isCorrect: false },
+          { id: 'optD', label: 'Không thể so sánh được', isCorrect: false }
+        ],
+        correctAnswer: 'Cô Hoa và chú Nam bằng tuổi nhau (đều 32 tuổi)',
+        hint: 'Tính tuổi cô Hoa (8 x 4) và tuổi chú Nam (8 + 24) rồi so sánh.',
+        solutionSteps: [
+          'Tuổi của cô Hoa là: 8 x 4 = 32 (tuổi).',
+          'Tuổi của chú Nam là: 8 + 24 = 32 (tuổi).',
+          'Như vậy cô Hoa và chú Nam có cùng độ tuổi là 32 tuổi.'
+        ]
+      },
+      {
+        id: 'ex-24-7',
+        order: 7,
+        title: 'Bài toán giá tiền dụng cụ học tập',
+        prompt: 'Giá tiền một chiếc bút chì là 5 000 đồng. Giá tiền một hộp bút màu gấp 6 lần giá tiền một chiếc bút chì. Hỏi hộp bút màu đắt hơn chiếc bút chì bao nhiêu tiền?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '20 000 đồng', isCorrect: false },
+          { id: 'optB', label: '25 000 đồng', isCorrect: true },
+          { id: 'optC', label: '30 000 đồng', isCorrect: false },
+          { id: 'optD', label: '35 000 đồng', isCorrect: false }
+        ],
+        correctAnswer: '25 000 đồng',
+        hint: 'Hộp bút màu giá 5 000 x 6 = 30 000 đồng. Lấy giá hộp màu trừ đi giá bút chì.',
+        solutionSteps: [
+          'Giá tiền của hộp bút màu là: 5 000 x 6 = 30 000 (đồng).',
+          'Hộp bút màu đắt hơn chiếc bút chì số tiền là: 30 000 - 5 000 = 25 000 (đồng).',
+          'Đáp số: 25 000 đồng.'
+        ]
+      },
+      {
+        id: 'ex-24-8',
+        order: 8,
+        title: 'Gấp lên một số lần rồi thêm một số đơn vị',
+        prompt: 'Ngày thứ nhất xưởng may được 9 bộ đồng phục. Ngày thứ hai xưởng may được số bộ gấp 3 lần ngày thứ nhất và thêm 4 bộ nữa. Hỏi ngày thứ hai may được bao nhiêu bộ đồng phục?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '27 bộ đồng phục', isCorrect: false },
+          { id: 'optB', label: '31 bộ đồng phục', isCorrect: true },
+          { id: 'optC', label: '35 bộ đồng phục', isCorrect: false },
+          { id: 'optD', label: '28 bộ đồng phục', isCorrect: false }
+        ],
+        correctAnswer: '31 bộ đồng phục',
+        hint: 'Lấy 9 x 3 rồi cộng thêm 4.',
+        solutionSteps: [
+          'Số bộ đồng phục may trong ngày thứ hai là: 9 x 3 + 4 = 27 + 4 = 31 (bộ).',
+          'Đáp số: 31 bộ đồng phục.'
+        ]
+      },
+      {
+        id: 'ex-24-9',
+        order: 9,
+        title: 'Tìm số bé khi biết hiệu và số lần gấp',
+        prompt: 'Bao ngô nặng gấp 3 lần bao khoai. Biết bao ngô nặng hơn bao khoai 18 kg. Hỏi bao khoai nặng bao nhiêu ki-lô-gam?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '6 kg', isCorrect: false },
+          { id: 'optB', label: '9 kg', isCorrect: true },
+          { id: 'optC', label: '12 kg', isCorrect: false },
+          { id: 'optD', label: '15 kg', isCorrect: false }
+        ],
+        correctAnswer: '9 kg',
+        hint: 'Coi bao khoai là 1 phần, bao ngô là 3 phần. Phần hơn là 3 - 1 = 2 phần, ứng với 18 kg.',
+        solutionSteps: [
+          'Theo sơ đồ đoạn thẳng: Bao ngô hơn bao khoai: 3 - 1 = 2 (phần bằng nhau).',
+          'Khối lượng của 1 phần (bao khoai) là: 18 : 2 = 9 (kg).',
+          'Thử lại: Bao ngô nặng 9 x 3 = 27 kg. 27 - 9 = 18 kg (hoàn toàn chính xác!).',
+          'Đáp số: 9 kg.'
+        ]
+      },
+      {
+        id: 'ex-24-10',
+        order: 10,
+        title: 'Hình học: Chiều dài gấp 3 lần chiều rộng',
+        prompt: 'Một mảnh đất hình chữ nhật có chiều rộng 12 m. Chiều dài gấp 3 lần chiều rộng. Hỏi chiều dài mảnh đất đó là bao nhiêu mét?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '15 m', isCorrect: false },
+          { id: 'optB', label: '36 m', isCorrect: true },
+          { id: 'optC', label: '24 m', isCorrect: false },
+          { id: 'optD', label: '48 m', isCorrect: false }
+        ],
+        correctAnswer: '36 m',
+        hint: 'Muốn tìm chiều dài, lấy chiều rộng nhân với số lần gấp (12 x 3).',
+        solutionSteps: [
+          'Chiều dài của mảnh đất là: 12 x 3 = 36 (m).',
+          'Đáp số: 36 m.'
+        ]
+      },
+      {
+        id: 'ex-24-11',
+        order: 11,
+        title: 'Bài toán tuổi: Tính tuổi bố khi sinh con',
+        prompt: 'Năm nay con 9 tuổi. Tuổi bố gấp 4 lần tuổi con. Hỏi khi sinh con ra thì bố bao nhiêu tuổi?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '25 tuổi', isCorrect: false },
+          { id: 'optB', label: '27 tuổi', isCorrect: true },
+          { id: 'optC', label: '30 tuổi', isCorrect: false },
+          { id: 'optD', label: '36 tuổi', isCorrect: false }
+        ],
+        correctAnswer: '27 tuổi',
+        hint: 'Bước 1: Tính tuổi bố hiện nay (9 x 4). Bước 2: Bố sinh con khi con 0 tuổi, lấy tuổi bố trừ đi 9 tuổi của con.',
+        solutionSteps: [
+          'Tuổi của bố hiện nay là: 9 x 4 = 36 (tuổi).',
+          'Khi sinh con ra, bố có số tuổi là: 36 - 9 = 27 (tuổi).',
+          'Đáp số: 27 tuổi.'
+        ]
+      },
+      {
+        id: 'ex-24-12',
+        order: 12,
+        title: 'Vận dụng tổng hợp 3 lớp trồng cây',
+        prompt: 'Lớp 3A trồng được 15 cây. Lớp 3B trồng số cây gấp 2 lần lớp 3A. Lớp 3C trồng được nhiều hơn lớp 3B là 8 cây. Hỏi cả ba lớp trồng được tất cả bao nhiêu cây?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '75 cây', isCorrect: false },
+          { id: 'optB', label: '83 cây', isCorrect: true },
+          { id: 'optC', label: '68 cây', isCorrect: false },
+          { id: 'optD', label: '90 cây', isCorrect: false }
+        ],
+        correctAnswer: '83 cây',
+        hint: 'Tính lớp 3B (15 x 2), tính lớp 3C (30 + 8), rồi cộng cả 3 lớp lại.',
+        solutionSteps: [
+          'Lớp 3B trồng được: 15 x 2 = 30 (cây).',
+          'Lớp 3C trồng được: 30 + 8 = 38 (cây).',
+          'Cả ba lớp trồng được: 15 + 30 + 38 = 83 (cây).',
+          'Đáp số: 83 cây.'
+        ]
+      },
+      {
+        id: 'ex-24-13',
+        order: 13,
+        title: 'Thử thách Olympic: Tổng và tỉ số giữa hai số',
+        prompt: 'Tổng của hai số là 40. Biết rằng số lớn gấp 4 lần số bé. Tìm số lớn.',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '28', isCorrect: false },
+          { id: 'optB', label: '32', isCorrect: true },
+          { id: 'optC', label: '30', isCorrect: false },
+          { id: 'optD', label: '36', isCorrect: false }
+        ],
+        correctAnswer: '32',
+        hint: 'Số bé là 1 phần, số lớn là 4 phần. Tổng số phần bằng nhau là 1 + 4 = 5 phần ứng với 40.',
+        solutionSteps: [
+          'Tổng số phần bằng nhau là: 1 + 4 = 5 (phần).',
+          'Giá trị của 1 phần (số bé) là: 40 : 5 = 8.',
+          'Số lớn là: 8 x 4 = 32 (hoặc 40 - 8 = 32).',
+          'Đáp số: 32.'
         ]
       }
     ]
@@ -838,6 +1261,223 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           'Còn dư 1 bạn học sinh bắt buộc phải có thêm 1 chiếc bàn nữa.',
           'Số bàn học ít nhất cần có là: 17 + 1 = 18 (bàn học).'
         ]
+      },
+      {
+        id: 'ex-25-4',
+        order: 4,
+        title: 'Thực tế chia có dư: Chở khách qua sông bằng thuyền',
+        prompt: 'Có 29 người muốn sang sông bằng thuyền thám hiểm. Mỗi chuyến thuyền chỉ chở được nhiều nhất 4 người (không tính người lái thuyền). Hỏi cần ít nhất bao nhiêu chuyến thuyền để chở hết số người đó sang sông?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '7 chuyến', isCorrect: false },
+          { id: 'optB', label: '8 chuyến', isCorrect: true },
+          { id: 'optC', label: '9 chuyến', isCorrect: false },
+          { id: 'optD', label: '6 chuyến', isCorrect: false }
+        ],
+        correctAnswer: '8 chuyến',
+        hint: '29 : 4 = 7 (dư 1). Người còn dư 1 này có cần thêm 1 chuyến thuyền nữa không?',
+        solutionSteps: [
+          'Thực hiện phép chia: 29 : 4 = 7 (dư 1).',
+          '7 chuyến thuyền chở được: 7 x 4 = 28 người.',
+          'Còn 1 người nữa bắt buộc phải đi thêm 1 chuyến thuyền.',
+          'Số chuyến thuyền ít nhất là: 7 + 1 = 8 (chuyến).'
+        ]
+      },
+      {
+        id: 'ex-25-5',
+        order: 5,
+        title: 'Chia phần đều và tìm số còn thừa',
+        prompt: 'Cô giáo có 50 chiếc bút chì đem chia đều cho các bạn trong lớp, mỗi bạn được 6 chiếc. Hỏi có nhiều nhất bao nhiêu bạn được chia và cô giáo còn thừa mấy chiếc bút chì?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '8 bạn và còn thừa 2 chiếc bút', isCorrect: true },
+          { id: 'optB', label: '8 bạn và còn thừa 4 chiếc bút', isCorrect: false },
+          { id: 'optC', label: '7 bạn và còn thừa 8 chiếc bút', isCorrect: false },
+          { id: 'optD', label: '9 bạn và không thừa chiếc nào', isCorrect: false }
+        ],
+        correctAnswer: '8 bạn và còn thừa 2 chiếc bút',
+        hint: 'Nhẩm 6 x 8 = 48, 50 - 48 = ?',
+        solutionSteps: [
+          'Ta có: 50 : 6 = 8 (dư 2).',
+          'Vậy có nhiều nhất 8 bạn được nhận bút và cô giáo còn thừa 2 chiếc bút chì.'
+        ]
+      },
+      {
+        id: 'ex-25-6',
+        order: 6,
+        title: 'Quy tắc: Số dư lớn nhất và nhỏ nhất khác 0',
+        prompt: 'Trong các phép chia có số chia là 8, số dư lớn nhất có thể có là bao nhiêu và số dư nhỏ nhất khác 0 là bao nhiêu?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: 'Số dư lớn nhất là 8, nhỏ nhất là 0', isCorrect: false },
+          { id: 'optB', label: 'Số dư lớn nhất là 7, nhỏ nhất là 1', isCorrect: true },
+          { id: 'optC', label: 'Số dư lớn nhất là 9, nhỏ nhất là 1', isCorrect: false },
+          { id: 'optD', label: 'Số dư lớn nhất là 6, nhỏ nhất là 2', isCorrect: false }
+        ],
+        correctAnswer: 'Số dư lớn nhất là 7, nhỏ nhất là 1',
+        hint: 'Số dư luôn bé hơn số chia. Số bé hơn 8 và lớn nhất là mấy?',
+        solutionSteps: [
+          'Vì số chia là 8 nên số dư r thỏa mãn: 0 <= r < 8.',
+          'Số dư lớn nhất là: 8 - 1 = 7.',
+          'Số dư nhỏ nhất khác 0 là: 1.'
+        ]
+      },
+      {
+        id: 'ex-25-7',
+        order: 7,
+        title: 'Tìm số bị chia khi biết thương, số chia và số dư',
+        prompt: 'Một số chia cho 5 được thương là 9 và số dư là 3. Số đó là số nào?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '42', isCorrect: false },
+          { id: 'optB', label: '48', isCorrect: true },
+          { id: 'optC', label: '45', isCorrect: false },
+          { id: 'optD', label: '53', isCorrect: false }
+        ],
+        correctAnswer: '48',
+        hint: 'Công thức: Số bị chia = Thương x Số chia + Số dư.',
+        solutionSteps: [
+          'Áp dụng công thức: Số bị chia = Thương x Số chia + Số dư.',
+          'Số đó là: 9 x 5 + 3 = 45 + 3 = 48.',
+          'Đáp số: 48.'
+        ]
+      },
+      {
+        id: 'ex-25-8',
+        order: 8,
+        title: 'Tìm số bị chia lớn nhất có thể',
+        prompt: 'Trong một phép chia có số chia là 6 và thương là 8. Số bị chia lớn nhất có thể có của phép chia này là bao nhiêu?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '48', isCorrect: false },
+          { id: 'optB', label: '53', isCorrect: true },
+          { id: 'optC', label: '54', isCorrect: false },
+          { id: 'optD', label: '52', isCorrect: false }
+        ],
+        correctAnswer: '53',
+        hint: 'Để số bị chia lớn nhất thì số dư phải là số dư lớn nhất có thể (số chia là 6 thì số dư lớn nhất là 5).',
+        solutionSteps: [
+          'Số dư lớn nhất trong phép chia cho 6 là: 6 - 1 = 5.',
+          'Số bị chia lớn nhất là: 8 x 6 + 5 = 48 + 5 = 53.',
+          'Đáp số: 53.'
+        ]
+      },
+      {
+        id: 'ex-25-9',
+        order: 9,
+        title: 'Cắt đoạn dây: Tìm số đoạn và phần thừa',
+        prompt: 'Một sợi dây đồng dài 43 cm. Người ta cắt sợi dây đó thành các đoạn ngắn bằng nhau, mỗi đoạn dài 5 cm. Hỏi cắt được nhiều nhất bao nhiêu đoạn ngắn và sợi dây còn thừa lại bao nhiêu xăng-ti-mét?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '8 đoạn và thừa 3 cm', isCorrect: true },
+          { id: 'optB', label: '8 đoạn và thừa 5 cm', isCorrect: false },
+          { id: 'optC', label: '9 đoạn và thừa 2 cm', isCorrect: false },
+          { id: 'optD', label: '7 đoạn và thừa 8 cm', isCorrect: false }
+        ],
+        correctAnswer: '8 đoạn và thừa 3 cm',
+        hint: 'Thực hiện phép chia: 43 : 5.',
+        solutionSteps: [
+          'Ta có: 43 : 5 = 8 (dư 3).',
+          'Vậy cắt được nhiều nhất 8 đoạn ngắn và còn thừa 3 cm dây đồng.'
+        ]
+      },
+      {
+        id: 'ex-25-10',
+        order: 10,
+        title: 'Ứng dụng chu kỳ thời gian: Tính ngày trong tuần',
+        prompt: 'Hôm nay là thứ Hai. Hỏi sau 23 ngày nữa thì là thứ mấy trong tuần?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: 'Thứ Ba', isCorrect: false },
+          { id: 'optB', label: 'Thứ Tư', isCorrect: true },
+          { id: 'optC', label: 'Thứ Năm', isCorrect: false },
+          { id: 'optD', label: 'Thứ Sáu', isCorrect: false }
+        ],
+        correctAnswer: 'Thứ Tư',
+        hint: 'Một tuần có 7 ngày. Lấy 23 chia cho 7, tìm số dư rồi đếm thêm từ thứ Hai.',
+        solutionSteps: [
+          'Một tuần lễ có 7 ngày.',
+          '23 : 7 = 3 (dư 2).',
+          'Sau đúng 3 tuần (21 ngày) thì lại trở về đúng ngày thứ Hai.',
+          'Còn dư 2 ngày nữa: Thứ Hai -> Thứ Ba (1 ngày) -> Thứ Tư (2 ngày).',
+          'Vậy 23 ngày nữa là ngày Thứ Tư.'
+        ]
+      },
+      {
+        id: 'ex-25-11',
+        order: 11,
+        title: 'Tư duy chu kỳ lặp lại: Màu sắc của bông hoa',
+        prompt: 'Bạn Lan cắm hoa vào 4 chiếc lọ theo thứ tự chu kỳ lặp lại: Đỏ, Vàng, Xanh, Trắng, rồi lại Đỏ, Vàng, Xanh, Trắng... Hỏi bông hoa thứ 35 được cắm vào chiếc lọ màu gì?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: 'Màu Đỏ', isCorrect: false },
+          { id: 'optB', label: 'Màu Vàng', isCorrect: false },
+          { id: 'optC', label: 'Màu Xanh', isCorrect: true },
+          { id: 'optD', label: 'Màu Trắng', isCorrect: false }
+        ],
+        correctAnswer: 'Màu Xanh',
+        hint: 'Chu kỳ gồm 4 màu: 1-Đỏ, 2-Vàng, 3-Xanh, 4-Trắng. Lấy 35 chia cho 4 để xem số dư.',
+        solutionSteps: [
+          'Chu kỳ lặp lại gồm 4 màu.',
+          '35 : 4 = 8 (dư 3).',
+          'Sau 8 chu kỳ trọn vẹn, còn dư 3 bông hoa.',
+          'Bông thứ 1 là Đỏ, bông thứ 2 là Vàng, bông thứ 3 là Xanh.',
+          'Vậy bông hoa thứ 35 cắm vào lọ màu Xanh.'
+        ]
+      },
+      {
+        id: 'ex-25-12',
+        order: 12,
+        title: 'Tìm số chia khi biết số bị chia, thương và số dư',
+        prompt: 'Lấy 38 chia cho một số thì được thương là 7 và số dư là 3. Số chia đó là bao nhiêu?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '4', isCorrect: false },
+          { id: 'optB', label: '5', isCorrect: true },
+          { id: 'optC', label: '6', isCorrect: false },
+          { id: 'optD', label: '7', isCorrect: false }
+        ],
+        correctAnswer: '5',
+        hint: 'Số bị chia trừ số dư sẽ chia hết cho số chia: (38 - 3) : 7 = ?',
+        solutionSteps: [
+          'Phần chia hết là: 38 - 3 = 35.',
+          'Số chia là: 35 : 7 = 5.',
+          'Thử lại: 38 : 5 = 7 (dư 3, thỏa mãn số dư 3 < số chia 5).',
+          'Đáp số: 5.'
+        ]
+      },
+      {
+        id: 'ex-25-13',
+        order: 13,
+        title: 'Thử thách Olympic: Số chia cho 5 dư 4, chia cho 6 dư 5',
+        prompt: 'Tìm một số tự nhiên nhỏ hơn 40, biết rằng số đó chia cho 5 thì dư 4, còn chia cho 6 thì dư 5.',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '24', isCorrect: false },
+          { id: 'optB', label: '29', isCorrect: true },
+          { id: 'optC', label: '34', isCorrect: false },
+          { id: 'optD', label: '39', isCorrect: false }
+        ],
+        correctAnswer: '29',
+        hint: 'Vì số đó chia 5 dư 4 và chia 6 dư 5, nên nếu thêm 1 đơn vị vào số đó thì sẽ chia hết cho cả 5 và 6.',
+        solutionSteps: [
+          'Nhận xét: Số đó thiếu 1 đơn vị để chia hết cho 5, và cũng thiếu 1 đơn vị để chia hết cho 6.',
+          'Do đó, nếu cộng thêm 1 vào số đó, ta được một số vừa chia hết cho 5 vừa chia hết cho 6.',
+          'Số nhỏ hơn 40 chia hết cho cả 5 và 6 là 30.',
+          'Vậy số cần tìm là: 30 - 1 = 29.',
+          'Thử lại: 29 : 5 = 5 (dư 4); 29 : 6 = 4 (dư 5) - Hoàn toàn chính xác!',
+          'Đáp số: 29.'
+        ]
       }
     ]
   },
@@ -1051,6 +1691,214 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           'Vậy 95 : 4 = 23 (dư 3).',
           'Đáp số: Đóng được nhiều nhất 23 thùng và còn thừa 3 quả dưa.'
         ]
+      },
+      {
+        id: 'ex-26-4',
+        order: 4,
+        title: 'Chia có dư ở hàng chục, chia hết ở hàng đơn vị',
+        prompt: 'Thực hiện phép tính: 72 : 3 = ?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '21', isCorrect: false },
+          { id: 'optB', label: '24', isCorrect: true },
+          { id: 'optC', label: '26', isCorrect: false },
+          { id: 'optD', label: '34', isCorrect: false }
+        ],
+        correctAnswer: '24',
+        hint: '7 : 3 = 2 (dư 1). Hạ 2 được 12; 12 : 3 = ?',
+        solutionSteps: [
+          'Lượt 1: 7 : 3 = 2, 2 x 3 = 6, 7 - 6 = 1 (dư 1 chục).',
+          'Lượt 2: Hạ 2 đơn vị, ghép với 1 chục thành 12. 12 : 3 = 4, 4 x 3 = 12, 12 - 12 = 0.',
+          'Kết quả: 72 : 3 = 24.'
+        ]
+      },
+      {
+        id: 'ex-26-5',
+        order: 5,
+        title: 'Thực hành chia có dư lượt đầu',
+        prompt: 'Thực hiện phép tính: 56 : 4 = ?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '14', isCorrect: true },
+          { id: 'optB', label: '12', isCorrect: false },
+          { id: 'optC', label: '16', isCorrect: false },
+          { id: 'optD', label: '15', isCorrect: false }
+        ],
+        correctAnswer: '14',
+        hint: '5 : 4 = 1 dư 1. Hạ 6 được 16; 16 : 4 = 4.',
+        solutionSteps: [
+          '5 : 4 = 1, 1 x 4 = 4, 5 - 4 = 1.',
+          'Hạ 6 được 16; 16 : 4 = 4, 4 x 4 = 16, 16 - 16 = 0.',
+          'Kết quả: 56 : 4 = 14.'
+        ]
+      },
+      {
+        id: 'ex-26-6',
+        order: 6,
+        title: 'Chia có dư ở cả hai lượt tính',
+        prompt: 'Thực hiện phép tính: 77 : 3 = ?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '25 (dư 1)', isCorrect: false },
+          { id: 'optB', label: '25 (dư 2)', isCorrect: true },
+          { id: 'optC', label: '24 (dư 2)', isCorrect: false },
+          { id: 'optD', label: '26 (dư 1)', isCorrect: false }
+        ],
+        correctAnswer: '25 (dư 2)',
+        hint: '7 : 3 = 2 dư 1. Hạ 7 được 17; 17 : 3 = 5 dư 2.',
+        solutionSteps: [
+          '7 : 3 = 2, 2 x 3 = 6, 7 - 6 = 1.',
+          'Hạ 7 được 17; 17 : 3 = 5, 5 x 3 = 15, 17 - 15 = 2.',
+          'Kết quả: 77 : 3 = 25 (dư 2).'
+        ]
+      },
+      {
+        id: 'ex-26-7',
+        order: 7,
+        title: 'Luyện tập chia có dư số lớn',
+        prompt: 'Thực hiện phép tính: 89 : 4 = ?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '22 (dư 1)', isCorrect: true },
+          { id: 'optB', label: '21 (dư 5)', isCorrect: false },
+          { id: 'optC', label: '22 (dư 3)', isCorrect: false },
+          { id: 'optD', label: '20 (dư 9)', isCorrect: false }
+        ],
+        correctAnswer: '22 (dư 1)',
+        hint: '8 : 4 = 2. Hạ 9; 9 : 4 = 2 dư 1.',
+        solutionSteps: [
+          '8 : 4 = 2, 2 x 4 = 8, 8 - 8 = 0.',
+          'Hạ 9; 9 : 4 = 2, 2 x 4 = 8, 9 - 8 = 1.',
+          'Kết quả: 89 : 4 = 22 (dư 1).'
+        ]
+      },
+      {
+        id: 'ex-26-8',
+        order: 8,
+        title: 'Vận dụng thực tế: Cắt may quần áo đồng phục',
+        prompt: 'Một xưởng may có 86 m vải. Mỗi bộ đồng phục học sinh may hết 3 m vải. Hỏi xưởng may được nhiều nhất bao nhiêu bộ đồng phục và còn thừa mấy mét vải?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '28 bộ và còn thừa 2 m vải', isCorrect: true },
+          { id: 'optB', label: '28 bộ và còn thừa 1 m vải', isCorrect: false },
+          { id: 'optC', label: '27 bộ và còn thừa 5 m vải', isCorrect: false },
+          { id: 'optD', label: '29 bộ và không thừa vải', isCorrect: false }
+        ],
+        correctAnswer: '28 bộ và còn thừa 2 m vải',
+        hint: 'Thực hiện phép chia: 86 : 3. Thương là số bộ may được, số dư là số mét vải còn thừa.',
+        solutionSteps: [
+          'Ta có: 86 : 3 = 28 (dư 2).',
+          'Vậy xưởng may được nhiều nhất 28 bộ đồng phục và còn thừa 2 m vải.'
+        ]
+      },
+      {
+        id: 'ex-26-9',
+        order: 9,
+        title: 'Tìm một phần mấy của một số',
+        prompt: 'Một cửa hàng có 75 kg gạo. Buổi sáng cửa hàng đã bán được 1/5 số gạo đó. Hỏi buổi sáng cửa hàng bán được bao nhiêu ki-lô-gam gạo?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '12 kg', isCorrect: false },
+          { id: 'optB', label: '15 kg', isCorrect: true },
+          { id: 'optC', label: '18 kg', isCorrect: false },
+          { id: 'optD', label: '25 kg', isCorrect: false }
+        ],
+        correctAnswer: '15 kg',
+        hint: 'Muốn tìm 1/5 của 75 kg, ta lấy 75 chia cho 5.',
+        solutionSteps: [
+          'Số gạo buổi sáng bán được là: 75 : 5 = 15 (kg).',
+          'Đáp số: 15 kg.'
+        ]
+      },
+      {
+        id: 'ex-26-10',
+        order: 10,
+        title: 'Bài toán rút về đơn vị: Xếp sách thư viện',
+        prompt: 'Cô thủ thư xếp đều 78 cuốn sách vào 6 ngăn giá sách. Bạn Nam mượn toàn bộ số sách ở 2 ngăn. Hỏi bạn Nam đã mượn bao nhiêu cuốn sách?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '13 cuốn sách', isCorrect: false },
+          { id: 'optB', label: '26 cuốn sách', isCorrect: true },
+          { id: 'optC', label: '39 cuốn sách', isCorrect: false },
+          { id: 'optD', label: '24 cuốn sách', isCorrect: false }
+        ],
+        correctAnswer: '26 cuốn sách',
+        hint: 'Bước 1: Tính số sách 1 ngăn (78 : 6). Bước 2: Nhân với 2 ngăn.',
+        solutionSteps: [
+          'Mỗi ngăn có số cuốn sách là: 78 : 6 = 13 (cuốn).',
+          'Bạn Nam mượn số cuốn sách là: 13 x 2 = 26 (cuốn).',
+          'Đáp số: 26 cuốn sách.'
+        ]
+      },
+      {
+        id: 'ex-26-11',
+        order: 11,
+        title: 'So sánh giá trị hai thương số',
+        prompt: 'Điền dấu thích hợp vào chỗ chấm: 96 : 3 ... 84 : 2',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '>', isCorrect: false },
+          { id: 'optB', label: '<', isCorrect: true },
+          { id: 'optC', label: '=', isCorrect: false },
+          { id: 'optD', label: 'Không so sánh được', isCorrect: false }
+        ],
+        correctAnswer: '<',
+        hint: 'Tính giá trị của 96 : 3 và 84 : 2 rồi so sánh kết quả.',
+        solutionSteps: [
+          '96 : 3 = 32.',
+          '84 : 2 = 42.',
+          'Vì 32 < 42 nên 96 : 3 < 84 : 2.'
+        ]
+      },
+      {
+        id: 'ex-26-12',
+        order: 12,
+        title: 'Phục hồi chữ số hàng chục trong phép chia',
+        prompt: 'Tìm chữ số thích hợp điền vào dấu ?: ?2 : 4 = 18.',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '5', isCorrect: false },
+          { id: 'optB', label: '7', isCorrect: true },
+          { id: 'optC', label: '6', isCorrect: false },
+          { id: 'optD', label: '8', isCorrect: false }
+        ],
+        correctAnswer: '7',
+        hint: 'Muốn tìm số bị chia, lấy thương nhân với số chia: 18 x 4 = ?',
+        solutionSteps: [
+          'Số bị chia là: 18 x 4 = 72.',
+          'Vậy chữ số hàng chục còn thiếu là 7.'
+        ]
+      },
+      {
+        id: 'ex-26-13',
+        order: 13,
+        title: 'Thử thách Olympic: Xếp hàng thể dục lớp 3B',
+        prompt: 'Lớp 3B có ít hơn 50 học sinh và nhiều hơn 40 học sinh. Khi tập thể dục, nếu xếp mỗi hàng 4 bạn thì vừa hết hàng, nếu xếp mỗi hàng 6 bạn cũng vừa hết hàng. Hỏi lớp 3B có bao nhiêu học sinh?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '44 học sinh', isCorrect: false },
+          { id: 'optB', label: '48 học sinh', isCorrect: true },
+          { id: 'optC', label: '42 học sinh', isCorrect: false },
+          { id: 'optD', label: '46 học sinh', isCorrect: false }
+        ],
+        correctAnswer: '48 học sinh',
+        hint: 'Số học sinh vừa chia hết cho 4 vừa chia hết cho 6, và nằm trong khoảng từ 41 đến 49.',
+        solutionSteps: [
+          'Số học sinh chia hết cho 6 trong khoảng 41 đến 49 là 42 và 48.',
+          'Thử 42 : 4 = 10 (dư 2, loại).',
+          'Thử 48 : 4 = 12 (vừa hết) và 48 : 6 = 8 (vừa hết).',
+          'Vậy lớp 3B có đúng 48 học sinh.'
+        ]
       }
     ]
   },
@@ -1257,6 +2105,220 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           'Bước 1: Số giảm đi 5 lần được 9, vậy số ban đầu là: 9 x 5 = 45.',
           'Bước 2: Lấy số đó bớt đi 5 đơn vị: 45 - 5 = 40.',
           'Đáp số: 40.'
+        ]
+      },
+      {
+        id: 'ex-27-4',
+        order: 4,
+        title: 'Giảm số lần rồi tính phần còn lại',
+        prompt: 'Cuộn dây thép dài 48 m. Bác thợ cắt đi một đoạn dây bằng chiều dài cuộn dây giảm đi 4 lần. Hỏi đoạn dây còn lại dài bao nhiêu mét?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '12 m', isCorrect: false },
+          { id: 'optB', label: '36 m', isCorrect: true },
+          { id: 'optC', label: '40 m', isCorrect: false },
+          { id: 'optD', label: '44 m', isCorrect: false }
+        ],
+        correctAnswer: '36 m',
+        hint: 'Bước 1: Đoạn dây cắt đi dài 48 : 4 = 12 m. Bước 2: Lấy 48 m trừ đi 12 m.',
+        solutionSteps: [
+          'Đoạn dây bác thợ cắt đi dài: 48 : 4 = 12 (m).',
+          'Đoạn dây còn lại dài là: 48 - 12 = 36 (m).',
+          'Đáp số: 36 m.'
+        ]
+      },
+      {
+        id: 'ex-27-5',
+        order: 5,
+        title: 'Giảm liên tiếp hai lần',
+        prompt: 'Số 80 đem giảm đi 2 lần, rồi lại giảm tiếp đi 4 lần thì được số nào?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '20', isCorrect: false },
+          { id: 'optB', label: '10', isCorrect: true },
+          { id: 'optC', label: '8', isCorrect: false },
+          { id: 'optD', label: '12', isCorrect: false }
+        ],
+        correctAnswer: '10',
+        hint: 'Lượt 1: 80 : 2 = 40. Lượt 2: 40 : 4 = ?',
+        solutionSteps: [
+          'Giảm đi 2 lần: 80 : 2 = 40.',
+          'Giảm tiếp đi 4 lần: 40 : 4 = 10.',
+          'Kết quả: 10.'
+        ]
+      },
+      {
+        id: 'ex-27-6',
+        order: 6,
+        title: 'Tìm số ban đầu khi biết kết quả sau khi giảm',
+        prompt: 'Một số giảm đi 6 lần thì được 8. Nếu lấy số đó giảm đi 4 lần thì được kết quả là bao nhiêu?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '10', isCorrect: false },
+          { id: 'optB', label: '12', isCorrect: true },
+          { id: 'optC', label: '14', isCorrect: false },
+          { id: 'optD', label: '16', isCorrect: false }
+        ],
+        correctAnswer: '12',
+        hint: 'Bước 1: Tìm số ban đầu: 8 x 6 = 48. Bước 2: Giảm số đó đi 4 lần: 48 : 4 = ?',
+        solutionSteps: [
+          'Số ban đầu là: 8 x 6 = 48.',
+          'Giảm số đó đi 4 lần: 48 : 4 = 12.',
+          'Đáp số: 12.'
+        ]
+      },
+      {
+        id: 'ex-27-7',
+        order: 7,
+        title: 'Giảm số lần kết hợp cộng thêm',
+        prompt: 'Trang trại có 64 con gà. Số con vịt bằng số con gà giảm đi 4 lần, sau đó cộng thêm 6 con. Hỏi trang trại có bao nhiêu con vịt?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '20 con vịt', isCorrect: false },
+          { id: 'optB', label: '22 con vịt', isCorrect: true },
+          { id: 'optC', label: '18 con vịt', isCorrect: false },
+          { id: 'optD', label: '24 con vịt', isCorrect: false }
+        ],
+        correctAnswer: '22 con vịt',
+        hint: 'Lấy 64 : 4 rồi cộng thêm 6.',
+        solutionSteps: [
+          'Số con vịt là: 64 : 4 + 6 = 16 + 6 = 22 (con vịt).',
+          'Đáp số: 22 con vịt.'
+        ]
+      },
+      {
+        id: 'ex-27-8',
+        order: 8,
+        title: 'So sánh "giảm 3 lần" và "bớt 3 đơn vị"',
+        prompt: 'Cho số 27. Nếu giảm số đó đi 3 lần ta được số A. Nếu bớt số đó đi 3 đơn vị ta được số B. Hỏi số B lớn hơn số A bao nhiêu đơn vị?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '12 đơn vị', isCorrect: false },
+          { id: 'optB', label: '15 đơn vị', isCorrect: true },
+          { id: 'optC', label: '18 đơn vị', isCorrect: false },
+          { id: 'optD', label: '21 đơn vị', isCorrect: false }
+        ],
+        correctAnswer: '15 đơn vị',
+        hint: 'A = 27 : 3; B = 27 - 3. Tìm hiệu B - A.',
+        solutionSteps: [
+          'Số A là: 27 : 3 = 9.',
+          'Số B là: 27 - 3 = 24.',
+          'Số B lớn hơn số A: 24 - 9 = 15 (đơn vị).',
+          'Đáp số: 15 đơn vị.'
+        ]
+      },
+      {
+        id: 'ex-27-9',
+        order: 9,
+        title: 'Tính tổng hai tổ từ tỉ lệ giảm',
+        prompt: 'Tổ Một thu gom được 36 kg giấy vụn. Số giấy vụn tổ Hai thu gom được bằng số giấy tổ Một giảm đi 3 lần. Hỏi cả hai tổ thu gom được bao nhiêu ki-lô-gam giấy vụn?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '42 kg', isCorrect: false },
+          { id: 'optB', label: '48 kg', isCorrect: true },
+          { id: 'optC', label: '45 kg', isCorrect: false },
+          { id: 'optD', label: '52 kg', isCorrect: false }
+        ],
+        correctAnswer: '48 kg',
+        hint: 'Bước 1: Tổ Hai thu được 36 : 3 = 12 kg. Bước 2: Cộng cả hai tổ lại.',
+        solutionSteps: [
+          'Tổ Hai thu gom được: 36 : 3 = 12 (kg).',
+          'Cả hai tổ thu gom được: 36 + 12 = 48 (kg).',
+          'Đáp số: 48 kg.'
+        ]
+      },
+      {
+        id: 'ex-27-10',
+        order: 10,
+        title: 'Bài toán tuổi ông và tuổi cháu',
+        prompt: 'Ông năm nay 72 tuổi. Tuổi của cháu bằng tuổi của ông giảm đi 8 lần. Hỏi ông nhiều hơn cháu bao nhiêu tuổi?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '61 tuổi', isCorrect: false },
+          { id: 'optB', label: '63 tuổi', isCorrect: true },
+          { id: 'optC', label: '65 tuổi', isCorrect: false },
+          { id: 'optD', label: '64 tuổi', isCorrect: false }
+        ],
+        correctAnswer: '63 tuổi',
+        hint: 'Tuổi cháu: 72 : 8 = 9 tuổi. Lấy tuổi ông trừ tuổi cháu.',
+        solutionSteps: [
+          'Tuổi của cháu là: 72 : 8 = 9 (tuổi).',
+          'Ông nhiều hơn cháu số tuổi là: 72 - 9 = 63 (tuổi).',
+          'Đáp số: 63 tuổi.'
+        ]
+      },
+      {
+        id: 'ex-27-11',
+        order: 11,
+        title: 'Bài toán bể nước tiêu thụ qua hai ngày',
+        prompt: 'Một bể chứa 96 lít nước. Ngày thứ nhất dùng hết 1/3 số nước (số nước giảm đi 3 lần). Ngày thứ hai dùng tiếp một lượng nước bằng số nước còn lại giảm đi 2 lần. Hỏi sau hai ngày bể còn lại bao nhiêu lít nước?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '24 lít', isCorrect: false },
+          { id: 'optB', label: '32 lít', isCorrect: true },
+          { id: 'optC', label: '36 lít', isCorrect: false },
+          { id: 'optD', label: '48 lít', isCorrect: false }
+        ],
+        correctAnswer: '32 lít',
+        hint: 'Ngày 1 dùng 96 : 3 = 32L -> Còn lại 64L. Ngày 2 dùng 64 : 2 = 32L -> Còn lại 64 - 32 = ?',
+        solutionSteps: [
+          'Ngày thứ nhất dùng: 96 : 3 = 32 (lít).',
+          'Số nước còn lại sau ngày thứ nhất: 96 - 32 = 64 (lít).',
+          'Ngày thứ hai dùng: 64 : 2 = 32 (lít).',
+          'Sau hai ngày bể còn lại: 64 - 32 = 32 (lít).',
+          'Đáp số: 32 lít nước.'
+        ]
+      },
+      {
+        id: 'ex-27-12',
+        order: 12,
+        title: 'Tìm x trong biểu thức có phép chia và phép cộng',
+        prompt: 'Tìm số tự nhiên x, biết: x : 4 + 15 = 27.',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '44', isCorrect: false },
+          { id: 'optB', label: '48', isCorrect: true },
+          { id: 'optC', label: '52', isCorrect: false },
+          { id: 'optD', label: '42', isCorrect: false }
+        ],
+        correctAnswer: '48',
+        hint: 'x : 4 = 27 - 15 = 12. Sau đó x = 12 x 4 = ?',
+        solutionSteps: [
+          'x : 4 = 27 - 15.',
+          'x : 4 = 12.',
+          'x = 12 x 4 = 48.',
+          'Đáp số: 48.'
+        ]
+      },
+      {
+        id: 'ex-27-13',
+        order: 13,
+        title: 'Thử thách Olympic: Tư duy ngược từ hai bước giảm và bớt',
+        prompt: 'Một số đem giảm đi 3 lần rồi bớt đi 5 đơn vị thì được kết quả đúng bằng 9. Hỏi số ban đầu là số nào?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '36', isCorrect: false },
+          { id: 'optB', label: '42', isCorrect: true },
+          { id: 'optC', label: '45', isCorrect: false },
+          { id: 'optD', label: '48', isCorrect: false }
+        ],
+        correctAnswer: '42',
+        hint: 'Đi ngược từ 9: Lấy 9 cộng 5 trước, sau đó nhân với 3.',
+        solutionSteps: [
+          'Số sau khi giảm 3 lần là: 9 + 5 = 14.',
+          'Số ban đầu là: 14 x 3 = 42.',
+          'Thử lại: 42 : 3 = 14; 14 - 5 = 9 (hoàn toàn chính xác!).',
+          'Đáp số: 42.'
         ]
       }
     ]
@@ -1466,6 +2528,220 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           'Bước 2: Mẹ còn lại số quả cam là: 40 - 10 = 30 (quả cam).',
           'Đáp số: 30 quả cam.'
         ]
+      },
+      {
+        id: 'ex-28-4',
+        order: 4,
+        title: 'Tính tổng xuất kho hai ngày rồi tìm phần còn lại',
+        prompt: 'Một kho vũ trụ có 90 bao lương thực. Ngày đầu xuất 25 bao, ngày thứ hai xuất 35 bao. Hỏi sau hai ngày trong kho còn lại bao nhiêu bao lương thực?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '35 bao lương thực', isCorrect: false },
+          { id: 'optB', label: '30 bao lương thực', isCorrect: true },
+          { id: 'optC', label: '40 bao lương thực', isCorrect: false },
+          { id: 'optD', label: '25 bao lương thực', isCorrect: false }
+        ],
+        correctAnswer: '30 bao lương thực',
+        hint: 'Bước 1: Tính tổng số bao đã xuất trong 2 ngày (25 + 35). Bước 2: Lấy 90 trừ đi tổng đó.',
+        solutionSteps: [
+          'Số bao lương thực xuất trong 2 ngày là: 25 + 35 = 60 (bao).',
+          'Số bao lương thực còn lại trong kho là: 90 - 60 = 30 (bao).',
+          'Đáp số: 30 bao lương thực.'
+        ]
+      },
+      {
+        id: 'ex-28-5',
+        order: 5,
+        title: 'Bớt đi một lượng rồi chia đều vào các túi',
+        prompt: 'Bác nông dân thu hoạch được 54 quả bưởi. Bác đem biếu người thân 6 quả. Số bưởi còn lại bác chia đều vào 6 túi. Hỏi mỗi túi có bao nhiêu quả bưởi?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '7 quả bưởi', isCorrect: false },
+          { id: 'optB', label: '8 quả bưởi', isCorrect: true },
+          { id: 'optC', label: '9 quả bưởi', isCorrect: false },
+          { id: 'optD', label: '6 quả bưởi', isCorrect: false }
+        ],
+        correctAnswer: '8 quả bưởi',
+        hint: 'Bước 1: Tính số bưởi còn lại sau khi biếu (54 - 6). Bước 2: Chia đều cho 6 túi.',
+        solutionSteps: [
+          'Số quả bưởi còn lại là: 54 - 6 = 48 (quả).',
+          'Mỗi túi có số quả bưởi là: 48 : 6 = 8 (quả).',
+          'Đáp số: 8 quả bưởi.'
+        ]
+      },
+      {
+        id: 'ex-28-6',
+        order: 6,
+        title: 'Tính tiền mua hàng và số tiền thối lại',
+        prompt: 'Bạn Nam có 50 000 đồng. Nam mua 3 quyển vở, mỗi quyển giá 12 000 đồng. Hỏi cô bán hàng phải trả lại cho Nam bao nhiêu tiền?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '12 000 đồng', isCorrect: false },
+          { id: 'optB', label: '14 000 đồng', isCorrect: true },
+          { id: 'optC', label: '16 000 đồng', isCorrect: false },
+          { id: 'optD', label: '24 000 đồng', isCorrect: false }
+        ],
+        correctAnswer: '14 000 đồng',
+        hint: 'Bước 1: Tính tổng tiền mua 3 quyển vở (12 000 x 3). Bước 2: Lấy 50 000 trừ đi số tiền đó.',
+        solutionSteps: [
+          'Số tiền mua 3 quyển vở là: 12 000 x 3 = 36 000 (đồng).',
+          'Số tiền cô bán hàng trả lại là: 50 000 - 36 000 = 14 000 (đồng).',
+          'Đáp số: 14 000 đồng.'
+        ]
+      },
+      {
+        id: 'ex-28-7',
+        order: 7,
+        title: 'Bài toán hai thửa ruộng có tỉ lệ gấp đôi',
+        prompt: 'Thửa ruộng thứ nhất thu hoạch được 28 kg cà chua. Thửa ruộng thứ hai thu hoạch được số cà chua gấp đôi (gấp 2 lần) thửa ruộng thứ nhất. Hỏi cả hai thửa ruộng thu hoạch được bao nhiêu ki-lô-gam cà chua?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '56 kg cà chua', isCorrect: false },
+          { id: 'optB', label: '84 kg cà chua', isCorrect: true },
+          { id: 'optC', label: '76 kg cà chua', isCorrect: false },
+          { id: 'optD', label: '92 kg cà chua', isCorrect: false }
+        ],
+        correctAnswer: '84 kg cà chua',
+        hint: 'Bước 1: Thửa thứ hai = 28 x 2. Bước 2: Cả hai thửa = Thửa 1 + Thửa 2.',
+        solutionSteps: [
+          'Thửa ruộng thứ hai thu hoạch được: 28 x 2 = 56 (kg).',
+          'Cả hai thửa ruộng thu hoạch được: 28 + 56 = 84 (kg).',
+          'Cách khác: 28 x 3 = 84 (kg).',
+          'Đáp số: 84 kg cà chua.'
+        ]
+      },
+      {
+        id: 'ex-28-8',
+        order: 8,
+        title: 'Giảm số lần rồi tìm hiệu hai thùng dầu',
+        prompt: 'Thùng thứ nhất đựng 60 lít dầu. Thùng thứ hai đựng số dầu bằng số dầu thùng thứ nhất giảm đi 3 lần. Hỏi thùng thứ nhất đựng nhiều hơn thùng thứ hai bao nhiêu lít dầu?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '20 lít dầu', isCorrect: false },
+          { id: 'optB', label: '40 lít dầu', isCorrect: true },
+          { id: 'optC', label: '35 lít dầu', isCorrect: false },
+          { id: 'optD', label: '45 lít dầu', isCorrect: false }
+        ],
+        correctAnswer: '40 lít dầu',
+        hint: 'Bước 1: Tìm số dầu thùng 2 (60 : 3). Bước 2: Lấy số dầu thùng 1 trừ đi thùng 2.',
+        solutionSteps: [
+          'Thùng thứ hai đựng số dầu là: 60 : 3 = 20 (lít).',
+          'Thùng thứ nhất nhiều hơn thùng thứ hai: 60 - 20 = 40 (lít).',
+          'Đáp số: 40 lít dầu.'
+        ]
+      },
+      {
+        id: 'ex-28-9',
+        order: 9,
+        title: 'Tính số học sinh lớp thứ ba từ trung bình hai lớp đầu',
+        prompt: 'Khối lớp Ba có 3 lớp. Lớp 3A có 32 học sinh, lớp 3B có 30 học sinh. Lớp 3C có số học sinh bằng một nửa (giảm 2 lần) tổng số học sinh của hai lớp 3A và 3B. Hỏi lớp 3C có bao nhiêu học sinh?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '30 học sinh', isCorrect: false },
+          { id: 'optB', label: '31 học sinh', isCorrect: true },
+          { id: 'optC', label: '32 học sinh', isCorrect: false },
+          { id: 'optD', label: '33 học sinh', isCorrect: false }
+        ],
+        correctAnswer: '31 học sinh',
+        hint: 'Bước 1: Tính tổng học sinh 3A và 3B (32 + 30). Bước 2: Chia cho 2.',
+        solutionSteps: [
+          'Tổng số học sinh lớp 3A và 3B là: 32 + 30 = 62 (học sinh).',
+          'Số học sinh của lớp 3C là: 62 : 2 = 31 (học sinh).',
+          'Đáp số: 31 học sinh.'
+        ]
+      },
+      {
+        id: 'ex-28-10',
+        order: 10,
+        title: 'Bài toán tính tổng lượng vải may nhiều bộ',
+        prompt: 'Để may một chiếc áo sơ mi cần 2 m vải, may một chiếc quần cần 3 m vải. Hỏi để may 8 bộ quần áo như thế (mỗi bộ gồm 1 áo và 1 quần) thì cần tất cả bao nhiêu mét vải?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '36 m vải', isCorrect: false },
+          { id: 'optB', label: '40 m vải', isCorrect: true },
+          { id: 'optC', label: '45 m vải', isCorrect: false },
+          { id: 'optD', label: '48 m vải', isCorrect: false }
+        ],
+        correctAnswer: '40 m vải',
+        hint: 'Bước 1: May 1 bộ cần 2 + 3 = 5 m. Bước 2: May 8 bộ lấy 5 x 8.',
+        solutionSteps: [
+          'Để may một bộ quần áo cần số mét vải là: 2 + 3 = 5 (m).',
+          'Để may 8 bộ quần áo cần số mét vải là: 5 x 8 = 40 (m).',
+          'Đáp số: 40 m vải.'
+        ]
+      },
+      {
+        id: 'ex-28-11',
+        order: 11,
+        title: 'Bài toán san sẻ kẹo để hai hộp bằng nhau',
+        prompt: 'Hộp A có 24 cái kẹo, hộp B có 12 cái kẹo. Hỏi phải chuyển từ hộp A sang hộp B bao nhiêu cái kẹo để hai hộp có số kẹo bằng nhau?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '4 cái kẹo', isCorrect: false },
+          { id: 'optB', label: '6 cái kẹo', isCorrect: true },
+          { id: 'optC', label: '8 cái kẹo', isCorrect: false },
+          { id: 'optD', label: '12 cái kẹo', isCorrect: false }
+        ],
+        correctAnswer: '6 cái kẹo',
+        hint: 'Bước 1: Hộp A hơn hộp B: 24 - 12 = 12 cái kẹo. Bước 2: Chia đôi khoảng cách đó (12 : 2).',
+        solutionSteps: [
+          'Cách 1: Hộp A nhiều hơn hộp B là: 24 - 12 = 12 (cái kẹo).',
+          'Muốn hai hộp bằng nhau thì phải chuyển một nửa số kẹo chênh lệch: 12 : 2 = 6 (cái kẹo).',
+          'Thử lại: Hộp A còn 24 - 6 = 18 cái; Hộp B có 12 + 6 = 18 cái (bằng nhau!).',
+          'Đáp số: 6 cái kẹo.'
+        ]
+      },
+      {
+        id: 'ex-28-12',
+        order: 12,
+        title: 'Bài toán năng suất lao động tổ thợ mộc',
+        prompt: 'Một tổ thợ mộc gồm 4 người, trong 3 ngày đóng được tất cả 24 chiếc ghế. Biết năng suất mỗi người như nhau. Hỏi 1 người thợ mộc trong 1 ngày đóng được bao nhiêu chiếc ghế?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '1 chiếc ghế', isCorrect: false },
+          { id: 'optB', label: '2 chiếc ghế', isCorrect: true },
+          { id: 'optC', label: '3 chiếc ghế', isCorrect: false },
+          { id: 'optD', label: '4 chiếc ghế', isCorrect: false }
+        ],
+        correctAnswer: '2 chiếc ghế',
+        hint: 'Bước 1: Cả tổ trong 1 ngày đóng được: 24 : 3 = 8 chiếc. Bước 2: 1 người trong 1 ngày: 8 : 4 = ?',
+        solutionSteps: [
+          'Trong 1 ngày, cả tổ 4 người đóng được: 24 : 3 = 8 (chiếc ghế).',
+          'Trong 1 ngày, 1 người thợ mộc đóng được: 8 : 4 = 2 (chiếc ghế).',
+          'Đáp số: 2 chiếc ghế.'
+        ]
+      },
+      {
+        id: 'ex-28-13',
+        order: 13,
+        title: 'Thử thách Olympic: Giỏ cam và phép chuyển đổi',
+        prompt: 'Có hai giỏ cam. Giỏ thứ nhất có 38 quả. Nếu chuyển 6 quả từ giỏ thứ nhất sang giỏ thứ hai thì số cam ở giỏ thứ hai vẫn ít hơn giỏ thứ nhất là 4 quả. Hỏi ban đầu giỏ thứ hai có bao nhiêu quả cam?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '20 quả cam', isCorrect: false },
+          { id: 'optB', label: '22 quả cam', isCorrect: true },
+          { id: 'optC', label: '24 quả cam', isCorrect: false },
+          { id: 'optD', label: '26 quả cam', isCorrect: false }
+        ],
+        correctAnswer: '22 quả cam',
+        hint: 'Sau khi chuyển 6 quả, giỏ 1 còn 38 - 6 = 32 quả. Giỏ 2 khi đó là 32 - 4 = 28 quả. Trừ 6 quả vừa nhận để ra ban đầu.',
+        solutionSteps: [
+          'Sau khi chuyển đi 6 quả, số cam ở giỏ thứ nhất còn là: 38 - 6 = 32 (quả).',
+          'Khi đó, số cam ở giỏ thứ hai là: 32 - 4 = 28 (quả).',
+          'Số cam ban đầu ở giỏ thứ hai là: 28 - 6 = 22 (quả).',
+          'Thử lại: Ban đầu 38 và 22 quả. Chuyển 6 quả: Giỏ 1 thành 32, giỏ 2 thành 28. 32 - 28 = 4 (hoàn toàn chính xác!).',
+          'Đáp số: 22 quả cam.'
+        ]
       }
     ]
   },
@@ -1644,6 +2920,230 @@ export const VIETNAM_GRADE_3_LESSONS: VietnamGrade3Lesson[] = [
           'Áp dụng công thức: Số bị chia = Thương x Số chia + Số dư.',
           'Số cần tìm là: 11 x 7 + 6 = 77 + 6 = 83.',
           'Đáp số: 83.'
+        ]
+      },
+      {
+        id: 'ex-29-4',
+        order: 4,
+        title: 'Biểu thức có dấu ngoặc và thứ tự phép tính',
+        prompt: 'Tính giá trị của biểu thức: (45 + 15) : 6 = ?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '10', isCorrect: true },
+          { id: 'optB', label: '12', isCorrect: false },
+          { id: 'optC', label: '8', isCorrect: false },
+          { id: 'optD', label: '15', isCorrect: false }
+        ],
+        correctAnswer: '10',
+        hint: 'Thực hiện phép tính trong ngoặc đơn trước: tính 45 + 15 trước rồi lấy kết quả chia cho 6.',
+        solutionSteps: [
+          'Quy tắc thứ tự: Thực hiện phép tính trong dấu ngoặc đơn trước.',
+          '45 + 15 = 60.',
+          '60 : 6 = 10.',
+          'Đáp số: 10.'
+        ]
+      },
+      {
+        id: 'ex-29-5',
+        order: 5,
+        title: 'Phối hợp nhân chia liên tiếp',
+        prompt: 'Tính giá trị của biểu thức: 84 : 4 x 3 = ?',
+        cognitiveLevel: 'thong_hieu',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '63', isCorrect: true },
+          { id: 'optB', label: '53', isCorrect: false },
+          { id: 'optC', label: '72', isCorrect: false },
+          { id: 'optD', label: '28', isCorrect: false }
+        ],
+        correctAnswer: '63',
+        hint: 'Biểu thức chỉ gồm phép chia và phép nhân thì ta thực hiện lần lượt từ trái sang phải: 84 : 4 trước, rồi nhân với 3.',
+        solutionSteps: [
+          'Quy tắc: Biểu thức chỉ có nhân và chia, thực hiện lần lượt từ trái sang phải.',
+          'Bước 1: 84 : 4 = 21.',
+          'Bước 2: 21 x 3 = 63.',
+          'Đáp số: 63.'
+        ]
+      },
+      {
+        id: 'ex-29-6',
+        order: 6,
+        title: 'Ứng dụng tìm số bị chia trong bài toán số học',
+        prompt: 'Một số đem chia cho 6 thì được thương là 14 và số dư là 4. Hỏi số đó là bao nhiêu?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '88', isCorrect: true },
+          { id: 'optB', label: '84', isCorrect: false },
+          { id: 'optC', label: '92', isCorrect: false },
+          { id: 'optD', label: '80', isCorrect: false }
+        ],
+        correctAnswer: '88',
+        hint: 'Nhớ lại công thức: Số bị chia = Thương x Số chia + Số dư. Ở đây: 14 x 6 + 4.',
+        solutionSteps: [
+          'Áp dụng công thức tìm số bị chia trong phép chia có dư: Số bị chia = Thương x Số chia + Số dư.',
+          'Ta có: 14 x 6 = 84.',
+          '84 + 4 = 88.',
+          'Đáp số: 88.'
+        ]
+      },
+      {
+        id: 'ex-29-7',
+        order: 7,
+        title: 'Vận dụng thực tế: Đi siêu thị và tiền thừa',
+        prompt: 'Mẹ mua 4 hộp bánh, mỗi hộp giá 15 000 đồng và 1 hộp sữa giá 25 000 đồng. Mẹ đưa cho cô thu ngân tờ 100 000 đồng. Hỏi cô thu ngân phải trả lại mẹ bao nhiêu tiền?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '15 000 đồng', isCorrect: true },
+          { id: 'optB', label: '25 000 đồng', isCorrect: false },
+          { id: 'optC', label: '20 000 đồng', isCorrect: false },
+          { id: 'optD', label: '10 000 đồng', isCorrect: false }
+        ],
+        correctAnswer: '15 000 đồng',
+        hint: 'Bước 1: Tính tiền 4 hộp bánh (15 000 x 4). Bước 2: Tính tổng tiền mua cả bánh và sữa. Bước 3: Lấy 100 000 đồng trừ đi tổng tiền mua.',
+        solutionSteps: [
+          'Bước 1: Mua 4 hộp bánh hết số tiền là: 15 000 x 4 = 60 000 (đồng).',
+          'Bước 2: Tổng số tiền mẹ mua cả bánh và sữa là: 60 000 + 25 000 = 85 000 (đồng).',
+          'Bước 3: Cô thu ngân phải trả lại mẹ số tiền là: 100 000 - 85 000 = 15 000 (đồng).',
+          'Đáp số: 15 000 đồng.'
+        ]
+      },
+      {
+        id: 'ex-29-8',
+        order: 8,
+        title: 'Vận dụng thực tế: Đóng chai nước mắm có dư',
+        prompt: 'Một thùng có 74 lít nước mắm. Bác An rót đều vào các can 5 lít. Hỏi bác An rót được nhiều nhất bao nhiêu can và còn thừa lại bao nhiêu lít nước mắm?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '14 can và thừa 4 lít', isCorrect: true },
+          { id: 'optB', label: '14 can và thừa 2 lít', isCorrect: false },
+          { id: 'optC', label: '15 can và thừa 1 lít', isCorrect: false },
+          { id: 'optD', label: '12 can và thừa 4 lít', isCorrect: false }
+        ],
+        correctAnswer: '14 can và thừa 4 lít',
+        hint: 'Thực hiện phép chia có dư: 74 : 5. Thương là số can rót được, số dư là số lít còn thừa.',
+        solutionSteps: [
+          'Đặt tính chia: 74 : 5.',
+          '7 chia 5 được 1, viết 1; 1 nhân 5 bằng 5; 7 trừ 5 bằng 2.',
+          'Hạ 4 được 24; 24 chia 5 được 4, viết 4; 4 nhân 5 bằng 20; 24 trừ 20 bằng 4.',
+          'Vậy 74 : 5 = 14 (dư 4).',
+          'Bác An rót được nhiều nhất 14 can 5 lít và còn thừa lại 4 lít nước mắm.',
+          'Đáp số: 14 can và thừa 4 lít.'
+        ]
+      },
+      {
+        id: 'ex-29-9',
+        order: 9,
+        title: 'Toán hình học tích hợp: Chu vi hình chữ nhật',
+        prompt: 'Một mảnh vườn hình chữ nhật có chiều rộng là 4 m, chiều dài gấp 3 lần chiều rộng. Hỏi chu vi của mảnh vườn đó là bao nhiêu mét?',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '32 m', isCorrect: true },
+          { id: 'optB', label: '48 m', isCorrect: false },
+          { id: 'optC', label: '24 m', isCorrect: false },
+          { id: 'optD', label: '36 m', isCorrect: false }
+        ],
+        correctAnswer: '32 m',
+        hint: 'Bước 1: Tính chiều dài (4 x 3). Bước 2: Tính chu vi hình chữ nhật = (chiều dài + chiều rộng) x 2.',
+        solutionSteps: [
+          'Bước 1: Chiều dài mảnh vườn là: 4 x 3 = 12 (m).',
+          'Bước 2: Chu vi mảnh vườn hình chữ nhật là: (12 + 4) x 2 = 16 x 2 = 32 (m).',
+          'Đáp số: 32 m.'
+        ]
+      },
+      {
+        id: 'ex-29-10',
+        order: 10,
+        title: 'So sánh hai biểu thức phối hợp phép tính',
+        prompt: 'Điền dấu thích hợp (<, >, =) vào chỗ chấm: 16 x 4 - 15 ... 14 x 3 + 6',
+        cognitiveLevel: 'van_dung',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '>', isCorrect: true },
+          { id: 'optB', label: '<', isCorrect: false },
+          { id: 'optC', label: '=', isCorrect: false },
+          { id: 'optD', label: 'Không thể so sánh', isCorrect: false }
+        ],
+        correctAnswer: '>',
+        hint: 'Tính giá trị của vế trái (16 x 4 - 15) và vế phải (14 x 3 + 6) rồi so sánh hai số kết quả.',
+        solutionSteps: [
+          'Tính vế trái: 16 x 4 = 64; 64 - 15 = 49.',
+          'Tính vế phải: 14 x 3 = 42; 42 + 6 = 48.',
+          'So sánh hai kết quả: Vì 49 > 48 nên 16 x 4 - 15 > 14 x 3 + 6.',
+          'Đáp số: >.'
+        ]
+      },
+      {
+        id: 'ex-29-11',
+        order: 11,
+        title: 'Vận dụng cao: Tìm số bị chia lớn nhất với số dư lớn nhất',
+        prompt: 'Trong một phép chia có số chia là 8, thương là số lớn nhất có một chữ số, và số dư là số dư lớn nhất có thể có trong phép chia đó. Tìm số bị chia?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '79', isCorrect: true },
+          { id: 'optB', label: '72', isCorrect: false },
+          { id: 'optC', label: '80', isCorrect: false },
+          { id: 'optD', label: '78', isCorrect: false }
+        ],
+        correctAnswer: '79',
+        hint: 'Số lớn nhất có 1 chữ số là 9 (thương). Số chia là 8 nên số dư lớn nhất có thể có là 7. Số bị chia = Thương x Số chia + Số dư.',
+        solutionSteps: [
+          'Thương là số lớn nhất có một chữ số nên thương là 9.',
+          'Vì số chia là 8 nên số dư lớn nhất có thể có là: 8 - 1 = 7.',
+          'Số bị chia cần tìm là: 9 x 8 + 7 = 72 + 7 = 79.',
+          'Đáp số: 79.'
+        ]
+      },
+      {
+        id: 'ex-29-12',
+        order: 12,
+        title: 'Vận dụng cao: Tìm thành phần chưa biết nâng cao',
+        prompt: 'Tìm x biết: 90 - x x 4 = 18',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: 'x = 18', isCorrect: true },
+          { id: 'optB', label: 'x = 12', isCorrect: false },
+          { id: 'optC', label: 'x = 24', isCorrect: false },
+          { id: 'optD', label: 'x = 16', isCorrect: false }
+        ],
+        correctAnswer: 'x = 18',
+        hint: 'Coi (x x 4) là số trừ chưa biết: x x 4 = 90 - 18. Sau đó tìm x bằng cách lấy kết quả chia cho 4.',
+        solutionSteps: [
+          'Coi cụm (x x 4) là số trừ chưa biết trong phép trừ.',
+          'x x 4 = 90 - 18.',
+          'x x 4 = 72.',
+          'x là thừa số chưa biết: x = 72 : 4.',
+          '7 chia 4 được 1 dư 3; hạ 2 được 32; 32 chia 4 được 8. Vậy x = 18.',
+          'Đáp số: x = 18.'
+        ]
+      },
+      {
+        id: 'ex-29-13',
+        order: 13,
+        title: 'Thử thách Olympic Toán 3: Chuỗi dữ kiện tổng hợp Chủ đề 4',
+        prompt: 'Ba bao gạo có tất cả một số ki-lô-gam gạo. Bao thứ nhất nặng 18 kg. Bao thứ hai nặng gấp 2 lần bao thứ nhất. Bao thứ ba nặng bằng một nửa tổng số gạo của bao thứ nhất và bao thứ hai gộp lại. Hỏi cả ba bao có tất cả bao nhiêu ki-lô-gam gạo?',
+        cognitiveLevel: 'van_dung_cao',
+        type: 'single_choice',
+        options: [
+          { id: 'optA', label: '81 kg', isCorrect: true },
+          { id: 'optB', label: '72 kg', isCorrect: false },
+          { id: 'optC', label: '90 kg', isCorrect: false },
+          { id: 'optD', label: '64 kg', isCorrect: false }
+        ],
+        correctAnswer: '81 kg',
+        hint: 'Bước 1: Tính bao thứ hai (18 x 2). Bước 2: Tính tổng bao 1 và bao 2. Bước 3: Tính bao 3 bằng cách lấy tổng chia cho 2. Bước 4: Cộng cả 3 bao lại.',
+        solutionSteps: [
+          'Bước 1: Bao thứ hai nặng số ki-lô-gam là: 18 x 2 = 36 (kg).',
+          'Bước 2: Tổng số gạo ở bao thứ nhất và bao thứ hai là: 18 + 36 = 54 (kg).',
+          'Bước 3: Bao thứ ba nặng một nửa (giảm đi 2 lần) tổng hai bao đầu nên nặng là: 54 : 2 = 27 (kg).',
+          'Bước 4: Cả ba bao có tất cả số ki-lô-gam gạo là: 54 + 27 = 81 (kg) (hoặc 18 + 36 + 27 = 81 kg).',
+          'Đáp số: 81 kg.'
         ]
       }
     ]

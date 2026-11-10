@@ -1,4 +1,4 @@
-import { LessonQuestion, BENNY, MAYLE, topicName } from './lessonTypes';
+import { LessonQuestion, ABBY, BENNY, CASEY, MAYLE, topicName } from './lessonTypes';
 
 export const EXTENDED_LOGIC_LESSONS: LessonQuestion[] = [
   {
@@ -244,5 +244,203 @@ export const EXTENDED_LOGIC_LESSONS: LessonQuestion[] = [
       ],
       correctOrder: ['cheetah', 'lion', 'zebra', 'giraffe', 'turtle']
     }
+  },
+  {
+    id: 'log-37',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đếm Hàng Chữ Thập Giao Nhau: Một Bạn Tại Tâm Giao Điểm',
+    badgeTitle: 'Bài 37 · Độ khó Cấp 19',
+    instruction: 'Hai hàng học sinh đứng giao nhau hình chữ Thập (+): Hàng ngang có 9 bạn, hàng dọc có 9 bạn. Bạn Nam đứng đúng ở tâm giao điểm. Hỏi có tất cả bao nhiêu bạn?',
+    hint: 'Tổng số bạn = 9 (hàng dọc) + 9 (hàng ngang) - 1 (bạn Nam bị tính 2 lần) = 17 bạn!',
+    mascot: { ...BENNY, message: 'Nhớ nguyên lý bù trừ: Bạn Nam ở tâm thuộc cả hai hàng nên chỉ được tính 1 lần thôi!' },
+    activity: {
+      type: 'cornerCross',
+      shape: '+',
+      verticalCount: 9,
+      horizontalCount: 9,
+      intersectionPerson: 'Bạn Nam ở tâm',
+      options: ['16 bạn', '17 bạn', '18 bạn', '19 bạn'],
+      correctAnswer: '17 bạn'
+    }
+  },
+  {
+    id: 'log-38',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Suy Luận Bắc Cầu Chiều Cao: Sắp Xếp 5 Bạn Nhỏ',
+    badgeTitle: 'Bài 38 · Độ khó Cấp 20',
+    instruction: 'Dựa vào các manh mối: Nam cao hơn An. An cao hơn Bình. Bình cao hơn Cúc. Cúc cao hơn Dũng. Hãy sắp xếp từ CAO NHẤT đến THẤP NHẤT.',
+    hint: 'Thứ tự từ cao nhất đến thấp nhất: Nam ➡️ An ➡️ Bình ➡️ Cúc ➡️ Dũng.',
+    mascot: { ...MAYLE, message: 'Tính chất bắc cầu: A > B và B > C suy ra A > C!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp chiều cao từ CAO NHẤT ➡️ THẤP NHẤT:',
+      directionLabel: 'Chiều cao: Cao Nhất ➡️ Thấp Nhất',
+      items: [
+        { id: 'nam', label: 'Bạn Nam', description: 'Cao hơn bạn An', icon: '👦' },
+        { id: 'an', label: 'Bạn An', description: 'Cao hơn Bình nhưng thấp hơn Nam', icon: '🧒' },
+        { id: 'binh', label: 'Bạn Bình', description: 'Đứng ở vị trí chính giữa', icon: '👦' },
+        { id: 'cuc', label: 'Bạn Cúc', description: 'Cao hơn Dũng nhưng thấp hơn Bình', icon: '👧' },
+        { id: 'dung', label: 'Bạn Dũng', description: 'Thấp nhất trong nhóm 5 bạn', icon: '👶' }
+      ],
+      correctOrder: ['nam', 'an', 'binh', 'cuc', 'dung']
+    }
+  },
+  {
+    id: 'log-39',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Sắp Xếp Chỗ Ngồi Bàn Tròn 6 Bạn Theo Manh Mối',
+    badgeTitle: 'Bài 39 · Độ khó Cấp 21',
+    instruction: 'Xếp 6 bạn vào 6 ghế quanh bàn tròn theo chiều kim đồng hồ từ ghế 1 đến 6: Khỉ Benny ngồi ghế 1, Thỏ Abby ngồi cạnh Benny ở ghế 2, Chuột Casey ghế 3, Thầy Mayle ghế 4, Bác Ram ghế 5, Bé Lisa ghế 6.',
+    hint: 'Thứ tự ghế 1 đến 6: Khỉ Benny ➡️ Thỏ Abby ➡️ Chuột Casey ➡️ Thầy Mayle ➡️ Bác Ram ➡️ Bé Lisa.',
+    mascot: { ...CASEY, message: 'Bàn tròn 6 vị trí quanh ánh nến lung linh!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 6,
+      allowedCharacters: ['Khỉ Benny', 'Thỏ Abby', 'Chuột Casey', 'Thầy Mayle', 'Bác Ram', 'Bé Lisa'],
+      correctOrder: ['Khỉ Benny', 'Thỏ Abby', 'Chuột Casey', 'Thầy Mayle', 'Bác Ram', 'Bé Lisa']
+    }
+  },
+  {
+    id: 'log-40',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Vòng Tròn 30 Học Sinh: Vị Trí Đối Diện Trực Diện',
+    badgeTitle: 'Bài 40 · Độ khó Cấp 22',
+    instruction: 'Có 30 bạn đứng thành vòng tròn cách đều nhau đánh số từ 1 đến 30 theo chiều kim đồng hồ. Hỏi bạn đứng đối diện trực diện với bạn số 7 là bạn số mấy?',
+    hint: 'Vòng tròn 30 bạn thì nửa vòng tròn bằng 30 : 2 = 15 bước. Vị trí đối diện bạn số 7 là: 7 + 15 = 22!',
+    mascot: { ...MAYLE, message: 'Khoảng cách đối diện trực tiếp luôn bằng đúng N : 2 (nửa chu vi vòng tròn)!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'circle',
+      totalInQueue: 30,
+      correctTotal: 22,
+      formula: 'Vị trí đối diện = 7 + (30 : 2) = 7 + 15 = 22',
+      options: [20, 21, 22, 23],
+      promptTitle: 'Bạn đứng đối diện bạn số 7 là bạn mang số:'
+    }
+  },
+  {
+    id: 'log-41',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Sắp Xếp 5 Phương Tiện Giao Thông Theo Khối Lượng',
+    badgeTitle: 'Bài 41 · Độ khó Cấp 23',
+    instruction: 'Dựa vào thực tế và các manh mối đo đạc, sắp xếp 5 phương tiện theo khối lượng từ NẶNG NHẤT đến NHẸ NHẤT.',
+    hint: 'Máy bay phản lực ✈️ nặng nhất ➡️ Xe buýt 🚌 ➡️ Xe tải 🚚 ➡️ Xe con 🚗 ➡️ Xe máy 🛵 nhẹ nhất.',
+    mascot: { ...BENNY, message: 'Tư duy vật lý trực quan kết hợp logic sắp xếp!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp khối lượng từ NẶNG NHẤT ➡️ NHẸ NHẤT:',
+      directionLabel: 'Khối lượng: Nặng Nhất ➡️ Nhẹ Nhất',
+      items: [
+        { id: 'plane', label: 'Máy Bay Phản Lực', description: 'Trọng tải hàng chục tấn, nặng nhất', icon: '✈️' },
+        { id: 'bus', label: 'Xe Buýt 45 Chỗ', description: 'Nặng hơn xe tải chở hàng nhẹ', icon: '🚌' },
+        { id: 'truck', label: 'Xe Tải Giao Hàng', description: 'Nặng hơn xe con gia đình', icon: '🚚' },
+        { id: 'car', label: 'Xe Con 4 Chỗ', description: 'Nặng hơn xe máy hai bánh', icon: '🚗' },
+        { id: 'motorbike', label: 'Xe Máy Tay Ga', description: 'Nhẹ nhất trong các phương tiện', icon: '🛵' }
+      ],
+      correctOrder: ['plane', 'bus', 'truck', 'car', 'motorbike']
+    }
+  },
+  {
+    id: 'log-42',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Bàn Tròn Họp Đội Tàu Không Gian 6 Thành Viên',
+    badgeTitle: 'Bài 42 · Độ khó Cấp 24',
+    instruction: 'Sắp xếp 6 phi hành gia vào 6 ghế quanh bàn điều khiển: Thầy Mayle ghế 1, Khỉ Benny ghế 2, Thỏ Abby ghế 3, Chuột Casey ghế 4, Bác Ram ghế 5, Bé Lisa ghế 6.',
+    hint: 'Theo chiều kim đồng hồ từ ghế 1 đến 6: Thầy Mayle ➡️ Khỉ Benny ➡️ Thỏ Abby ➡️ Chuột Casey ➡️ Bác Ram ➡️ Bé Lisa.',
+    mascot: { ...ABBY, message: 'Bàn điều khiển trung tâm sẵn sàng phóng phi thuyền!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 6,
+      allowedCharacters: ['Thầy Mayle', 'Khỉ Benny', 'Thỏ Abby', 'Chuột Casey', 'Bác Ram', 'Bé Lisa'],
+      correctOrder: ['Thầy Mayle', 'Khỉ Benny', 'Thỏ Abby', 'Chuột Casey', 'Bác Ram', 'Bé Lisa']
+    }
+  },
+  {
+    id: 'log-43',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Hàng Dọc Xếp Hàng: Khoảng Cách Giữa Hai Bạn Đặc Biệt',
+    badgeTitle: 'Bài 43 · Độ khó Cấp 25',
+    instruction: 'Trong một hàng dọc: Bạn Nam đứng thứ 6 tính từ đầu hàng. Bạn Bắc đứng thứ 7 tính từ cuối hàng. Giữa Nam và Bắc có đúng 3 bạn. Hỏi hàng dọc có tất cả bao nhiêu bạn?',
+    hint: 'Tổng số bạn = 6 (từ đầu đến Nam) + 3 (ở giữa) + 7 (từ Bắc đến cuối) = 16 bạn!',
+    mascot: { ...MAYLE, message: 'Cộng 3 đoạn rời rạc không giao nhau: Đầu hàng + Đoạn giữa + Cuối hàng!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'between',
+      totalInQueue: 16,
+      correctTotal: 16,
+      formula: 'Tổng số bạn = 6 + 3 + 7 = 16 bạn',
+      options: [14, 15, 16, 17],
+      promptTitle: 'Tổng số bạn học sinh trong hàng dọc là:'
+    }
+  },
+  {
+    id: 'log-44',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Sắp Xếp 5 Hành Tinh Theo Khoảng Cách Đến Mặt Trời',
+    badgeTitle: 'Bài 44 · Độ khó Cấp 26',
+    instruction: 'Dựa vào kiến thức thiên văn học, sắp xếp 5 hành tinh theo khoảng cách từ GẦN NHẤT đến XA NHẤT so với Mặt Trời.',
+    hint: 'Sao Thủy gần nhất ➡️ Sao Kim ➡️ Trái Đất thân yêu ➡️ Sao Hỏa đỏ ➡️ Sao Mộc khổng lồ xa nhất.',
+    mascot: { ...MAYLE, message: 'Hệ Mặt Trời tuyệt mỹ của chúng ta! Ghi nhớ thứ tự các hành tinh nhé!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp khoảng cách đến Mặt Trời từ GẦN NHẤT ➡️ XA NHẤT:',
+      directionLabel: 'Khoảng cách: Gần Nhất ➡️ Xa Nhất',
+      items: [
+        { id: 'mercury', label: 'Sao Thủy', description: 'Hành tinh gần Mặt Trời nhất', icon: '🪐' },
+        { id: 'venus', label: 'Sao Kim', description: 'Hành tinh thứ hai, nóng nhất', icon: '🌕' },
+        { id: 'earth', label: 'Trái Đất', description: 'Hành tinh xanh sự sống, thứ ba', icon: '🌍' },
+        { id: 'mars', label: 'Sao Hỏa', description: 'Hành tinh đỏ huyền bí, thứ tư', icon: '🔴' },
+        { id: 'jupiter', label: 'Sao Mộc', description: 'Hành tinh khí khổng lồ, thứ năm', icon: '🪐' }
+      ],
+      correctOrder: ['mercury', 'venus', 'earth', 'mars', 'jupiter']
+    }
+  },
+  {
+    id: 'log-45',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Bàn Tròn Đại Yến Hội: 6 Vị Trí Vinh Danh',
+    badgeTitle: 'Bài 45 · Độ khó Cấp 27',
+    instruction: 'Sắp xếp 6 bạn danh dự vào 6 ghế quanh bàn tiệc: Bác Ram ghế 1, Thầy Mayle ghế 2, Bé Lisa ghế 3, Khỉ Benny ghế 4, Thỏ Abby ghế 5, Chuột Casey ghế 6.',
+    hint: 'Theo đúng thứ tự: Bác Ram ➡️ Thầy Mayle ➡️ Bé Lisa ➡️ Khỉ Benny ➡️ Thỏ Abby ➡️ Chuột Casey.',
+    mascot: { ...CASEY, message: 'Bàn đại yến mừng công hoàn thành xuất sắc nhiệm vụ!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 6,
+      allowedCharacters: ['Bác Ram', 'Thầy Mayle', 'Bé Lisa', 'Khỉ Benny', 'Thỏ Abby', 'Chuột Casey'],
+      correctOrder: ['Bác Ram', 'Thầy Mayle', 'Bé Lisa', 'Khỉ Benny', 'Thỏ Abby', 'Chuột Casey']
+    }
+  },
+  {
+    id: 'log-46',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'SIÊU THỬ THÁCH SUY LUẬN LOGIC OLYMPIC TRẠM 5: Năm Loài Mãnh Thú Đua Tốc Độ',
+    badgeTitle: 'Bài 46 · Đỉnh Cao Trạm 5 Tuyệt Đối',
+    instruction: 'Đại thử thách Olympic suy luận: Sắp xếp 5 loài vật siêu đẳng theo thứ tự về đích từ HẠNG 1 (Nhanh nhất) đến HẠNG 5 (Chậm nhất).',
+    hint: 'Đại bàng 🦅 bay nhanh nhất về Hạng 1 ➡️ Báo hoa mai 🐆 Hạng 2 ➡️ Ngựa chiến 🐎 Hạng 3 ➡️ Sói tuyết 🐺 Hạng 4 ➡️ Thỏ rừng 🐇 Hạng 5.',
+    mascot: { ...MAYLE, message: 'Đỉnh cao tư duy suy luận logic! Em xứng danh là Bậc Thầy Trinh Thám Toán Học!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp thứ tự về đích từ HẠNG 1 (Nhanh Nhất) ➡️ HẠNG 5:',
+      directionLabel: 'Về đích: Hạng 1 ➡️ Hạng 5',
+      items: [
+        { id: 'eagle', label: 'Đại Bàng Vàng', description: 'Sải cánh chao liệng trên không, về đích đầu tiên (Hạng 1)', icon: '🦅' },
+        { id: 'leopard', label: 'Báo Hoa Mai', description: 'Về đích ngay sau Đại Bàng (Hạng 2)', icon: '🐆' },
+        { id: 'horse', label: 'Ngựa Chiến Phi Nước Đại', description: 'Cán đích ở vị trí chính giữa (Hạng 3)', icon: '🐎' },
+        { id: 'wolf', label: 'Sói Tuyết Dẻo Dai', description: 'Về đích sau Ngựa nhưng trước Thỏ (Hạng 4)', icon: '🐺' },
+        { id: 'rabbit', label: 'Thỏ Rừng Tinh Nghịch', description: 'Về đích ở vị trí cuối cùng (Hạng 5)', icon: '🐇' }
+      ],
+      correctOrder: ['eagle', 'leopard', 'horse', 'wolf', 'rabbit']
+    }
   }
 ];
+

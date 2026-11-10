@@ -17,6 +17,7 @@ Chuyển đổi toàn diện phân hệ **Toán SGK Lớp 3 (Kết Nối Tri Th�
 | **7. Trạm Đánh Giá Định Kỳ Thiên Hà** | ✅ Hoàn tất | `src/components/vietnam_grade3/VietnamGrade3AssessmentModal.tsx` - Modal vũ trụ công nghệ cao, 10 câu hỏi nhận thức 4 cấp độ, lưu điểm định kỳ. |
 | **8. Thanh Điều Hướng & Nền Vũ Trụ** | ✅ Hoàn tất | `src/components/Navbar.tsx`, `src/App.tsx` - Tinh vân phát sáng nền `#060913`, chuyển đổi mượt mà giữa SGK Vũ Trụ và Toán Tư Duy. |
 | **9. Quy trình Kiểm Chứng 3 Vòng Lặp** | ✅ Đạt 100% | Loop 1: Schema chuẩn; Loop 2: Toán học & Logic đàm thoại 100%; Loop 3: Compile & Lint 0 lỗi. |
+| **10. Mở rộng 70 Bài tập Lũy tiến (10 bài/trạm)** | ✅ Hoàn tất | Bổ sung 10 bài tập tăng dần độ khó (từ bài 4 đến bài 13) cho cả 7 trạm vũ trụ (Bài 23 - Bài 29), từ cơ bản đến Olympic Toán 3. |
 
 ---
 

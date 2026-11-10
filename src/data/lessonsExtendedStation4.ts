@@ -1,4 +1,4 @@
-import { LessonQuestion, ABBY, CASEY, MAYLE, topicName } from './lessonTypes';
+import { LessonQuestion, ABBY, BENNY, CASEY, MAYLE, topicName } from './lessonTypes';
 
 export const EXTENDED_PATTERN_LESSONS: LessonQuestion[] = [
   {
@@ -344,5 +344,343 @@ export const EXTENDED_PATTERN_LESSONS: LessonQuestion[] = [
       correctChoiceId: 'top2',
       correctExplanation: 'Hai số tầng 3 là 12 và 16. Đỉnh kim tự tháp = 12 + 16 = 28!'
     }
+  },
+  {
+    id: 'pat-34',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Fibonacci Tự Nhiên: Mỗi Số Bằng Tổng Hai Số Đứng Trước',
+    badgeTitle: 'Bài 34 · Độ khó Cấp 19',
+    instruction: 'Tìm số tiếp theo trong dãy số nổi tiếng: 1, 2, 3, 5, 8, 13, 21, [?].',
+    hint: 'Quy luật Fibonacci: 1 + 2 = 3; 2 + 3 = 5; 3 + 5 = 8; 5 + 8 = 13; 8 + 13 = 21; 13 + 21 = ?',
+    mascot: { ...ABBY, message: 'Dãy số Fibonacci xuất hiện khắp nơi trong tự nhiên: từ cánh hoa đến vỏ ốc!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Dãy Số Fibonacci Kỳ Diệu',
+      ruleExplanation: 'Mỗi số bằng tổng của hai số liền trước: 13 + 21 = 34.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1', subLabel: 'Gốc' },
+        { id: 2, label: '2', subLabel: 'Gốc' },
+        { id: 3, label: '3', subLabel: '1+2' },
+        { id: 4, label: '5', subLabel: '2+3' },
+        { id: 5, label: '8', subLabel: '3+5' },
+        { id: 6, label: '13', subLabel: '5+8' },
+        { id: 7, label: '21', subLabel: '8+13' },
+        { id: 8, label: '?', isMissing: true, subLabel: '13+21' }
+      ],
+      choices: [
+        { id: 'c1', label: '32', subLabel: 'Cộng nhầm' },
+        { id: 'c2', label: '34', subLabel: '13 + 21 = 34' },
+        { id: 'c3', label: '35', subLabel: 'Thừa 1' },
+        { id: 'c4', label: '36', subLabel: 'Thừa 2' }
+      ],
+      correctChoiceId: 'c2',
+      correctExplanation: 'Quy tắc Fibonacci: 13 + 21 = 34!'
+    }
+  },
+  {
+    id: 'pat-35',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê Cung Tinh Vân Thiên Hà: Chu Kỳ 4 Chòm Sao',
+    badgeTitle: 'Bài 35 · Độ khó Cấp 20',
+    instruction: 'Dẫn đường phi thuyền qua mê cung tinh vân theo đúng chu kỳ: ⭐ ➡️ 🌙 ➡️ ☀️ ➡️ 🪐 lặp lại tuần hoàn.',
+    hint: 'Xuất phát ở [0,0] là ⭐, tiếp theo phải đi vào ô 🌙, rồi ☀️, rồi 🪐.',
+    mascot: { ...BENNY, message: 'Bay đúng lộ trình chòm sao để không bị hút vào lỗ đen nhé!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['⭐', '🌙', '☀️', '🪐'],
+      ruleTitle: 'Chu kỳ chòm sao: ⭐ ➡️ 🌙 ➡️ ☀️ ➡️ 🪐',
+      startPos: [0, 0],
+      goalPos: [3, 3],
+      startIcon: '🚀',
+      startLabel: 'Trạm Khởi Hành',
+      goalIcon: '🌌',
+      goalLabel: 'Thiên Hà Rực Rỡ',
+      grid: [
+        ['⭐', '🌙', '☀️', '🪐'],
+        ['🪐', '☀️', '🌙', '⭐'],
+        ['☀️', '🪐', '⭐', '🌙'],
+        ['🌙', '⭐', '🪐', '☀️']
+      ],
+      targetPath: [
+        [0, 0], [0, 1], [0, 2], [0, 3],
+        [1, 3], [2, 3], [3, 3]
+      ],
+      successMessage: 'Tuyệt vời! Phi thuyền đã vượt qua mê cung tinh vân an toàn!'
+    }
+  },
+  {
+    id: 'pat-36',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Cấp Số Nhân: Bước Nhảy Gấp Đôi Liên Tiếp',
+    badgeTitle: 'Bài 36 · Độ khó Cấp 21',
+    instruction: 'Tìm số tiếp theo trong chuỗi nhân đôi: 2, 4, 8, 16, 32, [?].',
+    hint: 'Mỗi số gấp 2 lần số trước: 2 x 2 = 4; 4 x 2 = 8; 8 x 2 = 16; 16 x 2 = 32; 32 x 2 = ?',
+    mascot: { ...CASEY, message: 'Nhân đôi liên tục làm các con số lớn lên với tốc độ tên lửa!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Chuỗi Nhân Đôi Gấp Bội',
+      ruleExplanation: 'Mỗi số bằng số trước nhân với 2: 32 x 2 = 64.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '2', subLabel: 'x2' },
+        { id: 2, label: '4', subLabel: 'x2' },
+        { id: 3, label: '8', subLabel: 'x2' },
+        { id: 4, label: '16', subLabel: 'x2' },
+        { id: 5, label: '32', subLabel: 'x2' },
+        { id: 6, label: '?', isMissing: true, subLabel: '32x2' }
+      ],
+      choices: [
+        { id: 'c1', label: '60', subLabel: 'Thiếu 4' },
+        { id: 'c2', label: '64', subLabel: '32 x 2 = 64' },
+        { id: 'c3', label: '68', subLabel: 'Thừa 4' },
+        { id: 'c4', label: '72', subLabel: 'Nhân nhầm' }
+      ],
+      correctChoiceId: 'c2',
+      correctExplanation: 'Quy luật nhân đôi: 32 × 2 = 64!'
+    }
+  },
+  {
+    id: 'pat-37',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê Cung Năng Lượng Tự Nhiên: Chu Kỳ Bốn Nguyên Tố',
+    badgeTitle: 'Bài 37 · Độ khó Cấp 22',
+    instruction: 'Đi theo con đường năng lượng tuần hoàn: Cỏ bốn lá 🍀 ➡️ Giọt nước 💧 ➡️ Mặt trời ☀️ ➡️ Sấm sét ⚡.',
+    hint: 'Lần lượt: 🍀 ➡️ 💧 ➡️ ☀️ ➡️ ⚡ ➡️ 🍀...',
+    mascot: { ...ABBY, message: 'Năng lượng thiên nhiên hội tụ giúp mở khóa cánh cổng bí mật!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['🍀', '💧', '☀️', '⚡'],
+      ruleTitle: 'Bốn nguyên tố: 🍀 ➡️ 💧 ➡️ ☀️ ➡️ ⚡',
+      startPos: [0, 0],
+      goalPos: [3, 3],
+      startIcon: '🌱',
+      startLabel: 'Hạt Mầm',
+      goalIcon: '🌳',
+      goalLabel: 'Cây Cổ Thụ',
+      grid: [
+        ['🍀', '💧', '☀️', '⚡'],
+        ['⚡', '☀️', '💧', '🍀'],
+        ['☀️', '⚡', '🍀', '💧'],
+        ['💧', '🍀', '⚡', '☀️']
+      ],
+      targetPath: [
+        [0, 0], [0, 1], [0, 2], [0, 3],
+        [1, 3], [2, 3], [3, 3]
+      ],
+      successMessage: 'Hạt mầm đã tiếp đủ năng lượng và phát triển thành cây đại thụ!'
+    }
+  },
+  {
+    id: 'pat-38',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Hai Luồng Xen Kẽ: Tăng Và Giảm Đồng Thời',
+    badgeTitle: 'Bài 38 · Độ khó Cấp 23',
+    instruction: 'Tìm số tiếp theo trong chuỗi xen kẽ: 3, 30, 6, 25, 9, 20, 12, [?].',
+    hint: 'Tách làm hai luồng: Luồng vị trí lẻ (tăng 3): 3, 6, 9, 12. Luồng vị trí chẵn (giảm 5): 30, 25, 20, ?',
+    mascot: { ...MAYLE, message: 'Tư duy đa luồng: Quan sát sự chuyển động độc lập của các vị trí chẵn và lẻ!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Chuỗi Số Song Luồng Đan Xen',
+      ruleExplanation: 'Vị trí lẻ tăng 3: 3, 6, 9, 12. Vị trí chẵn giảm 5: 30, 25, 20, 15.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '3', subLabel: 'Lẻ (+3)' },
+        { id: 2, label: '30', subLabel: 'Chẵn (-5)' },
+        { id: 3, label: '6', subLabel: 'Lẻ (+3)' },
+        { id: 4, label: '25', subLabel: 'Chẵn (-5)' },
+        { id: 5, label: '9', subLabel: 'Lẻ (+3)' },
+        { id: 6, label: '20', subLabel: 'Chẵn (-5)' },
+        { id: 7, label: '12', subLabel: 'Lẻ (+3)' },
+        { id: 8, label: '?', isMissing: true, subLabel: 'Chẵn (-5)' }
+      ],
+      choices: [
+        { id: 'c1', label: '14', subLabel: 'Sai quy luật' },
+        { id: 'c2', label: '15', subLabel: '20 - 5 = 15' },
+        { id: 'c3', label: '16', subLabel: 'Tính nhầm' },
+        { id: 'c4', label: '18', subLabel: 'Nhầm luồng lẻ' }
+      ],
+      correctChoiceId: 'c2',
+      correctExplanation: 'Luồng chẵn đang giảm 5 đơn vị mỗi bước: 20 - 5 = 15!'
+    }
+  },
+  {
+    id: 'pat-39',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Kim Tự Tháp Số Cộng Dồn 4 Tầng Lên Đỉnh (Đáy 3, 4, 5, 6)',
+    badgeTitle: 'Bài 39 · Độ khó Cấp 24',
+    instruction: 'Tìm số trên đỉnh kim tự tháp: Tầng đáy gồm 3, 4, 5, 6. Mỗi số tầng trên bằng tổng hai số bên dưới.',
+    hint: 'Tầng 2: (3+4=7), (4+5=9), (5+6=11). Tầng 3: (7+9=16), (9+11=20). Đỉnh: 16 + 20 = ?',
+    mascot: { ...CASEY, message: 'Cộng dồn từng tầng kiên nhẫn như xây từng viên gạch kim tự tháp!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Kim Tự Tháp Đáy 3, 4, 5, 6',
+      ruleExplanation: 'Tầng 3 gồm 16 và 20. Đỉnh kim tự tháp = 16 + 20 = 36.',
+      sequenceType: 'pyramid',
+      items: [
+        { id: 1, label: '3', subLabel: 'Đáy' },
+        { id: 2, label: '4', subLabel: 'Đáy' },
+        { id: 3, label: '5', subLabel: 'Đáy' },
+        { id: 4, label: '6', subLabel: 'Đáy' },
+        { id: 5, label: '7', subLabel: '3+4' },
+        { id: 6, label: '9', subLabel: '4+5' },
+        { id: 7, label: '11', subLabel: '5+6' },
+        { id: 8, label: '16', subLabel: '7+9' },
+        { id: 9, label: '20', subLabel: '9+11' },
+        { id: 10, label: '?', isMissing: true, subLabel: '16+20' }
+      ],
+      choices: [
+        { id: 'top1', label: '34', subLabel: 'Thiếu 2' },
+        { id: 'top2', label: '36', subLabel: '16 + 20 = 36' },
+        { id: 'top3', label: '38', subLabel: 'Thừa 2' },
+        { id: 'top4', label: '40', subLabel: 'Cộng nhầm' }
+      ],
+      correctChoiceId: 'top2',
+      correctExplanation: 'Đỉnh kim tự tháp = 16 + 20 = 36!'
+    }
+  },
+  {
+    id: 'pat-40',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê Cung Vũ Trụ 4 Biểu Tượng Công Nghệ Cao',
+    badgeTitle: 'Bài 40 · Độ khó Cấp 25',
+    instruction: 'Vượt qua mê cung không gian theo chu kỳ: Tên lửa 🚀 ➡️ Đĩa bay 🛸 ➡️ Vệ tinh 🛰️ ➡️ Thiên hà 🌌.',
+    hint: 'Tìm chuỗi lặp: 🚀 ➡️ 🛸 ➡️ 🛰️ ➡️ 🌌 ➡️ 🚀...',
+    mascot: { ...MAYLE, message: 'Kiểm soát lộ trình thám hiểm vũ trụ không bao giờ bị lạc lối!' },
+    activity: {
+      type: 'flowerMaze',
+      pattern: ['🚀', '🛸', '🛰️', '🌌'],
+      ruleTitle: 'Hạm đội vũ trụ: 🚀 ➡️ 🛸 ➡️ 🛰️ ➡️ 🌌',
+      startPos: [0, 0],
+      goalPos: [3, 3],
+      startIcon: '👨‍🚀',
+      startLabel: 'Phi Hành Gia',
+      goalIcon: '🏆',
+      goalLabel: 'Cúp Không Gian',
+      grid: [
+        ['🚀', '🛸', '🛰️', '🌌'],
+        ['🌌', '🛰️', '🛸', '🚀'],
+        ['🛰️', '🌌', '🚀', '🛸'],
+        ['🛸', '🚀', '🌌', '🛰️']
+      ],
+      targetPath: [
+        [0, 0], [0, 1], [0, 2], [0, 3],
+        [1, 3], [2, 3], [3, 3]
+      ],
+      successMessage: 'Phi hành gia đã đến được bục trao cúp vinh quang!'
+    }
+  },
+  {
+    id: 'pat-41',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Cấp Số Cộng Bước Nhảy 7: Lũy Tiến Bền Vững',
+    badgeTitle: 'Bài 41 · Độ khó Cấp 26',
+    instruction: 'Tìm số tiếp theo trong dãy số: 12, 19, 26, 33, 40, [?].',
+    hint: 'Khoảng cách giữa các số liên tiếp là +7: 12 (+7) = 19; 19 (+7) = 26; 26 (+7) = 33; 33 (+7) = 40; 40 (+7) = ?',
+    mascot: { ...BENNY, message: 'Mỗi bước nhảy đều đặn thêm đúng 7 đơn vị!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Dãy Số Bước Nhảy +7',
+      ruleExplanation: 'Cộng thêm 7 vào số đứng trước: 40 + 7 = 47.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '12', subLabel: '+7' },
+        { id: 2, label: '19', subLabel: '+7' },
+        { id: 3, label: '26', subLabel: '+7' },
+        { id: 4, label: '33', subLabel: '+7' },
+        { id: 5, label: '40', subLabel: '+7' },
+        { id: 6, label: '?', isMissing: true, subLabel: '40+7' }
+      ],
+      choices: [
+        { id: 'c1', label: '45', subLabel: 'Cộng 5' },
+        { id: 'c2', label: '46', subLabel: 'Cộng 6' },
+        { id: 'c3', label: '47', subLabel: '40 + 7 = 47' },
+        { id: 'c4', label: '48', subLabel: 'Cộng 8' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: 'Quy luật: Số tiếp theo = 40 + 7 = 47!'
+    }
+  },
+  {
+    id: 'pat-42',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Nhân Đôi Rồi Cộng Một: Tăng Tốc Nhảy Vọt',
+    badgeTitle: 'Bài 42 · Độ khó Cấp 27',
+    instruction: 'Tìm số tiếp theo trong chuỗi số đặc biệt: 1, 3, 7, 15, 31, [?].',
+    hint: 'Quy luật: Mỗi số bằng số trước nhân đôi rồi cộng 1. (1x2+1=3), (3x2+1=7), (7x2+1=15), (15x2+1=31), (31x2+1=?).',
+    mascot: { ...MAYLE, message: 'Quy luật kết hợp cả phép nhân và phép cộng: x2 rồi +1!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Chuỗi Biến Đổi x2 + 1',
+      ruleExplanation: 'Mỗi số bằng số trước nhân 2 rồi cộng 1: 31 x 2 + 1 = 62 + 1 = 63.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1', subLabel: 'x2+1' },
+        { id: 2, label: '3', subLabel: 'x2+1' },
+        { id: 3, label: '7', subLabel: 'x2+1' },
+        { id: 4, label: '15', subLabel: 'x2+1' },
+        { id: 5, label: '31', subLabel: 'x2+1' },
+        { id: 6, label: '?', isMissing: true, subLabel: '31x2+1' }
+      ],
+      choices: [
+        { id: 'c1', label: '61', subLabel: 'Chưa cộng 1' },
+        { id: 'c2', label: '62', subLabel: 'Chỉ nhân 2' },
+        { id: 'c3', label: '63', subLabel: '31 x 2 + 1 = 63' },
+        { id: 'c4', label: '65', subLabel: 'Cộng thừa' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: 'Số tiếp theo = 31 × 2 + 1 = 62 + 1 = 63!'
+    }
+  },
+  {
+    id: 'pat-43',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'SIÊU THỬ THÁCH QUY LUẬT OLYMPIC TRẠM 4: Kim Tự Tháp 5 Tầng Cực Hạn',
+    badgeTitle: 'Bài 43 · Đỉnh Cao Trạm 4 Tuyệt Đối',
+    instruction: 'Đại thử thách quy luật tối hậu: Tìm số trên đỉnh kim tự tháp 5 tầng với đáy là 1, 2, 3, 4, 5. Mỗi số ở tầng trên bằng tổng hai số kề nhau ngay dưới nó.',
+    hint: 'Tầng 2: 3, 5, 7, 9. Tầng 3: 8, 12, 16. Tầng 4: 20, 28. Đỉnh tháp: 20 + 28 = ?',
+    mascot: { ...MAYLE, message: 'Đỉnh cao trí tuệ quy luật toán học! Em chính thức bước lên ngai vàng Phù Thủy Quy Luật!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Kim Tự Tháp Ngũ Tầng Đỉnh Cao',
+      ruleExplanation: 'Tầng 4 gồm hai số 20 và 28. Đỉnh kim tự tháp = 20 + 28 = 48.',
+      sequenceType: 'pyramid',
+      items: [
+        { id: 1, label: '1', subLabel: 'Đáy' },
+        { id: 2, label: '2', subLabel: 'Đáy' },
+        { id: 3, label: '3', subLabel: 'Đáy' },
+        { id: 4, label: '4', subLabel: 'Đáy' },
+        { id: 5, label: '5', subLabel: 'Đáy' },
+        { id: 6, label: '3', subLabel: '1+2' },
+        { id: 7, label: '5', subLabel: '2+3' },
+        { id: 8, label: '7', subLabel: '3+4' },
+        { id: 9, label: '9', subLabel: '4+5' },
+        { id: 10, label: '8', subLabel: '3+5' },
+        { id: 11, label: '12', subLabel: '5+7' },
+        { id: 12, label: '16', subLabel: '7+9' },
+        { id: 13, label: '20', subLabel: '8+12' },
+        { id: 14, label: '28', subLabel: '12+16' },
+        { id: 15, label: '?', isMissing: true, subLabel: '20+28' }
+      ],
+      choices: [
+        { id: 'top1', label: '44', subLabel: 'Thiếu 4' },
+        { id: 'top2', label: '46', subLabel: 'Thiếu 2' },
+        { id: 'top3', label: '48', subLabel: '20 + 28 = 48' },
+        { id: 'top4', label: '50', subLabel: 'Cộng nhầm' }
+      ],
+      correctChoiceId: 'top3',
+      correctExplanation: 'Hai số tầng 4 là 20 và 28. Đỉnh kim tự tháp = 20 + 28 = 48!'
+    }
   }
 ];
+

@@ -1,4 +1,4 @@
-import { LessonQuestion, CASEY, MAYLE, topicName } from './lessonTypes';
+import { LessonQuestion, ABBY, BENNY, CASEY, MAYLE, topicName } from './lessonTypes';
 
 export const EXTENDED_SUDOKU_LESSONS: LessonQuestion[] = [
   {
@@ -332,5 +332,306 @@ export const EXTENDED_SUDOKU_LESSONS: LessonQuestion[] = [
       ],
       hintFormula: 'Đường chéo 1: 29 + 20 + 11 = 60. Đường chéo 2: 23 + 20 + 17 = 60.'
     }
+  },
+  {
+    id: 'sud-35',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku 4x4: Bốn Vùng Đổi Xứng Kỳ Thú',
+    badgeTitle: 'Bài 35 · Độ khó Cấp 19',
+    instruction: 'Điền các chữ số từ 1 đến 4 vào ô trống sao cho: Mỗi hàng, mỗi cột và mỗi khối vuông 2x2 đều chứa đủ các số 1, 2, 3, 4.',
+    hint: 'Xét hàng 1 đã có 1, 4. Cột 2 đã có 3. Ô (1,2) chỉ có thể là 2!',
+    mascot: { ...CASEY, message: 'Tập trung vào hàng hoặc cột chỉ còn thiếu đúng 1 chữ số trước nhé!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [1, null, null, 4],
+        [null, 3, 2, null],
+        [null, 2, 3, null],
+        [4, null, null, 1]
+      ],
+      solution: [
+        [1, 2, 4, 3],
+        [4, 3, 2, 1],
+        [2, 4, 3, 2],
+        [3, 1, 1, 4]
+      ]
+    }
+  },
+  {
+    id: 'sud-36',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Kỳ Ảo 3x3: Tổng Các Hàng & Cột Bằng 45',
+    badgeTitle: 'Bài 36 · Độ khó Cấp 20',
+    instruction: 'Điền các số thích hợp vào ô trống ma phương 3x3 sao cho tổng mỗi hàng, mỗi cột và mỗi đường chéo đều bằng 45. Ô chính giữa là 15.',
+    hint: 'Số ở ô chính giữa = 45 : 3 = 15. Hàng 1: 24 + 3 + 18 = 45. Cột 1: 24 + 9 + 12 = 45.',
+    mascot: { ...MAYLE, message: 'Ma phương toán học: Ô trung tâm luôn bằng một phần ba tổng hàng!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Học Thuật (Tổng = 45)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 45',
+      targetSum: 45,
+      allowedNumbers: [3, 6, 9, 12, 15, 18, 21, 24, 27],
+      initialGrid: [
+        [24, null, 18],
+        [null, 15, null],
+        [12, null, 6]
+      ],
+      solution: [
+        [24, 3, 18],
+        [9, 15, 21],
+        [12, 27, 6]
+      ],
+      hintFormula: 'Đường chéo 1: 24 + 15 + 6 = 45. Đường chéo 2: 18 + 15 + 12 = 45.'
+    }
+  },
+  {
+    id: 'sud-37',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Killer Sudoku 4x4: Lồng Tổng Đa Sắc',
+    badgeTitle: 'Bài 37 · Độ khó Cấp 21',
+    instruction: 'Điền các chữ số 1 đến 4 sao cho thỏa mãn luật Sudoku 4x4 và tổng các số trong mỗi lồng màu bằng đúng số góc trên bên trái.',
+    hint: 'Lồng tổng 3 gồm 2 ô chỉ có thể là 1 + 2. Lồng tổng 7 gồm 2 ô chỉ có thể là 3 + 4.',
+    mascot: { ...CASEY, message: 'Kết hợp tư duy Sudoku và tính tổng nhanh là bí quyết chiến thắng!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null]
+      ],
+      solution: [
+        [1, 2, 3, 4],
+        [3, 4, 1, 2],
+        [2, 1, 4, 3],
+        [4, 3, 2, 1]
+      ],
+      sumLabels: [
+        [3, null, 7, null],
+        [7, null, 3, null],
+        [3, null, 7, null],
+        [7, null, 3, null]
+      ],
+      colorBlocks: [
+        ['#e0f2fe', '#e0f2fe', '#fef08a', '#fef08a'],
+        ['#fed7aa', '#fed7aa', '#bbf7d0', '#bbf7d0'],
+        ['#dcfce7', '#dcfce7', '#fee2e2', '#fee2e2'],
+        ['#fef9c3', '#fef9c3', '#e0e7ff', '#e0e7ff']
+      ]
+    }
+  },
+  {
+    id: 'sud-38',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Bội Số 5: Tổng Kỳ Ảo 75',
+    badgeTitle: 'Bài 38 · Độ khó Cấp 22',
+    instruction: 'Hoàn thành ma phương 3x3 có tổng mỗi hàng, cột và đường chéo bằng 75. Ô chính giữa là 25.',
+    hint: 'Hàng 1: 40 + ? + 30 = 75 ➡️ ? = 5. Cột 1: 40 + ? + 20 = 75 ➡️ ? = 15.',
+    mascot: { ...MAYLE, message: 'Các số trong ma phương này đều là bội số của 5 đấy!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Bội Số 5 (Tổng = 75)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 75',
+      targetSum: 75,
+      allowedNumbers: [5, 10, 15, 20, 25, 30, 35, 40, 45],
+      initialGrid: [
+        [40, null, 30],
+        [null, 25, null],
+        [20, null, 10]
+      ],
+      solution: [
+        [40, 5, 30],
+        [15, 25, 35],
+        [20, 45, 10]
+      ],
+      hintFormula: 'Đường chéo 1: 40 + 25 + 10 = 75. Đường chéo 2: 30 + 25 + 20 = 75.'
+    }
+  },
+  {
+    id: 'sud-39',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku Vũ Trụ 4x4: Bốn Biểu Tượng Thiên Hà',
+    badgeTitle: 'Bài 39 · Độ khó Cấp 23',
+    instruction: 'Sắp xếp 4 biểu tượng vũ trụ: Phi thuyền 🚀, Đĩa bay 🛸, Vệ tinh 🛰️, Ngôi sao ⭐ vào lưới sao cho không biểu tượng nào trùng lặp trên cùng hàng, cột hay khối 2x2.',
+    hint: 'Quan sát hàng có 3 biểu tượng trước, biểu tượng còn lại chính là đáp án ô trống!',
+    mascot: { ...BENNY, message: 'Không gian vũ trụ rực rỡ! Đưa các biểu tượng vào đúng quỹ đạo nào!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'shape',
+      symbols: [
+        { id: 'rocket', icon: '🚀', name: 'Phi thuyền' },
+        { id: 'ufo', icon: '🛸', name: 'Đĩa bay' },
+        { id: 'satellite', icon: '🛰️', name: 'Vệ tinh' },
+        { id: 'star', icon: '⭐', name: 'Ngôi sao' }
+      ],
+      initialGrid: [
+        ['rocket', null, null, 'star'],
+        [null, 'satellite', 'ufo', null],
+        [null, 'ufo', 'satellite', null],
+        ['star', null, null, 'rocket']
+      ],
+      solution: [
+        ['rocket', 'ufo', 'satellite', 'star'],
+        ['star', 'satellite', 'ufo', 'rocket'],
+        ['ufo', 'rocket', 'star', 'satellite'],
+        ['satellite', 'star', 'rocket', 'ufo']
+      ]
+    }
+  },
+  {
+    id: 'sud-40',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Bội Số 6: Tổng Kỳ Ảo 90',
+    badgeTitle: 'Bài 40 · Độ khó Cấp 24',
+    instruction: 'Hoàn thành ma phương 3x3 có tổng mỗi hàng, cột và đường chéo bằng 90. Ô chính giữa là 30.',
+    hint: 'Hàng 1: 48 + ? + 36 = 90 ➡️ ? = 6. Cột 1: 48 + ? + 24 = 90 ➡️ ? = 18.',
+    mascot: { ...MAYLE, message: 'Số trung tâm bằng 90 : 3 = 30. Một quy luật bất biến tuyệt đẹp!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Bội Số 6 (Tổng = 90)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 90',
+      targetSum: 90,
+      allowedNumbers: [6, 12, 18, 24, 30, 36, 42, 48, 54],
+      initialGrid: [
+        [48, null, 36],
+        [null, 30, null],
+        [24, null, 12]
+      ],
+      solution: [
+        [48, 6, 36],
+        [18, 30, 42],
+        [24, 54, 12]
+      ],
+      hintFormula: 'Đường chéo 1: 48 + 30 + 12 = 90. Đường chéo 2: 36 + 30 + 24 = 90.'
+    }
+  },
+  {
+    id: 'sud-41',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Killer Sudoku 4x4: Lồng Lớn Bốn Ô Đối Xứng',
+    badgeTitle: 'Bài 41 · Độ khó Cấp 25',
+    instruction: 'Điền các chữ số 1 đến 4 vào lưới Sudoku Killer. Mỗi lồng màu có tổng được chỉ định chính xác.',
+    hint: 'Lồng 4 ô ở trung tâm có tổng bằng 1 + 2 + 3 + 4 = 10!',
+    mascot: { ...CASEY, message: 'Quan sát các lồng có tổng lớn trước để thu hẹp phạm vi suy luận!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [2, null, null, 3],
+        [null, 1, 4, null],
+        [null, 4, 1, null],
+        [3, null, null, 2]
+      ],
+      solution: [
+        [2, 4, 3, 1],
+        [3, 1, 4, 2],
+        [4, 2, 1, 3],
+        [1, 3, 2, 4]
+      ],
+      sumLabels: [
+        [6, null, 4, null],
+        [null, 5, null, null],
+        [null, null, 5, null],
+        [4, null, 6, null]
+      ]
+    }
+  },
+  {
+    id: 'sud-42',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Bội Số 7: Tổng Kỳ Ảo 105',
+    badgeTitle: 'Bài 42 · Độ khó Cấp 26',
+    instruction: 'Hoàn thiện ma phương 3x3 có tổng mỗi hàng, cột và đường chéo bằng 105. Ô chính giữa là 35.',
+    hint: 'Hàng 1: 56 + ? + 42 = 105 ➡️ ? = 7. Cột 1: 56 + ? + 28 = 105 ➡️ ? = 21.',
+    mascot: { ...MAYLE, message: 'Càng lên cao, các con số càng lớn nhưng quy luật cốt lõi vẫn luôn vẹn nguyên!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Bội Số 7 (Tổng = 105)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 105',
+      targetSum: 105,
+      allowedNumbers: [7, 14, 21, 28, 35, 42, 49, 56, 63],
+      initialGrid: [
+        [56, null, 42],
+        [null, 35, null],
+        [28, null, 14]
+      ],
+      solution: [
+        [56, 7, 42],
+        [21, 35, 49],
+        [28, 63, 14]
+      ],
+      hintFormula: 'Đường chéo 1: 56 + 35 + 14 = 105. Đường chéo 2: 42 + 35 + 28 = 105.'
+    }
+  },
+  {
+    id: 'sud-43',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku Jigsaw 4x4: Khối Chữ L Đa Sắc Đan Xen',
+    badgeTitle: 'Bài 43 · Độ khó Cấp 27',
+    instruction: 'Điền các chữ số 1 đến 4 vào 4 khối hình chữ L zic-zac sao cho không chữ số nào bị trùng lặp trên hàng, cột và khối màu.',
+    hint: 'Nhìn vào khối chữ L màu xanh dương: 3 ô đã có số, ô còn lại chính là chữ số còn thiếu duy nhất!',
+    mascot: { ...CASEY, message: 'Khối chữ L đòi hỏi óc quan sát không gian cực kỳ nhạy bén!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [null, 1, 2, null],
+        [3, null, null, 4],
+        [2, null, null, 1],
+        [null, 4, 3, null]
+      ],
+      solution: [
+        [4, 1, 2, 3],
+        [3, 2, 1, 4],
+        [2, 3, 4, 1],
+        [1, 4, 3, 2]
+      ],
+      colorBlocks: [
+        ['#fed7aa', '#fed7aa', '#fed7aa', '#bbf7d0'],
+        ['#fed7aa', '#bbf7d0', '#bbf7d0', '#bbf7d0'],
+        ['#e0f2fe', '#e0f2fe', '#e0f2fe', '#fef08a'],
+        ['#e0f2fe', '#fef08a', '#fef08a', '#fef08a']
+      ]
+    }
+  },
+  {
+    id: 'sud-44',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'SIÊU THỬ THÁCH MA PHƯƠNG OLYMPIC TRẠM 3: Ma Trận Bội Số 8 (Tổng = 120)',
+    badgeTitle: 'Bài 44 · Đỉnh Cao Trạm 3 Tuyệt Đối',
+    instruction: 'Đại thử thách ma trận số học tối thượng: Hoàn thành ma phương 3x3 có tổng mỗi hàng, mỗi cột và mỗi đường chéo đều bằng đúng 120! Ô chính giữa là 40.',
+    hint: 'Hàng 1: 64 + ? + 48 = 120 ➡️ ? = 8. Cột 1: 64 + ? + 32 = 120 ➡️ ? = 24. Đường chéo: 64 + 40 + 16 = 120.',
+    mascot: { ...MAYLE, message: 'Đỉnh cao trí tuệ Ma Trận Số Học! Chúc mừng em đã trở thành Đại Kiện Tướng Sudoku & Ma Trận Số!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Đại Thử Thách Ma Phương (Tổng = 120)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 120',
+      targetSum: 120,
+      allowedNumbers: [8, 16, 24, 32, 40, 48, 56, 64, 72],
+      initialGrid: [
+        [64, null, 48],
+        [null, 40, null],
+        [32, null, 16]
+      ],
+      solution: [
+        [64, 8, 48],
+        [24, 40, 56],
+        [32, 72, 16]
+      ],
+      hintFormula: 'Đường chéo 1: 64 + 40 + 16 = 120. Đường chéo 2: 48 + 40 + 32 = 120.'
+    }
   }
 ];
+

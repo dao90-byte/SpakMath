@@ -351,5 +351,357 @@ export const EXTENDED_PICTOGRAPH_LESSONS: LessonQuestion[] = [
         }
       ]
     }
+  },
+  {
+    id: 'pic-33',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Vận Tải Đường Biển Quốc Tế: Đội Tàu Hàng Xanh',
+    badgeTitle: 'Bài 33 · Độ khó Cấp 19',
+    instruction: 'Đội tàu biển vận chuyển 4 loại hàng hóa quan trọng giữa các lục địa. Quy ước: Mỗi biểu tượng container 🚢 đại diện cho 50 tấn hàng hóa.',
+    hint: 'Nhân số biểu tượng với 50 tấn: Ngũ cốc 6 tàu = 300 tấn, Thiết bị 4 tàu = 200 tấn, Nông sản 5 tàu = 250 tấn, Nhiên liệu sạch 3 tàu = 150 tấn.',
+    mascot: { ...BENNY, message: 'Đại dương bao la đón đoàn tàu hàng! Hãy nhân thật nhanh bội số 50 nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🚢 = 50 tấn hàng hóa',
+      multiplier: 50,
+      items: [
+        { id: 'grain', label: 'Ngũ Cốc Lương Thực', icon: '🚢', count: 6, actualValue: 300, unit: 'tấn' },
+        { id: 'equipment', label: 'Thiết Bị Điện Tử', icon: '🚢', count: 4, actualValue: 200, unit: 'tấn' },
+        { id: 'farm', label: 'Nông Sản Xuất Khẩu', icon: '🚢', count: 5, actualValue: 250, unit: 'tấn' },
+        { id: 'fuel', label: 'Nhiên Liệu Xanh', icon: '🚢', count: 3, actualValue: 150, unit: 'tấn' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Khối lượng ngũ cốc lương thực được vận chuyển là bao nhiêu tấn?',
+          options: ['250 tấn', '300 tấn', '350 tấn', '400 tấn'],
+          correctAnswer: '300 tấn'
+        },
+        {
+          id: 'q2',
+          prompt: 'Ngũ cốc nhiều hơn nhiên liệu xanh bao nhiêu tấn hàng?',
+          options: ['100 tấn', '150 tấn', '200 tấn', '250 tấn'],
+          correctAnswer: '150 tấn'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng khối lượng hàng hóa của cả 4 chuyến tàu vận tải là bao nhiêu tấn?',
+          options: ['800 tấn', '850 tấn', '900 tấn', '950 tấn'],
+          correctAnswer: '900 tấn'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-34',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thiết Kế Biểu Đồ Công Viên Sinh Thái Xanh',
+    badgeTitle: 'Bài 34 · Độ khó Cấp 20',
+    instruction: 'Em hãy giúp Kỹ sư Benny thiết kế biểu đồ trồng cây: Mỗi cây xanh 🌳 đại diện cho 15 cây thực tế. Tổng số cây cần trồng là 225 cây (tương ứng 15 biểu tượng).',
+    hint: 'Cây bóng mát: 75 : 15 = 5 cây. Cây ăn quả: 60 : 15 = 4 cây. Cây hoa: 45 : 15 = 3 cây. Cây dược liệu: 45 : 15 = 3 cây.',
+    mascot: { ...BENNY, message: 'Công viên sinh thái ngát hương! Bấm ＋ để trồng cây và － để chỉnh sửa nhé!' },
+    activity: {
+      type: 'pictographBuilder',
+      multiplier: 15,
+      totalPeople: 225,
+      categories: [
+        { id: 'shade', label: 'Cây Bóng Mát (75 cây)', targetSymbols: 5, symbolColor: 'bg-emerald-600' },
+        { id: 'fruit', label: 'Cây Ăn Quả (60 cây)', targetSymbols: 4, symbolColor: 'bg-lime-500' },
+        { id: 'flower', label: 'Cây Hoa Cảnh (45 cây)', targetSymbols: 3, symbolColor: 'bg-pink-500' },
+        { id: 'herbs', label: 'Cây Dược Liệu (45 cây)', targetSymbols: 3, symbolColor: 'bg-teal-500' }
+      ]
+    }
+  },
+  {
+    id: 'pic-35',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thời Gian Nghiên Cứu Thiên Văn 4 Trạm Quan Sát',
+    badgeTitle: 'Bài 35 · Độ khó Cấp 21',
+    instruction: 'Bốn trạm quan sát bầu trời ghi nhận số giờ ngắm sao trong tháng. Mỗi kính thiên văn 🔭 đại diện cho 25 giờ nghiên cứu.',
+    hint: 'Nhân số biểu tượng với 25: Trạm Bắc 6 = 150h, Trạm Nam 8 = 200h, Trạm Đông 5 = 125h, Trạm Tây 7 = 175h.',
+    mascot: { ...CASEY, message: 'Kính thiên văn đưa chúng ta chạm vào ngàn vì sao xa xôi!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🔭 = 25 giờ quan sát',
+      multiplier: 25,
+      items: [
+        { id: 'north', label: 'Trạm Cực Bắc', icon: '🔭', count: 6, actualValue: 150, unit: 'giờ' },
+        { id: 'south', label: 'Trạm Cực Nam', icon: '🔭', count: 8, actualValue: 200, unit: 'giờ' },
+        { id: 'east', label: 'Trạm Phía Đông', icon: '🔭', count: 5, actualValue: 125, unit: 'giờ' },
+        { id: 'west', label: 'Trạm Phía Tây', icon: '🔭', count: 7, actualValue: 175, unit: 'giờ' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Trạm Cực Nam đã thực hiện bao nhiêu giờ quan sát?',
+          options: ['175 giờ', '180 giờ', '200 giờ', '225 giờ'],
+          correctAnswer: '200 giờ'
+        },
+        {
+          id: 'q2',
+          prompt: 'Trạm Cực Nam nhiều hơn Trạm Phía Đông bao nhiêu giờ?',
+          options: ['50 giờ', '75 giờ', '80 giờ', '100 giờ'],
+          correctAnswer: '75 giờ'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng thời gian nghiên cứu của cả 4 trạm là bao nhiêu giờ?',
+          options: ['600 giờ', '625 giờ', '650 giờ', '675 giờ'],
+          correctAnswer: '650 giờ'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-36',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Năng Lượng Tua-bin Gió Qua 4 Mùa',
+    badgeTitle: 'Bài 36 · Độ khó Cấp 22',
+    instruction: 'Trang trại năng lượng gió ghi nhận công suất phát điện theo quý. Quy ước: Mỗi cánh quạt gió 🌀 đại diện cho 30 Megawatt (MW).',
+    hint: 'Quý 1: 5 x 30 = 150 MW. Quý 2: 7 x 30 = 210 MW. Quý 3: 4 x 30 = 120 MW. Quý 4: 8 x 30 = 240 MW.',
+    mascot: { ...MAYLE, message: 'Năng lượng sạch bảo vệ môi trường Trái Đất thân yêu!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🌀 = 30 MW điện sạch',
+      multiplier: 30,
+      items: [
+        { id: 'q1-season', label: 'Quý 1 (Mùa Xuân)', icon: '🌀', count: 5, actualValue: 150, unit: 'MW' },
+        { id: 'q2-season', label: 'Quý 2 (Mùa Hạ)', icon: '🌀', count: 7, actualValue: 210, unit: 'MW' },
+        { id: 'q3-season', label: 'Quý 3 (Mùa Thu)', icon: '🌀', count: 4, actualValue: 120, unit: 'MW' },
+        { id: 'q4-season', label: 'Quý 4 (Mùa Đông)', icon: '🌀', count: 8, actualValue: 240, unit: 'MW' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Quý 4 (Mùa Đông) phát được bao nhiêu Megawatt điện?',
+          options: ['210 MW', '240 MW', '270 MW', '300 MW'],
+          correctAnswer: '240 MW'
+        },
+        {
+          id: 'q2',
+          prompt: 'Hiệu số công suất giữa Quý cao nhất (Quý 4) và Quý thấp nhất (Quý 3) là bao nhiêu MW?',
+          options: ['90 MW', '100 MW', '120 MW', '150 MW'],
+          correctAnswer: '120 MW'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng sản lượng điện sạch phát ra trong cả năm là bao nhiêu MW?',
+          options: ['680 MW', '720 MW', '750 MW', '780 MW'],
+          correctAnswer: '720 MW'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-37',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thiết Kế Trạm Phóng Tàu Không Gian 4 Đội Tàu',
+    badgeTitle: 'Bài 37 · Độ khó Cấp 23',
+    instruction: 'Giúp Chỉ huy Abby sắp xếp 300 phi thuyền vào 4 phân khu. Quy ước: Mỗi biểu tượng phi thuyền 🚀 đại diện cho 20 tàu vũ trụ (tổng cộng 15 biểu tượng).',
+    hint: 'Phân khu Alpha: 100 : 20 = 5 tàu. Beta: 80 : 20 = 4 tàu. Gamma: 60 : 20 = 3 tàu. Delta: 60 : 20 = 3 tàu.',
+    mascot: { ...BENNY, message: 'Sẵn sàng khởi động bệ phóng tên lửa vào không gian!' },
+    activity: {
+      type: 'pictographBuilder',
+      multiplier: 20,
+      totalPeople: 300,
+      categories: [
+        { id: 'alpha', label: 'Đội Tàu Alpha (100 tàu)', targetSymbols: 5, symbolColor: 'bg-cyan-500' },
+        { id: 'beta', label: 'Đội Tàu Beta (80 tàu)', targetSymbols: 4, symbolColor: 'bg-indigo-500' },
+        { id: 'gamma', label: 'Đội Tàu Gamma (60 tàu)', targetSymbols: 3, symbolColor: 'bg-amber-500' },
+        { id: 'delta', label: 'Đội Tàu Delta (60 tàu)', targetSymbols: 3, symbolColor: 'bg-rose-500' }
+      ]
+    }
+  },
+  {
+    id: 'pic-38',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Khảo Sát Tảng Băng Bắc Cực & Lưu Vực Sông Băng',
+    badgeTitle: 'Bài 38 · Độ khó Cấp 24',
+    instruction: 'Nhóm nghiên cứu địa chất đo lường trữ lượng nước ngọt tại 4 sông băng. Quy ước: Mỗi khối băng 🧊 đại diện cho 35 triệu mét khối nước.',
+    hint: 'Sông băng A: 4 x 35 = 140. Sông băng B: 6 x 35 = 210. Sông băng C: 5 x 35 = 175. Sông băng D: 3 x 35 = 105.',
+    mascot: { ...MAYLE, message: 'Bảo tồn nguồn nước ngọt quý giá cho tương lai hành tinh!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🧊 = 35 triệu m³ nước ngọt',
+      multiplier: 35,
+      items: [
+        { id: 'glacier-a', label: 'Sông Băng Aurora', icon: '🧊', count: 4, actualValue: 140, unit: 'triệu m³' },
+        { id: 'glacier-b', label: 'Sông Băng Boreal', icon: '🧊', count: 6, actualValue: 210, unit: 'triệu m³' },
+        { id: 'glacier-c', label: 'Sông Băng Crystal', icon: '🧊', count: 5, actualValue: 175, unit: 'triệu m³' },
+        { id: 'glacier-d', label: 'Sông Băng Diamond', icon: '🧊', count: 3, actualValue: 105, unit: 'triệu m³' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Sông băng Boreal có trữ lượng nước ngọt là bao nhiêu triệu m³?',
+          options: ['175 triệu m³', '210 triệu m³', '245 triệu m³', '280 triệu m³'],
+          correctAnswer: '210 triệu m³'
+        },
+        {
+          id: 'q2',
+          prompt: 'Sông băng Boreal nhiều hơn Sông băng Diamond bao nhiêu triệu m³?',
+          options: ['70 triệu m³', '105 triệu m³', '140 triệu m³', '175 triệu m³'],
+          correctAnswer: '105 triệu m³'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng trữ lượng nước ngọt của cả 4 sông băng là bao nhiêu triệu m³?',
+          options: ['595 triệu m³', '630 triệu m³', '665 triệu m³', '700 triệu m³'],
+          correctAnswer: '630 triệu m³'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-39',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Hội Thao Toán Học & Khoa Học Toàn Quốc',
+    badgeTitle: 'Bài 39 · Độ khó Cấp 25',
+    instruction: 'Số lượng thí sinh tham gia 4 môn thi đấu trí tuệ. Quy ước: Mỗi huy chương 🏅 đại diện cho 45 thí sinh xuất sắc.',
+    hint: 'Nhân số huy chương với 45: Toán tư duy 7 x 45 = 315; Cờ vua 5 x 45 = 225; Lập trình 6 x 45 = 270; Thiên văn 4 x 45 = 180.',
+    mascot: { ...BENNY, message: 'Đấu trí đỉnh cao tại hội thao trí tuệ toàn quốc!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🏅 = 45 thí sinh tài năng',
+      multiplier: 45,
+      items: [
+        { id: 'math', label: 'Toán Tư Duy Sáng Tạo', icon: '🏅', count: 7, actualValue: 315, unit: 'thí sinh' },
+        { id: 'chess', label: 'Cờ Vua Trí Tuệ', icon: '🏅', count: 5, actualValue: 225, unit: 'thí sinh' },
+        { id: 'coding', label: 'Lập Trình Robot Nhí', icon: '🏅', count: 6, actualValue: 270, unit: 'thí sinh' },
+        { id: 'astro', label: 'Khám Phá Thiên Văn', icon: '🏅', count: 4, actualValue: 180, unit: 'thí sinh' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Môn Toán Tư Duy có bao nhiêu thí sinh tham gia tranh tài?',
+          options: ['270 thí sinh', '300 thí sinh', '315 thí sinh', '360 thí sinh'],
+          correctAnswer: '315 thí sinh'
+        },
+        {
+          id: 'q2',
+          prompt: 'Số thí sinh môn Toán nhiều hơn môn Thiên Văn là bao nhiêu bạn?',
+          options: ['90 thí sinh', '115 thí sinh', '135 thí sinh', '150 thí sinh'],
+          correctAnswer: '135 thí sinh'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng số thí sinh của cả 4 môn thi đấu là bao nhiêu bạn?',
+          options: ['945 thí sinh', '990 thí sinh', '1020 thí sinh', '1080 thí sinh'],
+          correctAnswer: '990 thí sinh'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-40',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thiết Kế Mạng Lưới Tiếp Tế Trạm Không Gian',
+    badgeTitle: 'Bài 40 · Độ khó Cấp 26',
+    instruction: 'Em hãy giúp Đội Trưởng Casey phân bổ 240 kiện hàng vào 4 khoang tiếp tế. Quy ước: Mỗi kiện hàng 📦 đại diện cho 16 kiện thực tế (tổng 15 biểu tượng).',
+    hint: 'Khoang Oxy: 80 : 16 = 5. Khoang Lương thực: 64 : 16 = 4. Khoang Nước: 48 : 16 = 3. Khoang Thuốc men: 48 : 16 = 3.',
+    mascot: { ...CASEY, message: 'Kiểm tra kỹ lưỡng từng kiện hàng trước khi phóng nhé!' },
+    activity: {
+      type: 'pictographBuilder',
+      multiplier: 16,
+      totalPeople: 240,
+      categories: [
+        { id: 'oxygen', label: 'Khoang Bình Oxy (80 kiện)', targetSymbols: 5, symbolColor: 'bg-sky-500' },
+        { id: 'food', label: 'Khoang Lương Thực Khô (64 kiện)', targetSymbols: 4, symbolColor: 'bg-amber-600' },
+        { id: 'water', label: 'Khoang Nước Tinh Khiết (48 kiện)', targetSymbols: 3, symbolColor: 'bg-blue-600' },
+        { id: 'meds', label: 'Khoang Thuốc Y Tế (48 kiện)', targetSymbols: 3, symbolColor: 'bg-red-500' }
+      ]
+    }
+  },
+  {
+    id: 'pic-41',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Đường Đua Phi Thuyền Công Nghệ Cao Siêu Tốc',
+    badgeTitle: 'Bài 41 · Độ khó Cấp 27',
+    instruction: 'Đo quãng đường bay thử nghiệm của 4 dòng động cơ phản lực mới. Quy ước: Mỗi tia chớp ⚡ đại diện cho 60 hải lý không gian.',
+    hint: 'Động cơ Plasma: 6 x 60 = 360; Động cơ Ion: 8 x 60 = 480; Động cơ Photon: 5 x 60 = 300; Động cơ Lượng tử: 7 x 60 = 420.',
+    mascot: { ...MAYLE, message: 'Vận tốc vượt thời không! Tính toán chuẩn xác từng hải lý!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '⚡ = 60 hải lý không gian',
+      multiplier: 60,
+      items: [
+        { id: 'plasma', label: 'Động Cơ Plasma', icon: '⚡', count: 6, actualValue: 360, unit: 'hải lý' },
+        { id: 'ion', label: 'Động Cơ Ion Siêu Dẫn', icon: '⚡', count: 8, actualValue: 480, unit: 'hải lý' },
+        { id: 'photon', label: 'Động Cơ Ánh Sáng Photon', icon: '⚡', count: 5, actualValue: 300, unit: 'hải lý' },
+        { id: 'quantum', label: 'Động Cơ Lượng Tử Mới', icon: '⚡', count: 7, actualValue: 420, unit: 'hải lý' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Động cơ Ion Siêu Dẫn đã bay được quãng đường thử nghiệm là bao nhiêu hải lý?',
+          options: ['420 hải lý', '460 hải lý', '480 hải lý', '540 hải lý'],
+          correctAnswer: '480 hải lý'
+        },
+        {
+          id: 'q2',
+          prompt: 'Động cơ Ion bay xa hơn Động cơ Photon bao nhiêu hải lý?',
+          options: ['120 hải lý', '160 hải lý', '180 hải lý', '200 hải lý'],
+          correctAnswer: '180 hải lý'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng quãng đường bay thử nghiệm của cả 4 động cơ là bao nhiêu hải lý?',
+          options: ['1440 hải lý', '1500 hải lý', '1560 hải lý', '1620 hải lý'],
+          correctAnswer: '1560 hải lý'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-42',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'SIÊU THỬ THÁCH OLYMPIC TRẠM 1: Đại Khảo Sát Tinh Vân Toàn Vũ Trụ',
+    badgeTitle: 'Bài 42 · Đỉnh Cao Trạm 1 Tuyệt Đối',
+    instruction: 'Đại khảo sát 5 tinh vân rực rỡ nhất dải ngân hà. Quy ước: Mỗi ngôi sao tinh vân ⭐ đại diện cho 50 năm ánh sáng đường kính.',
+    hint: 'Sao tinh vân: 8 + 6 + 9 + 5 + 7 = 35 ngôi sao. Tổng đường kính: 35 × 50 = 1750 năm ánh sáng.',
+    mascot: { ...MAYLE, message: 'Đỉnh cao tối thượng của Trạm 1! Vượt qua bài này em được vinh danh là Huyền Thoại Biểu Đồ Tranh!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '⭐ = 50 năm ánh sáng',
+      multiplier: 50,
+      items: [
+        { id: 'nebula-orion', label: 'Tinh Vân Thợ Săn', icon: '⭐', count: 8, actualValue: 400, unit: 'năm ánh sáng' },
+        { id: 'nebula-eagle', label: 'Tinh Vân Đại Bàng', icon: '⭐', count: 6, actualValue: 300, unit: 'năm ánh sáng' },
+        { id: 'nebula-carina', label: 'Tinh Vân Thuyền Viễn Xứ', icon: '⭐', count: 9, actualValue: 450, unit: 'năm ánh sáng' },
+        { id: 'nebula-crab', label: 'Tinh Vân Con Cua', icon: '⭐', count: 5, actualValue: 250, unit: 'năm ánh sáng' },
+        { id: 'nebula-helix', label: 'Tinh Vân Mắt Thần', icon: '⭐', count: 7, actualValue: 350, unit: 'năm ánh sáng' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Tinh vân nào có kích thước đường kính lớn nhất và cụ thể là bao nhiêu năm ánh sáng?',
+          options: ['Tinh Vân Thợ Săn: 400 năm ánh sáng', 'Tinh Vân Thuyền Viễn Xứ: 450 năm ánh sáng', 'Tinh Vân Mắt Thần: 350 năm ánh sáng', 'Tinh Vân Đại Bàng: 300 năm ánh sáng'],
+          correctAnswer: 'Tinh Vân Thuyền Viễn Xứ: 450 năm ánh sáng'
+        },
+        {
+          id: 'q2',
+          prompt: 'Đường kính Tinh Vân Thuyền Viễn Xứ lớn hơn Tinh Vân Con Cua bao nhiêu năm ánh sáng?',
+          options: ['150 năm ánh sáng', '200 năm ánh sáng', '250 năm ánh sáng', '300 năm ánh sáng'],
+          correctAnswer: '200 năm ánh sáng'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng đường kính của cả 5 đại tinh vân cộng lại là bao nhiêu năm ánh sáng?',
+          options: ['1650 năm ánh sáng', '1700 năm ánh sáng', '1750 năm ánh sáng', '1800 năm ánh sáng'],
+          correctAnswer: '1750 năm ánh sáng'
+        }
+      ]
+    }
   }
 ];
+
