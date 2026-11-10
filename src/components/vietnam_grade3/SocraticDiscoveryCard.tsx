@@ -24,6 +24,7 @@ interface SocraticDiscoveryCardProps {
   currentStep: number;
   totalSteps: number;
   lessonId?: string;
+  nextStageTitle?: string;
   onNextStep: () => void;
   onPrevStep: () => void;
   onCompleteDiscovery: () => void;
@@ -34,6 +35,7 @@ export const SocraticDiscoveryCard: React.FC<SocraticDiscoveryCardProps> = ({
   currentStep,
   totalSteps,
   lessonId,
+  nextStageTitle,
   onNextStep,
   onPrevStep,
   onCompleteDiscovery
@@ -118,7 +120,8 @@ export const SocraticDiscoveryCard: React.FC<SocraticDiscoveryCardProps> = ({
   const renderVisual = () => {
     switch (card.visualType) {
       case 'multiplication_groups': {
-        const { groupCount = 3, itemsPerGroup = 12, itemIcon = '🧁', groupLabels = [] } = card.visualData;
+        const { groupCount = 3, itemsPerGroup = 12, itemIcon = '🧁', groupLabels = [], expressionLong } = card.visualData;
+        const displayCount = Math.min(groupCount, 8);
         return (
           <div className="bg-[#0B132B]/90 border-2 border-amber-400/40 rounded-3xl p-5 sm:p-6 my-5 shadow-[0_0_20px_rgba(251,191,36,0.12)]">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -131,24 +134,24 @@ export const SocraticDiscoveryCard: React.FC<SocraticDiscoveryCardProps> = ({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              {Array.from({ length: Math.min(groupCount, 3) }).map((_, gIdx) => (
+            <div className={`grid gap-3 ${displayCount > 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-1 sm:grid-cols-3'}`}>
+              {Array.from({ length: displayCount }).map((_, gIdx) => (
                 <div 
                   key={gIdx}
-                  className="bg-slate-900/90 border-2 border-amber-400/30 rounded-2xl p-4 shadow-sm flex flex-col items-center hover:border-amber-400/60 transition-colors"
+                  className="bg-slate-900/90 border-2 border-amber-400/30 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col items-center hover:border-amber-400/60 transition-colors"
                 >
-                  <div className="text-sm font-black text-amber-200 mb-2.5">
+                  <div className="text-xs sm:text-sm font-black text-amber-200 mb-2">
                     {groupLabels[gIdx] || `Khay ${gIdx + 1}`}
                   </div>
-                  <div className="grid grid-cols-4 gap-2 p-3 bg-slate-950/70 rounded-xl w-full justify-items-center border border-slate-800">
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <span key={i} className="text-xl sm:text-2xl select-none transform hover:scale-125 transition-transform" title={`Bánh ${i+1}`}>
+                  <div className="grid grid-cols-4 gap-1.5 p-2.5 bg-slate-950/70 rounded-xl w-full justify-items-center border border-slate-800">
+                    {Array.from({ length: Math.min(itemsPerGroup, 12) }).map((_, i) => (
+                      <span key={i} className="text-lg sm:text-xl select-none transform hover:scale-125 transition-transform" title={`Bánh ${i+1}`}>
                         {itemIcon}
                       </span>
                     ))}
                   </div>
-                  <span className="text-sm font-black text-amber-300 mt-2.5">
-                    = 12 cái bánh
+                  <span className="text-xs sm:text-sm font-black text-amber-300 mt-2">
+                    = {itemsPerGroup} cái
                   </span>
                 </div>
               ))}
@@ -157,12 +160,16 @@ export const SocraticDiscoveryCard: React.FC<SocraticDiscoveryCardProps> = ({
             <div className="mt-5 pt-4 border-t border-amber-400/30 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-sm sm:text-base font-bold">
               <span className="flex items-center gap-2 bg-slate-900/90 px-4 py-2.5 rounded-2xl border border-slate-700">
                 <span className="text-slate-400">Cách cộng dài:</span>
-                <span className="text-amber-300 font-mono font-black text-base sm:text-lg">12 + 12 + 12 = 36</span>
+                <span className="text-amber-300 font-mono font-black text-xs sm:text-base">
+                  {expressionLong || (groupCount === 3 ? '12 + 12 + 12 = 36' : `${Array(groupCount).fill(itemsPerGroup).join(' + ')} = ?`)}
+                </span>
               </span>
               <span className="text-amber-400 font-black text-lg">⇌</span>
               <span className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 px-4.5 py-2.5 rounded-2xl shadow-md font-black">
-                <span>Cách nhân nhanh:</span>
-                <span className="font-mono text-base sm:text-lg">12 × 3 = 36</span>
+                <span>Cách nhân siêu gọn:</span>
+                <span className="font-mono text-sm sm:text-lg">
+                  {itemsPerGroup} × {groupCount} = {itemsPerGroup * groupCount}
+                </span>
               </span>
             </div>
           </div>
@@ -810,33 +817,42 @@ export const SocraticDiscoveryCard: React.FC<SocraticDiscoveryCardProps> = ({
             <span>Chặng trước</span>
           </button>
 
-          {currentStep < totalSteps ? (
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                onNextStep();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs sm:text-sm md:text-base flex items-center gap-2.5 shadow-[0_0_20px_rgba(0,240,255,0.45)] active:scale-95 transition-transform"
-            >
-              <span>Tiến Về Chặng Tiếp Theo</span>
-              <ArrowRight className="w-4 h-4 text-slate-950" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                sound.playVictory();
-                onCompleteDiscovery();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm md:text-base flex items-center gap-2.5 shadow-[0_0_25px_rgba(251,191,36,0.6)] active:scale-95 transition-transform"
-            >
-              <span>Vào Thử Thách Hành Tinh Ngay</span>
-              <Sparkles className="w-4 h-4 text-slate-950" />
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            <span className="text-xs sm:text-sm font-black text-cyan-300 font-mono hidden sm:inline bg-cyan-950/60 border border-cyan-500/40 px-3 py-1.5 rounded-xl">
+              Chặng {currentStep} / {totalSteps}
+            </span>
+
+            {currentStep < totalSteps ? (
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  onNextStep();
+                }}
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs sm:text-sm md:text-base flex items-center gap-2.5 shadow-[0_0_20px_rgba(0,240,255,0.45)] active:scale-95 transition-transform"
+              >
+                <span>
+                  {nextStageTitle 
+                    ? `Tiến Sang Chặng ${currentStep + 1}: ${nextStageTitle.split(':')[0] || 'Kế tiếp'}`
+                    : `Tiến Sang Chặng ${currentStep + 1} / ${totalSteps}`}
+                </span>
+                <ArrowRight className="w-4 h-4 text-slate-950" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playVictory();
+                  onCompleteDiscovery();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm md:text-base flex items-center gap-2.5 shadow-[0_0_25px_rgba(251,191,36,0.6)] active:scale-95 transition-transform"
+              >
+                <span>Vào Thử Thách Hành Tinh Ngay</span>
+                <Sparkles className="w-4 h-4 text-slate-950" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

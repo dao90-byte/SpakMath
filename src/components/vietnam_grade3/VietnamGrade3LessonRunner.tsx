@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { VietnamGrade3Lesson } from '../../data/vietnamGrade3LessonsData';
 import { SocraticDiscoveryCard } from './SocraticDiscoveryCard';
 import { sound } from '../../utils/soundEffects';
@@ -44,23 +44,33 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
   const [showTeacherNotes, setShowTeacherNotes] = useState(false);
   const [answeredExercises, setAnsweredExercises] = useState<Record<string, boolean>>({});
 
+  const cardTopRef = useRef<HTMLDivElement>(null);
+
   const currentExercise = lesson.exercises[exerciseIndex];
   const currentSocraticCard = lesson.socraticDiscovery[socraticStepIndex];
   const allExercisesCompleted = lesson.exercises.every(
     (ex) => answeredExercises[ex.id] === true
   );
 
+  // Automatically scroll card top into view whenever step or tab changes
+  useEffect(() => {
+    if (activeTab === 'socratic' && cardTopRef.current) {
+      const timer = setTimeout(() => {
+        cardTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 40);
+      return () => clearTimeout(timer);
+    }
+  }, [socraticStepIndex, activeTab]);
+
   const handleNextSocraticStep = () => {
     if (socraticStepIndex < lesson.socraticDiscovery.length - 1) {
       setSocraticStepIndex((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const handlePrevSocraticStep = () => {
     if (socraticStepIndex > 0) {
       setSocraticStepIndex((prev) => prev - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -264,20 +274,64 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
 
       {/* PHASE 1: SOCRATIC DISCOVERY */}
       {activeTab === 'socratic' && currentSocraticCard && (
-        <SocraticDiscoveryCard
-          key={currentSocraticCard.id}
-          card={currentSocraticCard}
-          currentStep={socraticStepIndex + 1}
-          totalSteps={lesson.socraticDiscovery.length}
-          lessonId={lesson.id}
-          onNextStep={handleNextSocraticStep}
-          onPrevStep={handlePrevSocraticStep}
-          onCompleteDiscovery={() => {
-            sound.playVictory();
-            setActiveTab('practice');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        />
+        <div ref={cardTopRef} className="space-y-4 scroll-mt-6">
+          {/* Interactive Socratic Stage Stepper Bar */}
+          <div className="bg-[#0B0F19] rounded-2xl border-2 border-slate-800 p-2.5 sm:p-3 flex items-center justify-between gap-2 overflow-x-auto shadow-md">
+            <div className="flex items-center gap-2 shrink-0 px-1.5">
+              <Sparkles className="w-4 h-4 text-cyan-400" />
+              <span className="text-xs font-black uppercase text-cyan-400 font-mono tracking-wider hidden sm:inline">
+                CHẶNG KHÁM PHÁ:
+              </span>
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none flex-1 justify-end">
+              {lesson.socraticDiscovery.map((stepCard, idx) => {
+                const isActive = idx === socraticStepIndex;
+                const isPassed = idx < socraticStepIndex;
+                return (
+                  <button
+                    key={stepCard.id}
+                    type="button"
+                    onClick={() => {
+                      sound.playClick();
+                      setSocraticStepIndex(idx);
+                    }}
+                    className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2 whitespace-nowrap transition-all active:scale-95 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_15px_rgba(0,240,255,0.5)] ring-2 ring-cyan-300'
+                        : isPassed
+                        ? 'bg-slate-900 text-emerald-300 border border-emerald-500/40 hover:bg-slate-800'
+                        : 'bg-slate-900/80 text-cyan-200/90 border border-slate-800 hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    <span className="w-5 h-5 rounded-md bg-black/20 flex items-center justify-center font-mono text-[11px]">
+                      {idx + 1}
+                    </span>
+                    <span>{stepCard.stageTitle.split(':')[0] || `Chặng ${idx + 1}`}</span>
+                    {isPassed && (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <SocraticDiscoveryCard
+            key={currentSocraticCard.id}
+            card={currentSocraticCard}
+            currentStep={socraticStepIndex + 1}
+            totalSteps={lesson.socraticDiscovery.length}
+            nextStageTitle={lesson.socraticDiscovery[socraticStepIndex + 1]?.stageTitle}
+            lessonId={lesson.id}
+            onNextStep={handleNextSocraticStep}
+            onPrevStep={handlePrevSocraticStep}
+            onCompleteDiscovery={() => {
+              sound.playVictory();
+              setActiveTab('practice');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </div>
       )}
 
       {/* PHASE 2: PRACTICE EXERCISES */}
