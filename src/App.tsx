@@ -15,7 +15,6 @@ import { sound } from './utils/soundEffects';
 import { getMistakesStats } from './utils/mistakeManager';
 import { getProgramErrors } from './utils/devErrorCollector';
 import { isTeacherUnlocked } from './data/periodicAssessmentsData';
-import { Bug } from 'lucide-react';
 import { VietnamGrade3Hub } from './components/vietnam_grade3/VietnamGrade3Hub';
 import { VietnamGrade3LessonRunner } from './components/vietnam_grade3/VietnamGrade3LessonRunner';
 import { VietnamGrade3AssessmentModal } from './components/vietnam_grade3/VietnamGrade3AssessmentModal';
@@ -574,79 +573,6 @@ export default function App() {
         assessmentId={activePeriodicAssessmentId || 'periodic-comparison-bar-model'}
         onClose={() => setIsPeriodicRunnerOpen(false)}
       />
-
-      {/* Footer */}
-      <footer className={`py-6 text-center text-xs transition-colors duration-500 ${
-        isCosmicMode
-          ? 'bg-slate-950/90 border-t border-indigo-500/20 text-slate-400 backdrop-blur-md'
-          : 'bg-white border-t border-slate-200 text-slate-500 mt-12'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-semibold flex items-center gap-2">
-            {programMode === 'inmonth' ? (
-              <>
-                <span className="text-amber-300">🌌</span>
-                <span className="text-slate-200">
-                  IN MONTH · Chương Trình Tháng 11 (30 Ngày Toán Tư Duy Chuẩn Singapore &amp; Quốc Tế)
-                </span>
-              </>
-            ) : programMode === 'textbook' ? (
-              <>
-                <span className="text-cyan-400">🌌</span>
-                <span className="text-slate-300">Vũ Trụ Toán 3 · Kết Nối Tri Thức (Chủ Đề 4: Phép Nhân &amp; Phép Chia)</span>
-              </>
-            ) : (
-              <>
-                <span>✨</span>
-                <span>Vương Quốc Toán Tư Duy Lớp 3 · Dựa trên tài liệu Spark Math</span>
-              </>
-            )}
-          </p>
-          <div className="flex items-center gap-3 font-medium text-slate-400 flex-wrap justify-center">
-            {programMode === 'inmonth' ? (
-              <>
-                <span className="text-amber-300 font-bold">Sơ Đồ Thanh CPA</span>
-                <span>·</span>
-                <span className="text-cyan-300 font-bold">Phép Chia Có Dư</span>
-                <span>·</span>
-                <span className="text-emerald-300 font-bold">Toán Khoảng Cách</span>
-                <span>·</span>
-                <span className="text-fuchsia-300 font-bold">Đo Lường &amp; Biểu Đồ</span>
-              </>
-            ) : programMode === 'textbook' ? (
-              <>
-                <span className="text-cyan-300 font-bold">7 Hành Tinh Tri Thức</span>
-                <span>·</span>
-                <span className="text-amber-300 font-bold">Chòm Sao Suy Ngẫm</span>
-                <span>·</span>
-                <span className="text-emerald-300 font-bold">Trạm Vũ Trụ Định Kỳ</span>
-              </>
-            ) : (
-              <>
-                <span>Biểu đồ hình ảnh</span>
-                <span>·</span>
-                <span>Thể tích (Lít)</span>
-                <span>·</span>
-                <span>Sudoku &amp; Quy luật</span>
-                <span>·</span>
-                <span>Logic hàng ngũ</span>
-              </>
-            )}
-            <span>·</span>
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setIsDevConsoleOpen(true);
-              }}
-              className="text-amber-400 hover:text-amber-300 hover:underline font-bold inline-flex items-center gap-1 cursor-pointer"
-            >
-              <Bug className="w-3 h-3" />
-              <span>Chẩn đoán lỗi code</span>
-            </button>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

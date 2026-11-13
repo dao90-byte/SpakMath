@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
+:root {
+  --color-primary: #2563EB;
+  --color-secondary: #F59E0B;
+  --color-accent: #EC4899;
+  --color-cosmic-bg: #0B1026;
+  --color-cosmic-surface: #141B41;
+  --color-ring: #2563EB;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 10px rgba(15, 23, 42, 0.12);
+  --shadow-lg: 0 12px 24px rgba(15, 23, 42, 0.18);
+  --shadow-xl: 0 20px 32px rgba(15, 23, 42, 0.25);
+}
+
 @layer base {
   body {
     font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
     color: #1e293b;
     background-color: #f8fafc;
     user-select: none;
@@ -11,9 +26,43 @@
   }
 
   h1, h2, h3, h4, .font-display {
-    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    font-family: 'Baloo 2', 'Nunito', system-ui, -apple-system, sans-serif;
     font-weight: 800;
   }
+
+  button, a, input, select, textarea {
+    &:focus-visible {
+      outline: 2px solid #FBBF24;
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* Tactile Glass & Cosmic Card Utilities */
+.cosmic-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.cosmic-card-elevated {
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes unlockGlow {
@@ -64,18 +113,14 @@
   animation: pulseGlow 2s infinite;
 }
 
-/* ========================================================================== */
-/* HIGH-TECH SCI-FI COSMIC NEON ANIMATIONS & GLOW UTILITIES */
-/* ========================================================================== */
-
 @keyframes cosmicTwinkle {
   0%, 100% {
-    opacity: 0.3;
-    transform: scale(0.85);
+    opacity: 0.35;
+    transform: scale(0.92);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.15);
+    opacity: 0.85;
+    transform: scale(1.08);
   }
 }
 
@@ -122,4 +167,14 @@
 
 .neon-solar-glow {
   animation: solarPulse 3.5s ease-in-out infinite;
+}
+
+/* Respect prefers-reduced-motion per UI/UX Pro Max accessibility standard */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
