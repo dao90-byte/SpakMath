@@ -42,20 +42,27 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
   const checkAnswerMatch = (input: string, correct: string) => {
     const cleanIn = input.trim().toLowerCase();
     const cleanCor = correct.trim().toLowerCase();
+    if (!cleanIn || !cleanCor) return false;
     if (cleanIn === cleanCor) return true;
 
-    // Compare pure digits if both have numbers
-    const inDigits = cleanIn.replace(/\D/g, '');
-    const corDigits = cleanCor.replace(/\D/g, '');
-    if (inDigits && corDigits && inDigits === corDigits) return true;
+    const normIn = cleanIn.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
+    const normCor = cleanCor.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
 
-    // Check if correct answer contains the input or starts with it
-    return cleanCor.includes(cleanIn) || cleanIn.includes(cleanCor);
+    const inDigits = normIn.match(/\d+/)?.[0];
+    const corDigits = normCor.match(/\d+/)?.[0];
+    if (inDigits && corDigits) {
+      return inDigits === corDigits;
+    }
+
+    if (!inDigits && !corDigits && cleanIn.length >= 2) {
+      return cleanCor.includes(cleanIn) || cleanIn.includes(cleanCor);
+    }
+    return false;
   };
 
-  const handleCheck = (qId: string, correct: string) => {
+  const handleCheck = (qId: string, correct: string, overrideVal?: string) => {
     sound.playClick();
-    const entered = inputValues[qId] || '';
+    const entered = overrideVal !== undefined ? overrideVal : (inputValues[qId] || '');
     if (!entered.trim()) return;
 
     const isMatch = checkAnswerMatch(entered, correct);
@@ -65,7 +72,7 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
       setAnswers((prev) => {
         const next = { ...prev, [qId]: entered };
         const allCorrect = questions.every((q) => {
-          return q.id === qId ? true : prev[q.id] && checkAnswerMatch(prev[q.id], q.correctAnswer);
+          return q.id === qId ? true : Boolean(next[q.id] && checkAnswerMatch(next[q.id], q.correctAnswer));
         });
 
         if (allCorrect) {
@@ -93,6 +100,7 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
         <div className="space-y-6">
           {bars.map((bar, idx) => {
             const widthPercent = (bar.lengthVal / maxLength) * 90;
+            const isHexColor = bar.color?.startsWith('#');
 
             return (
               <div key={idx} className="space-y-1.5">
@@ -124,8 +132,11 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
                     })
                   ) : (
                     <div
-                      style={{ width: `${widthPercent}%` }}
-                      className={`h-full ${bar.color} rounded-xl flex items-center justify-center text-xs md:text-sm font-bold text-white transition-all shadow-xs`}
+                      style={{
+                        width: `${widthPercent}%`,
+                        backgroundColor: isHexColor ? bar.color : undefined
+                      }}
+                      className={`h-full ${!isHexColor ? bar.color : ''} rounded-xl flex items-center justify-center text-xs md:text-sm font-bold text-white transition-all shadow-xs`}
                     >
                       {bar.display || `${bar.lengthVal} L`}
                     </div>
@@ -141,7 +152,7 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
         </div>
       </div>
 
-      {/* Sub questions with direct input typing */}
+      {/* Sub questions with option pills + direct input typing */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {questions.map((q) => {
           const status = feedback[q.id];
@@ -159,18 +170,46 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
                   : 'bg-white border-slate-200'
               }`}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <span className="font-bold text-slate-800 text-sm md:text-base">
                   {q.prompt}
                 </span>
                 {status && (
                   isCorrect ? (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                   ) : (
-                    <XCircle className="w-5 h-5 text-rose-500" />
+                    <XCircle className="w-5 h-5 text-rose-500 shrink-0" />
                   )
                 )}
               </div>
+
+              {q.options && q.options.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {q.options.map((opt, oIdx) => {
+                    const isPicked = inputValues[q.id] === opt;
+                    return (
+                      <button
+                        key={oIdx}
+                        type="button"
+                        disabled={isCorrect}
+                        onClick={() => {
+                          setInputValues((prev) => ({ ...prev, [q.id]: opt }));
+                          handleCheck(q.id, q.correctAnswer, opt);
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
+                          isCorrect && opt === q.correctAnswer
+                            ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
+                            : isPicked
+                            ? 'bg-amber-200 text-amber-950 border-amber-400'
+                            : 'bg-slate-50 hover:bg-amber-50 text-slate-700 border-slate-200 hover:border-amber-300'
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               <div className="flex items-center gap-2">
                 <input
@@ -184,7 +223,7 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
                     }
                   }}
                   onKeyDown={(e) => e.key === 'Enter' && handleCheck(q.id, q.correctAnswer)}
-                  placeholder="Nhập kết quả..."
+                  placeholder="Hoặc tự nhập kết quả..."
                   disabled={isCorrect}
                   className={`flex-1 px-3.5 py-2.5 rounded-xl border-2 text-sm font-bold text-slate-800 focus:outline-none transition-all ${
                     isCorrect

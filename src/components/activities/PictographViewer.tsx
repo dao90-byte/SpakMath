@@ -45,19 +45,30 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
 
     if (cleanUser === cleanCorrect) return true;
 
-    // Compare extracted numbers (e.g. user typed "12", answer is "12 chiếc" or "12 học sinh")
-    const userNum = cleanUser.match(/\d+/)?.[0];
-    const correctNum = cleanCorrect.match(/\d+/)?.[0];
-    if (userNum && correctNum && userNum === correctNum) return true;
+    // Normalize numbers with thousand separators (spaces, dots, commas): e.g. "12 000" -> "12000"
+    const normalizedUser = cleanUser.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
+    const normalizedCorrect = cleanCorrect.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
 
-    // Substring match for non-numbers
-    if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+    const userNums = normalizedUser.match(/\d+/g);
+    const correctNums = normalizedCorrect.match(/\d+/g);
+    if (userNums && correctNums && userNums[0] === correctNums[0]) return true;
+
+    // For non-numeric or named answers, require at least 3 characters and no numeric mismatch
+    if (!userNums && !correctNums && cleanUser.length >= 3) {
+      if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+    }
 
     return false;
   };
 
-  const handleCheckAnswer = (questionId: string, correctAnswer: string) => {
-    const rawVal = inputValues[questionId] || '';
+  const handleSelectOption = (questionId: string, optionText: string, correctAnswer: string) => {
+    sound.playClick();
+    setInputValues((prev) => ({ ...prev, [questionId]: optionText }));
+    handleCheckAnswer(questionId, correctAnswer, optionText);
+  };
+
+  const handleCheckAnswer = (questionId: string, correctAnswer: string, overrideVal?: string) => {
+    const rawVal = overrideVal !== undefined ? overrideVal : (inputValues[questionId] || '');
     if (!rawVal.trim()) return;
 
     const isMatch = checkAnswerMatch(rawVal, correctAnswer);
@@ -67,7 +78,6 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
       setAnsweredStatus((prev) => ({ ...prev, [questionId]: 'correct' }));
       setSelectedAnswers((prev) => {
         const next = { ...prev, [questionId]: correctAnswer };
-        // Check if all questions are answered correctly
         const allCorrect = subQuestions.every((q) => {
           const ans = q.id === questionId ? correctAnswer : next[q.id];
           return ans === q.correctAnswer;
@@ -192,13 +202,38 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
                 {isWrong && <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />}
               </div>
 
-              {/* Direct Input Form */}
-              <div className="space-y-2">
+              {/* Option Pills + Direct Input Form */}
+              <div className="space-y-2.5">
+                {q.options && q.options.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {q.options.map((opt, oIdx) => {
+                      const isPicked = inputValues[q.id] === opt;
+                      return (
+                        <button
+                          key={oIdx}
+                          type="button"
+                          disabled={isCorrect}
+                          onClick={() => handleSelectOption(q.id, opt, q.correctAnswer)}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
+                            isCorrect && opt === q.correctAnswer
+                              ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
+                              : isPicked
+                              ? 'bg-amber-200 text-amber-950 border-amber-400'
+                              : 'bg-slate-50 hover:bg-amber-50 text-slate-700 border-slate-200 hover:border-amber-300'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     inputMode="text"
-                    placeholder="Tự nhập kết quả của em..."
+                    placeholder="Hoặc tự nhập kết quả của em..."
                     value={inputValues[q.id] || ''}
                     disabled={isCorrect}
                     onChange={(e) => {

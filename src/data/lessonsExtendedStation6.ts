@@ -79,7 +79,7 @@ export const EXTENDED_CHALLENGE_LESSONS: LessonQuestion[] = [
     title: 'Thử Thách 17.1 · Đếm Khối Lập Phương 3D: Tòa Thành 4 Tầng Cực Hạn',
     badgeTitle: 'Thử Thách 17.1 · Trang 90+',
     instruction: 'Đếm tổng số khối lập phương tạo nên tòa thành 4 tầng có các góc khuất và hành lang chữ U bên trong.',
-    hint: 'Tầng 1 (đáy): 16 khối. Tầng 2: 10 khối. Tầng 3: 6 khối. Tầng 4: 2 khối tháp đỉnh. Tổng = 16 + 10 + 6 + 2 = 34 khối!',
+    hint: 'Tầng 1 (đáy): 16 khối. Tầng 2: 12 khối. Tầng 3: 6 khối. Tầng 4: 2 khối tháp đỉnh. Tổng = 16 + 12 + 6 + 2 = 36 khối!',
     mascot: { ...MAYLE, message: 'Cộng lần lượt từng tầng từ dưới lên trên để không bao giờ bị bỏ sót khối khuất!' },
     activity: {
       type: 'cubeCounter',
@@ -93,13 +93,13 @@ export const EXTENDED_CHALLENGE_LESSONS: LessonQuestion[] = [
       ],
       layers: [
         { layerName: 'Tầng 1 (Toàn bộ mặt đáy)', count: 16 },
-        { layerName: 'Tầng 2 (Khung tường bao quanh)', count: 10 },
+        { layerName: 'Tầng 2 (Khung tường bao quanh)', count: 12 },
         { layerName: 'Tầng 3 (Các cột tháp)', count: 6 },
         { layerName: 'Tầng 4 (2 đỉnh tháp canh)', count: 2 }
       ],
-      totalCubes: 34,
-      options: [30, 32, 34, 36],
-      explanation: 'Tổng số khối lập phương là: 16 + 10 + 6 + 2 = 34 khối!'
+      totalCubes: 36,
+      options: [32, 34, 36, 38],
+      explanation: 'Tổng số khối lập phương là: 16 + 12 + 6 + 2 = 36 khối!'
     }
   },
   {
@@ -116,24 +116,24 @@ export const EXTENDED_CHALLENGE_LESSONS: LessonQuestion[] = [
       rows: 4,
       cols: 4,
       clues: [
-        [3, 2, 2, 3],
-        [2, null, null, 2],
-        [2, null, null, 2],
-        [3, 2, 2, 3]
+        [3, 1, null, 2],
+        [3, null, 0, null],
+        [2, null, 0, 1],
+        [3, 3, 2, 2]
       ],
       solutionEdges: {
         h: [
           [true, true, true, true],
-          [false, false, false, false],
-          [false, false, false, false],
-          [false, false, false, false],
-          [true, true, true, true]
+          [true, false, false, false],
+          [true, false, false, false],
+          [false, true, false, false],
+          [true, false, true, true]
         ],
         v: [
           [true, false, false, false, true],
+          [false, true, false, false, true],
           [true, false, false, false, true],
-          [true, false, false, false, true],
-          [true, false, false, false, true]
+          [true, true, true, false, true]
         ]
       }
     }
@@ -232,7 +232,7 @@ export const EXTENDED_CHALLENGE_LESSONS: LessonQuestion[] = [
     activity: {
       type: 'starBattle',
       size: 6,
-      targetStarCount: 1,
+      targetStarCount: 6,
       regions: [
         [0, 0, 0, 1, 1, 1],
         [0, 0, 0, 1, 1, 1],
@@ -705,6 +705,420 @@ export const EXTENDED_CHALLENGE_LESSONS: LessonQuestion[] = [
         }
       ]
     }
+  },
+  {
+    id: 'chal-51',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Cân Thăng Bằng Bậc Thang Vũ Trụ: Đổi Vương Miện Ra Ngôi Sao',
+    badgeTitle: 'Thử Thách 27 · Cấp Tinh Vân',
+    instruction: 'Quan sát hai chiếc cân mẫu để tính xem 2 Vương Miện 👑 và 1 Kim Cương 💎 nặng bằng bao nhiêu Ngôi Sao ⭐.',
+    hint: '1 💎 = 2 ⭐, nên 1 👑 = 3 💎 = 6 ⭐. Vậy 2 👑 + 1 💎 = 6 + 6 + 2 = 14 ⭐!',
+    mascot: { ...ABBY, message: 'Dùng phương pháp thế bắc cầu 2 tầng để quy đổi mọi vật về Ngôi Sao ⭐ nhé!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'Cân Thăng Bằng Quy Đổi 2 Tầng',
+      ruleExplanation: 'Biết 1 Vương Miện 👑 = 3 Kim Cương 💎 và 1 Kim Cương 💎 = 2 Ngôi Sao ⭐.',
+      scales: [
+        {
+          leftIcons: ['👑'],
+          leftLabel: '1 Vương Miện',
+          rightIcons: ['💎', '💎', '💎'],
+          rightLabel: '3 Kim Cương'
+        },
+        {
+          leftIcons: ['💎'],
+          leftLabel: '1 Kim Cương',
+          rightIcons: ['⭐', '⭐'],
+          rightLabel: '2 Ngôi Sao'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['👑', '👑', '💎'],
+        targetLeftLabel: '2 Vương Miện + 1 Kim Cương',
+        options: [
+          { id: 'b12', count: 12, icon: '⭐', label: '12 Ngôi Sao' },
+          { id: 'b14', count: 14, icon: '⭐', label: '14 Ngôi Sao' },
+          { id: 'b16', count: 16, icon: '⭐', label: '16 Ngôi Sao' }
+        ],
+        correctOptionId: 'b14',
+        explanation: '1 👑 = 3 💎 = 6 ⭐. Vậy 2 👑 + 1 💎 = 6×2 + 2 = 14 Ngôi Sao!'
+      }
+    }
+  },
+  {
+    id: 'chal-52',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Pixidoku 5x5 Thiên Hà Huyền Bí (Thử Thách Ít Gợi Ý)',
+    badgeTitle: 'Thử Thách 28 · Cấp Sao Chổi',
+    instruction: 'Điền 5 biểu tượng vũ trụ (☀️, 🌙, 🌍, 🪐, ☄️) vào bảng 5x5 sao cho mỗi hàng và mỗi cột có đủ cả 5 biểu tượng không trùng lặp.',
+    hint: 'Đếm loại biểu tượng đã xuất hiện nhiều nhất (Mặt Trời ☀️ hoặc Trái Đất 🌍) để khoanh vùng ô duy nhất còn lại trong hàng/cột!',
+    mascot: { ...CASEY, message: 'Bảng Pixidoku 5x5 siêu hóc búa chỉ có 11 ô gợi ý! Bé bình tĩnh suy luận từng ô nhé!' },
+    activity: {
+      type: 'pixidoku',
+      size: 5,
+      animals: [
+        { id: 'sun', icon: '☀️', name: 'Mặt Trời' },
+        { id: 'moon', icon: '🌙', name: 'Mặt Trăng' },
+        { id: 'earth', icon: '🌍', name: 'Trái Đất' },
+        { id: 'saturn', icon: '🪐', name: 'Sao Thổ' },
+        { id: 'comet', icon: '☄️', name: 'Sao Chổi' }
+      ],
+      initialGrid: [
+        ['sun', null, 'earth', null, 'comet'],
+        ['earth', null, 'comet', 'sun', null],
+        ['comet', 'sun', null, null, 'saturn'],
+        [null, 'earth', null, null, 'sun'],
+        ['saturn', 'comet', null, null, 'earth']
+      ],
+      solution: [
+        ['sun', 'moon', 'earth', 'saturn', 'comet'],
+        ['earth', 'saturn', 'comet', 'sun', 'moon'],
+        ['comet', 'sun', 'moon', 'earth', 'saturn'],
+        ['moon', 'earth', 'saturn', 'comet', 'sun'],
+        ['saturn', 'comet', 'sun', 'moon', 'earth']
+      ]
+    }
+  },
+  {
+    id: 'chal-53',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Kiến Trúc Sư Không Gian 3D: Đếm Khối Lập Phương 4 Tầng',
+    badgeTitle: 'Thử Thách 29 · Cấp Hành Tinh',
+    instruction: 'Quan sát khối kiến trúc bậc thang 3D cao tới 4 tầng. Hãy đếm kỹ kể cả những khối lập phương bị che khuất phía sau và bên dưới để tìm tổng số khối.',
+    hint: 'Đếm theo từng tầng từ đáy lên đỉnh: Tầng 1 có 9 khối, Tầng 2 có 9 khối, Tầng 3 có 8 khối, Tầng 4 có 3 khối!',
+    mascot: { ...MAYLE, message: 'Đừng quên các khối đỡ bên dưới cột màu hồng tầng 4 nhé!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'Tháp Lập Phương Bậc Thang 4 Tầng',
+      instructionText: 'Đếm chính xác tổng số khối lập phương tạo nên công trình 3D này (bao gồm các khối bị che khuất):',
+      gridHeights: [
+        [4, 4, 3],
+        [4, 3, 3],
+        [3, 3, 2]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (Đáy 3x3)', count: 9 },
+        { layerName: 'Tầng 2 (Thân dưới)', count: 9 },
+        { layerName: 'Tầng 3 (Thân trên)', count: 8 },
+        { layerName: 'Tầng 4 (Đỉnh chóp)', count: 3 }
+      ],
+      totalCubes: 29,
+      options: [27, 28, 29, 30],
+      explanation: 'Tổng số khối lập phương = 9 + 9 + 8 + 3 = 29 khối!'
+    }
+  },
+  {
+    id: 'chal-54',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Giải Mã Két Sắt Lượng Tử 4 Chữ Số (Suy Luận Thuần Túy)',
+    badgeTitle: 'Thử Thách 30 · Cấp Hố Đen',
+    instruction: 'Đọc kỹ 4 manh mối thám tử để suy luận chính xác mật mã 4 chữ số mở khóa Két Sắt Lượng Tử.',
+    hint: 'Manh mối 1 loại 1, 3, 4, 9. Manh mối 4 cho biết mật mã gồm đúng 4 chữ số 2, 5, 6, 8. Kết hợp manh mối 2 & 3 để đặt từng số đúng vị trí!',
+    mascot: { ...CASEY, message: 'Không hề có gợi ý lộ đáp án đâu! Hãy dùng tư duy thám tử để khóa chặt từng vị trí!' },
+    activity: {
+      type: 'treasureVault',
+      title: 'Két Sắt Lượng Tử Vũ Trụ',
+      codeLength: 4,
+      solutionCode: [5, 8, 2, 6],
+      clues: [
+        {
+          attempt: [1, 3, 4, 9],
+          correctDigits: 0,
+          correctPositions: 0,
+          description: 'Không có số nào đúng'
+        },
+        {
+          attempt: [5, 0, 7, 2],
+          correctDigits: 2,
+          correctPositions: 1,
+          description: 'Có 2 chữ số đúng: 1 số đúng vị trí, 1 số sai vị trí'
+        },
+        {
+          attempt: [6, 8, 0, 7],
+          correctDigits: 2,
+          correctPositions: 1,
+          description: 'Có 2 chữ số đúng: 1 số đúng vị trí, 1 số sai vị trí'
+        },
+        {
+          attempt: [2, 6, 8, 5],
+          correctDigits: 4,
+          correctPositions: 0,
+          description: 'Cả 4 chữ số đều đúng nhưng TẤT CẢ đều sai vị trí!'
+        }
+      ]
+    }
+  },
+  {
+    id: 'chal-55',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Đấu Trường Ngôi Sao Star Battle 6x6: Chòm Sao Bắc Đẩu',
+    badgeTitle: 'Thử Thách 31 · Cấp Thiên Hà',
+    instruction: 'Đặt 6 Ngôi Sao ⭐ vào bảng 6x6 sao cho mỗi hàng, mỗi cột và mỗi vùng màu có đúng 1 ngôi sao. Các ngôi sao KHÔNG được đứng cạnh nhau (kể cả đường chéo)!',
+    hint: 'Hãy chú ý vùng màu nhỏ ở góc trên trái (4 ô) và quy tắc không chạm chéo giữa 2 ngôi sao gần nhau!',
+    mascot: { ...ABBY, message: 'Bấm 2 lần để đánh dấu chấm • loại trừ các ô xung quanh ngôi sao vừa đặt!' },
+    activity: {
+      type: 'starBattle',
+      size: 6,
+      targetStarCount: 6,
+      regions: [
+        [0, 0, 1, 1, 1, 1],
+        [0, 0, 2, 1, 1, 3],
+        [2, 2, 2, 3, 3, 3],
+        [2, 2, 4, 3, 3, 3],
+        [5, 5, 4, 4, 4, 4],
+        [5, 5, 5, 5, 4, 4]
+      ],
+      starsSolution: [
+        [0, 1],
+        [1, 4],
+        [2, 0],
+        [3, 3],
+        [4, 5],
+        [5, 2]
+      ]
+    }
+  },
+  {
+    id: 'chal-56',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Ma Trận 2x2 Quy Luật Kép: Xoay 90° Rồi Cộng Thêm 10',
+    badgeTitle: 'Thử Thách 32 · Cấp Siêu Tân Tinh',
+    instruction: 'Phát hiện quy luật biến đổi kép qua Ô 1 ➔ Ô 2 ➔ Ô 3 để tự tay điền 4 con số vào Ô 4.',
+    hint: 'Mỗi bước, 4 con số vừa xoay THEO chiều kim đồng hồ 1 góc, vừa tăng thêm đúng +10 đơn vị! Ví dụ: 2 ➔ 12 ➔ 22 ➔ 32.',
+    mascot: { ...MAYLE, message: 'Quy luật kết hợp cả hình học (xoay) và số học (+10) cực kỳ đẳng cấp!' },
+    activity: {
+      type: 'matrix2x2',
+      title: 'Ma Trận 2x2 Quy Luật Kép (Xoay + Cộng 10)',
+      ruleExplanation: 'Mỗi bước cả 4 số xoay theo chiều kim đồng hồ 90 độ rồi cộng thêm 10.',
+      sampleGrids: [
+        {
+          stepNum: 1,
+          grid: [
+            ['2', '5'],
+            ['8', '3']
+          ]
+        },
+        {
+          stepNum: 2,
+          grid: [
+            ['18', '12'],
+            ['13', '15']
+          ]
+        },
+        {
+          stepNum: 3,
+          grid: [
+            ['23', '28'],
+            ['25', '22']
+          ]
+        }
+      ],
+      choices: [
+        {
+          id: 'opt1',
+          label: 'Chuẩn xoay +10',
+          grid: [
+            ['35', '33'],
+            ['32', '38']
+          ]
+        }
+      ],
+      correctChoiceId: 'opt1'
+    }
+  },
+  {
+    id: 'chal-57',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Mê Cung Hàng Rào Số Slitherlink 4x4: Vành Đai Ánh Sáng',
+    badgeTitle: 'Thử Thách 33 · Cấp Chuẩn Tinh',
+    instruction: 'Nối các điểm tạo thành MỘT vòng khép kín duy nhất sao cho số trong mỗi ô bằng đúng số cạnh có đường viền bao quanh ô đó.',
+    hint: 'Bắt đầu loại bỏ toàn bộ 4 cạnh xung quanh các ô số 0 ở chính giữa, sau đó nối tiếp từ các ô số 2 ở các góc!',
+    mascot: { ...BENNY, message: 'Mẹo Slitherlink: 3 ô số 0 ở giữa là chìa khóa mở ra toàn bộ đường bao xung quanh!' },
+    activity: {
+      type: 'slitherlink',
+      rows: 4,
+      cols: 4,
+      clues: [
+        [2, null, 2, 1],
+        [null, 0, null, 2],
+        [2, 0, 0, null],
+        [2, 2, null, 2]
+      ],
+      solutionEdges: {
+        h: [
+          [true, true, false, false],
+          [false, false, true, true],
+          [false, false, false, false],
+          [true, false, false, true],
+          [false, true, true, false]
+        ],
+        v: [
+          [true, false, true, false, false],
+          [true, false, false, false, true],
+          [true, false, false, false, true],
+          [false, true, false, true, false]
+        ]
+      }
+    }
+  },
+  {
+    id: 'chal-58',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Cân Thăng Bằng 3 Chiếc Đĩa: Kho Báu Ba Tầng',
+    badgeTitle: 'Thử Thách 34 · Cấp Ngân Hà',
+    instruction: 'Từ 3 chiếc cân thăng bằng bên dưới, hãy quy đổi xem 2 Chiếc Cúp 🏆 nặng bằng bao nhiêu Ngôi Sao ⭐.',
+    hint: '1 🎖️ = 3 ⭐ và 1 💎 = 4 ⭐. Thay vào cân #1: 1 🏆 = 2×3 + 4 = 10 ⭐. Vậy 2 🏆 = ?',
+    mascot: { ...ABBY, message: 'Thay thế từng biểu tượng một rồi nhân đôi kết quả cho 2 Chiếc Cúp nhé!' },
+    activity: {
+      type: 'balanceScale',
+      title: 'Cân Thăng Bằng 3 Biến Số',
+      ruleExplanation: 'Biết 1 Cúp 🏆 = 2 Huy Chương 🎖️ + 1 Kim Cương 💎; 1 Huy Chương = 3 Sao ⭐; 1 Kim Cương = 4 Sao ⭐.',
+      scales: [
+        {
+          leftIcons: ['🏆'],
+          leftLabel: '1 Cúp Vàng',
+          rightIcons: ['🎖️', '🎖️', '💎'],
+          rightLabel: '2 Huy Chương + 1 Kim Cương'
+        },
+        {
+          leftIcons: ['🎖️'],
+          leftLabel: '1 Huy Chương',
+          rightIcons: ['⭐', '⭐', '⭐'],
+          rightLabel: '3 Ngôi Sao'
+        },
+        {
+          leftIcons: ['💎'],
+          leftLabel: '1 Kim Cương',
+          rightIcons: ['⭐', '⭐', '⭐', '⭐'],
+          rightLabel: '4 Ngôi Sao'
+        }
+      ],
+      targetQuestion: {
+        targetLeftIcons: ['🏆', '🏆'],
+        targetLeftLabel: '2 Chiếc Cúp Vàng',
+        options: [
+          { id: 's18', count: 18, icon: '⭐', label: '18 Ngôi Sao' },
+          { id: 's20', count: 20, icon: '⭐', label: '20 Ngôi Sao' },
+          { id: 's22', count: 22, icon: '⭐', label: '22 Ngôi Sao' }
+        ],
+        correctOptionId: 's20',
+        explanation: '1 🏆 = 2×3 + 4 = 10 ⭐. Vậy 2 🏆 = 2 × 10 = 20 Ngôi Sao!'
+      }
+    }
+  },
+  {
+    id: 'chal-59',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'Pháo Đài Không Gian 3D 30 Khối Lập Phương',
+    badgeTitle: 'Thử Thách 35 · Cấp Vũ Trụ',
+    instruction: 'Đếm toàn bộ số khối lập phương tạo nên Pháo Đài 4 tầng cực đại bên dưới.',
+    hint: 'Phân lớp cẩn thận: Tầng 1 (9 khối) + Tầng 2 (9 khối) + Tầng 3 (8 khối) + Tầng 4 (4 khối màu hồng) = ?',
+    mascot: { ...MAYLE, message: 'Công trình đồ sộ nhất toàn khóa học! Quan sát kỹ cả 4 khối màu hồng tầng trên cùng!' },
+    activity: {
+      type: 'cubeCounter',
+      title: 'Pháo Đài Không Gian 4 Tầng',
+      instructionText: 'Tính tổng số khối lập phương của Pháo Đài 3D (bao gồm cả phần bị che khuất):',
+      gridHeights: [
+        [4, 4, 4],
+        [4, 3, 3],
+        [3, 3, 2]
+      ],
+      layers: [
+        { layerName: 'Tầng 1 (Đáy 3x3)', count: 9 },
+        { layerName: 'Tầng 2 (Thân dưới)', count: 9 },
+        { layerName: 'Tầng 3 (Thân trên)', count: 8 },
+        { layerName: 'Tầng 4 (Tháp đỉnh)', count: 4 }
+      ],
+      totalCubes: 30,
+      options: [28, 29, 30, 32],
+      explanation: 'Tổng số khối = 9 + 9 + 8 + 4 = 30 khối lập phương!'
+    }
+  },
+  {
+    id: 'chal-60',
+    topicId: 'challenge',
+    topicName: topicName('challenge'),
+    title: 'SIÊU CHUNG KẾT LIÊN HÀNH TINH: TỐI THƯỢNG TOÁN TƯ DUY SPARK MATH',
+    badgeTitle: 'SIÊU CHUNG KẾT · HUYỀN THOẠI LIÊN HÀNH TINH',
+    instruction: 'Chinh phục 5 vòng thi tích hợp đỉnh cao cuối cùng về Biểu đồ, Thể tích, Ma phương, Dãy số và Suy luận vòng tròn để bước lên Ngôi Vương Toán Tư Duy!',
+    hint: 'Vận dụng toàn bộ tuyệt chiêu đã học từ Trạm 1 đến Trạm 6 và sử dụng Bảng Vẽ Nháp khi cần tính nhẩm số lớn nhé!',
+    mascot: { ...MAYLE, message: 'Khoảnh khắc lịch sử! Vượt qua 5 vòng siêu đỉnh này, em là Huyền Thoại Liên Hành Tinh bất khả chiến bại!' },
+    activity: {
+      type: 'grandFinale',
+      title: 'Siêu Chung Kết Liên Hành Tinh Spark Math',
+      roundQuestions: [
+        {
+          id: 'super-q1',
+          category: 'Vòng 1 · Biểu Đồ Tỷ Lệ Thiên Văn',
+          question: 'Trên bản đồ vũ trụ, khoảng cách tới Sao Hỏa được vẽ bằng 11 biểu tượng 🪐, tới Sao Mộc có 7 biểu tượng 🪐. Biết mỗi biểu tượng 🪐 đại diện cho 45 triệu km. Hỏi khoảng cách đầu lớn hơn khoảng cách sau bao nhiêu triệu km?',
+          options: [
+            { id: 'sq1-a', text: '135 triệu km', isCorrect: false },
+            { id: 'sq1-b', text: '180 triệu km', isCorrect: true },
+            { id: 'sq1-c', text: '225 triệu km', isCorrect: false },
+            { id: 'sq1-d', text: '270 triệu km', isCorrect: false }
+          ],
+          explanation: 'Hiệu số biểu tượng: 11 - 7 = 4 biểu tượng. Khoảng cách chênh lệch: 4 × 45 = 180 triệu km!'
+        },
+        {
+          id: 'super-q2',
+          category: 'Vòng 2 · Cân Bằng Nhiên Liệu 5 Khoang Tàu',
+          question: '5 khoang nhiên liệu chứa lần lượt 45L, 52L, 38L, 60L và 55L. Khi bơm san đều để cả 5 khoang có lượng nhiên liệu bằng nhau thì mỗi khoang chứa bao nhiêu lít?',
+          options: [
+            { id: 'sq2-a', text: '48 lít', isCorrect: false },
+            { id: 'sq2-b', text: '50 lít', isCorrect: true },
+            { id: 'sq2-c', text: '52 lít', isCorrect: false },
+            { id: 'sq2-d', text: '55 lít', isCorrect: false }
+          ],
+          explanation: 'Tổng nhiên liệu: 45 + 52 + 38 + 60 + 55 = 250 lít. Chia đều 5 khoang: 250 : 5 = 50 lít!'
+        },
+        {
+          id: 'super-q3',
+          category: 'Vòng 3 · Giải Mã Ma Phương 3x3',
+          question: 'Một ma phương 3x3 có tổng mỗi hàng, cột và đường chéo đều bằng 108. Biết ô góc trên bên trái là số 40. Hỏi số nằm ở ô góc dưới bên phải (trên cùng đường chéo chính) là bao nhiêu?',
+          options: [
+            { id: 'sq3-a', text: '28', isCorrect: false },
+            { id: 'sq3-b', text: '32', isCorrect: true },
+            { id: 'sq3-c', text: '36', isCorrect: false },
+            { id: 'sq3-d', text: '40', isCorrect: false }
+          ],
+          explanation: 'Ô chính giữa ma phương bằng 108 : 3 = 36. Tổng đường chéo = 40 + 36 + Ô góc dưới phải = 108 ➔ Ô cần tìm = 108 - 76 = 32!'
+        },
+        {
+          id: 'super-q4',
+          category: 'Vòng 4 · Dãy Số Tăng Tốc',
+          question: 'Tìm số tiếp theo trong dãy số quy luật kết hợp: 2, 5, 11, 23, 47, [?].',
+          options: [
+            { id: 'sq4-a', text: '93', isCorrect: false },
+            { id: 'sq4-b', text: '94', isCorrect: false },
+            { id: 'sq4-c', text: '95', isCorrect: true },
+            { id: 'sq4-d', text: '96', isCorrect: false }
+          ],
+          explanation: 'Quy luật: mỗi số bằng số trước nhân 2 rồi cộng 1 (2×2+1=5, 5×2+1=11, ..., 47×2+1 = 95)!'
+        },
+        {
+          id: 'super-q5',
+          category: 'Vòng 5 · Suy Luận Vòng Tròn Đối Xứng',
+          question: 'Có 32 phi hành gia đứng thành một vòng tròn cách đều nhau, đánh số từ 1 đến 32 theo chiều kim đồng hồ. Hỏi phi hành gia đứng đối diện trực diện với số 9 mang số bao nhiêu?',
+          options: [
+            { id: 'sq5-a', text: 'Số 23', isCorrect: false },
+            { id: 'sq5-b', text: 'Số 24', isCorrect: false },
+            { id: 'sq5-c', text: 'Số 25', isCorrect: true },
+            { id: 'sq5-d', text: 'Số 26', isCorrect: false }
+          ],
+          explanation: 'Nửa vòng tròn có 32 : 2 = 16 bước. Người đối diện với số 9 là: 9 + 16 = 25!'
+        }
+      ]
+    }
   }
 ];
+
 

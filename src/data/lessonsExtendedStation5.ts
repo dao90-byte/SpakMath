@@ -441,6 +441,211 @@ export const EXTENDED_LOGIC_LESSONS: LessonQuestion[] = [
       ],
       correctOrder: ['eagle', 'leopard', 'horse', 'wolf', 'rabbit']
     }
+  },
+  {
+    id: 'log-47',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đội Hình Chữ Thập (+): Đếm Bù Trừ Giao Điểm Lớn',
+    badgeTitle: 'Bài 47 · Độ khó Cấp 29',
+    instruction: 'Đội robot xếp thành hình chữ thập (+). Hàng dọc có 11 bạn, hàng ngang có 8 bạn. Khỉ Benny đứng đúng tại ô giao nhau của hai hàng. Hỏi cả đội có bao nhiêu bạn?',
+    hint: 'Khỉ Benny ở giao điểm bị đếm 2 lần (1 lần ở hàng dọc, 1 lần ở hàng ngang). Vậy tổng số bạn = 11 + 8 - 1 = ?',
+    mascot: { ...BENNY, message: 'Đừng quên trừ đi 1 bạn ở chính giữa giao điểm bị đếm trùng 2 lần nhé!' },
+    activity: {
+      type: 'cornerCross',
+      shape: '+',
+      verticalCount: 11,
+      horizontalCount: 8,
+      intersectionPerson: 'Khỉ Benny',
+      options: ['17 bạn', '18 bạn', '19 bạn', '20 bạn'],
+      correctAnswer: '18 bạn'
+    }
+  },
+  {
+    id: 'log-48',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đếm Người Ở Giữa Hai Đầu Hàng Trong Đoàn 22 Bạn',
+    badgeTitle: 'Bài 48 · Độ khó Cấp 30',
+    instruction: 'Một đoàn có tất cả 22 bạn. Khỉ Benny đứng thứ 7 tính từ đầu hàng, Thỏ Abby đứng thứ 6 tính từ cuối hàng. Hỏi ở giữa Benny và Abby có bao nhiêu bạn?',
+    hint: 'Lấy tổng số 22 bạn trừ đi 7 bạn (từ đầu đến Benny) và trừ tiếp 6 bạn (từ Abby đến cuối): 22 - 7 - 6 = ?',
+    mascot: { ...MAYLE, message: 'Bài toán ngược cực hay: biết tổng cả hàng, tìm số bạn đứng ở khoảng giữa!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'between',
+      totalInQueue: 22,
+      personA: { name: 'Benny', avatar: '🐵', pos: 7 },
+      personB: { name: 'Abby', avatar: '🐰', pos: 6 },
+      correctTotal: 9,
+      formula: '22 - 7 - 6',
+      options: [8, 9, 10, 11],
+      promptTitle: 'Số bạn đứng ở giữa Benny và Abby là:'
+    }
+  },
+  {
+    id: 'log-49',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Suy Luận 6 Ghế Chỉ Huy Tàu Vũ Trụ Từ Manh Mối Rời',
+    badgeTitle: 'Bài 49 · Độ khó Cấp 31',
+    instruction: 'Xếp 6 thành viên vào ghế 1 đến 6 dựa vào manh mối: (1) Bác Ram ngồi ghế 1; (2) Bé Lisa ngồi ghế 6; (3) Thầy Mayle ngồi ngay bên phải Bác Ram; (4) Chuột Casey ngồi ghế 4; (5) Thỏ Abby ngồi giữa Thầy Mayle và Chuột Casey; (6) Khỉ Benny ngồi ghế còn lại.',
+    hint: 'Ghế 1: Bác Ram ➔ Ghế 2: Thầy Mayle ➔ Ghế 3: Thỏ Abby ➔ Ghế 4: Chuột Casey ➔ Ghế 5: Khỉ Benny ➔ Ghế 6: Bé Lisa.',
+    mascot: { ...ABBY, message: 'Đọc từng manh mối chắc chắn trước rồi điền dần các ghế còn trống nhé!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 6,
+      allowedCharacters: ['Bác Ram', 'Thầy Mayle', 'Thỏ Abby', 'Chuột Casey', 'Khỉ Benny', 'Bé Lisa'],
+      correctOrder: ['Bác Ram', 'Thầy Mayle', 'Thỏ Abby', 'Chuột Casey', 'Khỉ Benny', 'Bé Lisa']
+    }
+  },
+  {
+    id: 'log-50',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Bảng Vàng Olympic Toán Vũ Trụ: Xếp Hạng 6 Thí Sinh',
+    badgeTitle: 'Bài 50 · Độ khó Cấp 32',
+    instruction: 'Sắp xếp 6 thí sinh theo số điểm từ CAO NHẤT đến THẤP NHẤT dựa vào gợi ý điểm số ở mỗi thẻ.',
+    hint: 'Minh (98) ➔ Lan (94) ➔ Hùng (91) ➔ Tuấn (89) ➔ Vy (85) ➔ An (80).',
+    mascot: { ...MAYLE, message: 'Dùng phép tính trừ và tính chất bắc cầu để sắp xếp thứ tự chính xác nhé!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp 6 thí sinh theo điểm số từ CAO NHẤT ➡️ THẤP NHẤT:',
+      directionLabel: 'Điểm số: Cao Nhất ➡️ Thấp Nhất',
+      items: [
+        { id: 'minh', label: 'Bạn Minh', description: 'Đạt số điểm cao nhất (98 điểm)', icon: '🥇' },
+        { id: 'lan', label: 'Bạn Lan', description: 'Kém Minh đúng 4 điểm', icon: '🥈' },
+        { id: 'hung', label: 'Bạn Hùng', description: 'Kém Lan 3 điểm, hơn Tuấn 2 điểm', icon: '🥉' },
+        { id: 'tuan', label: 'Bạn Tuấn', description: 'Đạt 89 điểm, cao hơn Vy 4 điểm', icon: '🌟' },
+        { id: 'vy', label: 'Bạn Vy', description: 'Cao hơn An 5 điểm', icon: '📘' },
+        { id: 'an', label: 'Bạn An', description: 'Đạt 80 điểm (thấp nhất đội)', icon: '🌱' }
+      ],
+      correctOrder: ['minh', 'lan', 'hung', 'tuan', 'vy', 'an']
+    }
+  },
+  {
+    id: 'log-51',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Hàng Lên Phi Thuyền Lớn: Đếm Hai Đầu Chống Trùng',
+    badgeTitle: 'Bài 51 · Độ khó Cấp 33',
+    instruction: 'Trong hàng chờ lên tàu vũ trụ, Thỏ Abby đứng thứ 14 tính từ đầu hàng và đứng thứ 19 tính từ cuối hàng. Hỏi cả hàng có tất cả bao nhiêu bạn?',
+    hint: 'Thỏ Abby được đếm 2 lần trong phép cộng 14 + 19. Vậy số bạn thực tế = 14 + 19 - 1 = ?',
+    mascot: { ...ABBY, message: 'Hàng dài hơn 30 bạn luôn! Công thức 14 + 19 - 1 giúp em tính cực nhanh!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'twoEnds',
+      fromFront: 14,
+      fromBack: 19,
+      correctTotal: 32,
+      formula: '14 + 19 - 1',
+      options: [31, 32, 33, 34],
+      promptTitle: 'Cả hàng chờ lên tàu có tất cả bao nhiêu bạn?'
+    }
+  },
+  {
+    id: 'log-52',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đội Hình Robot Chữ T Cỡ Lớn Trên Boong Tàu',
+    badgeTitle: 'Bài 52 · Độ khó Cấp 34',
+    instruction: 'Đội robot xếp hình chữ T trên sân bay: hàng ngang phía trên có 13 robot, hàng dọc từ giữa xuống có 9 robot (Thỏ Abby đứng tại điểm giao chữ T). Hỏi có tất cả bao nhiêu robot?',
+    hint: 'Tổng số robot = 13 (hàng ngang) + 9 (hàng dọc) - 1 (điểm giao Abby) = ?',
+    mascot: { ...CASEY, message: 'Nhớ trừ đi 1 ở đỉnh giao chữ T vì vị trí đó thuộc cả hai hàng!' },
+    activity: {
+      type: 'cornerCross',
+      shape: 'T',
+      verticalCount: 9,
+      horizontalCount: 13,
+      intersectionPerson: 'Thỏ Abby',
+      options: ['20 bạn', '21 bạn', '22 bạn', '23 bạn'],
+      correctAnswer: '21 bạn'
+    }
+  },
+  {
+    id: 'log-53',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Thư Viện Thiên Hà: Sắp Xếp 6 Cuốn Sổ Tay Theo Độ Dày',
+    badgeTitle: 'Bài 53 · Độ khó Cấp 35',
+    instruction: 'Đọc mô tả số trang của 6 cuốn sách và sắp xếp theo thứ tự từ DÀY NHẤT (nhiều trang nhất) đến MỎNG NHẤT.',
+    hint: 'Atlas Thiên Văn (420) ➔ Vật Lý (350) ➔ Toán Tư Duy (320) ➔ Sinh Học ➔ Hóa Học (210) ➔ Vẽ Phác Thảo.',
+    mascot: { ...MAYLE, message: 'So sánh từng cặp manh mối để đặt cuốn sách về đúng kệ thư viện nhé!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp 6 cuốn sách theo số trang từ DÀY NHẤT ➡️ MỎNG NHẤT:',
+      directionLabel: 'Số trang: Dày Nhất ➡️ Mỏng Nhất',
+      items: [
+        { id: 'atlas', label: 'Atlas Thiên Văn', description: 'Cuốn dày nhất với 420 trang', icon: '🌌' },
+        { id: 'physics', label: 'Sổ Tay Vật Lý', description: 'Dày hơn sách Toán 30 trang, mỏng hơn Atlas', icon: '⚡' },
+        { id: 'math', label: 'Tuyển Tập Toán Tư Duy', description: 'Có đúng 320 trang', icon: '📐' },
+        { id: 'bio', label: 'Cẩm Nang Sinh Học', description: 'Mỏng hơn Toán nhưng dày hơn Hóa Học', icon: '🧬' },
+        { id: 'chem', label: 'Sổ Tay Hóa Học', description: 'Có 210 trang', icon: '🧪' },
+        { id: 'art', label: 'Tập Vẽ Phác Thảo', description: 'Mỏng nhất, ít trang hơn Hóa Học', icon: '🎨' }
+      ],
+      correctOrder: ['atlas', 'physics', 'math', 'bio', 'chem', 'art']
+    }
+  },
+  {
+    id: 'log-54',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Mật Thám Rạp Chiếu Phim 6 Ghế: Không Cho Vị Trí Đầu Cuối',
+    badgeTitle: 'Bài 54 · Độ khó Cấp 36',
+    instruction: 'Xếp 6 bạn vào 6 ghế dựa trên 5 manh mối: (1) Bác Ram ngồi ghế 2; (2) Bé Lisa ngồi ngay bên trái Bác Ram; (3) Thỏ Abby ngồi ghế cuối cùng (ghế 6); (4) Khỉ Benny ngồi ngay bên trái Thỏ Abby; (5) Chuột Casey ngồi ngay bên phải Bác Ram; (6) Thầy Mayle ngồi ghế còn lại.',
+    hint: 'Ghế 1: Bé Lisa ➔ Ghế 2: Bác Ram ➔ Ghế 3: Chuột Casey ➔ Ghế 4: Thầy Mayle ➔ Ghế 5: Khỉ Benny ➔ Ghế 6: Thỏ Abby.',
+    mascot: { ...CASEY, message: 'Khóa chặt các cặp ngồi cạnh nhau rồi ghép nối thành hàng ghế hoàn chỉnh!' },
+    activity: {
+      type: 'logicSeatOrder',
+      seatsCount: 6,
+      allowedCharacters: ['Bé Lisa', 'Bác Ram', 'Chuột Casey', 'Thầy Mayle', 'Khỉ Benny', 'Thỏ Abby'],
+      correctOrder: ['Bé Lisa', 'Bác Ram', 'Chuột Casey', 'Thầy Mayle', 'Khỉ Benny', 'Thỏ Abby']
+    }
+  },
+  {
+    id: 'log-55',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'Đoàn Tàu 28 Phi Hành Gia: Tính Khoảng Cách Giữa Hai Đội Trưởng',
+    badgeTitle: 'Bài 55 · Độ khó Cấp 37',
+    instruction: 'Đoàn kiểm tra sức khỏe gồm 28 phi hành gia xếp thành 1 hàng dọc. Khỉ Benny đứng thứ 9 từ đầu hàng, Chuột Casey đứng thứ 8 từ cuối hàng. Hỏi giữa Benny và Casey có bao nhiêu bạn?',
+    hint: 'Số bạn ở giữa = Tổng cả hàng (28) - 9 (từ đầu đến Benny) - 8 (từ Casey đến cuối) = ?',
+    mascot: { ...BENNY, message: 'Hãy cẩn thận tính 28 - 9 - 8 để không bỏ sót hay đếm thừa bạn nào nhé!' },
+    activity: {
+      type: 'queueCounter',
+      mode: 'between',
+      totalInQueue: 28,
+      personA: { name: 'Benny', avatar: '🐵', pos: 9 },
+      personB: { name: 'Casey', avatar: '🐹', pos: 8 },
+      correctTotal: 11,
+      formula: '28 - 9 - 8',
+      options: [10, 11, 12, 13],
+      promptTitle: 'Số phi hành gia đứng giữa Benny và Casey là:'
+    }
+  },
+  {
+    id: 'log-56',
+    topicId: 'logic',
+    topicName: topicName('logic'),
+    title: 'SIÊU ĐỈNH CAO SUY LUẬN VŨ TRỤ TRẠM 5: Sáu Vệ Tinh Quỹ Đạo',
+    badgeTitle: 'Bài 56 · Huyền Thoại Suy Luận Trạm 5',
+    instruction: 'Thử thách Olympic tối hậu của Trạm 5: Dùng suy luận bắc cầu sắp xếp 6 vệ tinh nhân tạo theo độ cao quỹ đạo từ CAO NHẤT đến THẤP NHẤT.',
+    hint: 'Omega (36.000 km) ➔ Alpha ➔ Beta ➔ Delta ➔ Gamma ➔ Sigma (400 km).',
+    mascot: { ...MAYLE, message: 'Hoàn thành bài toán 6 vệ tinh này, em chính thức đạt danh hiệu Huyền Thoại Logic Trạm 5!' },
+    activity: {
+      type: 'itemOrdering',
+      promptText: 'Sắp xếp 6 vệ tinh theo độ cao quỹ đạo từ CAO NHẤT ➡️ THẤP NHẤT:',
+      directionLabel: 'Quỹ đạo: Cao Nhất ➡️ Thấp Nhất',
+      items: [
+        { id: 'sat-omega', label: 'Vệ tinh Omega', description: 'Bay cao nhất ở quỹ đạo địa tĩnh (36.000 km)', icon: '🛰️' },
+        { id: 'sat-alpha', label: 'Vệ tinh Alpha', description: 'Thấp hơn Omega, nhưng cao hơn Beta 5.000 km', icon: '📡' },
+        { id: 'sat-beta', label: 'Vệ tinh Beta', description: 'Thấp hơn Alpha nhưng cao hơn hẳn Delta', icon: '🔭' },
+        { id: 'sat-delta', label: 'Vệ tinh Delta', description: 'Cao hơn Gamma 4.000 km, thấp hơn Beta', icon: '🪐' },
+        { id: 'sat-gamma', label: 'Vệ tinh Gamma', description: 'Thấp hơn Delta nhưng vẫn bay cao hơn Sigma', icon: '☄️' },
+        { id: 'sat-sigma', label: 'Vệ tinh Sigma', description: 'Bay ở quỹ đạo tầm thấp nhất (400 km)', icon: '🚀' }
+      ],
+      correctOrder: ['sat-omega', 'sat-alpha', 'sat-beta', 'sat-delta', 'sat-gamma', 'sat-sigma']
+    }
   }
 ];
+
 

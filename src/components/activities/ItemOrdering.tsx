@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, ArrowRight } from 'lucide-react';
+import { Check, RotateCcw } from 'lucide-react';
 
 interface OrderItem {
   id: string;
@@ -18,7 +18,6 @@ interface ItemOrderingProps {
 }
 
 export const ItemOrdering: React.FC<ItemOrderingProps> = ({
-  promptText,
   items,
   correctOrder,
   directionLabel = 'Sắp xếp theo thứ tự',
@@ -29,11 +28,11 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
     Array.from({ length: correctOrder.length }, () => null)
   );
   const [isSuccess, setIsSuccess] = useState(false);
-
-  const availableItems = items.filter((it) => !slots.includes(it.id));
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handlePlaceItem = (itemId: string) => {
     sound.playClick();
+    setErrorMessage(null);
     const firstEmpty = slots.findIndex((s) => s === null);
     if (firstEmpty !== -1) {
       const newSlots = [...slots];
@@ -48,6 +47,7 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
 
   const handleRemoveFromSlot = (slotIdx: number) => {
     sound.playClick();
+    setErrorMessage(null);
     const newSlots = [...slots];
     newSlots[slotIdx] = null;
     setSlots(newSlots);
@@ -57,23 +57,49 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
     sound.playWrong();
     setSlots(Array.from({ length: correctOrder.length }, () => null));
     setIsSuccess(false);
+    setErrorMessage(null);
   };
+
+  // Deterministically shuffle items for display so they do not appear in the exact solved order
+  const displayItems = React.useMemo(() => {
+    const arr = [...items];
+    const isAlreadyOrdered = arr.every((it, idx) => it.id === correctOrder[idx]);
+    if (isAlreadyOrdered && arr.length >= 2) {
+      const even: OrderItem[] = [];
+      const odd: OrderItem[] = [];
+      arr.forEach((it, idx) => {
+        if (idx % 2 === 0) odd.push(it);
+        else even.push(it);
+      });
+      return [...even, ...odd.reverse()];
+    }
+    return arr;
+  }, [items, correctOrder]);
 
   const checkOrder = (currentSlots = slots) => {
     const isMatched = correctOrder.every((id, idx) => currentSlots[idx] === id);
     if (isMatched) {
       sound.playCorrect();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playVictory();
         onCompleted();
       }, 500);
     } else {
       sound.playWrong();
+      setErrorMessage('Thứ tự chưa chính xác! Em hãy chạm vào các ô để đổi lại vị trí cho đúng chiều mũi tên nhé.');
     }
   };
 
   const getItem = (id: string | null) => items.find((it) => it.id === id);
+
+  const gridColsClass =
+    slots.length === 6
+      ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-6'
+      : slots.length === 5
+      ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-5'
+      : 'grid-cols-2 sm:grid-cols-4';
 
   return (
     <div className="space-y-6 flex flex-col items-center">
@@ -88,8 +114,8 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
       </div>
 
       {/* Target Slots */}
-      <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-100 shadow-md w-full max-w-2xl">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+      <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-100 shadow-md w-full max-w-3xl">
+        <div className={`grid ${gridColsClass} gap-3 md:gap-4`}>
           {slots.map((placedId, idx) => {
             const item = getItem(placedId);
 
@@ -101,7 +127,7 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
 
                 <div
                   onClick={() => placedId && handleRemoveFromSlot(idx)}
-                  className={`w-full aspect-square rounded-2xl border-3 flex flex-col items-center justify-center p-2 transition-all cursor-pointer ${
+                  className={`w-full aspect-square rounded-2xl border-3 flex flex-col items-center justify-center p-2 transition-all cursor-pointer text-center ${
                     placedId
                       ? 'bg-amber-50 border-amber-400 shadow-md scale-102 hover:border-rose-400 hover:bg-rose-50'
                       : 'bg-slate-50 border-dashed border-slate-300 hover:bg-slate-100'
@@ -110,7 +136,7 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
                   {placedId && item ? (
                     <>
                       <span className="text-3xl">{item.icon || '🏷️'}</span>
-                      <span className="text-sm font-black text-slate-800 mt-1">
+                      <span className="text-xs sm:text-sm font-black text-slate-800 mt-1 line-clamp-2">
                         {item.label}
                       </span>
                       <span className="text-[10px] text-slate-400">Chạm để bỏ</span>
@@ -126,13 +152,13 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
       </div>
 
       {/* Available Items to Pick */}
-      <div className="bg-slate-50 p-5 rounded-3xl border border-slate-200 w-full max-w-2xl space-y-3">
+      <div className="bg-slate-50 p-5 rounded-3xl border border-slate-200 w-full max-w-3xl space-y-3">
         <div className="text-xs font-bold text-slate-500 text-center">
           Chạm vào từng mục dưới đây để xếp vào ô trống tiếp theo:
         </div>
 
         <div className="flex flex-wrap justify-center gap-3">
-          {items.map((it) => {
+          {displayItems.map((it) => {
             const isUsed = slots.includes(it.id);
 
             return (
@@ -160,9 +186,16 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
         </div>
       </div>
 
+      {errorMessage && (
+        <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs sm:text-sm font-bold text-center max-w-lg">
+          {errorMessage}
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex items-center gap-4">
         <button
+          type="button"
           onClick={handleReset}
           className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm border border-slate-300 transition-colors"
         >
@@ -170,11 +203,13 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
           Sắp xếp lại
         </button>
         <button
+          type="button"
           onClick={() => {
             if (slots.every((s) => s !== null)) {
               checkOrder(slots as string[]);
             } else {
               sound.playWrong();
+              setErrorMessage(`Hãy xếp đủ ${correctOrder.length} vị trí trước khi kiểm tra nhé!`);
             }
           }}
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm md:text-base shadow-lg transition-transform active:scale-95"
@@ -186,7 +221,7 @@ export const ItemOrdering: React.FC<ItemOrderingProps> = ({
 
       {isSuccess && (
         <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Rất chính xác! Bạn đã suy luận và sắp xếp đúng thứ tự {correctOrder.join(' ➔ ')}!
+          🎉 Rất chính xác! Bạn đã suy luận và sắp xếp đúng thứ tự hoàn hảo!
         </div>
       )}
     </div>

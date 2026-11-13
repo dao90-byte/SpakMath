@@ -346,16 +346,16 @@ export const EXTENDED_SUDOKU_LESSONS: LessonQuestion[] = [
       type: 'sudoku',
       sudokuType: 'number',
       initialGrid: [
-        [1, null, null, 4],
-        [null, 3, 2, null],
-        [null, 2, 3, null],
-        [4, null, null, 1]
+        [1, null, null, 3],
+        [null, 3, 1, null],
+        [null, 4, 2, null],
+        [2, null, null, 4]
       ],
       solution: [
         [1, 2, 4, 3],
-        [4, 3, 2, 1],
-        [2, 4, 3, 2],
-        [3, 1, 1, 4]
+        [4, 3, 1, 2],
+        [3, 4, 2, 1],
+        [2, 1, 3, 4]
       ]
     }
   },
@@ -473,15 +473,15 @@ export const EXTENDED_SUDOKU_LESSONS: LessonQuestion[] = [
       ],
       initialGrid: [
         ['rocket', null, null, 'star'],
-        [null, 'satellite', 'ufo', null],
-        [null, 'ufo', 'satellite', null],
+        [null, 'star', 'rocket', null],
+        [null, 'rocket', 'star', null],
         ['star', null, null, 'rocket']
       ],
       solution: [
         ['rocket', 'ufo', 'satellite', 'star'],
-        ['star', 'satellite', 'ufo', 'rocket'],
+        ['satellite', 'star', 'rocket', 'ufo'],
         ['ufo', 'rocket', 'star', 'satellite'],
-        ['satellite', 'star', 'rocket', 'ufo']
+        ['star', 'satellite', 'ufo', 'rocket']
       ]
     }
   },
@@ -526,10 +526,10 @@ export const EXTENDED_SUDOKU_LESSONS: LessonQuestion[] = [
       type: 'sudoku',
       sudokuType: 'number',
       initialGrid: [
-        [2, null, null, 3],
+        [2, null, null, 1],
         [null, 1, 4, null],
-        [null, 4, 1, null],
-        [3, null, null, 2]
+        [null, 2, 1, null],
+        [1, null, null, 4]
       ],
       solution: [
         [2, 4, 3, 1],
@@ -632,6 +632,303 @@ export const EXTENDED_SUDOKU_LESSONS: LessonQuestion[] = [
       ],
       hintFormula: 'Đường chéo 1: 64 + 40 + 16 = 120. Đường chéo 2: 48 + 40 + 32 = 120.'
     }
+  },
+  {
+    id: 'sud-45',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku 4x4 Tinh Gọn: Chỉ Cho Trước 8 Ô Manh Mối',
+    badgeTitle: 'Bài 45 · Độ khó Cấp 28',
+    instruction: 'Điền các chữ số 1, 2, 3, 4 vào các ô trống sao cho không trùng lặp trên cùng hàng, cùng cột và cùng khối vuông 2x2.',
+    hint: 'Hàng 1 đã có 2 và 1. Xét khối vuông 2x2 góc trên bên trái đã có 2 và 3.',
+    mascot: { ...CASEY, message: 'Ít ô gợi ý hơn đồng nghĩa với thử thách tư duy loại trừ sâu sắc hơn!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [2, null, 1, null],
+        [null, 3, null, 4],
+        [4, null, 3, null],
+        [null, 2, null, 1]
+      ],
+      solution: [
+        [2, 4, 1, 3],
+        [1, 3, 2, 4],
+        [4, 1, 3, 2],
+        [3, 2, 4, 1]
+      ]
+    }
+  },
+  {
+    id: 'sud-46',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Bội Số 9: Tổng Kỳ Ảo 135',
+    badgeTitle: 'Bài 46 · Độ khó Cấp 29',
+    instruction: 'Hoàn thiện ma phương 3x3 có tổng mỗi hàng, mỗi cột và mỗi đường chéo đều bằng 135. Ô chính giữa là 45.',
+    hint: 'Hàng 1: 72 + ? + 54 = 135 ➡️ ? = 9. Đường chéo: 72 + 45 + ? = 135 ➡️ ? = 18.',
+    mascot: { ...MAYLE, message: 'Tâm ma phương luôn bằng đúng 135 : 3 = 45!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Bội Số 9 (Tổng = 135)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 135',
+      targetSum: 135,
+      allowedNumbers: [9, 18, 27, 36, 45, 54, 63, 72, 81],
+      initialGrid: [
+        [72, null, 54],
+        [null, 45, null],
+        [null, 81, null]
+      ],
+      solution: [
+        [72, 9, 54],
+        [27, 45, 63],
+        [36, 81, 18]
+      ],
+      hintFormula: 'Đường chéo 1: 72 + 45 + 18 = 135. Đường chéo 2: 54 + 45 + 36 = 135.'
+    }
+  },
+  {
+    id: 'sud-47',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Killer Sudoku 4x4: Ma Trận Tổng Đôi Đối Xứng',
+    badgeTitle: 'Bài 47 · Độ khó Cấp 30',
+    instruction: 'Điền chữ số từ 1 đến 4 thỏa mãn quy luật Sudoku 4x4 đồng thời tổng hai số trong mỗi lồng màu khớp đúng với số ghi ở góc.',
+    hint: 'Ô góc trên trái là 4, cùng lồng tổng 6 nên ô bên cạnh phải là 2!',
+    mascot: { ...CASEY, message: 'Kết hợp phép trừ tìm số hạng chưa biết với luật Sudoku 4x4!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [4, null, null, 3],
+        [null, 3, 4, null],
+        [null, 4, 3, null],
+        [3, null, null, 4]
+      ],
+      solution: [
+        [4, 2, 1, 3],
+        [1, 3, 4, 2],
+        [2, 4, 3, 1],
+        [3, 1, 2, 4]
+      ],
+      sumLabels: [
+        [6, null, 4, null],
+        [4, null, 6, null],
+        [6, null, 4, null],
+        [4, null, 6, null]
+      ],
+      colorBlocks: [
+        ['#e0f2fe', '#e0f2fe', '#fef08a', '#fef08a'],
+        ['#fed7aa', '#fed7aa', '#bbf7d0', '#bbf7d0'],
+        ['#dcfce7', '#dcfce7', '#fee2e2', '#fee2e2'],
+        ['#fef9c3', '#fef9c3', '#e0e7ff', '#e0e7ff']
+      ]
+    }
+  },
+  {
+    id: 'sud-48',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Bội Số 10: Tổng Kỳ Ảo 150 (Chỉ Cho 4 Ô)',
+    badgeTitle: 'Bài 48 · Độ khó Cấp 31',
+    instruction: 'Hoàn thành ma phương 3x3 có tổng mỗi hàng, cột và đường chéo bằng 150. Chỉ có 4 ô được mở khóa sẵn!',
+    hint: 'Cột 1: 80 + 30 + ? = 150 ➡️ ô góc dưới trái là 40. Đường chéo: 40 + 50 + ? = 150 ➡️ ô góc trên phải là 60!',
+    mascot: { ...MAYLE, message: 'Chỉ với 4 ô gợi ý, hãy tìm hàng/cột có 2 số trước nhé!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Bội Số 10 (Tổng = 150)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 150',
+      targetSum: 150,
+      allowedNumbers: [10, 20, 30, 40, 50, 60, 70, 80, 90],
+      initialGrid: [
+        [80, null, null],
+        [30, 50, null],
+        [null, null, 20]
+      ],
+      solution: [
+        [80, 10, 60],
+        [30, 50, 70],
+        [40, 90, 20]
+      ],
+      hintFormula: 'Đường chéo 1: 80 + 50 + 20 = 150. Cột 1: 80 + 30 + 40 = 150.'
+    }
+  },
+  {
+    id: 'sud-49',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku Thiên Văn 4x4: Bốn Tinh Tú Dẫn Đường',
+    badgeTitle: 'Bài 49 · Độ khó Cấp 32',
+    instruction: 'Đặt 4 biểu tượng: Mặt Trời ☀️, Trăng Khuyết 🌙, Sao Chổi ☄️, Hành Tinh 🪐 sao cho mỗi hàng, cột và khối 2x2 đủ cả 4 biểu tượng.',
+    hint: 'Xét khối vuông góc trên bên trái hoặc hàng 1 đang thiếu hai biểu tượng nào!',
+    mascot: { ...BENNY, message: 'Tinh tú hội tụ rực rỡ trên bầu trời đêm!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'shape',
+      symbols: [
+        { id: 'sun', icon: '☀️', name: 'Mặt Trời' },
+        { id: 'moon', icon: '🌙', name: 'Trăng Khuyết' },
+        { id: 'comet', icon: '☄️', name: 'Sao Chổi' },
+        { id: 'planet', icon: '🪐', name: 'Hành Tinh' }
+      ],
+      initialGrid: [
+        ['sun', null, 'comet', null],
+        [null, 'planet', null, 'moon'],
+        ['moon', null, 'planet', null],
+        [null, 'comet', null, 'sun']
+      ],
+      solution: [
+        ['sun', 'moon', 'comet', 'planet'],
+        ['comet', 'planet', 'sun', 'moon'],
+        ['moon', 'sun', 'planet', 'comet'],
+        ['planet', 'comet', 'moon', 'sun']
+      ]
+    }
+  },
+  {
+    id: 'sud-50',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Cấp Số Cộng Tâm 60: Tổng Kỳ Ảo 180',
+    badgeTitle: 'Bài 50 · Độ khó Cấp 33',
+    instruction: 'Hoàn thiện ma phương 3x3 có tổng mỗi hàng, cột và đường chéo đều bằng 180.',
+    hint: 'Hàng 1: ? + 20 + 70 = 180 ➡️ ? = 90. Đường chéo: 90 + 60 + ? = 180 ➡️ ? = 30.',
+    mascot: { ...MAYLE, message: 'Dãy số cách đều 10 đơn vị từ 20 đến 100 xoay quanh tâm 60!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Tâm 60 (Tổng = 180)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 180',
+      targetSum: 180,
+      allowedNumbers: [20, 30, 40, 50, 60, 70, 80, 90, 100],
+      initialGrid: [
+        [null, 20, 70],
+        [null, 60, null],
+        [50, null, null]
+      ],
+      solution: [
+        [90, 20, 70],
+        [40, 60, 80],
+        [50, 100, 30]
+      ],
+      hintFormula: 'Đường chéo 2: 70 + 60 + 50 = 180. Hàng 1: 90 + 20 + 70 = 180.'
+    }
+  },
+  {
+    id: 'sud-51',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Sudoku Jigsaw 4x4: Bốn Vùng Đa Giác Biến Hình',
+    badgeTitle: 'Bài 51 · Độ khó Cấp 34',
+    instruction: 'Điền chữ số 1 đến 4 vào 4 vùng màu đa giác bất đối xứng sao cho mỗi hàng, mỗi cột và mỗi vùng màu đủ cả 4 số 1, 2, 3, 4.',
+    hint: 'Vùng màu cam ở góc trên trái đã có 1, 3, 2 ➡️ ô còn lại là 4!',
+    mascot: { ...CASEY, message: 'Đừng nhầm với khối vuông 2x2 nhé: Hãy nhìn kỹ ranh giới các khối màu!' },
+    activity: {
+      type: 'sudoku',
+      sudokuType: 'number',
+      initialGrid: [
+        [1, 3, null, null],
+        [2, null, 3, null],
+        [null, 1, null, 4],
+        [null, null, 1, 3]
+      ],
+      solution: [
+        [1, 3, 4, 2],
+        [2, 4, 3, 1],
+        [3, 1, 2, 4],
+        [4, 2, 1, 3]
+      ],
+      colorBlocks: [
+        ['#fed7aa', '#fed7aa', '#fed7aa', '#bbf7d0'],
+        ['#fed7aa', '#e0f2fe', '#bbf7d0', '#bbf7d0'],
+        ['#e0f2fe', '#e0f2fe', '#e0f2fe', '#bbf7d0'],
+        ['#fef08a', '#fef08a', '#fef08a', '#fef08a']
+      ]
+    }
+  },
+  {
+    id: 'sud-52',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Khoảng Cách 12: Tổng Kỳ Ảo 210',
+    badgeTitle: 'Bài 52 · Độ khó Cấp 35',
+    instruction: 'Hoàn thiện ma phương 3x3 có tổng mỗi hàng, cột và đường chéo đều bằng 210.',
+    hint: 'Đường chéo: 58 + 70 + ? = 210 ➡️ ô góc trên phải là 82! Hàng 2: ? + 70 + 94 = 210 ➡️ ô đầu hàng 2 là 46!',
+    mascot: { ...MAYLE, message: 'Khoảng cách giữa các số trong dãy là 12 đơn vị đấy!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Khoảng Cách 12 (Tổng = 210)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 210',
+      targetSum: 210,
+      allowedNumbers: [22, 34, 46, 58, 70, 82, 94, 106, 118],
+      initialGrid: [
+        [106, null, null],
+        [null, 70, 94],
+        [58, null, null]
+      ],
+      solution: [
+        [106, 22, 82],
+        [46, 70, 94],
+        [58, 118, 34]
+      ],
+      hintFormula: 'Đường chéo 1: 106 + 70 + 34 = 210. Đường chéo 2: 82 + 70 + 58 = 210.'
+    }
+  },
+  {
+    id: 'sud-53',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'Ma Phương Khoảng Cách 15: Tổng Kỳ Ảo 240',
+    badgeTitle: 'Bài 53 · Độ khó Cấp 36',
+    instruction: 'Hoàn thiện ma phương 3x3 có tổng mỗi hàng, cột và đường chéo đều bằng 240.',
+    hint: 'Hàng 2: 50 + 80 + ? = 240 ➡️ ô cuối hàng 2 là 110! Cột 2: 20 + 80 + ? = 240 ➡️ ô cuối cột 2 là 140!',
+    mascot: { ...ABBY, message: 'Tính thật cẩn thận để không nhầm hàng chục khi tổng lên đến 240 nhé!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Ma Phương Khoảng Cách 15 (Tổng = 240)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 240',
+      targetSum: 240,
+      allowedNumbers: [20, 35, 50, 65, 80, 95, 110, 125, 140],
+      initialGrid: [
+        [null, 20, null],
+        [50, 80, null],
+        [null, null, 35]
+      ],
+      solution: [
+        [125, 20, 95],
+        [50, 80, 110],
+        [65, 140, 35]
+      ],
+      hintFormula: 'Đường chéo 1: 125 + 80 + 35 = 240. Hàng 2: 50 + 80 + 110 = 240.'
+    }
+  },
+  {
+    id: 'sud-54',
+    topicId: 'sudoku',
+    topicName: topicName('sudoku'),
+    title: 'ĐẠI THỬ THÁCH MA PHƯƠNG OLYMPIC TỐI HẬU TRẠM 3: Tổng Kỳ Ảo 300 (Chỉ Cho 3 Ô!)',
+    badgeTitle: 'Bài 54 · Đỉnh Cao Vũ Trụ Trạm 3',
+    instruction: 'Thử thách đỉnh cao tối hậu của Ma Trận Số: Chỉ cho trước ĐÚNG 3 Ô, hãy giải toàn bộ ma phương 3x3 có tổng mọi hàng, cột và đường chéo bằng 300!',
+    hint: 'Bước 1: Hàng 2 cho 100 và 140 ➡️ ô (2,1) là 60. Bước 2: Đường chéo 160 + 100 ➡️ góc dưới phải là 40. Bước 3: Cột 1 có 160 và 60 ➡️ góc dưới trái là 80!',
+    mascot: { ...MAYLE, message: 'Giải thành công Ma Phương 300 chỉ với 3 manh mối, em xứng danh Thiên Tài Ma Trận Số Học!' },
+    activity: {
+      type: 'numberMatrix',
+      title: 'Siêu Ma Phương 3 Manh Mối (Tổng = 300)',
+      subtitle: 'Mỗi hàng, cột, đường chéo = 300',
+      targetSum: 300,
+      allowedNumbers: [20, 40, 60, 80, 100, 120, 140, 160, 180],
+      initialGrid: [
+        [160, null, null],
+        [null, 100, 140],
+        [null, null, null]
+      ],
+      solution: [
+        [160, 20, 120],
+        [60, 100, 140],
+        [80, 180, 40]
+      ],
+      hintFormula: 'Đường chéo 1: 160 + 100 + 40 = 300. Đường chéo 2: 120 + 100 + 80 = 300.'
+    }
   }
 ];
+
 

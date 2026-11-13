@@ -31,11 +31,14 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
   });
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const targetTotalSymbols = categories.reduce((sum, c) => sum + c.targetSymbols, 0);
+  const maxCategoryTarget = Math.max(8, ...categories.map((c) => c.targetSymbols + 2));
+
   const handleAdd = (catId: string) => {
     sound.playClick();
     setCounts((prev) => ({
       ...prev,
-      [catId]: Math.min(12, (prev[catId] || 0) + 1)
+      [catId]: Math.min(maxCategoryTarget, (prev[catId] || 0) + 1)
     }));
   };
 
@@ -83,18 +86,18 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 text-center">
           <p className="text-xs text-sky-700 font-bold uppercase tracking-wide">Quy đổi</p>
-          <p className="text-lg font-black text-sky-900 mt-1">1 Ô 🟦 = 3 Người</p>
+          <p className="text-lg font-black text-sky-900 mt-1">1 Ô 🟦 = {multiplier} Đơn vị</p>
         </div>
         <div className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 text-center">
-          <p className="text-xs text-amber-700 font-bold uppercase tracking-wide">Tổng người khảo sát</p>
+          <p className="text-xs text-amber-700 font-bold uppercase tracking-wide">Tổng số lượng quy đổi</p>
           <p className="text-lg font-black text-amber-900 mt-1">
-            {currentTotalPeople} / {totalPeople} người
+            {currentTotalPeople} / {totalPeople}
           </p>
         </div>
         <div className="bg-purple-50 border-2 border-purple-200 rounded-2xl p-4 text-center">
-          <p className="text-xs text-purple-700 font-bold uppercase tracking-wide">Số ô đã vẽ</p>
+          <p className="text-xs text-purple-700 font-bold uppercase tracking-wide">Số biểu tượng đã vẽ</p>
           <p className="text-lg font-black text-purple-900 mt-1">
-            {currentTotalSymbols} / 8 ô
+            {currentTotalSymbols} / {targetTotalSymbols} ô
           </p>
         </div>
       </div>
@@ -117,19 +120,19 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
               <div className="md:w-1/3">
                 <span className="font-bold text-slate-800 text-base">{cat.label}</span>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Đã xếp: <span className="font-bold text-slate-700">{count} ô</span>
+                  Đã xếp: <span className="font-bold text-slate-700">{count} ô ({count * multiplier})</span>
                 </p>
               </div>
 
               {/* Symbol Slot Container */}
-              <div className="flex-1 flex items-center gap-2 min-h-[48px] bg-white rounded-xl p-2 border border-slate-200">
+              <div className="flex-1 flex flex-wrap items-center gap-2 min-h-[48px] bg-white rounded-xl p-2 border border-slate-200">
                 {count === 0 ? (
                   <span className="text-xs text-slate-400 italic px-2">Chưa có biểu tượng nào, bấm (+) để thêm</span>
                 ) : (
                   Array.from({ length: count }).map((_, i) => (
                     <div
                       key={i}
-                      className="w-10 h-10 rounded-lg bg-sky-500 text-white font-bold flex items-center justify-center text-xs shadow-xs animate-in zoom-in-75 duration-150"
+                      className={`w-10 h-10 rounded-lg ${cat.symbolColor || 'bg-sky-500'} text-white font-bold flex items-center justify-center text-xs shadow-xs animate-in zoom-in-75 duration-150`}
                     >
                       {multiplier > 1 ? multiplier : '★'}
                     </div>
@@ -151,7 +154,7 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
                 <button
                   type="button"
                   onClick={() => handleAdd(cat.id)}
-                  disabled={count >= 6}
+                  disabled={count >= maxCategoryTarget}
                   className="w-10 h-10 rounded-xl bg-sky-500 hover:bg-sky-600 disabled:opacity-40 flex items-center justify-center text-white font-bold transition-all active:scale-95 shadow-xs"
                   title="Thêm 1 ô"
                 >
@@ -185,7 +188,7 @@ export const PictographBuilder: React.FC<PictographBuilderProps> = ({
 
       {isSuccess && (
         <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Xuất sắc! Bạn đã giúp Casey vẽ lại chính xác biểu đồ thời tiết 24 người rồi!
+          🎉 Xuất sắc! Bạn đã hoàn thành chính xác biểu đồ với tổng cộng {totalPeople} đơn vị ({targetTotalSymbols} biểu tượng)!
         </div>
       )}
     </div>

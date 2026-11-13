@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { CheckCircle2, XCircle, Info } from 'lucide-react';
 
 interface CornerCrossProps {
   shape: 'L' | 'T' | '+';
@@ -25,19 +24,22 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleCheck = () => {
-    sound.playClick();
-    const cleanInput = inputValue.trim().toLowerCase();
-    const cleanTarget = correctAnswer.trim().toLowerCase();
+  const targetNum = Number(correctAnswer.replace(/\D/g, ''));
+  const isHollowRect = targetNum === (verticalCount + horizontalCount) * 2 - 4;
 
-    // Extract numbers to compare flexibly
+  const handleCheck = (overrideVal?: string) => {
+    sound.playClick();
+    const rawVal = overrideVal !== undefined ? overrideVal : inputValue;
+    const cleanInput = rawVal.trim().toLowerCase();
+    const cleanTarget = correctAnswer.trim().toLowerCase();
+    if (!cleanInput) return;
+
     const inputDigits = cleanInput.replace(/\D/g, '');
     const targetDigits = cleanTarget.replace(/\D/g, '');
 
     const isMatch =
       (inputDigits && targetDigits && inputDigits === targetDigits) ||
-      cleanInput === cleanTarget ||
-      cleanTarget.includes(cleanInput);
+      cleanInput === cleanTarget;
 
     if (isMatch) {
       sound.playCorrect();
@@ -49,22 +51,30 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
       }, 500);
     } else {
       sound.playWrong();
-      setErrorMessage(`Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Bạn ${intersectionPerson} đang đứng ở vị trí giao nhau của hai hàng. Vị trí này được tính bao nhiêu lần khi em đếm từng hàng riêng biệt?`);
+      setErrorMessage(
+        isHollowRect
+          ? `Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Khung hình chữ nhật có 4 cạnh, nhưng 4 bạn ở 4 góc đều thuộc cả 2 cạnh kề nhau nên bị đếm trùng 2 lần. Em nhớ trừ đi 4 góc nhé!`
+          : `Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Bạn ${intersectionPerson} đang đứng ở vị trí giao nhau của hai hàng. Vị trí này được tính bao nhiêu lần khi em đếm từng hàng riêng biệt?`
+      );
     }
   };
 
-  const formulaCalc = `${verticalCount} + ${horizontalCount} - 1 = ${verticalCount + horizontalCount - 1}`;
+  const formulaCalc = isHollowRect
+    ? `(${verticalCount} + ${horizontalCount}) × 2 - 4 = ${targetNum}`
+    : `${verticalCount} + ${horizontalCount} - 1 = ${verticalCount + horizontalCount - 1}`;
 
   return (
     <div className="space-y-6 flex flex-col items-center">
       {/* Visual Canvas Representation */}
       <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-100 shadow-md w-full max-w-xl flex flex-col items-center">
         <div className="text-xs font-bold text-slate-500 uppercase mb-4">
-          Hàng người đứng thành hình chữ {shape === '+' ? 'thập (+)' : shape}
+          {isHollowRect
+            ? `Đội hình khung chữ nhật (${verticalCount} × ${horizontalCount})`
+            : `Hàng người đứng thành hình chữ ${shape === '+' ? 'thập (+)' : shape}`}
         </div>
 
         {/* Shape Diagram */}
-        <div className="relative p-6 bg-slate-50 rounded-2xl border border-slate-200 w-full flex items-center justify-center">
+        <div className="relative p-6 bg-slate-50 rounded-2xl border border-slate-200 w-full flex items-center justify-center overflow-x-auto">
           {shape === 'L' ? (
             <div className="flex flex-col items-start space-y-1">
               {/* Vertical line top */}
@@ -79,7 +89,6 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
 
               {/* Corner row (Intersection + Horizontal) */}
               <div className="flex items-center space-x-1">
-                {/* Intersection Casey */}
                 <div
                   className="w-10 h-10 rounded-2xl bg-amber-300 border-3 border-amber-600 ring-4 ring-amber-300 flex items-center justify-center text-xl shadow-md"
                   title={`Điểm giao: ${intersectionPerson}`}
@@ -87,7 +96,6 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                   🐹
                 </div>
 
-                {/* Horizontal line */}
                 {Array.from({ length: horizontalCount - 1 }).map((_, i) => (
                   <div
                     key={i}
@@ -99,9 +107,7 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
               </div>
             </div>
           ) : shape === 'T' ? (
-            /* T shape */
             <div className="flex flex-col items-center space-y-1">
-              {/* Top Horizontal bar */}
               <div className="flex items-center space-x-1">
                 {Array.from({ length: Math.floor((horizontalCount - 1) / 2) }).map((_, i) => (
                   <div
@@ -112,7 +118,6 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                   </div>
                 ))}
 
-                {/* Intersection Abby */}
                 <div
                   className="w-10 h-10 rounded-2xl bg-pink-200 border-3 border-pink-600 ring-4 ring-pink-300 flex items-center justify-center text-xl shadow-md"
                   title={`Điểm giao: ${intersectionPerson}`}
@@ -125,12 +130,11 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                     key={`right-${i}`}
                     className="w-8 h-8 rounded-full bg-emerald-200 border-2 border-emerald-400 flex items-center justify-center text-xs font-bold text-emerald-800"
                   >
-                    {i + 4}
+                    {i + 1}
                   </div>
                 ))}
               </div>
 
-              {/* Vertical trunk under intersection */}
               {Array.from({ length: verticalCount - 1 }).map((_, i) => (
                 <div
                   key={`trunk-${i}`}
@@ -141,9 +145,7 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
               ))}
             </div>
           ) : (
-            /* + shape (Cross) */
             <div className="flex flex-col items-center space-y-1">
-              {/* Vertical top */}
               {Array.from({ length: Math.floor((verticalCount - 1) / 2) }).map((_, i) => (
                 <div
                   key={`vtop-${i}`}
@@ -153,7 +155,6 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                 </div>
               ))}
 
-              {/* Center row */}
               <div className="flex items-center space-x-1">
                 {Array.from({ length: Math.floor((horizontalCount - 1) / 2) }).map((_, i) => (
                   <div
@@ -164,7 +165,6 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                   </div>
                 ))}
 
-                {/* Intersection Benny */}
                 <div
                   className="w-10 h-10 rounded-2xl bg-amber-300 border-3 border-amber-600 ring-4 ring-amber-300 flex items-center justify-center text-xl shadow-md"
                   title={`Điểm giao: ${intersectionPerson}`}
@@ -177,18 +177,17 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
                     key={`hright-${i}`}
                     className="w-8 h-8 rounded-full bg-emerald-200 border-2 border-emerald-400 flex items-center justify-center text-xs font-bold text-emerald-800"
                   >
-                    {i + 3}
+                    {i + 1}
                   </div>
                 ))}
               </div>
 
-              {/* Vertical bottom */}
               {Array.from({ length: Math.ceil((verticalCount - 1) / 2) }).map((_, i) => (
                 <div
                   key={`vbot-${i}`}
                   className="w-8 h-8 rounded-full bg-sky-200 border-2 border-sky-400 flex items-center justify-center text-xs font-bold text-sky-800"
                 >
-                  {i + 3}
+                  {i + 1}
                 </div>
               ))}
             </div>
@@ -206,24 +205,51 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
             Hàng ngang ({horizontalCount} bạn)
           </span>
           <span className="flex items-center gap-1.5 text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full">
-            ★ Điểm giao: Bạn {intersectionPerson}
+            ★ Điểm giao: {intersectionPerson}
           </span>
         </div>
       </div>
 
-      {/* Direct Input Answer Form */}
+      {/* Answer Form with Option Pills + Direct Input */}
       <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
         <h4 className="font-black text-slate-800 text-base">
-          Hỏi có tất cả bao nhiêu bạn đang đứng trong hàng?
+          Hỏi có tất cả bao nhiêu bạn đang đứng trong đội hình?
         </h4>
+
+        {options && options.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2">
+            {options.map((opt, idx) => (
+              <button
+                key={idx}
+                type="button"
+                disabled={isSuccess}
+                onClick={() => {
+                  setInputValue(opt);
+                  handleCheck(opt);
+                }}
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black border-2 transition-all active:scale-95 ${
+                  isSuccess && opt === correctAnswer
+                    ? 'bg-emerald-500 text-white border-emerald-600'
+                    : inputValue === opt
+                    ? 'bg-amber-200 text-amber-950 border-amber-400'
+                    : 'bg-slate-50 hover:bg-amber-50 text-slate-700 border-slate-200 hover:border-amber-300'
+                }`}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        )}
+
         <p className="text-xs text-slate-500">
-          Bé hãy quan sát điểm giao, tự tính toán và nhập đáp án:
+          Hoặc tự tính toán và nhập đáp án vào ô dưới đây:
         </p>
 
         <div className="flex items-center justify-center gap-3">
           <div className="relative">
             <input
               type="text"
+              disabled={isSuccess}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -240,7 +266,8 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
 
           <button
             type="button"
-            onClick={handleCheck}
+            disabled={isSuccess}
+            onClick={() => handleCheck()}
             className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-black text-sm shadow-md transition-all active:scale-95"
           >
             Kiểm tra
@@ -256,7 +283,7 @@ export const CornerCross: React.FC<CornerCrossProps> = ({
 
       {isSuccess && (
         <div className="p-4 bg-emerald-100 border-2 border-emerald-400 rounded-2xl text-emerald-900 font-bold text-center animate-bounce-slow">
-          🎉 Quá giỏi! Vì bạn {intersectionPerson} ở điểm giao được tính 2 lần, ta lấy: {formulaCalc} bạn!
+          🎉 Quá giỏi! Trừ đi các vị trí góc giao nhau bị đếm trùng, ta có: {formulaCalc} bạn!
         </div>
       )}
     </div>

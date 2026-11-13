@@ -681,6 +681,387 @@ export const EXTENDED_PATTERN_LESSONS: LessonQuestion[] = [
       correctChoiceId: 'top3',
       correctExplanation: 'Hai số tầng 4 là 20 và 28. Đỉnh kim tự tháp = 20 + 28 = 48!'
     }
+  },
+  {
+    id: 'pat-44',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Bình Phương Thiên Hà: Quy Luật Nhân Chính Mình',
+    badgeTitle: 'Bài 44 · Độ khó Cấp 29',
+    instruction: 'Khám phá quy luật dãy số chính phương: 1, 4, 9, 16, 25, 36, [?]. Tìm số thích hợp thay cho dấu [?].',
+    hint: 'Mỗi số bằng vị trí của nó nhân với chính nó: 1×1=1, 2×2=4, 3×3=9, 4×4=16, 5×5=25, 6×6=36, 7×7=?',
+    mascot: { ...MAYLE, message: 'Khi một số tự nhân với chính nó, ta gọi là số chính phương!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Chuỗi Số Chính Phương (n × n)',
+      ruleExplanation: 'Số thứ 7 trong dãy bằng 7 × 7 = 49.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1', subLabel: '1×1' },
+        { id: 2, label: '4', subLabel: '2×2' },
+        { id: 3, label: '9', subLabel: '3×3' },
+        { id: 4, label: '16', subLabel: '4×4' },
+        { id: 5, label: '25', subLabel: '5×5' },
+        { id: 6, label: '36', subLabel: '6×6' },
+        { id: 7, label: '?', isMissing: true, subLabel: '7×7' }
+      ],
+      choices: [
+        { id: 'c1', label: '45', subLabel: '36 + 9' },
+        { id: 'c2', label: '48', subLabel: 'Thiếu 1' },
+        { id: 'c3', label: '49', subLabel: '7 × 7 = 49' },
+        { id: 'c4', label: '52', subLabel: 'Vượt quá' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: 'Số hạng thứ 7 là 7 × 7 = 49 (cũng chính là +3, +5, +7, +9, +11, +13)!'
+    }
+  },
+  {
+    id: 'pat-45',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê Cung Pha Lê 4 Chu Kỳ: Đường Hầm Không Gian',
+    badgeTitle: 'Bài 45 · Độ khó Cấp 30',
+    instruction: 'Dẫn đường phi hành gia đi từ Kim Cương 💎 góc trên trái tới Đích 💎 góc dưới phải theo đúng chu kỳ 4 bước lặp lại: 💎 ➔ 🪐 ➔ 🌟 ➔ ☄️.',
+    hint: 'Từ ô (1,1) 💎 đi sang phải qua 🪐 ➔ 🌟, xuống dưới gặp ☄️ ➔ 💎, tiếp tục bậc thang theo đúng 💎 ➔ 🪐 ➔ 🌟 ➔ ☄️!',
+    mascot: { ...ABBY, message: 'Chu kỳ 4 biểu tượng đòi hỏi sự tập trung cực cao, hãy kiểm tra từng bước chân!' },
+    activity: {
+      type: 'flowerMaze',
+      ruleTitle: 'Chu kỳ 4 biểu tượng: 💎 ➔ 🪐 ➔ 🌟 ➔ ☄️',
+      pattern: ['💎', '🪐', '🌟', '☄️'],
+      patternDisplay: [
+        { icon: '💎', name: 'Pha lê' },
+        { icon: '🪐', name: 'Thổ tinh' },
+        { icon: '🌟', name: 'Sao sáng' },
+        { icon: '☄️', name: 'Sao chổi' }
+      ],
+      startPos: [0, 0],
+      goalPos: [6, 6],
+      startIcon: '👩‍🚀',
+      startLabel: 'Xuất phát',
+      goalIcon: '🛸',
+      goalLabel: 'Trạm Đích',
+      successMessage: '🎉 Tuyệt vời! Em đã chinh phục mê cung chu kỳ 4 bước chuẩn xác tuyệt đối!',
+      grid: [
+        ['💎', '🪐', '🌟', '💎', '☄️', '🌟', '🪐'],
+        ['☄️', '🌟', '☄️', '🪐', '💎', '☄️', '🌟'],
+        ['🌟', '🪐', '💎', '🪐', '🌟', '💎', '☄️'],
+        ['💎', '☄️', '🌟', '🌟', '☄️', '🪐', '💎'],
+        ['🪐', '🌟', '☄️', '💎', '💎', '🪐', '🌟'],
+        ['☄️', '💎', '🪐', '🌟', '☄️', '🌟', '☄️'],
+        ['🌟', '☄️', '💎', '🪐', '🌟', '💎', '💎']
+      ],
+      targetPath: [
+        [0, 0], [0, 1], [0, 2], [1, 2], [2, 2], [2, 3], [3, 3],
+        [3, 4], [4, 4], [4, 5], [5, 5], [5, 6], [6, 6]
+      ]
+    }
+  },
+  {
+    id: 'pat-46',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Nhân Đôi Cộng Hai: Vượt Tốc Độ Ánh Sáng',
+    badgeTitle: 'Bài 46 · Độ khó Cấp 31',
+    instruction: 'Tìm số tiếp theo trong dãy số tăng tốc: 2, 6, 14, 30, 62, [?].',
+    hint: 'Mỗi số bằng số đứng trước nhân 2 rồi cộng thêm 2: (2×2+2=6), (6×2+2=14), (14×2+2=30), (30×2+2=62), (62×2+2=?).',
+    mascot: { ...BENNY, message: 'Công thức bí mật là ×2 rồi +2! Hãy tính thật cẩn thận nhé!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Quy Luật Biến Đổi ×2 + 2',
+      ruleExplanation: 'Mỗi số bằng số liền trước nhân 2 cộng 2: 62 × 2 + 2 = 124 + 2 = 126.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '2', subLabel: '×2+2' },
+        { id: 2, label: '6', subLabel: '×2+2' },
+        { id: 3, label: '14', subLabel: '×2+2' },
+        { id: 4, label: '30', subLabel: '×2+2' },
+        { id: 5, label: '62', subLabel: '×2+2' },
+        { id: 6, label: '?', isMissing: true, subLabel: '62×2+2' }
+      ],
+      choices: [
+        { id: 'c1', label: '124', subLabel: 'Quên cộng 2' },
+        { id: 'c2', label: '126', subLabel: '62 × 2 + 2 = 126' },
+        { id: 'c3', label: '128', subLabel: 'Cộng 4' },
+        { id: 'c4', label: '130', subLabel: 'Cộng 6' }
+      ],
+      correctChoiceId: 'c2',
+      correctExplanation: '62 × 2 + 2 = 124 + 2 = 126!'
+    }
+  },
+  {
+    id: 'pat-47',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Bước Nhảy Chẵn Tăng Dần: Thang Số Thần Kỳ',
+    badgeTitle: 'Bài 47 · Độ khó Cấp 32',
+    instruction: 'Tìm số còn thiếu trong dãy số: 5, 9, 15, 23, 33, [?].',
+    hint: 'Tìm hiệu hai số kề nhau: 9-5=4, 15-9=6, 23-15=8, 33-23=10. Bước nhảy tiếp theo là +12!',
+    mascot: { ...CASEY, message: 'Khoảng cách giữa các số cũng tự tạo thành một quy luật tăng thêm 2 đơn vị!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Dãy Số Hiệu Tăng Dần (+4, +6, +8, +10, +12)',
+      ruleExplanation: 'Khoảng cách tăng dần theo số chẵn: 33 + 12 = 45.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '5', subLabel: '+4' },
+        { id: 2, label: '9', subLabel: '+6' },
+        { id: 3, label: '15', subLabel: '+8' },
+        { id: 4, label: '23', subLabel: '+10' },
+        { id: 5, label: '33', subLabel: '+12' },
+        { id: 6, label: '?', isMissing: true, subLabel: '33+12' }
+      ],
+      choices: [
+        { id: 'c1', label: '43', subLabel: '+10' },
+        { id: 'c2', label: '44', subLabel: '+11' },
+        { id: 'c3', label: '45', subLabel: '33 + 12 = 45' },
+        { id: 'c4', label: '47', subLabel: '+14' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: 'Bước nhảy kế tiếp là +12 nên số cần tìm là 33 + 12 = 45!'
+    }
+  },
+  {
+    id: 'pat-48',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Ma Trận 2x2 Xoay Ngược Chiều Kim Đồng Hồ',
+    badgeTitle: 'Bài 48 · Độ khó Cấp 33',
+    instruction: 'Quan sát cách 4 con số 12, 24, 36, 48 di chuyển từ Ô 1 ➔ Ô 2 ➔ Ô 3 rồi tự điền các số vào Ô 4.',
+    hint: 'Số 12 đi từ góc trên trái ➔ dưới trái ➔ dưới phải ➔ vậy ở Ô 4 số 12 nằm ở góc trên phải! Cả 4 số xoay ngược chiều kim đồng hồ 1 góc.',
+    mascot: { ...MAYLE, message: 'Lần này vòng xoay đi ngược chiều kim đồng hồ! Em hãy bám theo từng số một nhé!' },
+    activity: {
+      type: 'matrix2x2',
+      title: 'Ma Trận 2x2 Xoay Ngược Chiều Kim Đồng Hồ',
+      ruleExplanation: 'Qua mỗi bước, cả 4 số xoay ngược chiều kim đồng hồ 90 độ.',
+      sampleGrids: [
+        {
+          stepNum: 1,
+          grid: [
+            ['12', '24'],
+            ['48', '36']
+          ]
+        },
+        {
+          stepNum: 2,
+          grid: [
+            ['24', '36'],
+            ['12', '48']
+          ]
+        },
+        {
+          stepNum: 3,
+          grid: [
+            ['36', '48'],
+            ['24', '12']
+          ]
+        }
+      ],
+      choices: [
+        {
+          id: 'opt1',
+          label: 'Chuẩn xoay ngược chiều kim đồng hồ',
+          grid: [
+            ['48', '12'],
+            ['36', '24']
+          ]
+        }
+      ],
+      correctChoiceId: 'opt1'
+    }
+  },
+  {
+    id: 'pat-49',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Tribonacci: Tổng Ba Số Liền Trước',
+    badgeTitle: 'Bài 49 · Độ khó Cấp 34',
+    instruction: 'Tìm số tiếp theo trong dãy Tribonacci kỳ diệu: 1, 1, 2, 4, 7, 13, 24, [?].',
+    hint: 'Mỗi số kể từ số thứ 4 bằng tổng của BA số ngay trước nó: 1+1+2=4, 1+2+4=7, 2+4+7=13, 4+7+13=24, vậy 7+13+24=?',
+    mascot: { ...MAYLE, message: 'Không chỉ cộng 2 số như Fibonacci, dãy Tribonacci cộng hẳn 3 số liền trước!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Dãy Tribonacci (Tổng 3 Số Trước)',
+      ruleExplanation: 'Số tiếp theo bằng tổng 3 số đứng ngay trước nó: 7 + 13 + 24 = 44.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '1', subLabel: 'Khởi đầu' },
+        { id: 2, label: '1', subLabel: 'Khởi đầu' },
+        { id: 3, label: '2', subLabel: 'Khởi đầu' },
+        { id: 4, label: '4', subLabel: '1+1+2' },
+        { id: 5, label: '7', subLabel: '1+2+4' },
+        { id: 6, label: '13', subLabel: '2+4+7' },
+        { id: 7, label: '24', subLabel: '4+7+13' },
+        { id: 8, label: '?', isMissing: true, subLabel: '7+13+24' }
+      ],
+      choices: [
+        { id: 'c1', label: '41', subLabel: 'Cộng thiếu' },
+        { id: 'c2', label: '43', subLabel: 'Sai hàng đơn vị' },
+        { id: 'c3', label: '44', subLabel: '7 + 13 + 24 = 44' },
+        { id: 'c4', label: '46', subLabel: 'Cộng thừa' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: '7 + 13 + 24 = 44!'
+    }
+  },
+  {
+    id: 'pat-50',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Mê Cung Đại Dương Thần Bí: Đường Chéo Ngược',
+    badgeTitle: 'Bài 50 · Độ khó Cấp 35',
+    instruction: 'Đi từ Bạch Tuộc 🐙 góc DƯỚI TRÁI lên Đích 🐙 góc TRÊN PHẢI theo đúng vòng lặp 4 loài vật biển: 🐙 ➔ 🐳 ➔ 🐠 ➔ 🦀.',
+    hint: 'Bắt đầu từ góc dưới cùng bên trái (hàng 7, cột 1) đi bậc thang lên trên và sang phải: 🐙 ➔ 🐳 ➔ 🐠 ➔ 🦀!',
+    mascot: { ...ABBY, message: 'Lần này hành trình đi ngược từ dưới lên trên! Quan sát hướng đi cẩn thận nhé!' },
+    activity: {
+      type: 'flowerMaze',
+      ruleTitle: 'Chu kỳ 4 sinh vật biển: 🐙 ➔ 🐳 ➔ 🐠 ➔ 🦀',
+      pattern: ['🐙', '🐳', '🐠', '🦀'],
+      patternDisplay: [
+        { icon: '🐙', name: 'Bạch tuộc' },
+        { icon: '🐳', name: 'Cá voi' },
+        { icon: '🐠', name: 'Cá nhiệt đới' },
+        { icon: '🦀', name: 'Cua biển' }
+      ],
+      startPos: [6, 0],
+      goalPos: [0, 6],
+      startIcon: '🤿',
+      startLabel: 'Thợ lặn',
+      goalIcon: '🏝️',
+      goalLabel: 'Đảo Ngọc',
+      successMessage: '🎉 Xuất sắc! Em đã đưa thợ lặn lên Đảo Ngọc theo đúng chu kỳ đại dương!',
+      grid: [
+        ['🦀', '🐳', '🐠', '🐙', '🐳', '🦀', '🐙'],
+        ['🐠', '🐙', '🦀', '🐠', '🐳', '🐠', '🐳'],
+        ['🐳', '🦀', '🐙', '🦀', '🐙', '🦀', '🐠'],
+        ['🐙', '🐠', '🐳', '🐠', '🐳', '🐙', '🦀'],
+        ['🦀', '🦀', '🐙', '🐳', '🐠', '🦀', '🐳'],
+        ['🐳', '🐠', '🐳', '🐙', '🦀', '🐠', '🐙'],
+        ['🐙', '🦀', '🐠', '🐳', '🐙', '🐳', '🦀']
+      ],
+      targetPath: [
+        [6, 0], [5, 0], [5, 1], [4, 1], [4, 2], [3, 2], [3, 3],
+        [2, 3], [2, 4], [1, 4], [1, 5], [0, 5], [0, 6]
+      ]
+    }
+  },
+  {
+    id: 'pat-51',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Dãy Số Song Song Hai Luồng: Nhân Đôi & Giảm Đều',
+    badgeTitle: 'Bài 51 · Độ khó Cấp 36',
+    instruction: 'Tìm số còn thiếu ở vị trí thứ 10 của dãy số kép: 2, 100, 4, 90, 8, 80, 16, 70, 32, [?].',
+    hint: 'Tách thành 2 dãy xen kẽ: Dãy lẻ (2, 4, 8, 16, 32) nhân đôi. Dãy chẵn (100, 90, 80, 70, ?) trừ đi 10!',
+    mascot: { ...BENNY, message: 'Tuyệt chiêu tách đôi dãy số: vị trí lẻ đi một đường, vị trí chẵn đi một đường!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Dãy Số Kép Đan Xen Hai Quy Luật',
+      ruleExplanation: 'Các vị trí chẵn tạo thành dãy giảm 10: 100, 90, 80, 70, 60.',
+      sequenceType: 'numbers',
+      items: [
+        { id: 1, label: '2', subLabel: 'Lẻ 1' },
+        { id: 2, label: '100', subLabel: 'Chẵn 1' },
+        { id: 3, label: '4', subLabel: 'Lẻ 2' },
+        { id: 4, label: '90', subLabel: 'Chẵn 2' },
+        { id: 5, label: '8', subLabel: 'Lẻ 3' },
+        { id: 6, label: '80', subLabel: 'Chẵn 3' },
+        { id: 7, label: '16', subLabel: 'Lẻ 4' },
+        { id: 8, label: '70', subLabel: 'Chẵn 4' },
+        { id: 9, label: '32', subLabel: 'Lẻ 5' },
+        { id: 10, label: '?', isMissing: true, subLabel: 'Chẵn 5' }
+      ],
+      choices: [
+        { id: 'c1', label: '50', subLabel: 'Giảm 20' },
+        { id: 'c2', label: '60', subLabel: '70 - 10 = 60' },
+        { id: 'c3', label: '64', subLabel: 'Nhầm sang dãy lẻ' },
+        { id: 'c4', label: '65', subLabel: 'Giảm 5' }
+      ],
+      correctChoiceId: 'c2',
+      correctExplanation: 'Vị trí thứ 10 thuộc dãy chẵn giảm dần 10 đơn vị: 70 - 10 = 60!'
+    }
+  },
+  {
+    id: 'pat-52',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'Kim Tự Tháp 5 Tầng Số Chẵn: Bội Số Khổng Lồ',
+    badgeTitle: 'Bài 52 · Độ khó Cấp 37',
+    instruction: 'Tìm số trên đỉnh kim tự tháp 5 tầng với đáy gồm 5 số chẵn: 2, 4, 6, 8, 10 (mỗi ô trên bằng tổng 2 ô kề ngay dưới).',
+    hint: 'Tầng 2: 6, 10, 14, 18. Tầng 3: 16, 24, 32. Tầng 4: 40, 56. Vậy đỉnh tháp là 40 + 56 = ?',
+    mascot: { ...CASEY, message: 'Mẹo nhanh: đáy gấp đôi bài Kim Tự Tháp 1-2-3-4-5, nên đỉnh cũng gấp đôi 48 đó!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Kim Tự Tháp 5 Tầng Số Chẵn',
+      ruleExplanation: 'Tầng 4 gồm 40 và 56. Đỉnh kim tự tháp = 40 + 56 = 96.',
+      sequenceType: 'pyramid',
+      items: [
+        { id: 1, label: '2', subLabel: 'Đáy' },
+        { id: 2, label: '4', subLabel: 'Đáy' },
+        { id: 3, label: '6', subLabel: 'Đáy' },
+        { id: 4, label: '8', subLabel: 'Đáy' },
+        { id: 5, label: '10', subLabel: 'Đáy' },
+        { id: 6, label: '6', subLabel: '2+4' },
+        { id: 7, label: '10', subLabel: '4+6' },
+        { id: 8, label: '14', subLabel: '6+8' },
+        { id: 9, label: '18', subLabel: '8+10' },
+        { id: 10, label: '16', subLabel: '6+10' },
+        { id: 11, label: '24', subLabel: '10+14' },
+        { id: 12, label: '32', subLabel: '14+18' },
+        { id: 13, label: '40', subLabel: '16+24' },
+        { id: 14, label: '56', subLabel: '24+32' },
+        { id: 15, label: '?', isMissing: true, subLabel: '40+56' }
+      ],
+      choices: [
+        { id: 'c1', label: '88', subLabel: 'Cộng thiếu' },
+        { id: 'c2', label: '92', subLabel: 'Thiếu 4' },
+        { id: 'c3', label: '96', subLabel: '40 + 56 = 96' },
+        { id: 'c4', label: '98', subLabel: 'Cộng thừa' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: 'Hai số tầng 4 là 40 và 56. Đỉnh kim tự tháp = 40 + 56 = 96!'
+    }
+  },
+  {
+    id: 'pat-53',
+    topicId: 'pattern',
+    topicName: topicName('pattern'),
+    title: 'SIÊU ĐỈNH CAO QUY LUẬT VŨ TRỤ TRẠM 4: Kim Tự Tháp Bất Đối Xứng 5 Tầng',
+    badgeTitle: 'Bài 53 · Huyền Thoại Quy Luật Trạm 4',
+    instruction: 'Thử thách tối thượng: Tìm số trên đỉnh kim tự tháp 5 tầng bất đối xứng với hàng đáy: 3, 5, 8, 6, 4.',
+    hint: 'Tính từng tầng cẩn thận: Tầng 2: 8, 13, 14, 10. Tầng 3: 21, 27, 24. Tầng 4: 48, 51. Đỉnh: 48 + 51 = ?',
+    mascot: { ...MAYLE, message: 'Chinh phục tháp số bất đối xứng này, em chính là Huyền Thoại Quy Luật của Trạm 4!' },
+    activity: {
+      type: 'sequencePattern',
+      title: 'Kim Tự Tháp Bất Đối Xứng 5 Tầng',
+      ruleExplanation: 'Tầng 4 gồm 48 và 51. Đỉnh tháp = 48 + 51 = 99.',
+      sequenceType: 'pyramid',
+      items: [
+        { id: 1, label: '3', subLabel: 'Đáy' },
+        { id: 2, label: '5', subLabel: 'Đáy' },
+        { id: 3, label: '8', subLabel: 'Đáy' },
+        { id: 4, label: '6', subLabel: 'Đáy' },
+        { id: 5, label: '4', subLabel: 'Đáy' },
+        { id: 6, label: '8', subLabel: '3+5' },
+        { id: 7, label: '13', subLabel: '5+8' },
+        { id: 8, label: '14', subLabel: '8+6' },
+        { id: 9, label: '10', subLabel: '6+4' },
+        { id: 10, label: '21', subLabel: '8+13' },
+        { id: 11, label: '27', subLabel: '13+14' },
+        { id: 12, label: '24', subLabel: '14+10' },
+        { id: 13, label: '48', subLabel: '21+27' },
+        { id: 14, label: '51', subLabel: '27+24' },
+        { id: 15, label: '?', isMissing: true, subLabel: '48+51' }
+      ],
+      choices: [
+        { id: 'c1', label: '95', subLabel: 'Thiếu 4' },
+        { id: 'c2', label: '97', subLabel: 'Thiếu 2' },
+        { id: 'c3', label: '99', subLabel: '48 + 51 = 99' },
+        { id: 'c4', label: '101', subLabel: 'Cộng thừa' }
+      ],
+      correctChoiceId: 'c3',
+      correctExplanation: 'Đỉnh kim tự tháp bất đối xứng = 48 + 51 = 99!'
+    }
   }
 ];
+
 

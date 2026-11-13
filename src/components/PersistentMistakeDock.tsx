@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookMarked, Brain, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
+import { BookMarked, Brain, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { sound } from '../utils/soundEffects';
 
 interface PersistentMistakeDockProps {
@@ -36,25 +36,18 @@ export const PersistentMistakeDock: React.FC<PersistentMistakeDockProps> = ({
           )}
         </button>
       ) : (
-        <div className="bg-white/95 backdrop-blur-md border-2 border-slate-300/80 shadow-2xl rounded-2xl p-2.5 flex flex-col gap-2 max-w-xs ring-4 ring-black/5 animate-fade-in">
-          {/* Header row with minimize button */}
-          <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-1.5 px-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              Luôn Sẵn Sàng Hỗ Trợ
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setIsMinimized(true);
-              }}
-              className="text-slate-400 hover:text-slate-700 p-0.5 rounded-lg"
-              title="Thu nhỏ thanh này"
-            >
-              <ChevronDown className="w-3.5 h-3.5" />
-            </button>
-          </div>
+        <div className="relative bg-white/95 backdrop-blur-md border-2 border-slate-300/80 shadow-2xl rounded-2xl p-2.5 flex flex-col gap-2 max-w-xs ring-4 ring-black/5 animate-fade-in">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              setIsMinimized(true);
+            }}
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white border border-slate-300 text-slate-400 hover:text-slate-700 shadow-sm flex items-center justify-center"
+            title="Thu nhỏ thanh này"
+          >
+            <ChevronDown className="w-3.5 h-3.5" />
+          </button>
 
           {/* Button 1: SỔ LỖI SAI (LUÔN HIỂN THỊ) */}
           <button

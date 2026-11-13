@@ -702,6 +702,363 @@ export const EXTENDED_PICTOGRAPH_LESSONS: LessonQuestion[] = [
         }
       ]
     }
+  },
+  {
+    id: 'pic-43',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Kho Dự Trữ Lương Thực Liên Hành Tinh: Bội Số 75 Tấn',
+    badgeTitle: 'Bài 43 · Độ khó Cấp 28',
+    instruction: 'Bốn trạm không gian dự trữ lương thực sạch cho các chuyến bay dài ngày. Quy ước: Mỗi bông lúa vàng 🌾 đại diện cho 75 tấn lương thực.',
+    hint: 'Lúa mì: 6 x 75 = 450 tấn. Gạo thơm: 4 x 75 = 300 tấn. Đậu dinh dưỡng: 5 x 75 = 375 tấn. Ngô ngọt: 3 x 75 = 225 tấn.',
+    mascot: { ...BENNY, message: 'Tính nhanh bội số 75 bằng cách lấy số biểu tượng nhân 75 nhé!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🌾 = 75 tấn lương thực',
+      multiplier: 75,
+      items: [
+        { id: 'wheat', label: 'Kho Lúa Mì', icon: '🌾', count: 6, actualValue: 450, unit: 'tấn' },
+        { id: 'rice', label: 'Kho Gạo Thơm', icon: '🌾', count: 4, actualValue: 300, unit: 'tấn' },
+        { id: 'beans', label: 'Kho Đậu Dinh Dưỡng', icon: '🌾', count: 5, actualValue: 375, unit: 'tấn' },
+        { id: 'corn', label: 'Kho Ngô Ngọt', icon: '🌾', count: 3, actualValue: 225, unit: 'tấn' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Kho Lúa Mì đang dự trữ bao nhiêu tấn lương thực?',
+          options: ['400 tấn', '425 tấn', '450 tấn', '475 tấn'],
+          correctAnswer: '450 tấn'
+        },
+        {
+          id: 'q2',
+          prompt: 'Kho Lúa Mì nhiều hơn Kho Ngô Ngọt bao nhiêu tấn?',
+          options: ['150 tấn', '200 tấn', '225 tấn', '250 tấn'],
+          correctAnswer: '225 tấn'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng lượng lương thực dự trữ ở cả 4 kho là bao nhiêu tấn?',
+          options: ['1250 tấn', '1300 tấn', '1350 tấn', '1425 tấn'],
+          correctAnswer: '1350 tấn'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-44',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thiết Kế Mạng Lưới Vệ Tinh Viễn Thông Toàn Cầu',
+    badgeTitle: 'Bài 44 · Độ khó Cấp 29',
+    instruction: 'Giúp Kỹ sư Benny xây dựng biểu đồ 480 trạm phát sóng vệ tinh: Mỗi ăng-ten 📡 đại diện cho 30 trạm (tổng 16 biểu tượng).',
+    hint: 'Khu Á: 150 : 30 = 5. Khu Âu: 120 : 30 = 4. Khu Mỹ: 120 : 30 = 4. Khu Phi: 90 : 30 = 3.',
+    mascot: { ...BENNY, message: 'Chia số trạm thực tế cho 30 để biết số ăng-ten cần đặt nhé!' },
+    activity: {
+      type: 'pictographBuilder',
+      multiplier: 30,
+      totalPeople: 480,
+      categories: [
+        { id: 'asia', label: 'Vành Đai Châu Á (150 trạm)', targetSymbols: 5, symbolColor: 'bg-cyan-500' },
+        { id: 'europe', label: 'Vành Đai Châu Âu (120 trạm)', targetSymbols: 4, symbolColor: 'bg-indigo-500' },
+        { id: 'america', label: 'Vành Đai Châu Mỹ (120 trạm)', targetSymbols: 4, symbolColor: 'bg-amber-500' },
+        { id: 'africa', label: 'Vành Đai Châu Phi (90 trạm)', targetSymbols: 3, symbolColor: 'bg-emerald-500' }
+      ]
+    }
+  },
+  {
+    id: 'pic-45',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Điện Mặt Trời Quỹ Đạo: Phân Tích 5 Trạm Thu Năng Lượng',
+    badgeTitle: 'Bài 45 · Độ khó Cấp 30',
+    instruction: 'Năm trạm vệ tinh thu năng lượng Mặt Trời hoạt động suốt 24 giờ. Quy ước: Mỗi mặt trời ☀️ đại diện cho 80 kWh điện.',
+    hint: 'Tổng số biểu tượng của cả 5 trạm: 6 + 8 + 5 + 7 + 4 = 30 biểu tượng. Tổng điện năng = 30 x 80 = 2400 kWh.',
+    mascot: { ...CASEY, message: 'So sánh gộp hai trạm bằng cách cộng số biểu tượng trước rồi nhân với 80!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '☀️ = 80 kWh điện sạch',
+      multiplier: 80,
+      items: [
+        { id: 'solar-a', label: 'Trạm Helios A', icon: '☀️', count: 6, actualValue: 480, unit: 'kWh' },
+        { id: 'solar-b', label: 'Trạm Helios B', icon: '☀️', count: 8, actualValue: 640, unit: 'kWh' },
+        { id: 'solar-c', label: 'Trạm Helios C', icon: '☀️', count: 5, actualValue: 400, unit: 'kWh' },
+        { id: 'solar-d', label: 'Trạm Helios D', icon: '☀️', count: 7, actualValue: 560, unit: 'kWh' },
+        { id: 'solar-e', label: 'Trạm Helios E', icon: '☀️', count: 4, actualValue: 320, unit: 'kWh' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Tổng sản lượng điện của Trạm B và Trạm E gộp lại là bao nhiêu kWh?',
+          options: ['880 kWh', '960 kWh', '1040 kWh', '1120 kWh'],
+          correctAnswer: '960 kWh'
+        },
+        {
+          id: 'q2',
+          prompt: 'Trạm B sản xuất nhiều hơn Trạm E bao nhiêu kWh điện?',
+          options: ['240 kWh', '300 kWh', '320 kWh', '400 kWh'],
+          correctAnswer: '320 kWh'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng năng lượng thu được của cả 5 trạm là bao nhiêu kWh?',
+          options: ['2240 kWh', '2320 kWh', '2400 kWh', '2480 kWh'],
+          correctAnswer: '2400 kWh'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-46',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Hệ Thống Thư Viện Tri Thức Số: Bội Số 120 Quyển Sách',
+    badgeTitle: 'Bài 46 · Độ khó Cấp 31',
+    instruction: 'Thống kê số sách khoa học tại 5 thư viện hiện đại. Quy ước: Mỗi chồng sách 📚 đại diện cho 120 quyển sách.',
+    hint: 'Tổng số chồng sách: 5 + 7 + 4 + 8 + 6 = 30. Tổng sách = 30 x 120 = 3600 quyển.',
+    mascot: { ...MAYLE, message: 'Đọc sách mỗi ngày giúp trí tuệ bay cao như tên lửa!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '📚 = 120 quyển sách',
+      multiplier: 120,
+      items: [
+        { id: 'lib-1', label: 'Thư Viện Sao Mai', icon: '📚', count: 5, actualValue: 600, unit: 'quyển' },
+        { id: 'lib-2', label: 'Thư Viện Bình Minh', icon: '📚', count: 7, actualValue: 840, unit: 'quyển' },
+        { id: 'lib-3', label: 'Thư Viện Sóng Xanh', icon: '📚', count: 4, actualValue: 480, unit: 'quyển' },
+        { id: 'lib-4', label: 'Thư Viện Trung Tâm', icon: '📚', count: 8, actualValue: 960, unit: 'quyển' },
+        { id: 'lib-5', label: 'Thư Viện Rạng Đông', icon: '📚', count: 6, actualValue: 720, unit: 'quyển' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Thư Viện Trung Tâm đang lưu giữ bao nhiêu quyển sách?',
+          options: ['840 quyển', '920 quyển', '960 quyển', '1080 quyển'],
+          correctAnswer: '960 quyển'
+        },
+        {
+          id: 'q2',
+          prompt: 'Thư Viện Trung Tâm nhiều hơn Thư Viện Sóng Xanh bao nhiêu quyển sách?',
+          options: ['360 quyển', '420 quyển', '480 quyển', '540 quyển'],
+          correctAnswer: '480 quyển'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng số sách khoa học ở cả 5 thư viện là bao nhiêu quyển?',
+          options: ['3360 quyển', '3480 quyển', '3600 quyển', '3720 quyển'],
+          correctAnswer: '3600 quyển'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-47',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Điều Phối 640 Robot Thám Hiểm Hành Tinh Đỏ',
+    badgeTitle: 'Bài 47 · Độ khó Cấp 32',
+    instruction: 'Sắp xếp 640 robot tự hành đến 4 miệng núi lửa trên Sao Hỏa. Quy ước: Mỗi chú robot 🤖 đại diện cho 40 robot thực tế (tổng 16 biểu tượng).',
+    hint: 'Vùng Olympus: 200 : 40 = 5. Vùng Marineris: 160 : 40 = 4. Vùng Gale: 160 : 40 = 4. Vùng Jezero: 120 : 40 = 3.',
+    mascot: { ...BENNY, message: 'Phân bổ chính xác từng đội hình robot để thám hiểm Sao Hỏa!' },
+    activity: {
+      type: 'pictographBuilder',
+      multiplier: 40,
+      totalPeople: 640,
+      categories: [
+        { id: 'olympus', label: 'Đỉnh Olympus (200 robot)', targetSymbols: 5, symbolColor: 'bg-red-500' },
+        { id: 'marineris', label: 'Hẻm Marineris (160 robot)', targetSymbols: 4, symbolColor: 'bg-orange-500' },
+        { id: 'gale', label: 'Miệng Hố Gale (160 robot)', targetSymbols: 4, symbolColor: 'bg-amber-500' },
+        { id: 'jezero', label: 'Hồ Cổ Jezero (120 robot)', targetSymbols: 3, symbolColor: 'bg-rose-500' }
+      ]
+    }
+  },
+  {
+    id: 'pic-48',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Đường Sắt Đệm Từ Siêu Tốc: Bội Số 150 km',
+    badgeTitle: 'Bài 48 · Độ khó Cấp 33',
+    instruction: 'Ghi nhận chiều dài 5 tuyến đường sắt đệm từ hiện đại. Quy ước: Mỗi đầu tàu 🚄 đại diện cho 150 km đường ray.',
+    hint: 'Tuyến D: 8 x 150 = 1200 km; Tuyến A: 4 x 150 = 600 km. Tổng 5 tuyến = (4+7+5+8+6) x 150 = 30 x 150 = 4500 km.',
+    mascot: { ...CASEY, message: 'Chuyến tàu xuyên lục địa lướt đi êm ái với tốc độ siêu thanh!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🚄 = 150 km đường ray',
+      multiplier: 150,
+      items: [
+        { id: 'line-a', label: 'Tuyến Phía Bắc', icon: '🚄', count: 4, actualValue: 600, unit: 'km' },
+        { id: 'line-b', label: 'Tuyến Duyên Hải', icon: '🚄', count: 7, actualValue: 1050, unit: 'km' },
+        { id: 'line-c', label: 'Tuyến Cao Nguyên', icon: '🚄', count: 5, actualValue: 750, unit: 'km' },
+        { id: 'line-d', label: 'Tuyến Xuyên Tâm', icon: '🚄', count: 8, actualValue: 1200, unit: 'km' },
+        { id: 'line-e', label: 'Tuyến Đảo Ngọc', icon: '🚄', count: 6, actualValue: 900, unit: 'km' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Tuyến Xuyên Tâm có chiều dài thực tế là bao nhiêu km?',
+          options: ['1050 km', '1150 km', '1200 km', '1350 km'],
+          correctAnswer: '1200 km'
+        },
+        {
+          id: 'q2',
+          prompt: 'Tuyến Xuyên Tâm dài hơn Tuyến Phía Bắc bao nhiêu km?',
+          options: ['450 km', '550 km', '600 km', '750 km'],
+          correctAnswer: '600 km'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng chiều dài của cả 5 tuyến đường sắt đệm từ là bao nhiêu km?',
+          options: ['4200 km', '4350 km', '4500 km', '4650 km'],
+          correctAnswer: '4500 km'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-49',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Nhà Máy Lọc Nước Đại Dương: Bội Số 200 Lít',
+    badgeTitle: 'Bài 49 · Độ khó Cấp 34',
+    instruction: 'Công suất lọc nước biển thành nước ngọt mỗi giờ tại 5 nhà máy. Quy ước: Mỗi giọt nước 💧 đại diện cho 200 lít nước tinh khiết.',
+    hint: 'Tổng số giọt nước: 5 + 8 + 6 + 9 + 4 = 32 giọt. Tổng lượng nước = 32 x 200 = 6400 lít.',
+    mascot: { ...MAYLE, message: 'Nhân với 200 rất dễ: Nhân với 2 rồi viết thêm hai chữ số 0!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '💧 = 200 lít nước tinh khiết',
+      multiplier: 200,
+      items: [
+        { id: 'plant-1', label: 'Nhà Máy Biển Đông', icon: '💧', count: 5, actualValue: 1000, unit: 'lít' },
+        { id: 'plant-2', label: 'Nhà Máy San Hô', icon: '💧', count: 8, actualValue: 1600, unit: 'lít' },
+        { id: 'plant-3', label: 'Nhà Máy Hải Âu', icon: '💧', count: 6, actualValue: 1200, unit: 'lít' },
+        { id: 'plant-4', label: 'Nhà Máy Thái Bình', icon: '💧', count: 9, actualValue: 1800, unit: 'lít' },
+        { id: 'plant-5', label: 'Nhà Máy Trường Sa', icon: '💧', count: 4, actualValue: 800, unit: 'lít' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Nhà Máy Thái Bình lọc được bao nhiêu lít nước tinh khiết mỗi giờ?',
+          options: ['1600 lít', '1800 lít', '2000 lít', '2200 lít'],
+          correctAnswer: '1800 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Tổng lượng nước của Nhà Máy San Hô và Nhà Máy Trường Sa gộp lại là bao nhiêu lít?',
+          options: ['2200 lít', '2400 lít', '2600 lít', '2800 lít'],
+          correctAnswer: '2400 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng công suất của cả 5 nhà máy cộng lại đạt bao nhiêu lít mỗi giờ?',
+          options: ['6000 lít', '6200 lít', '6400 lít', '6800 lít'],
+          correctAnswer: '6400 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-50',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Thiết Kế Kho Năng Lượng Siêu Cấp 850 Pin Lượng Tử',
+    badgeTitle: 'Bài 50 · Độ khó Cấp 35',
+    instruction: 'Giúp Đội Trưởng Benny nạp 850 pin năng lượng vào 4 khoang chiến hạm. Quy ước: Mỗi viên pin 🔋 đại diện cho 50 viên thực tế (tổng 17 biểu tượng).',
+    hint: 'Khoang Chính: 300 : 50 = 6. Khoang Lá Chắn: 200 : 50 = 4. Khoang Động Cơ: 200 : 50 = 4. Khoang Dự Phòng: 150 : 50 = 3.',
+    mascot: { ...BENNY, message: 'Nạp đầy 17 biểu tượng pin năng lượng để chiến hạm xuất phát nhé!' },
+    activity: {
+      type: 'pictographBuilder',
+      multiplier: 50,
+      totalPeople: 850,
+      categories: [
+        { id: 'core', label: 'Khoang Lõi Chính (300 viên)', targetSymbols: 6, symbolColor: 'bg-emerald-500' },
+        { id: 'shield', label: 'Khoang Lá Chắn (200 viên)', targetSymbols: 4, symbolColor: 'bg-sky-500' },
+        { id: 'engine', label: 'Khoang Động Cơ (200 viên)', targetSymbols: 4, symbolColor: 'bg-amber-500' },
+        { id: 'backup', label: 'Khoang Dự Phòng (150 viên)', targetSymbols: 3, symbolColor: 'bg-purple-500' }
+      ]
+    }
+  },
+  {
+    id: 'pic-51',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'Đại Hội Olympic Các Học Viện Thiên Tài: Bội Số 250 Điểm',
+    badgeTitle: 'Bài 51 · Độ khó Cấp 36',
+    instruction: 'Bảng điểm tổng kết 5 Học Viện tham gia Đại hội Toán học Quốc tế. Quy ước: Mỗi chiếc cúp 🏆 đại diện cho 250 điểm danh vọng.',
+    hint: 'Số cúp: A=7, B=5, C=9, D=6, E=8. Tổng số cúp = 35 cúp. Tổng điểm = 35 x 250 = 8750 điểm.',
+    mascot: { ...MAYLE, message: 'Tính toán chuẩn xác với tỷ lệ lớn 250 điểm cho mỗi chiếc cúp!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🏆 = 250 điểm danh vọng',
+      multiplier: 250,
+      items: [
+        { id: 'acad-a', label: 'Học Viện Ánh Sáng', icon: '🏆', count: 7, actualValue: 1750, unit: 'điểm' },
+        { id: 'acad-b', label: 'Học Viện Sao Băng', icon: '🏆', count: 5, actualValue: 1250, unit: 'điểm' },
+        { id: 'acad-c', label: 'Học Viện Kim Cương', icon: '🏆', count: 9, actualValue: 2250, unit: 'điểm' },
+        { id: 'acad-d', label: 'Học Viện Sóng Âm', icon: '🏆', count: 6, actualValue: 1500, unit: 'điểm' },
+        { id: 'acad-e', label: 'Học Viện Thiên Hà', icon: '🏆', count: 8, actualValue: 2000, unit: 'điểm' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Học Viện Kim Cương (nhiều nhất) hơn Học Viện Sao Băng (ít nhất) bao nhiêu điểm?',
+          options: ['750 điểm', '1000 điểm', '1250 điểm', '1500 điểm'],
+          correctAnswer: '1000 điểm'
+        },
+        {
+          id: 'q2',
+          prompt: 'Tổng điểm của hai học viện dẫn đầu (Kim Cương và Thiên Hà) là bao nhiêu điểm?',
+          options: ['4000 điểm', '4250 điểm', '4500 điểm', '4750 điểm'],
+          correctAnswer: '4250 điểm'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng số điểm danh vọng của cả 5 học viện đạt được là bao nhiêu?',
+          options: ['8250 điểm', '8500 điểm', '8750 điểm', '9000 điểm'],
+          correctAnswer: '8750 điểm'
+        }
+      ]
+    }
+  },
+  {
+    id: 'pic-52',
+    topicId: 'pictograph',
+    topicName: topicName('pictograph'),
+    title: 'ĐẠI THỬ THÁCH THIÊN HÀ TỐI THƯỢNG TRẠM 1: Cụm Siêu Thiên Hà (1 Biểu Tượng = 300 Năm Ánh Sáng)',
+    badgeTitle: 'Bài 52 · Đỉnh Cao Vũ Trụ Trạm 1',
+    instruction: 'Cuộc khảo sát vĩ đại nhất Trạm 1: Đo kích thước 5 cụm siêu thiên hà xa xôi. Quy ước: Mỗi dải ngân hà 🌌 đại diện cho 300 năm ánh sáng.',
+    hint: 'Tổng biểu tượng = 7 + 9 + 6 + 10 + 8 = 40 biểu tượng. Tổng kích thước = 40 x 300 = 12 000 năm ánh sáng!',
+    mascot: { ...MAYLE, message: 'Vượt qua thử thách 12 000 năm ánh sáng này, em chính thức đạt danh hiệu Thống Soái Dữ Liệu Vũ Trụ!' },
+    activity: {
+      type: 'pictographViewer',
+      keyNotice: '🌌 = 300 năm ánh sáng',
+      multiplier: 300,
+      items: [
+        { id: 'cluster-1', label: 'Cụm Virgo', icon: '🌌', count: 7, actualValue: 2100, unit: 'năm ánh sáng' },
+        { id: 'cluster-2', label: 'Cụm Coma', icon: '🌌', count: 9, actualValue: 2700, unit: 'năm ánh sáng' },
+        { id: 'cluster-3', label: 'Cụm Perseus', icon: '🌌', count: 6, actualValue: 1800, unit: 'năm ánh sáng' },
+        { id: 'cluster-4', label: 'Cụm Laniakea', icon: '🌌', count: 10, actualValue: 3000, unit: 'năm ánh sáng' },
+        { id: 'cluster-5', label: 'Cụm Hercules', icon: '🌌', count: 8, actualValue: 2400, unit: 'năm ánh sáng' }
+      ],
+      subQuestions: [
+        {
+          id: 'q1',
+          prompt: 'Cụm siêu thiên hà nào rộng lớn nhất và có kích thước bao nhiêu năm ánh sáng?',
+          options: ['Cụm Coma: 2700 năm ánh sáng', 'Cụm Laniakea: 3000 năm ánh sáng', 'Cụm Hercules: 2400 năm ánh sáng', 'Cụm Virgo: 2100 năm ánh sáng'],
+          correctAnswer: 'Cụm Laniakea: 3000 năm ánh sáng'
+        },
+        {
+          id: 'q2',
+          prompt: 'Cụm Laniakea lớn hơn Cụm Perseus bao nhiêu năm ánh sáng?',
+          options: ['900 năm ánh sáng', '1200 năm ánh sáng', '1500 năm ánh sáng', '1800 năm ánh sáng'],
+          correctAnswer: '1200 năm ánh sáng'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng kích thước của cả 5 cụm siêu thiên hà cộng lại là bao nhiêu năm ánh sáng?',
+          options: ['11 400 năm ánh sáng', '11 700 năm ánh sáng', '12 000 năm ánh sáng', '12 300 năm ánh sáng'],
+          correctAnswer: '12 000 năm ánh sáng'
+        }
+      ]
+    }
   }
 ];
+
 

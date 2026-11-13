@@ -100,6 +100,27 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
     setIsSuccess(false);
   };
 
+  // Group pyramid items into rows from top (1 item) down to base (N items)
+  const buildPyramidRows = () => {
+    const total = items.length;
+    // Standard triangular numbers: 6 -> 3 rows, 10 -> 4 rows, 15 -> 5 rows
+    let numRows = Math.round((Math.sqrt(8 * total + 1) - 1) / 2);
+    if ((numRows * (numRows + 1)) / 2 !== total) {
+      // Fallback for 3-row legacy pyramid
+      return null;
+    }
+    // Items in lessons are ordered from bottom layer (numRows items) up to top (1 item)
+    const rowsBottomUp: SequenceStepItem[][] = [];
+    let offset = 0;
+    for (let len = numRows; len >= 1; len--) {
+      rowsBottomUp.push(items.slice(offset, offset + len));
+      offset += len;
+    }
+    return rowsBottomUp.reverse(); // Top to bottom
+  };
+
+  const dynamicPyramidRows = sequenceType === 'pyramid' ? buildPyramidRows() : null;
+
   return (
     <div className="space-y-6 flex flex-col items-center w-full max-w-2xl mx-auto">
       {/* Rule header */}
@@ -117,47 +138,93 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
       <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-md w-full overflow-x-auto">
         {/* Pyramid layout */}
         {sequenceType === 'pyramid' ? (
-          <div className="flex flex-col items-center gap-3 py-2">
-            {/* Top row */}
-            <div className="flex justify-center">
-              <div
-                className={`w-18 h-18 rounded-2xl border-3 flex flex-col items-center justify-center font-black text-2xl shadow-md ${
-                  selectedChoiceId
-                    ? selectedChoiceId === correctChoiceId
-                      ? 'bg-emerald-100 border-emerald-500 text-emerald-950 ring-4 ring-emerald-300'
-                      : 'bg-rose-100 border-rose-400 text-rose-950 ring-4 ring-rose-200'
-                    : 'bg-amber-100 border-dashed border-amber-400 text-amber-900 animate-pulse'
-                }`}
-              >
-                <span>{selectedChoice ? selectedChoice.label : '?'}</span>
-                <span className="text-[10px] font-bold text-slate-500">Đỉnh</span>
-              </div>
-            </div>
-
-            {/* Mid row */}
-            <div className="flex justify-center gap-4">
-              <div className="w-16 h-16 rounded-2xl border-2 border-purple-300 bg-purple-50 flex flex-col items-center justify-center font-black text-xl text-purple-900 shadow-sm">
-                <span>7</span>
-                <span className="text-[9px] font-bold text-purple-400">(3+4)</span>
-              </div>
-              <div className="w-16 h-16 rounded-2xl border-2 border-purple-300 bg-purple-50 flex flex-col items-center justify-center font-black text-xl text-purple-900 shadow-sm">
-                <span>8</span>
-                <span className="text-[9px] font-bold text-purple-400">(4+4)</span>
-              </div>
-            </div>
-
-            {/* Bottom row */}
-            <div className="flex justify-center gap-3">
-              {['3', '4', '4'].map((num, i) => (
-                <div
-                  key={i}
-                  className="w-14 h-14 rounded-xl border border-slate-300 bg-slate-50 flex items-center justify-center font-black text-lg text-slate-700"
-                >
-                  {num}
+          dynamicPyramidRows ? (
+            <div className="flex flex-col items-center gap-2.5 py-2 min-w-[340px]">
+              {dynamicPyramidRows.map((rowItems, rIdx) => (
+                <div key={rIdx} className="flex justify-center gap-2 sm:gap-3">
+                  {rowItems.map((cell) => {
+                    if (cell.isMissing) {
+                      return (
+                        <div
+                          key={cell.id}
+                          className={`w-15 h-15 sm:w-17 sm:h-17 rounded-2xl border-3 flex flex-col items-center justify-center font-black text-xl sm:text-2xl shadow-md transition-all ${
+                            selectedChoiceId
+                              ? selectedChoiceId === correctChoiceId
+                                ? 'bg-emerald-100 border-emerald-500 text-emerald-950 ring-4 ring-emerald-300'
+                                : 'bg-rose-100 border-rose-400 text-rose-950 ring-4 ring-rose-200'
+                              : 'bg-amber-100 border-dashed border-amber-400 text-amber-900 animate-pulse'
+                          }`}
+                        >
+                          <span>{selectedChoice ? selectedChoice.label : '?'}</span>
+                          {cell.subLabel && (
+                            <span className="text-[9px] font-bold text-slate-500">{cell.subLabel}</span>
+                          )}
+                        </div>
+                      );
+                    }
+                    const isBaseRow = rIdx === dynamicPyramidRows.length - 1;
+                    return (
+                      <div
+                        key={cell.id}
+                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 flex flex-col items-center justify-center font-black text-base sm:text-xl shadow-xs ${
+                          isBaseRow
+                            ? 'border-slate-300 bg-slate-50 text-slate-700'
+                            : 'border-purple-300 bg-purple-50 text-purple-900'
+                        }`}
+                      >
+                        <span>{cell.label}</span>
+                        {cell.subLabel && (
+                          <span className="text-[9px] font-bold text-purple-500">{cell.subLabel}</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col items-center gap-3 py-2">
+              {/* Top row */}
+              <div className="flex justify-center">
+                <div
+                  className={`w-18 h-18 rounded-2xl border-3 flex flex-col items-center justify-center font-black text-2xl shadow-md ${
+                    selectedChoiceId
+                      ? selectedChoiceId === correctChoiceId
+                        ? 'bg-emerald-100 border-emerald-500 text-emerald-950 ring-4 ring-emerald-300'
+                        : 'bg-rose-100 border-rose-400 text-rose-950 ring-4 ring-rose-200'
+                      : 'bg-amber-100 border-dashed border-amber-400 text-amber-900 animate-pulse'
+                  }`}
+                >
+                  <span>{selectedChoice ? selectedChoice.label : '?'}</span>
+                  <span className="text-[10px] font-bold text-slate-500">Đỉnh</span>
+                </div>
+              </div>
+
+              {/* Mid row */}
+              <div className="flex justify-center gap-4">
+                <div className="w-16 h-16 rounded-2xl border-2 border-purple-300 bg-purple-50 flex flex-col items-center justify-center font-black text-xl text-purple-900 shadow-sm">
+                  <span>7</span>
+                  <span className="text-[9px] font-bold text-purple-400">(3+4)</span>
+                </div>
+                <div className="w-16 h-16 rounded-2xl border-2 border-purple-300 bg-purple-50 flex flex-col items-center justify-center font-black text-xl text-purple-900 shadow-sm">
+                  <span>8</span>
+                  <span className="text-[9px] font-bold text-purple-400">(4+4)</span>
+                </div>
+              </div>
+
+              {/* Bottom row */}
+              <div className="flex justify-center gap-3">
+                {['3', '4', '4'].map((num, i) => (
+                  <div
+                    key={i}
+                    className="w-14 h-14 rounded-xl border border-slate-300 bg-slate-50 flex items-center justify-center font-black text-lg text-slate-700"
+                  >
+                    {num}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
         ) : sequenceType === 'domino' ? (
           /* Domino layout */
           <div className="flex items-center justify-center gap-3 sm:gap-4 min-w-[420px] py-2">
@@ -199,7 +266,7 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
           </div>
         ) : (
           /* Stepping Stones / Beads layout */
-          <div className="flex items-center justify-center gap-2 sm:gap-3 min-w-[500px] py-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-4">
             {items.map((item, index) => {
               if (item.isMissing) {
                 return (
@@ -232,7 +299,9 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
                     <span className="text-2xl font-black text-slate-800">
                       {item.icon || item.label}
                     </span>
-                    <span className="text-[10px] font-bold text-slate-400 mt-1">#{item.id}</span>
+                    <span className="text-[10px] font-bold text-slate-400 mt-1">
+                      {item.subLabel || `#${item.id}`}
+                    </span>
                   </div>
                 </div>
               );
@@ -241,12 +310,42 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
         )}
       </div>
 
-      {/* Direct typing input box */}
-      <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-purple-200 shadow-sm space-y-4 text-center">
-        <h4 className="font-black text-slate-800 text-sm md:text-base">
-          Tự tay nhập giá trị hoặc con số còn thiếu vào ô:
-        </h4>
-        <div className="flex items-center justify-center gap-3">
+      {/* Choice Buttons + Direct typing input box */}
+      <div className="w-full max-w-xl bg-white p-6 rounded-3xl border-2 border-purple-200 shadow-sm space-y-4 text-center">
+        {choices.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="font-black text-slate-700 text-xs sm:text-sm uppercase tracking-wider">
+              Chọn nhanh đáp án hoặc tự nhập vào ô bên dưới:
+            </h4>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {choices.map((ch) => {
+                const isSelected = selectedChoiceId === ch.id;
+                return (
+                  <button
+                    key={ch.id}
+                    type="button"
+                    disabled={isSuccess}
+                    onClick={() => {
+                      setTypedInput(ch.label);
+                      handleSelectChoice(ch.id);
+                    }}
+                    className={`p-3 rounded-2xl border-2 font-black text-base sm:text-lg transition-all active:scale-95 flex flex-col items-center justify-center ${
+                      isSelected
+                        ? ch.id === correctChoiceId
+                          ? 'bg-emerald-100 border-emerald-500 text-emerald-900 ring-2 ring-emerald-300'
+                          : 'bg-rose-100 border-rose-400 text-rose-900'
+                        : 'bg-purple-50/70 hover:bg-purple-100 border-purple-200 text-purple-950'
+                    }`}
+                  >
+                    <span>{ch.icon || ch.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-center justify-center gap-3 pt-1">
           <input
             type="text"
             value={typedInput}
@@ -256,7 +355,7 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
               setErrorMessage(null);
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
-            placeholder="Nhập kết quả của em..."
+            placeholder="Hoặc tự nhập kết quả của em..."
             className={`flex-1 px-4 py-3 rounded-2xl border-2 text-base font-bold text-center outline-none transition-all ${
               isSuccess
                 ? 'bg-emerald-50 border-emerald-400 text-emerald-800 font-black cursor-default'

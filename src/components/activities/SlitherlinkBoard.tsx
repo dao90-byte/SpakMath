@@ -17,7 +17,6 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
   rows = 4,
   cols = 4,
   clues,
-  solutionEdges,
   onCompleted
 }) => {
   // Horizontal edges: (rows + 1) rows, cols columns
@@ -31,23 +30,26 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
   );
 
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const toggleHorizontal = (r: number, c: number) => {
     sound.playClick();
+    setErrorMessage(null);
     const next = hEdges.map((row, ri) =>
       row.map((val, ci) => (ri === r && ci === c ? !val : val))
     );
     setHEdges(next);
-    checkSolution(next, vEdges);
+    checkSolution(next, vEdges, false);
   };
 
   const toggleVertical = (r: number, c: number) => {
     sound.playClick();
+    setErrorMessage(null);
     const next = vEdges.map((row, ri) =>
       row.map((val, ci) => (ri === r && ci === c ? !val : val))
     );
     setVEdges(next);
-    checkSolution(hEdges, next);
+    checkSolution(hEdges, next, false);
   };
 
   const handleReset = () => {
@@ -55,14 +57,21 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
     setHEdges(Array.from({ length: rows + 1 }, () => Array(cols).fill(false)));
     setVEdges(Array.from({ length: rows }, () => Array(cols + 1).fill(false)));
     setIsSuccess(false);
+    setErrorMessage(null);
   };
 
-  const checkSolution = (currH = hEdges, currV = vEdges) => {
+  const checkSolution = (currH = hEdges, currV = vEdges, manualCheck = true) => {
     let totalEdges = 0;
     currH.forEach((row) => row.forEach((e) => { if (e) totalEdges++; }));
     currV.forEach((row) => row.forEach((e) => { if (e) totalEdges++; }));
 
-    if (totalEdges < 4) return;
+    if (totalEdges < 4) {
+      if (manualCheck) {
+        sound.playWrong();
+        setErrorMessage('Hãy vẽ ít nhất 4 cạnh để tạo thành một vòng khép kín nhé!');
+      }
+      return;
+    }
 
     let allCluesMatch = true;
 
@@ -86,13 +95,38 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
       if (!allCluesMatch) break;
     }
 
-    if (allCluesMatch) {
+    // Verify closed loop rule: every vertex must have degree 0 or 2
+    let isValidClosedLoop = true;
+    for (let vr = 0; vr <= rows; vr++) {
+      for (let vc = 0; vc <= cols; vc++) {
+        let deg = 0;
+        if (vc > 0 && currH[vr][vc - 1]) deg++;
+        if (vc < cols && currH[vr][vc]) deg++;
+        if (vr > 0 && currV[vr - 1][vc]) deg++;
+        if (vr < rows && currV[vr][vc]) deg++;
+        if (deg !== 0 && deg !== 2) {
+          isValidClosedLoop = false;
+          break;
+        }
+      }
+      if (!isValidClosedLoop) break;
+    }
+
+    if (allCluesMatch && isValidClosedLoop) {
       sound.playVictory();
       setIsSuccess(true);
+      setErrorMessage(null);
       setTimeout(() => {
         sound.playStarCollect();
         onCompleted();
       }, 500);
+    } else if (manualCheck) {
+      sound.playWrong();
+      if (!allCluesMatch) {
+        setErrorMessage('Một số ô chưa có đúng số cạnh theo chữ số gợi ý! Hãy kiểm tra các ô chưa hiện màu xanh lá nhé.');
+      } else {
+        setErrorMessage('Các cạnh chưa tạo thành một vòng khép kín liền mạch (không được có đầu thừa hoặc ngã ba)! Hãy nối kín vòng nhé.');
+      }
     }
   };
 
@@ -101,7 +135,7 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
       {/* Rules Notice */}
       <div className="bg-amber-100/90 border-2 border-amber-300 rounded-2xl p-4 text-center max-w-lg w-full">
         <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">
-          Câu đố ma trận số khép kín (Slitherlink - Trang 79)
+          Câu đố ma trận số khép kín (Slitherlink)
         </p>
         <p className="text-sm md:text-base font-black text-amber-950 mt-1">
           Nối các điểm thành 1 đường đi khép kín sao cho số trong mỗi ô bằng đúng số cạnh có đường đi qua!
@@ -246,9 +280,16 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
         </div>
       </div>
 
+      {errorMessage && (
+        <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs sm:text-sm font-bold text-center max-w-lg">
+          {errorMessage}
+        </div>
+      )}
+
       {/* Controls */}
       <div className="flex items-center gap-3">
         <button
+          type="button"
           onClick={handleReset}
           className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs md:text-sm border border-slate-300"
         >
@@ -257,7 +298,8 @@ export const SlitherlinkBoard: React.FC<SlitherlinkProps> = ({
         </button>
 
         <button
-          onClick={() => checkSolution()}
+          type="button"
+          onClick={() => checkSolution(hEdges, vEdges, true)}
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm md:text-base shadow-lg transition-transform active:scale-95"
         >
           <Check className="w-5 h-5" />

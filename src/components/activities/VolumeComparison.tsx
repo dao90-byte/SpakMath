@@ -40,19 +40,26 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
 
     if (cleanUser === cleanCorrect) return true;
 
-    // Compare extracted numbers (e.g. user typed "200", correct is "200 mL" or "200ml")
-    const userNum = cleanUser.match(/\d+/)?.[0];
-    const correctNum = cleanCorrect.match(/\d+/)?.[0];
-    if (userNum && correctNum && userNum === correctNum) return true;
+    const normUser = cleanUser.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
+    const normCorrect = cleanCorrect.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
 
-    // Substring match (e.g. user typed "A" or "Bình A")
-    if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+    // Compare extracted numbers (e.g. user typed "200", correct is "200 mL" or "200ml")
+    const userNum = normUser.match(/\d+/)?.[0];
+    const correctNum = normCorrect.match(/\d+/)?.[0];
+    if (userNum && correctNum) {
+      return userNum === correctNum;
+    }
+
+    // Substring match for non-numeric answers (e.g. user typed "A" or "Bình A")
+    if (!userNum && !correctNum) {
+      if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+    }
 
     return false;
   };
 
-  const handleCheckAnswer = (qId: string, correct: string) => {
-    const rawVal = inputValues[qId] || '';
+  const handleCheckAnswer = (qId: string, correct: string, overrideVal?: string) => {
+    const rawVal = overrideVal !== undefined ? overrideVal : (inputValues[qId] || '');
     if (!rawVal.trim()) return;
 
     const isMatch = checkAnswerMatch(rawVal, correct);
@@ -154,13 +161,42 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
                 {isWrong && <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />}
               </div>
 
-              {/* Direct Input Form */}
-              <div className="space-y-2">
+              {/* Option Pills + Direct Input Form */}
+              <div className="space-y-2.5">
+                {q.options && q.options.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {q.options.map((opt, oIdx) => {
+                      const isPicked = inputValues[q.id] === opt;
+                      return (
+                        <button
+                          key={oIdx}
+                          type="button"
+                          disabled={isCorrect}
+                          onClick={() => {
+                            sound.playClick();
+                            setInputValues((prev) => ({ ...prev, [q.id]: opt }));
+                            handleCheckAnswer(q.id, q.correctAnswer, opt);
+                          }}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
+                            isCorrect && opt === q.correctAnswer
+                              ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
+                              : isPicked
+                              ? 'bg-sky-200 text-sky-950 border-sky-400'
+                              : 'bg-slate-50 hover:bg-sky-50 text-slate-700 border-slate-200 hover:border-sky-300'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     inputMode="text"
-                    placeholder="Tự nhập câu trả lời của em..."
+                    placeholder="Hoặc tự nhập câu trả lời của em..."
                     value={inputValues[q.id] || ''}
                     disabled={isCorrect}
                     onChange={(e) => {

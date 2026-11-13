@@ -129,15 +129,17 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
               const borderRight =
                 !colorBlocks && c === 1 ? 'border-r-4 border-r-slate-700' : '';
 
-              const cellBg = colorBlocks?.[r]?.[c] || 'bg-slate-50';
+              const rawCellBg = colorBlocks?.[r]?.[c];
+              const isHexBg = rawCellBg?.startsWith('#');
+              const cellBgClass = !isHexBg ? (rawCellBg || 'bg-slate-50') : '';
 
-              let bgStyle = `${cellBg} hover:opacity-90`;
+              let bgStyle = `${cellBgClass} hover:opacity-90`;
               if (isLocked) {
-                bgStyle = `${cellBg} text-slate-900 cursor-not-allowed font-extrabold brightness-95`;
+                bgStyle = `${cellBgClass} text-slate-900 cursor-not-allowed font-extrabold brightness-95`;
               } else if (isSelected) {
                 bgStyle = 'bg-amber-300 ring-4 ring-amber-500 scale-105 z-10 shadow-lg';
               } else if (isInSelectedRowCol) {
-                bgStyle = `${cellBg} ring-2 ring-amber-200`;
+                bgStyle = `${cellBgClass} ring-2 ring-amber-200`;
               }
 
               const sumBadge = sumLabels?.[r]?.[c];
@@ -147,6 +149,9 @@ export const SudokuBoard: React.FC<SudokuBoardProps> = ({
                   key={`${r}-${c}`}
                   type="button"
                   onClick={() => handleCellClick(r, c)}
+                  style={{
+                    backgroundColor: !isSelected && isHexBg ? rawCellBg : undefined
+                  }}
                   className={`w-14 h-14 md:w-18 md:h-18 rounded-2xl flex items-center justify-center text-2xl md:text-3xl font-black transition-all border border-slate-300 relative ${borderBottom} ${borderRight} ${bgStyle}`}
                 >
                   {sumBadge && (

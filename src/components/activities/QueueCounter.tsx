@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
 import { recordMistake } from '../../utils/mistakeManager';
-import { Info, Users } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 interface QueueCounterProps {
   mode?: 'twoEnds' | 'between' | 'circle';
@@ -37,9 +37,9 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
   const totalSlots = mode === 'between' ? totalInQueue : correctTotal;
   const abbyIndex = fromFront - 1;
 
-  const handleCheck = () => {
+  const handleCheck = (overrideNum?: number) => {
     sound.playClick();
-    const parsed = parseInt(inputValue.trim(), 10);
+    const parsed = overrideNum !== undefined ? overrideNum : parseInt(inputValue.trim(), 10);
     if (isNaN(parsed)) {
       setErrorMessage('Bé hãy nhập một số nguyên nhé!');
       sound.playWrong();
@@ -56,7 +56,9 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
       }, 500);
     } else {
       sound.playWrong();
-      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Khi đếm vị trí của một bạn từ hai đầu hàng, bạn đó đã được gọi tên mấy lần trong phép tính của em? Vị trí đó có ảnh hưởng gì tới tổng số bạn không?');
+      setErrorMessage(
+        'Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Khi đếm vị trí của một bạn từ hai đầu hàng hoặc tính khoảng giữa, hãy chú ý xem đối tượng có bị đếm trùng 2 lần không nhé!'
+      );
       recordMistake({
         questionPrompt: `${promptTitle} (Bài toán hàng ngũ: ${formula})`,
         userAnswer: `${parsed} bạn`,
@@ -81,7 +83,7 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
         </div>
 
         {/* Queue Lineup */}
-        <div className="flex items-center justify-center gap-2 md:gap-3 py-4 px-2 overflow-x-auto bg-slate-50/70 rounded-2xl border border-slate-200">
+        <div className="flex items-center justify-start sm:justify-center gap-2 md:gap-3 py-4 px-2 overflow-x-auto bg-slate-50/70 rounded-2xl border border-slate-200">
           {mode === 'between' ? (
             /* Between mode lineup */
             Array.from({ length: totalInQueue }).map((_, idx) => {
@@ -187,19 +189,46 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
         </div>
       </div>
 
-      {/* Direct Input Answer Form */}
+      {/* Answer Form with Option Pills + Direct Input */}
       <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
         <h4 className="font-black text-slate-800 text-base">
           {promptTitle}
         </h4>
+
+        {options && options.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2">
+            {options.map((opt, idx) => (
+              <button
+                key={idx}
+                type="button"
+                disabled={isSuccess}
+                onClick={() => {
+                  setInputValue(String(opt));
+                  handleCheck(opt);
+                }}
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black border-2 transition-all active:scale-95 ${
+                  isSuccess && opt === correctTotal
+                    ? 'bg-emerald-500 text-white border-emerald-600'
+                    : inputValue === String(opt)
+                    ? 'bg-amber-200 text-amber-950 border-amber-400'
+                    : 'bg-slate-50 hover:bg-amber-50 text-slate-700 border-slate-200 hover:border-amber-300'
+                }`}
+              >
+                {opt} bạn
+              </button>
+            ))}
+          </div>
+        )}
+
         <p className="text-xs text-slate-500">
-          Bé hãy tự tính toán và nhập con số chính xác vào ô dưới đây (không đoán mò):
+          Hoặc tự nhập con số chính xác vào ô dưới đây:
         </p>
 
         <div className="flex items-center justify-center gap-3">
           <div className="relative">
             <input
               type="number"
+              disabled={isSuccess}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -216,7 +245,8 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
 
           <button
             type="button"
-            onClick={handleCheck}
+            disabled={isSuccess}
+            onClick={() => handleCheck()}
             className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-black text-sm shadow-md transition-all active:scale-95"
           >
             Kiểm tra

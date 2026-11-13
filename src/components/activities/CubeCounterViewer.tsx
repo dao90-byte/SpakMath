@@ -32,9 +32,9 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleCheck = () => {
+  const handleCheck = (overrideNum?: number) => {
     sound.playClick();
-    const parsed = parseInt(inputValue.trim(), 10);
+    const parsed = overrideNum !== undefined ? overrideNum : parseInt(inputValue.trim(), 10);
     if (isNaN(parsed)) {
       setErrorMessage('Bé hãy nhập một số nguyên nhé!');
       sound.playWrong();
@@ -51,14 +51,13 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
       }, 600);
     } else {
       sound.playWrong();
-      setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Những khối lập phương ở tầng trên đang đứng tựa vào đâu? Em hãy quan sát xem có khối nào bị che khuất ở các tầng bên dưới không nhé!');
+      setErrorMessage(
+        'Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Những khối lập phương ở tầng trên đang đứng tựa vào đâu? Em hãy quan sát xem có khối nào bị che khuất ở các tầng bên dưới không nhé!'
+      );
     }
   };
 
   // Isometric rendering helpers
-  // gridHeights is R x C. Isometric projection coordinates:
-  // isoX = (col - row) * 36 + originX
-  // isoY = (col + row) * 18 - height * 30 + originY
   const originX = 180;
   const originY = 160;
 
@@ -98,7 +97,6 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
         <svg viewBox="0 0 360 260" className="w-72 h-56 sm:w-88 sm:h-64 filter drop-shadow-md">
           {cubeList.map((cube, idx) => {
             const { x, y } = cube;
-            // Colors per layer height: layer 0: blue, layer 1: amber, layer 2: emerald, layer 3: rose
             const palette = [
               { top: '#60a5fa', left: '#2563eb', right: '#1d4ed8' }, // Layer 0
               { top: '#fcd34d', left: '#f59e0b', right: '#d97706' }, // Layer 1
@@ -143,19 +141,46 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
         </span>
       </div>
 
-      {/* Direct Input Answer Form */}
+      {/* Answer Form with Option Pills + Direct Input */}
       <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
         <h4 className="font-black text-slate-800 text-base">
           Có tất cả bao nhiêu khối lập phương?
         </h4>
+
+        {options && options.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2">
+            {options.map((opt, idx) => (
+              <button
+                key={idx}
+                type="button"
+                disabled={isSuccess}
+                onClick={() => {
+                  setInputValue(String(opt));
+                  handleCheck(opt);
+                }}
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black border-2 transition-all active:scale-95 ${
+                  isSuccess && opt === totalCubes
+                    ? 'bg-emerald-500 text-white border-emerald-600'
+                    : inputValue === String(opt)
+                    ? 'bg-indigo-200 text-indigo-950 border-indigo-400'
+                    : 'bg-slate-50 hover:bg-indigo-50 text-slate-700 border-slate-200 hover:border-indigo-300'
+                }`}
+              >
+                {opt} khối
+              </button>
+            ))}
+          </div>
+        )}
+
         <p className="text-xs text-slate-500">
-          Bé hãy phân tích theo từng tầng và nhập tổng số khối:
+          Hoặc tự phân tích theo từng tầng và nhập tổng số khối:
         </p>
 
         <div className="flex items-center justify-center gap-3">
           <div className="relative">
             <input
               type="number"
+              disabled={isSuccess}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -172,7 +197,8 @@ export const CubeCounterViewer: React.FC<CubeCounterViewerProps> = ({
 
           <button
             type="button"
-            onClick={handleCheck}
+            disabled={isSuccess}
+            onClick={() => handleCheck()}
             className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm shadow-md transition-all active:scale-95"
           >
             Kiểm tra

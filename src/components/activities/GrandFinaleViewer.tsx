@@ -36,11 +36,37 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
   const checkAnswerMatch = (input: string, correctText: string): boolean => {
     const cleanIn = input.trim().toLowerCase();
     const cleanCor = correctText.trim().toLowerCase();
+    if (!cleanIn || !cleanCor) return false;
     if (cleanIn === cleanCor) return true;
-    const inDigits = cleanIn.match(/\d+/)?.[0];
-    const corDigits = cleanCor.match(/\d+/)?.[0];
-    if (inDigits && corDigits && inDigits === corDigits) return true;
-    return cleanCor.includes(cleanIn) || cleanIn.includes(cleanCor);
+
+    const normIn = cleanIn.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
+    const normCor = cleanCor.replace(/(\d)[\s.,]+(?=\d)/g, '$1');
+    const inDigits = normIn.match(/\d+/)?.[0];
+    const corDigits = normCor.match(/\d+/)?.[0];
+    if (inDigits && corDigits) {
+      return inDigits === corDigits;
+    }
+    if (!inDigits && !corDigits && cleanIn.length >= 2) {
+      return cleanCor.includes(cleanIn) || cleanIn.includes(cleanCor);
+    }
+    return false;
+  };
+
+  const handleSelectOption = (opt: { id: string; text: string; isCorrect: boolean }) => {
+    if (isAnsweredCorrect) return;
+    sound.playClick();
+    setTypedInput(opt.text);
+    if (opt.isCorrect) {
+      sound.playCorrect();
+      sound.playStarCollect();
+      setIsAnsweredCorrect(true);
+      setShowExplanation(true);
+      setErrorMessage(null);
+      setSelectedAnswers((prev) => ({ ...prev, [currentQ.id]: opt.id }));
+    } else {
+      sound.playWrong();
+      setErrorMessage('Chưa chính xác. Em hãy phân tích đề bài và kiểm tra lại phép tính nhé!');
+    }
   };
 
   const handleCheckAnswer = () => {
@@ -146,12 +172,35 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
             {currentQ.question}
           </h3>
 
-          {/* Typed Answer Input */}
+          {/* Clickable Options + Typed Answer Input */}
           <div className="space-y-3 pt-2">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {currentQ.options.map((opt) => {
+                const isPicked = typedInput === opt.text;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    disabled={isAnsweredCorrect}
+                    onClick={() => handleSelectOption(opt)}
+                    className={`p-3.5 rounded-2xl border-2 text-left font-bold text-sm md:text-base transition-all active:scale-95 ${
+                      isPicked
+                        ? isAnsweredCorrect
+                          ? 'bg-emerald-100 border-emerald-500 text-emerald-900 ring-2 ring-emerald-300'
+                          : 'bg-rose-50 border-rose-400 text-rose-900'
+                        : 'bg-slate-50 hover:bg-amber-50 border-slate-200 hover:border-amber-300 text-slate-800'
+                    }`}
+                  >
+                    {opt.text}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
               <input
                 type="text"
-                placeholder="Tự tay nhập câu trả lời của em..."
+                placeholder="Hoặc tự tay nhập câu trả lời của em..."
                 value={typedInput}
                 disabled={isAnsweredCorrect}
                 onChange={(e) => {

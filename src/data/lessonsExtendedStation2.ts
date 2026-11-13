@@ -791,6 +791,398 @@ export const EXTENDED_VOLUME_LESSONS: LessonQuestion[] = [
         }
       ]
     }
+  },
+  {
+    id: 'vol-42',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Thí Nghiệm Đo Thể Tích 3 Khối Khoáng Thạch Vũ Trụ',
+    badgeTitle: 'Bài 42 · Độ khó Cấp 28',
+    instruction: 'Bình đo thí nghiệm chứa sẵn 24L dung dịch. Thả Khối A mực nước dâng lên 32L. Thả tiếp Khối B dâng lên 45L. Thả tiếp Khối C dâng lên 60L.',
+    hint: 'Khối A: 32 - 24 = 8L. Khối B: 45 - 32 = 13L. Khối C: 60 - 45 = 15L. Tổng 3 khối = 60 - 24 = 36L.',
+    mascot: { ...MAYLE, message: 'Theo dõi từng bậc nước dâng để bóc tách chính xác thể tích mỗi khối khoáng thạch!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'm0', label: 'Ban Đầu (24L)', levelPercent: 35, color: '#38bdf8', subLabel: '24 Lít' },
+        { id: 'm1', label: '+ Khối A (32L)', levelPercent: 50, color: '#0284c7', subLabel: '32 Lít (+8L)' },
+        { id: 'm2', label: '+ Khối B (45L)', levelPercent: 72, color: '#6366f1', subLabel: '45 Lít (+13L)' },
+        { id: 'm3', label: '+ Khối C (60L)', levelPercent: 95, color: '#9333ea', subLabel: '60 Lít (+15L)' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Thể tích của Khối khoáng thạch B là bao nhiêu lít?',
+          options: ['11 lít', '12 lít', '13 lít', '14 lít'],
+          correctAnswer: '13 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Khối C lớn hơn Khối A bao nhiêu lít?',
+          options: ['5 lít', '6 lít', '7 lít', '8 lít'],
+          correctAnswer: '7 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng thể tích cả 3 khối khoáng thạch A, B và C chiếm chỗ là bao nhiêu lít?',
+          options: ['34 lít', '36 lít', '38 lít', '40 lít'],
+          correctAnswer: '36 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-43',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Sơ Đồ Thanh 4 Bể Nhiên Liệu Tên Lửa Kết Hợp Gấp Lần & Cộng Thêm',
+    badgeTitle: 'Bài 43 · Độ khó Cấp 29',
+    instruction: 'Hệ thống phóng có 4 bể nhiên liệu: Bể 1 chứa 18L. Bể 2 gấp 2 lần Bể 1. Bể 3 nhiều hơn Bể 2 là 14L. Bể 4 gấp 3 lần Bể 1.',
+    hint: 'Bể 1 = 18L. Bể 2 = 18 x 2 = 36L. Bể 3 = 36 + 14 = 50L. Bể 4 = 18 x 3 = 54L. Tổng = 18 + 36 + 50 + 54 = 158L.',
+    mascot: { ...ABBY, message: 'Kết hợp phép nhân gấp lần và phép cộng hơn đơn vị trên sơ đồ thanh!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Bể 1 (Gốc)', lengthVal: 18, display: '18 Lít', color: '#0284c7' },
+        { label: 'Bể 2 (Gấp 2 Bể 1)', lengthVal: 36, display: '36 Lít', color: '#0ea5e9' },
+        { label: 'Bể 3 (Bể 2 + 14L)', lengthVal: 50, display: '50 Lít', color: '#f59e0b' },
+        { label: 'Bể 4 (Gấp 3 Bể 1)', lengthVal: 54, display: '54 Lít', color: '#10b981' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Bể 3 chứa được bao nhiêu lít nhiên liệu?',
+          options: ['46 lít', '48 lít', '50 lít', '52 lít'],
+          correctAnswer: '50 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Bể 4 chứa nhiều hơn Bể 1 bao nhiêu lít nhiên liệu?',
+          options: ['32 lít', '34 lít', '36 lít', '38 lít'],
+          correctAnswer: '36 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng lượng nhiên liệu trong cả 4 bể là bao nhiêu lít?',
+          options: ['148 lít', '154 lít', '158 lít', '162 lít'],
+          correctAnswer: '158 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-44',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'San Sẻ 5 Bình Nước Lớn Về Trạng Thái Cân Bằng 46 Lít',
+    badgeTitle: 'Bài 44 · Độ khó Cấp 30',
+    instruction: 'Năm bình nước có dung tích giảm đều nhau 12L: Bình 1 (70L), Bình 2 (58L), Bình 3 (46L), Bình 4 (34L), Bình 5 (22L). Tính mức cân bằng.',
+    hint: 'Tổng thể tích = 70 + 58 + 46 + 34 + 22 = 230L. Chia đều cho 5 bình = 46L mỗi bình (đúng bằng Bình 3 ở giữa!).',
+    mascot: { ...MAYLE, message: 'Mẹo toán tư duy: Với dãy số cách đều có 5 số, trung bình cộng chính là số ở chính giữa!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Bình 1 (70L)', lengthVal: 70, display: '70 Lít', color: '#1d4ed8' },
+        { label: 'Bình 2 (58L)', lengthVal: 58, display: '58 Lít', color: '#2563eb' },
+        { label: 'Bình 3 (46L)', lengthVal: 46, display: '46 Lít', color: '#3b82f6' },
+        { label: 'Bình 4 (34L)', lengthVal: 34, display: '34 Lít', color: '#60a5fa' },
+        { label: 'Bình 5 (22L)', lengthVal: 22, display: '22 Lít', color: '#93c5fd' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Tổng lượng nước chứa trong cả 5 bình là bao nhiêu lít?',
+          options: ['210 lít', '220 lít', '230 lít', '240 lít'],
+          correctAnswer: '230 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Sau khi san đều cho cả 5 bình bằng nhau, mỗi bình có bao nhiêu lít nước?',
+          options: ['44 lít', '46 lít', '48 lít', '50 lít'],
+          correctAnswer: '46 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Bình 1 (70L) phải chuyển đi bao nhiêu lít nước để bằng mức trung bình 46L?',
+          options: ['20 lít', '22 lít', '24 lít', '26 lít'],
+          correctAnswer: '24 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-45',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Thí Nghiệm Năm Khối Cầu Hợp Kim Đồng Nhất',
+    badgeTitle: 'Bài 45 · Độ khó Cấp 31',
+    instruction: 'Bình thí nghiệm ban đầu chứa 25L nước. Khi thả 5 khối cầu hợp kim giống hệt nhau vào, mực nước dâng lên đúng mức 65L.',
+    hint: 'Tổng thể tích 5 khối cầu = 65 - 25 = 40L. Mỗi khối cầu = 40 : 5 = 8L. Nếu chỉ thả 3 khối cầu thì nước dâng thêm 3 x 8 = 24L.',
+    mascot: { ...BENNY, message: 'Tìm thể tích 1 khối cầu trước, sau đó dễ dàng suy ra mực nước với bất kỳ số lượng nào!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'c0', label: 'Ban Đầu (25L)', levelPercent: 35, color: '#38bdf8', subLabel: '25 Lít' },
+        { id: 'c3', label: '+ 3 Khối Cầu', levelPercent: 70, color: '#64748b', subLabel: '49 Lít (+24L)' },
+        { id: 'c5', label: '+ 5 Khối Cầu (65L)', levelPercent: 95, color: '#334155', subLabel: '65 Lít (+40L)' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Tổng thể tích của cả 5 khối cầu hợp kim là bao nhiêu lít?',
+          options: ['35 lít', '40 lít', '45 lít', '50 lít'],
+          correctAnswer: '40 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Thể tích của MỘT khối cầu hợp kim là bao nhiêu lít?',
+          options: ['6 lít', '7 lít', '8 lít', '9 lít'],
+          correctAnswer: '8 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Nếu chỉ thả 3 khối cầu hợp kim vào bình 25L ban đầu thì nước dâng lên mức bao nhiêu lít?',
+          options: ['47 lít', '49 lít', '51 lít', '53 lít'],
+          correctAnswer: '49 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-46',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Bài Toán Tính Ngược: San Sẻ Ba Bể Nước Có Tổng 150 Lít',
+    badgeTitle: 'Bài 46 · Độ khó Cấp 32',
+    instruction: 'Có 3 bể A, B, C chứa tổng cộng 150L nước. Nếu rót từ bể A sang bể B 12L và rót từ bể A sang bể C 8L thì cả 3 bể đều bằng nhau.',
+    hint: 'Khi bằng nhau mỗi bể có: 150 : 3 = 50L. Trước khi nhận 12L, bể B có: 50 - 12 = 38L. Lúc đầu bể A cho đi 12 + 8 = 20L nên ban đầu A có 50 + 20 = 70L.',
+    mascot: { ...MAYLE, message: 'Tư duy tính ngược từ trạng thái cân bằng cuối cùng trở về lúc ban đầu!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Bể A (Lúc đầu)', lengthVal: 70, display: '70 Lít', color: '#0284c7' },
+        { label: 'Bể B (Lúc đầu)', lengthVal: 38, display: '38 Lít', color: '#10b981' },
+        { label: 'Bể C (Lúc đầu)', lengthVal: 42, display: '42 Lít', color: '#f59e0b' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Sau khi rót chuyển xong và 3 bể bằng nhau, mỗi bể chứa bao nhiêu lít nước?',
+          options: ['45 lít', '50 lít', '55 lít', '60 lít'],
+          correctAnswer: '50 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Lúc đầu trước khi nhận thêm 12L, bể B có bao nhiêu lít nước?',
+          options: ['36 lít', '38 lít', '40 lít', '42 lít'],
+          correctAnswer: '38 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Lúc đầu trước khi rót cho hai bể kia, bể A có bao nhiêu lít nước?',
+          options: ['62 lít', '68 lít', '70 lít', '72 lít'],
+          correctAnswer: '70 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-47',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Nghệ Thuật Đong Nước Bằng Hai Can 11 Lít Và 5 Lít',
+    badgeTitle: 'Bài 47 · Độ khó Cấp 33',
+    instruction: 'Với hai chiếc can rỗng dung tích 11 lít và 5 lít cùng nguồn nước dồi dào, hãy thực hiện các bước đong trừ để lấy lượng nước chính xác.',
+    hint: 'Đong đầy can 11L rót sang can 5L -> can 11L còn 6L. Đổ bỏ can 5L rồi rót tiếp từ 6L sang can 5L -> còn lại đúng 1L!',
+    mascot: { ...CASEY, message: 'Kết hợp phép trừ lặp liên tiếp để tạo ra đúng số lít mong muốn!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'd11', label: 'Can Lớn (11L)', levelPercent: 95, color: '#0284c7', subLabel: '11 Lít' },
+        { id: 'd5', label: 'Can Nhỏ (5L)', levelPercent: 45, color: '#38bdf8', subLabel: '5 Lít' },
+        { id: 'r1', label: 'Sau Rót Lần 1', levelPercent: 55, color: '#f59e0b', subLabel: 'Còn 6 Lít' },
+        { id: 'r2', label: 'Sau Rót Lần 2', levelPercent: 12, color: '#ef4444', subLabel: 'Còn 1 Lít' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Đong đầy can 11L rồi rót đầy can 5L, trong can 11L còn lại bao nhiêu lít?',
+          options: ['5 lít', '6 lít', '7 lít', '8 lít'],
+          correctAnswer: '6 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Đổ hết nước trong can 5L đi, sau đó rót tiếp từ 6L trong can lớn sang cho đầy can 5L thì can lớn còn mấy lít?',
+          options: ['1 lít', '2 lít', '3 lít', '4 lít'],
+          correctAnswer: '1 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Để lấy được đúng 10 lít nước nhanh nhất, ta cần đong đầy can 5 lít mấy lần?',
+          options: ['1 lần', '2 lần', '3 lần', '4 lần'],
+          correctAnswer: '2 lần'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-48',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Hệ Thống 5 Bồn Nước Tưới Tiêu Tăng Đều Công Sai 9 Lít',
+    badgeTitle: 'Bài 48 · Độ khó Cấp 34',
+    instruction: 'Năm bồn tưới cây tự động có lượng nước lần lượt: 16L, 25L, 34L, 43L và 52L. Hãy phân tích sơ đồ để điều phối.',
+    hint: 'Mỗi bồn kế tiếp nhiều hơn bồn trước 9L. Tổng 5 bồn = 16 + 25 + 34 + 43 + 52 = 170L. Trung bình = 170 : 5 = 34L.',
+    mascot: { ...ABBY, message: 'Khoảng cách giữa Bồn 5 và Bồn 1 bằng 4 lần bước nhảy 9L đấy!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Bồn 1 (16L)', lengthVal: 16, display: '16 Lít', color: '#10b981' },
+        { label: 'Bồn 2 (25L)', lengthVal: 25, display: '25 Lít', color: '#059669' },
+        { label: 'Bồn 3 (34L)', lengthVal: 34, display: '34 Lít', color: '#0d9488' },
+        { label: 'Bồn 4 (43L)', lengthVal: 43, display: '43 Lít', color: '#0f766e' },
+        { label: 'Bồn 5 (52L)', lengthVal: 52, display: '52 Lít', color: '#115e59' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Bồn 5 chứa nhiều hơn Bồn 1 bao nhiêu lít nước?',
+          options: ['27 lít', '32 lít', '36 lít', '40 lít'],
+          correctAnswer: '36 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Tổng thể tích nước trong cả 5 bồn tưới tiêu là bao nhiêu lít?',
+          options: ['160 lít', '165 lít', '170 lít', '175 lít'],
+          correctAnswer: '170 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Nếu san đều lượng nước cho cả 5 bồn, mỗi bồn chứa bao nhiêu lít?',
+          options: ['32 lít', '34 lít', '36 lít', '38 lít'],
+          correctAnswer: '34 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-49',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'So Sánh Kép Hai Bình Thí Nghiệm: Bi Thép & Khối Đồng',
+    badgeTitle: 'Bài 49 · Độ khó Cấp 35',
+    instruction: 'Bình X ban đầu có 30L nước, thả 3 viên bi thép giống nhau thì nước dâng lên 48L. Bình Y ban đầu có 24L nước, thả 2 viên bi thép và 1 khối đồng thì nước dâng lên 50L.',
+    hint: 'Từ Bình X: 3 bi thép = 48 - 30 = 18L ➡️ 1 bi thép = 6L. Từ Bình Y: 2 bi thép = 12L ➡️ 1 khối đồng = 50 - 24 - 12 = 14L!',
+    mascot: { ...MAYLE, message: 'Dùng kết quả tìm được ở Bình X để giải mã bí ẩn ở Bình Y!' },
+    activity: {
+      type: 'volumeComparison',
+      bottles: [
+        { id: 'bx0', label: 'Bình X Ban Đầu', levelPercent: 50, color: '#38bdf8', subLabel: '30 Lít' },
+        { id: 'bx1', label: 'Bình X + 3 Bi', levelPercent: 80, color: '#475569', subLabel: '48 Lít (+18L)' },
+        { id: 'by0', label: 'Bình Y Ban Đầu', levelPercent: 40, color: '#0ea5e9', subLabel: '24 Lít' },
+        { id: 'by1', label: 'Bình Y + 2 Bi + Đồng', levelPercent: 88, color: '#d97706', subLabel: '50 Lít (+26L)' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Thể tích của MỘT viên bi thép là bao nhiêu lít?',
+          options: ['5 lít', '6 lít', '7 lít', '8 lít'],
+          correctAnswer: '6 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Thể tích của khối đồng trong Bình Y là bao nhiêu lít?',
+          options: ['12 lít', '14 lít', '16 lít', '18 lít'],
+          correctAnswer: '14 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng thể tích của 3 viên bi thép và 1 khối đồng là bao nhiêu lít?',
+          options: ['28 lít', '30 lít', '32 lít', '34 lít'],
+          correctAnswer: '32 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-50',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'Sơ Đồ Thanh 4 Khoang Tàu Ngầm Thám Hiểm Đáy Biển',
+    badgeTitle: 'Bài 50 · Độ khó Cấp 36',
+    instruction: 'Bốn khoang chứa nước dằn của tàu ngầm: Khoang A chứa 30L. Khoang B gấp 3 lần Khoang A. Khoang C bằng một nửa tổng A và B. Khoang D chứa 40L.',
+    hint: 'A = 30L. B = 30 x 3 = 90L. C = (30 + 90) : 2 = 60L. D = 40L. Tổng = 30 + 90 + 60 + 40 = 220L. Cân bằng = 220 : 4 = 55L.',
+    mascot: { ...BENNY, message: 'Tàu ngầm lặn xuống rãnh đại dương sâu thẳm! Hãy tính thật chuẩn xác các khoang nước dằn!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Khoang A (30L)', lengthVal: 30, display: '30 Lít', color: '#0ea5e9' },
+        { label: 'Khoang B (Gấp 3 A)', lengthVal: 90, display: '90 Lít', color: '#0369a1' },
+        { label: 'Khoang C (Nửa A+B)', lengthVal: 60, display: '60 Lít', color: '#0284c7' },
+        { label: 'Khoang D (40L)', lengthVal: 40, display: '40 Lít', color: '#38bdf8' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Khoang C chứa bao nhiêu lít nước dằn?',
+          options: ['45 lít', '50 lít', '60 lít', '70 lít'],
+          correctAnswer: '60 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Tổng lượng nước ở cả 4 khoang tàu ngầm là bao nhiêu lít?',
+          options: ['200 lít', '210 lít', '220 lít', '240 lít'],
+          correctAnswer: '220 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Nếu mở van chia đều nước cho 4 khoang để giữ thăng bằng, mỗi khoang có bao nhiêu lít?',
+          options: ['50 lít', '55 lít', '60 lít', '65 lít'],
+          correctAnswer: '55 lít'
+        }
+      ]
+    }
+  },
+  {
+    id: 'vol-51',
+    topicId: 'volume',
+    topicName: topicName('volume'),
+    title: 'ĐẠI THỬ THÁCH ĐẠI THỦY LỢI QUỐC GIA TRẠM 2: Điều Tiết 5 Hồ Chứa 275 Lít',
+    badgeTitle: 'Bài 51 · Đỉnh Cao Vũ Trụ Trạm 2',
+    instruction: 'Hệ thống đại thủy lợi 5 bậc có lượng nước: Hồ 1 (85L), Hồ 2 (70L), Hồ 3 (55L), Hồ 4 (40L), Hồ 5 (25L). Phân tích lưu lượng xả lũ cân bằng.',
+    hint: 'Tổng = 85 + 70 + 55 + 40 + 25 = 275L. Cân bằng = 275 : 5 = 55L. Hồ 1 cần xả 85 - 55 = 30L; Hồ 2 cần xả 70 - 55 = 15L.',
+    mascot: { ...MAYLE, message: 'Thử thách thủy lợi tối thượng của Trạm 2! Hoàn thành bài này em là Tổng Chỉ Huy Thủy Văn!' },
+    activity: {
+      type: 'barModel',
+      bars: [
+        { label: 'Hồ 1 (85L)', lengthVal: 85, display: '85 Lít', color: '#1e3a8a' },
+        { label: 'Hồ 2 (70L)', lengthVal: 70, display: '70 Lít', color: '#1d4ed8' },
+        { label: 'Hồ 3 (55L)', lengthVal: 55, display: '55 Lít', color: '#2563eb' },
+        { label: 'Hồ 4 (40L)', lengthVal: 40, display: '40 Lít', color: '#3b82f6' },
+        { label: 'Hồ 5 (25L)', lengthVal: 25, display: '25 Lít', color: '#60a5fa' }
+      ],
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Tổng thể tích nước tích trữ ở cả 5 hồ đại thủy lợi là bao nhiêu lít?',
+          options: ['255 lít', '265 lít', '275 lít', '285 lít'],
+          correctAnswer: '275 lít'
+        },
+        {
+          id: 'q2',
+          prompt: 'Khi điều tiết để 5 hồ đạt mực nước cân bằng hoàn hảo, mỗi hồ có bao nhiêu lít nước?',
+          options: ['50 lít', '55 lít', '60 lít', '65 lít'],
+          correctAnswer: '55 lít'
+        },
+        {
+          id: 'q3',
+          prompt: 'Tổng lượng nước mà Hồ 1 và Hồ 2 phải xả bớt đi để cả hai cùng về mức 55L là bao nhiêu lít?',
+          options: ['35 lít', '40 lít', '45 lít', '50 lít'],
+          correctAnswer: '45 lít'
+        }
+      ]
+    }
   }
 ];
+
 
