@@ -117,12 +117,20 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
   return (
     <div className="space-y-6">
       {/* Notice Banner */}
-      <div className="bg-amber-100/80 border-2 border-amber-300 rounded-2xl px-5 py-3 flex items-center justify-between shadow-xs">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">💡</span>
-          <span className="font-bold text-amber-900 text-sm md:text-base">{keyNotice}</span>
+      <div className="relative overflow-hidden rounded-2xl border border-cyan-300/55 bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.24),_transparent_55%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.2),_transparent_55%),linear-gradient(135deg,_rgba(11,18,58,0.96),_rgba(23,16,68,0.96))] backdrop-blur-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_26px_rgba(34,211,238,0.2)]">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 inset-x-6 h-[2px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 shadow-[0_0_16px_rgba(34,211,238,0.85)]"
+        />
+        <div className="relative z-10 flex items-center gap-2.5">
+          <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400/25 to-fuchsia-400/25 border border-cyan-300/50 flex items-center justify-center text-lg shadow-[0_0_14px_rgba(34,211,238,0.3)] shrink-0">
+            💡
+          </span>
+          <span className="font-extrabold text-white text-sm md:text-base drop-shadow-[0_0_10px_rgba(34,211,238,0.32)]">
+            {keyNotice}
+          </span>
         </div>
-        <span className="text-xs text-amber-700 bg-amber-200/70 px-2.5 py-1 rounded-full font-medium">
+        <span className="relative z-10 text-xs text-cyan-100 bg-cyan-400/18 border border-cyan-300/50 px-3 py-1 rounded-xl font-bold shadow-[0_0_14px_rgba(34,211,238,0.22)]">
           Chạm vào biểu tượng để đếm!
         </span>
       </div>
@@ -259,10 +267,10 @@ export const PictographViewer: React.FC<PictographViewerProps> = ({
                     type="button"
                     onClick={() => handleCheckAnswer(q.id, q.correctAnswer)}
                     disabled={isCorrect || !inputValues[q.id]?.trim()}
-                    className={`px-4 py-2.5 rounded-2xl font-black text-xs md:text-sm transition-all shadow-xs shrink-0 active:scale-95 flex items-center gap-1.5 ${
+                    className={`px-4 py-2.5 rounded-2xl font-black text-xs md:text-sm transition-all shrink-0 active:scale-95 flex items-center gap-1.5 cursor-pointer ${
                       isCorrect
-                        ? 'bg-emerald-500 text-white cursor-default'
-                        : 'bg-amber-500 hover:bg-amber-600 text-white disabled:opacity-40 disabled:cursor-not-allowed'
+                        ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 ring-1 ring-emerald-200/80 shadow-[0_0_18px_rgba(52,211,153,0.45)] cursor-default'
+                        : 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 ring-1 ring-cyan-200/85 shadow-[0_8px_22px_rgba(34,211,238,0.38),0_0_24px_rgba(232,121,249,0.24)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none'
                     }`}
                   >
                     {isCorrect ? 'Đúng ✓' : 'Kiểm tra'}

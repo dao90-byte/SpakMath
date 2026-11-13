@@ -328,7 +328,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_rgba(30,58,138,0.48),_transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(126,34,206,0.3),_transparent_55%),linear-gradient(180deg,_#040715_0%,_#0B1232_45%,_#15103A_100%)] text-white selection:bg-cyan-400 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col font-sans relative transition-colors duration-500 bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.14),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white selection:bg-cyan-400 selection:text-slate-950">
       {/* Top Bar Navigation */}
       <Navbar
         currentTab={activeTab}

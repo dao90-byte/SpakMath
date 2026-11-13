@@ -286,63 +286,63 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_rgba(30,58,138,0.48),_transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(126,34,206,0.32),_transparent_55%),linear-gradient(180deg,_#040715_0%,_#0B1232_45%,_#15103A_100%)] text-white pb-16 relative overflow-hidden">
-      {/* Deep Space Starfield, Orbital Rings & Nebula Glows */}
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.14),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white pb-16 relative overflow-hidden">
+      {/* Deep Space Starfield, Orbital Rings & Multi-Spectrum Aurora Blooms */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-28 left-1/4 w-[480px] h-[480px] rounded-full bg-cyan-500/18 blur-[145px]" />
-        <div className="absolute top-1/3 -right-24 w-[440px] h-[440px] rounded-full bg-purple-500/20 blur-[145px]" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full bg-amber-400/14 blur-[155px]" />
+        <div className="absolute -top-28 left-1/5 w-[540px] h-[540px] rounded-full bg-cyan-400/28 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] rounded-full bg-fuchsia-500/26 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[540px] h-[540px] rounded-full bg-amber-400/18 blur-[155px] cosmic-light-bloom" />
         <svg
           viewBox="0 0 1440 900"
           preserveAspectRatio="xMidYMid slice"
-          className="w-full h-full opacity-65"
+          className="w-full h-full opacity-80"
         >
-          <circle cx="1220" cy="140" r="260" fill="none" stroke="rgba(56,189,248,0.14)" strokeWidth="1" strokeDasharray="6 10" />
-          <circle cx="1220" cy="140" r="370" fill="none" stroke="rgba(251,191,36,0.1)" strokeWidth="1" />
-          <circle cx="180" cy="760" r="240" fill="none" stroke="rgba(168,85,247,0.13)" strokeWidth="1" strokeDasharray="4 10" />
-          <circle cx="110" cy="95" r="1.6" fill="#67E8F9" />
-          <circle cx="290" cy="160" r="1.4" fill="#FDE68A" />
-          <circle cx="470" cy="60" r="1.2" fill="#FFFFFF" />
-          <circle cx="640" cy="210" r="1.8" fill="#67E8F9" />
-          <circle cx="880" cy="90" r="1.5" fill="#F9A8D4" />
-          <circle cx="1090" cy="240" r="2" fill="#FDE68A" />
-          <circle cx="1320" cy="310" r="1.4" fill="#FFFFFF" />
-          <circle cx="195" cy="490" r="1.7" fill="#FDE68A" />
-          <circle cx="520" cy="640" r="1.4" fill="#67E8F9" />
-          <circle cx="840" cy="740" r="1.6" fill="#FFFFFF" />
-          <circle cx="1160" cy="680" r="1.8" fill="#F9A8D4" />
-          <circle cx="1360" cy="820" r="1.5" fill="#67E8F9" />
+          <circle cx="1220" cy="140" r="260" fill="none" stroke="rgba(103,232,249,0.22)" strokeWidth="1.2" strokeDasharray="6 10" />
+          <circle cx="1220" cy="140" r="370" fill="none" stroke="rgba(251,191,36,0.16)" strokeWidth="1" />
+          <circle cx="180" cy="760" r="240" fill="none" stroke="rgba(232,121,249,0.2)" strokeWidth="1.2" strokeDasharray="4 10" />
+          <circle cx="110" cy="95" r="1.8" fill="#67E8F9" />
+          <circle cx="290" cy="160" r="1.6" fill="#FDE68A" />
+          <circle cx="470" cy="60" r="1.4" fill="#FFFFFF" />
+          <circle cx="640" cy="210" r="2" fill="#67E8F9" />
+          <circle cx="880" cy="90" r="1.7" fill="#F9A8D4" />
+          <circle cx="1090" cy="240" r="2.2" fill="#FDE68A" />
+          <circle cx="1320" cy="310" r="1.6" fill="#FFFFFF" />
+          <circle cx="195" cy="490" r="1.9" fill="#FDE68A" />
+          <circle cx="520" cy="640" r="1.6" fill="#67E8F9" />
+          <circle cx="840" cy="740" r="1.8" fill="#FFFFFF" />
+          <circle cx="1160" cy="680" r="2" fill="#F9A8D4" />
+          <circle cx="1360" cy="820" r="1.7" fill="#67E8F9" />
         </svg>
       </div>
 
       {/* Top Cosmic Mission Command Bar */}
-      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_15%_0%,_rgba(56,189,248,0.20),_transparent_50%),radial-gradient(ellipse_at_85%_0%,_rgba(192,132,252,0.20),_transparent_50%),linear-gradient(180deg,_rgba(6,10,32,0.97),_rgba(11,17,48,0.94))] border-b border-cyan-300/30 px-4 py-3.5 shadow-[0_20px_52px_rgba(3,7,24,0.78)] overflow-hidden">
+      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_15%_0%,_rgba(34,211,238,0.34),_transparent_52%),radial-gradient(ellipse_at_85%_0%,_rgba(217,70,239,0.34),_transparent_52%),linear-gradient(180deg,_rgba(5,9,30,0.97),_rgba(11,15,48,0.94))] border-b border-cyan-300/55 px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.24)] overflow-hidden">
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent"
+          className="pointer-events-none absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 opacity-95 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-amber-300/55 to-transparent shadow-[0_0_14px_rgba(34,211,238,0.5)]"
+          className="pointer-events-none absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-300/90 to-transparent shadow-[0_0_22px_rgba(34,211,238,0.75)]"
         />
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3.5">
             <button
               type="button"
               onClick={onBack}
-              className="px-3.5 py-2.5 rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/35 hover:border-cyan-300/70 shadow-[0_0_18px_rgba(34,211,238,0.16)] transition-all duration-200 cursor-pointer min-h-[44px] whitespace-nowrap"
+              className="px-3.5 py-2.5 rounded-xl bg-white/[0.09] hover:bg-cyan-400/20 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/45 hover:border-cyan-200/80 shadow-[0_0_22px_rgba(34,211,238,0.24)] hover:shadow-[0_0_28px_rgba(34,211,238,0.45)] transition-all duration-200 cursor-pointer min-h-[44px] whitespace-nowrap"
             >
               <ArrowLeft className="w-4 h-4 text-cyan-300" aria-hidden="true" />
               <span>Lịch {monthLabel}</span>
             </button>
             <div>
               <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-                <span className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-amber-400/20 to-orange-400/15 border border-amber-300/45 text-amber-200 font-black uppercase tracking-wider tabular-nums inline-flex items-center gap-1.5 shadow-[0_0_12px_rgba(251,191,36,0.2)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.9)]" aria-hidden="true" />
+                <span className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-amber-400/25 to-orange-400/20 border border-amber-300/60 text-amber-200 font-black uppercase tracking-wider tabular-nums inline-flex items-center gap-1.5 shadow-[0_0_18px_rgba(251,191,36,0.32)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(251,191,36,1)]" aria-hidden="true" />
                   <span>Ngày {dayPlan.dayNumber}/30</span>
                 </span>
               </div>
-              <h2 className="text-base sm:text-xl font-black font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-1 drop-shadow-[0_2px_16px_rgba(34,211,238,0.28)]">
+              <h2 className="text-base sm:text-xl font-black font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-1 cosmic-glow-title-cyan">
                 {dayPlan.title}
               </h2>
             </div>
@@ -350,10 +350,10 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
           {/* 30-Minute Session Chronometer */}
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#0A1136]/95 border border-cyan-300/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_24px_rgba(34,211,238,0.2)] min-h-[44px]">
-              <Clock className="w-4 h-4 text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.7)]" aria-hidden="true" />
+            <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#0A1136]/95 border border-cyan-300/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_0_32px_rgba(34,211,238,0.32)] min-h-[44px]">
+              <Clock className="w-4 h-4 text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
               <div className="text-xs">
-                <span className="font-black text-cyan-200 tabular-nums drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]">
+                <span className="font-black text-cyan-200 tabular-nums drop-shadow-[0_0_12px_rgba(34,211,238,0.75)]">
                   {formatTime(elapsedSeconds)}
                 </span>
                 <span className="text-indigo-200/80 tabular-nums"> / 30:00</span>
@@ -362,7 +362,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 type="button"
                 onClick={() => setIsPaused(!isPaused)}
                 aria-label={isPaused ? 'Tiếp tục đồng hồ' : 'Tạm dừng đồng hồ'}
-                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-cyan-400/20 border border-white/15 text-white transition-colors duration-200 cursor-pointer flex items-center justify-center"
+                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-cyan-400/25 border border-cyan-300/25 hover:border-cyan-300/65 text-white transition-all duration-200 cursor-pointer flex items-center justify-center"
                 title={isPaused ? 'Tiếp tục' : 'Tạm dừng'}
               >
                 {isPaused ? (
@@ -416,10 +416,10 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
       {/* Constellation Question Progress Matrix Strip */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6">
-        <div className="relative overflow-hidden flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.14),_transparent_45%),linear-gradient(135deg,_rgba(14,22,62,0.95),_rgba(19,16,58,0.95))] backdrop-blur-2xl border border-cyan-300/30 p-4 shadow-[0_18px_46px_rgba(3,7,24,0.65),inset_0_1px_0_rgba(255,255,255,0.1)]">
+        <div className="relative overflow-hidden flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_32px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(255,255,255,0.14)]">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-6 h-[2px] rounded-full bg-gradient-to-r from-cyan-300/75 via-indigo-400/60 to-amber-300/75"
+            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
           />
           <div role="group" aria-label="Danh sách câu hỏi" className="flex flex-wrap items-center gap-2">
             {questions.map((q, idx) => {
@@ -486,18 +486,18 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
           {/* Hint appears ONLY after 4 wrong attempts */}
           {shouldShowHint && (
-            <div className="relative overflow-hidden bg-gradient-to-br from-amber-500/18 to-orange-500/10 backdrop-blur-2xl border border-amber-300/60 rounded-3xl p-5 shadow-[0_14px_34px_rgba(251,191,36,0.18)] animate-fade-in">
+            <div className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_left,_rgba(251,191,36,0.24),_transparent_55%),linear-gradient(135deg,_rgba(26,18,52,0.94),_rgba(14,16,46,0.96))] backdrop-blur-2xl border border-amber-300/65 rounded-3xl p-5 shadow-[0_18px_42px_rgba(251,191,36,0.22),0_0_24px_rgba(245,158,11,0.18)] animate-fade-in">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute top-0 inset-x-5 h-[2px] rounded-full bg-gradient-to-r from-amber-300 to-orange-400"
+                className="pointer-events-none absolute top-0 inset-x-5 h-[2.5px] rounded-full bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 shadow-[0_0_14px_rgba(251,191,36,0.7)]"
               />
               <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="w-5 h-5 text-amber-300" aria-hidden="true" />
+                <Lightbulb className="w-5 h-5 text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.85)]" aria-hidden="true" />
                 <span className="text-sm font-extrabold font-display text-amber-200 uppercase tracking-wider">
                   Gợi ý
                 </span>
               </div>
-              <p className="text-sm text-amber-50 leading-relaxed bg-slate-950/60 p-4 rounded-2xl border border-amber-300/25">
+              <p className="text-sm text-amber-50 leading-relaxed bg-[#050922]/85 p-4 rounded-2xl border border-amber-300/35">
                 {currentQ.hint}
               </p>
             </div>
@@ -505,40 +505,41 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
         </div>
 
         {/* Right Zone: Flagship Cosmic Mission Question Console */}
-        <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.20),_transparent_48%),radial-gradient(ellipse_at_bottom_left,_rgba(56,189,248,0.16),_transparent_50%),linear-gradient(168deg,_rgba(18,28,80,0.98),_rgba(7,12,38,0.99))] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_30px_76px_rgba(3,7,24,0.88),inset_0_1px_0_rgba(255,255,255,0.18)] border border-cyan-300/35">
+        <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.24),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(34,211,238,0.22),_transparent_52%),radial-gradient(ellipse_at_15%_20%,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(165deg,_rgba(14,22,68,0.97),_rgba(18,12,56,0.98)_55%,_rgba(6,10,34,0.99)_100%)] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.2)] border border-cyan-300/50">
           <svg
             aria-hidden="true"
             viewBox="0 0 180 120"
-            className="pointer-events-none absolute -top-2 -right-2 w-48 h-32 opacity-50"
+            className="pointer-events-none absolute -top-2 -right-2 w-48 h-32 opacity-65"
           >
-            <circle cx="152" cy="18" r="24" fill="rgba(103,232,249,0.12)" stroke="rgba(103,232,249,0.25)" strokeWidth="1" />
-            <ellipse cx="152" cy="18" rx="46" ry="12" transform="rotate(-18 152 18)" fill="none" stroke="rgba(251,191,36,0.28)" strokeWidth="1" />
-            <circle cx="152" cy="18" r="68" fill="none" stroke="rgba(251,191,36,0.2)" strokeWidth="1" strokeDasharray="4 6" />
-            <circle cx="152" cy="18" r="96" fill="none" stroke="rgba(34,211,238,0.16)" strokeWidth="1" />
-            <circle cx="104" cy="24" r="1.8" fill="#FDE68A" />
-            <circle cx="136" cy="52" r="1.6" fill="#67E8F9" />
+            <circle cx="152" cy="18" r="24" fill="rgba(103,232,249,0.16)" stroke="rgba(103,232,249,0.34)" strokeWidth="1" />
+            <ellipse cx="152" cy="18" rx="46" ry="12" transform="rotate(-18 152 18)" fill="none" stroke="rgba(251,191,36,0.36)" strokeWidth="1.2" />
+            <circle cx="152" cy="18" r="68" fill="none" stroke="rgba(251,191,36,0.24)" strokeWidth="1" strokeDasharray="4 6" />
+            <circle cx="152" cy="18" r="96" fill="none" stroke="rgba(34,211,238,0.22)" strokeWidth="1" />
+            <circle cx="104" cy="24" r="2" fill="#FDE68A" />
+            <circle cx="136" cy="52" r="1.8" fill="#67E8F9" />
+            <circle cx="118" cy="70" r="1.4" fill="#F9A8D4" />
           </svg>
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-pink-500 shadow-[0_0_20px_rgba(34,211,238,0.75)]"
+            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
           />
 
-          <div className="relative z-10 flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-400/15 border border-amber-300/40 text-xs font-black uppercase tracking-wider shadow-[0_0_16px_rgba(251,191,36,0.18)]">
+          <div className="relative z-10 flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-gradient-to-r from-amber-400/22 to-fuchsia-500/15 border border-amber-300/55 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(251,191,36,0.25)]">
               <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" aria-hidden="true" />
-              <span className="text-amber-200 tabular-nums">
+              <span className="text-amber-100 tabular-nums">
                 Câu {currentIdx + 1} / {questions.length}
               </span>
             </div>
             {isSolved && (
-              <span className="px-2.5 py-1 rounded-xl bg-emerald-500/20 border border-emerald-400/45 text-emerald-200 font-black text-xs flex items-center gap-1 whitespace-nowrap">
+              <span className="px-2.5 py-1 rounded-xl bg-emerald-500/25 border border-emerald-400/55 text-emerald-100 font-black text-xs flex items-center gap-1 whitespace-nowrap shadow-[0_0_16px_rgba(52,211,153,0.25)]">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
                 <span>Đã hoàn thành</span>
               </span>
             )}
           </div>
 
-          <div className="relative z-10 rounded-2xl bg-[#070C26]/88 border border-cyan-300/20 p-4 sm:p-5 mb-6 shadow-[inset_0_2px_14px_rgba(0,0,0,0.45)]">
+          <div className="relative z-10 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.16),_transparent_58%),linear-gradient(160deg,_rgba(5,9,34,0.95),_rgba(12,15,48,0.96))] border border-cyan-300/35 p-4 sm:p-5 mb-6 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5),0_0_24px_rgba(34,211,238,0.12)]">
             <p className="text-base sm:text-lg font-extrabold text-white leading-relaxed">
               {currentQ.prompt}
             </p>
@@ -560,10 +561,10 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                     onClick={() => handleSelectOption(opt)}
                     className={`p-4 rounded-2xl border-2 font-black text-left transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer tabular-nums min-h-[56px] active:scale-[0.98] ${
                       isRightOption
-                        ? 'bg-emerald-500/25 border-emerald-400 text-emerald-100 shadow-[0_0_24px_rgba(16,185,129,0.35)]'
+                        ? 'bg-emerald-500/25 border-emerald-400 text-emerald-100 shadow-[0_0_26px_rgba(16,185,129,0.4)]'
                         : isSelected
-                        ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 border-cyan-100 text-slate-950 shadow-[0_0_28px_rgba(56,189,248,0.52),0_0_36px_rgba(232,121,249,0.28)]'
-                        : 'bg-[#080E2B]/90 border-indigo-400/28 text-white hover:border-cyan-300 hover:bg-indigo-900/60 hover:shadow-[0_0_26px_rgba(34,211,238,0.38)]'
+                        ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 border-cyan-100 text-slate-950 shadow-[0_0_30px_rgba(56,189,248,0.58),0_0_38px_rgba(232,121,249,0.34)]'
+                        : 'bg-[#080E32]/92 border-cyan-300/30 text-white hover:border-cyan-300 hover:bg-indigo-900/65 hover:shadow-[0_0_26px_rgba(34,211,238,0.42)]'
                     }`}
                   >
                     <span className="flex items-center gap-2.5 text-sm">
@@ -573,7 +574,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                             ? 'bg-emerald-400 text-slate-950'
                             : isSelected
                             ? 'bg-slate-950 text-cyan-300'
-                            : 'bg-white/10 text-cyan-200 border border-cyan-300/25'
+                            : 'bg-cyan-400/15 text-cyan-200 border border-cyan-300/35'
                         }`}
                       >
                         {String.fromCharCode(65 + oIdx)}
@@ -589,7 +590,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
             (() => {
               const { quotient, remainder } = parseDivisionRemainderAnswer(currentAnswer);
               return (
-                <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[#070B22]/90 border border-cyan-300/35 shadow-[inset_0_2px_12px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.1)] space-y-3">
+                <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.12),_transparent_60%),rgba(6,10,34,0.94)] border border-cyan-300/45 shadow-[inset_0_2px_14px_rgba(0,0,0,0.6),0_0_26px_rgba(34,211,238,0.16)] space-y-3">
                   <div className="text-xs font-black uppercase tracking-wider text-cyan-300">
                     Nhập kết quả phép chia
                   </div>
@@ -642,7 +643,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
               );
             })()
           ) : (
-            <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[#070B22]/90 border border-cyan-300/35 shadow-[inset_0_2px_12px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.1)] space-y-2.5">
+            <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.12),_transparent_60%),rgba(6,10,34,0.94)] border border-cyan-300/45 shadow-[inset_0_2px_14px_rgba(0,0,0,0.6),0_0_26px_rgba(34,211,238,0.16)] space-y-2.5">
               <label htmlFor={`q-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-cyan-300">
                 Nhập câu trả lời của em
               </label>

@@ -15,7 +15,6 @@ import {
   ChevronRight,
   ArrowLeft,
   Orbit,
-  Rocket,
 } from 'lucide-react';
 
 export interface InMonthDayProgress {
@@ -90,27 +89,27 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
       : monthProgram.days.filter((d) => d.weekNumber === selectedWeek);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_rgba(34,211,238,0.14),_transparent_52%),radial-gradient(ellipse_at_bottom_right,_rgba(168,85,247,0.28),_transparent_55%),linear-gradient(180deg,_#030617_0%,_#0A1038_46%,_#1A0E46_100%)] text-white pb-20 relative overflow-hidden">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_16%_14%,_rgba(34,211,238,0.2),_transparent_50%),radial-gradient(ellipse_at_84%_20%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_90%,_rgba(251,191,36,0.12),_transparent_54%),linear-gradient(180deg,_#030617_0%,_#0A1038_46%,_#1A0E46_100%)] text-white pb-20 relative overflow-hidden">
       {/* Deep Space Ambient Nebula & Starfield Canvas */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-32 left-1/4 w-[480px] h-[480px] rounded-full bg-cyan-500/18 blur-[145px]" />
-        <div className="absolute top-1/3 -right-24 w-[440px] h-[440px] rounded-full bg-fuchsia-500/18 blur-[145px]" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full bg-indigo-500/16 blur-[155px]" />
-        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" className="w-full h-full opacity-55">
-          <circle cx="120" cy="140" r="1.5" fill="#67E8F9" />
-          <circle cx="310" cy="80" r="1.2" fill="#FDE68A" />
-          <circle cx="540" cy="210" r="1.7" fill="#FFFFFF" />
-          <circle cx="790" cy="110" r="1.4" fill="#F9A8D4" />
-          <circle cx="1040" cy="190" r="1.8" fill="#67E8F9" />
-          <circle cx="1310" cy="120" r="1.4" fill="#FDE68A" />
-          <circle cx="190" cy="460" r="1.5" fill="#FFFFFF" />
-          <circle cx="430" cy="540" r="1.6" fill="#67E8F9" />
-          <circle cx="680" cy="490" r="1.3" fill="#F9A8D4" />
-          <circle cx="960" cy="610" r="1.7" fill="#FDE68A" />
-          <circle cx="1240" cy="520" r="1.5" fill="#67E8F9" />
-          <circle cx="280" cy="790" r="1.6" fill="#F9A8D4" />
-          <circle cx="840" cy="820" r="1.5" fill="#FFFFFF" />
-          <circle cx="1350" cy="780" r="1.8" fill="#67E8F9" />
+        <div className="absolute -top-32 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-400/26 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/3 -right-24 w-[480px] h-[480px] rounded-full bg-fuchsia-500/26 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[520px] h-[520px] rounded-full bg-amber-400/16 blur-[155px] cosmic-light-bloom" />
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" className="w-full h-full opacity-75">
+          <circle cx="120" cy="140" r="1.8" fill="#67E8F9" />
+          <circle cx="310" cy="80" r="1.5" fill="#FDE68A" />
+          <circle cx="540" cy="210" r="2" fill="#FFFFFF" />
+          <circle cx="790" cy="110" r="1.6" fill="#F9A8D4" />
+          <circle cx="1040" cy="190" r="2" fill="#67E8F9" />
+          <circle cx="1310" cy="120" r="1.6" fill="#FDE68A" />
+          <circle cx="190" cy="460" r="1.7" fill="#FFFFFF" />
+          <circle cx="430" cy="540" r="1.8" fill="#67E8F9" />
+          <circle cx="680" cy="490" r="1.5" fill="#F9A8D4" />
+          <circle cx="960" cy="610" r="1.9" fill="#FDE68A" />
+          <circle cx="1240" cy="520" r="1.7" fill="#67E8F9" />
+          <circle cx="280" cy="790" r="1.8" fill="#F9A8D4" />
+          <circle cx="840" cy="820" r="1.7" fill="#FFFFFF" />
+          <circle cx="1350" cy="780" r="2" fill="#67E8F9" />
         </svg>
       </div>
 
@@ -144,110 +143,114 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
         </div>
       </div>
 
-      {/* Month Overview Hero (Flagship Cosmic Observatory) */}
-      <div className="relative z-10 overflow-hidden border-b border-cyan-300/35 bg-[radial-gradient(ellipse_at_10%_15%,_rgba(56,189,248,0.38),_transparent_46%),radial-gradient(ellipse_at_88%_18%,_rgba(192,132,252,0.34),_transparent_46%),radial-gradient(ellipse_at_68%_96%,_rgba(245,158,11,0.28),_transparent_50%),linear-gradient(132deg,_#05081E_0%,_#111548_48%,_#271059_100%)] backdrop-blur-2xl px-4 sm:px-6 py-7 sm:py-12 lg:py-16 shadow-[0_32px_84px_rgba(3,7,24,0.8)]">
-        {/* Ambient Aurora Glow Orbs */}
-        <div className="pointer-events-none absolute -top-24 left-1/3 w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-cyan-400/15 blur-[110px]" aria-hidden="true" />
-        <div className="pointer-events-none absolute -bottom-24 right-1/4 w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-fuchsia-500/15 blur-[120px]" aria-hidden="true" />
+      {/* Month Overview Hero (Ethereal Luminous Cosmic Observatory) */}
+      <div className="relative z-10 overflow-hidden border-b border-cyan-300/50 bg-[radial-gradient(ellipse_at_14%_18%,_rgba(34,211,238,0.36),_transparent_48%),radial-gradient(ellipse_at_84%_20%,_rgba(217,70,239,0.36),_transparent_48%),radial-gradient(ellipse_at_54%_96%,_rgba(251,191,36,0.24),_transparent_52%),linear-gradient(118deg,_#030618_0%,_#090E36_46%,_#1B0C4A_100%)] backdrop-blur-2xl px-4 sm:px-6 py-8 sm:py-12 lg:py-14 shadow-[0_32px_86px_rgba(3,7,24,0.88),0_0_52px_rgba(34,211,238,0.22)]">
+        {/* Ethereal Multi-Spectrum Aurora Orbs */}
+        <div className="pointer-events-none absolute -top-24 left-12 w-80 sm:w-[440px] h-80 sm:h-[440px] rounded-full bg-cyan-400/28 blur-[115px] cosmic-light-bloom" aria-hidden="true" />
+        <div className="pointer-events-none absolute -top-16 right-1/4 w-80 sm:w-[440px] h-80 sm:h-[440px] rounded-full bg-fuchsia-500/26 blur-[120px] cosmic-light-bloom" aria-hidden="true" />
+        <div className="pointer-events-none absolute -bottom-24 right-12 w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-amber-400/20 blur-[115px] cosmic-light-bloom" aria-hidden="true" />
 
-        {/* Cosmic Observatory Rings, Ringed Planet, Comet & Constellation Starfield */}
+        {/* Calibrated Celestial Astrolabe & Ringed Planet Backdrop */}
         <svg
           aria-hidden="true"
           viewBox="0 0 1200 380"
           preserveAspectRatio="xMidYMid slice"
-          className="pointer-events-none absolute inset-0 w-full h-full opacity-90"
+          className="pointer-events-none absolute inset-0 w-full h-full opacity-95"
         >
           <defs>
-            <radialGradient id="monthHeroGlow" cx="83%" cy="30%" r="38%">
-              <stop offset="0%" stopColor="rgba(251,191,36,0.32)" />
-              <stop offset="45%" stopColor="rgba(56,189,248,0.16)" />
+            <radialGradient id="monthHeroGlow" cx="85%" cy="32%" r="40%">
+              <stop offset="0%" stopColor="rgba(251,191,36,0.38)" />
+              <stop offset="45%" stopColor="rgba(232,121,249,0.22)" />
+              <stop offset="75%" stopColor="rgba(56,189,248,0.16)" />
               <stop offset="100%" stopColor="rgba(15,23,42,0)" />
             </radialGradient>
             <radialGradient id="monthPlanetFill" cx="32%" cy="28%" r="72%">
-              <stop offset="0%" stopColor="#A5F3FC" stopOpacity="0.72" />
-              <stop offset="42%" stopColor="#6366F1" stopOpacity="0.4" />
-              <stop offset="85%" stopColor="#311068" stopOpacity="0.24" />
-              <stop offset="100%" stopColor="#0F172A" stopOpacity="0.1" />
+              <stop offset="0%" stopColor="#E0F2FE" stopOpacity="0.92" />
+              <stop offset="38%" stopColor="#38BDF8" stopOpacity="0.54" />
+              <stop offset="76%" stopColor="#A855F7" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#070B22" stopOpacity="0.2" />
             </radialGradient>
             <linearGradient id="monthCometGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="rgba(103,232,249,0)" />
-              <stop offset="65%" stopColor="rgba(103,232,249,0.38)" />
-              <stop offset="100%" stopColor="#FDE68A" />
+              <stop offset="60%" stopColor="rgba(103,232,249,0.52)" />
+              <stop offset="100%" stopColor="#FEF08A" />
             </linearGradient>
             <linearGradient id="monthRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(56,189,248,0.1)" />
-              <stop offset="50%" stopColor="rgba(251,191,36,0.5)" />
-              <stop offset="100%" stopColor="rgba(232,121,249,0.22)" />
+              <stop offset="0%" stopColor="rgba(56,189,248,0.24)" />
+              <stop offset="50%" stopColor="rgba(251,191,36,0.78)" />
+              <stop offset="100%" stopColor="rgba(232,121,249,0.48)" />
             </linearGradient>
           </defs>
           <rect width="1200" height="380" fill="url(#monthHeroGlow)" />
 
           {/* Astrolabe Orbital Trajectories */}
-          <circle cx="1015" cy="108" r="195" fill="none" stroke="rgba(56,189,248,0.24)" strokeWidth="1.2" strokeDasharray="6 8" />
-          <circle cx="1015" cy="108" r="275" fill="none" stroke="rgba(251,191,36,0.16)" strokeWidth="1" />
-          <circle cx="1015" cy="108" r="355" fill="none" stroke="rgba(168,85,247,0.16)" strokeWidth="1" strokeDasharray="3 10" />
+          <circle cx="1030" cy="116" r="190" fill="none" stroke="rgba(56,189,248,0.28)" strokeWidth="1.2" strokeDasharray="6 8" />
+          <circle cx="1030" cy="116" r="270" fill="none" stroke="rgba(251,191,36,0.22)" strokeWidth="1.1" />
+          <circle cx="1030" cy="116" r="350" fill="none" stroke="rgba(232,121,249,0.22)" strokeWidth="1.1" strokeDasharray="3 10" />
 
           {/* Luminous Planet & Dual Tilted Rings */}
-          <circle cx="1015" cy="108" r="64" fill="url(#monthPlanetFill)" stroke="rgba(165,243,252,0.42)" strokeWidth="1.2" />
-          <ellipse cx="1015" cy="108" rx="134" ry="30" transform="rotate(-18 1015 108)" fill="none" stroke="url(#monthRingGrad)" strokeWidth="1.8" />
-          <ellipse cx="1015" cy="108" rx="112" ry="23" transform="rotate(14 1015 108)" fill="none" stroke="rgba(103,232,249,0.25)" strokeWidth="1" strokeDasharray="4 6" />
-          <circle cx="889" cy="148" r="4" fill="#67E8F9" />
-          <circle cx="1141" cy="68" r="4.5" fill="#FDE68A" />
+          <circle cx="1030" cy="116" r="62" fill="url(#monthPlanetFill)" stroke="rgba(186,230,253,0.68)" strokeWidth="1.4" />
+          <ellipse cx="1030" cy="116" rx="134" ry="29" transform="rotate(-18 1030 116)" fill="none" stroke="url(#monthRingGrad)" strokeWidth="2.1" />
+          <ellipse cx="1030" cy="116" rx="112" ry="22" transform="rotate(14 1030 116)" fill="none" stroke="rgba(103,232,249,0.34)" strokeWidth="1.2" strokeDasharray="4 6" />
+          <circle cx="904" cy="156" r="4.2" fill="#67E8F9" />
+          <circle cx="1156" cy="76" r="4.6" fill="#FDE68A" />
 
-          {/* Shooting Star / Comet Trail */}
-          <line x1="650" y1="22" x2="778" y2="74" stroke="url(#monthCometGrad)" strokeWidth="1.8" strokeLinecap="round" />
-          <circle cx="778" cy="74" r="2.6" fill="#FEF08A" />
+          {/* Comet Arc */}
+          <line x1="680" y1="24" x2="804" y2="74" stroke="url(#monthCometGrad)" strokeWidth="1.9" strokeLinecap="round" />
+          <circle cx="804" cy="74" r="2.8" fill="#FEF08A" />
 
-          {/* Constellation Geometry & 4-Point Diamond Stars */}
-          <polyline points="88,62 215,32 356,82 512,34 654,76" fill="none" stroke="rgba(103,232,249,0.2)" strokeWidth="1" strokeDasharray="3 5" />
-          <path d="M215 24 L217 30 L223 32 L217 34 L215 40 L213 34 L207 32 L213 30 Z" fill="#FDE68A" />
-          <path d="M512 25 L514 32 L521 34 L514 36 L512 43 L510 36 L503 34 L510 32 Z" fill="#67E8F9" />
-          <path d="M878 24 L880 30 L886 32 L880 34 L878 40 L876 34 L870 32 L876 30 Z" fill="#F9A8D4" />
-          <circle cx="88" cy="62" r="2.2" fill="#67E8F9" />
-          <circle cx="356" cy="82" r="1.6" fill="#FFFFFF" />
-          <circle cx="654" cy="76" r="2" fill="#67E8F9" />
-          <circle cx="1142" cy="188" r="2.2" fill="#FDE68A" />
-          <circle cx="165" cy="300" r="1.8" fill="#FFFFFF" />
-          <circle cx="480" cy="322" r="1.6" fill="#67E8F9" />
-          <circle cx="790" cy="312" r="1.8" fill="#F9A8D4" />
+          {/* Subtle Constellation Starfield */}
+          <polyline points="560,46 675,88 805,36 920,76" fill="none" stroke="rgba(103,232,249,0.22)" strokeWidth="1.1" strokeDasharray="3 5" />
+          <path d="M560 39 L562 44 L567 46 L562 48 L560 53 L558 48 L553 46 L558 44 Z" fill="#FDE68A" />
+          <path d="M805 28 L807 34 L813 36 L807 38 L805 44 L803 38 L797 36 L803 34 Z" fill="#67E8F9" />
+          <circle cx="675" cy="88" r="2" fill="#FFFFFF" />
+          <circle cx="1142" cy="198" r="2.3" fill="#FDE68A" />
+          <circle cx="790" cy="312" r="1.9" fill="#F9A8D4" />
+          <circle cx="480" cy="322" r="1.7" fill="#67E8F9" />
         </svg>
 
+        {/* Top & Bottom Intense Aurora Horizon Beams */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/75 to-transparent shadow-[0_0_14px_rgba(34,211,238,0.5)]"
+          className="pointer-events-none absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-300 via-50% to-transparent shadow-[0_0_24px_rgba(34,211,238,0.95),0_0_40px_rgba(217,70,239,0.5)]"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-amber-300/70 to-transparent shadow-[0_0_14px_rgba(251,191,36,0.45)]"
+          className="pointer-events-none absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-fuchsia-400 via-50% to-transparent shadow-[0_0_22px_rgba(232,121,249,0.85),0_0_38px_rgba(251,191,36,0.45)]"
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-10">
-          <div className="space-y-5 sm:space-y-6 w-full lg:max-w-3xl">
-            <h1 className="font-display space-y-3 [text-wrap:balance]">
-              <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-400/18 via-indigo-400/15 to-fuchsia-400/18 border border-cyan-300/40 text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.14em] sm:tracking-[0.26em] text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.26)] backdrop-blur-md max-w-full">
-                <Orbit className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0" aria-hidden="true" />
-                <span>HÀNH TRÌNH VŨ TRỤ KHÁM PHÁ</span>
-              </span>
-              <span className="block relative">
-                <span className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 text-[28px] sm:text-5xl lg:text-[58px] font-black uppercase tracking-tight leading-[1.08]">
-                  <span className="whitespace-nowrap bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_6px_30px_rgba(56,189,248,0.48)]">
-                    TOÁN TƯ DUY
-                  </span>
-                  <span aria-hidden="true" className="text-amber-300/90 text-xl sm:text-3xl drop-shadow-[0_0_12px_rgba(251,191,36,0.85)]">
-                    ✦
-                  </span>
-                  <span className="whitespace-nowrap bg-gradient-to-r from-amber-200 via-yellow-100 to-orange-300 bg-clip-text text-transparent drop-shadow-[0_6px_28px_rgba(251,191,36,0.52)]">
-                    {monthProgram.label}
-                  </span>
+        <div className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
+          {/* Left Editorial Typography & Action Stage */}
+          <div className="space-y-4 sm:space-y-5 w-full lg:max-w-2xl relative">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-8 -top-2 h-36 rounded-full bg-[radial-gradient(ellipse_at_30%_50%,_rgba(34,211,238,0.34),_rgba(217,70,239,0.22)_50%,_transparent_75%)] blur-2xl cosmic-light-bloom"
+            />
+            <div className="relative inline-flex items-center gap-2.5 text-[11px] sm:text-xs font-extrabold tracking-[0.2em] uppercase text-cyan-200 drop-shadow-[0_0_14px_rgba(34,211,238,0.8)]">
+              <Orbit className="w-4 h-4 text-amber-300 shrink-0 drop-shadow-[0_0_12px_rgba(251,191,36,0.95)]" aria-hidden="true" />
+              <span>Hành trình vũ trụ khám phá</span>
+              <span aria-hidden="true" className="hidden sm:inline-block w-12 h-[1.5px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-transparent shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+            </div>
+
+            <div className="relative space-y-3">
+              <h1 className="font-display text-3xl sm:text-5xl lg:text-[56px] font-black tracking-tight leading-[1.08] [text-wrap:balance]">
+                <span className="bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent [filter:drop-shadow(0_2px_4px_rgba(2,6,23,0.98))_drop-shadow(0_0_22px_rgba(34,211,238,0.95))_drop-shadow(0_0_52px_rgba(168,85,247,0.68))]">
+                  Toán Tư Duy
                 </span>
-                <span
-                  aria-hidden="true"
-                  className="block mt-2.5 sm:mt-3 h-1 w-28 sm:w-44 rounded-full bg-gradient-to-r from-amber-300 via-cyan-300 to-fuchsia-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]"
-                />
-              </span>
-            </h1>
+                <span aria-hidden="true" className="mx-2.5 sm:mx-3.5 text-amber-300 text-2xl sm:text-3xl align-middle [filter:drop-shadow(0_0_20px_rgba(251,191,36,1))_drop-shadow(0_0_40px_rgba(232,121,249,0.85))] animate-pulse">
+                  ✦
+                </span>
+                <span className="whitespace-nowrap bg-gradient-to-r from-amber-200 via-pink-200 to-fuchsia-300 bg-clip-text text-transparent [filter:drop-shadow(0_2px_4px_rgba(2,6,23,0.98))_drop-shadow(0_0_22px_rgba(251,191,36,0.92))_drop-shadow(0_0_52px_rgba(236,72,153,0.7))]">
+                  {monthProgram.label}
+                </span>
+              </h1>
+              <span
+                aria-hidden="true"
+                className="block h-[3.5px] w-44 sm:w-64 rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_26px_rgba(34,211,238,0.95),0_0_48px_rgba(217,70,239,0.65)]"
+              />
+            </div>
 
-            <div className="grid grid-cols-1 sm:flex sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-3.5 pt-1">
+            <div className="relative flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3.5 pt-1">
               <button
                 type="button"
                 onClick={() => {
@@ -257,19 +260,19 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                     ) || monthProgram.days[0];
                   onSelectDay(target);
                 }}
-                className="w-full sm:w-auto justify-center px-5 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:from-cyan-200 hover:via-sky-200 hover:to-fuchsia-200 text-slate-950 font-black text-sm sm:text-base ring-2 ring-cyan-200/90 shadow-[0_0_34px_rgba(34,211,238,0.52),0_14px_38px_rgba(192,132,252,0.38),inset_0_1px_0_rgba(255,255,255,0.85)] hover:shadow-[0_0_44px_rgba(34,211,238,0.7),0_18px_46px_rgba(217,70,239,0.5)] flex items-center gap-2 sm:gap-2.5 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer min-h-[48px] sm:min-h-[52px]"
+                className="justify-center px-6 sm:px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-200 to-fuchsia-300 hover:from-cyan-200 hover:via-white hover:to-fuchsia-200 text-slate-950 font-black text-sm sm:text-base ring-2 ring-cyan-200/90 shadow-[0_0_38px_rgba(34,211,238,0.72),0_0_72px_rgba(217,70,239,0.48),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_0_54px_rgba(34,211,238,0.92),0_0_92px_rgba(217,70,239,0.68)] flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer min-h-[48px] whitespace-nowrap"
               >
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden="true" />
+                <Sparkles className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>Bắt Đầu Ngay: Ngày {nextActiveDayNumber}/30</span>
-                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" aria-hidden="true" />
+                <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
               </button>
 
               <button
                 type="button"
                 onClick={onOpenExam}
-                className="w-full sm:w-auto justify-center px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-white/[0.1] hover:bg-cyan-400/20 border border-cyan-300/40 hover:border-cyan-300/70 text-white font-bold text-xs sm:text-sm flex items-center gap-2 transition-all duration-200 cursor-pointer min-h-[46px] sm:min-h-[52px] backdrop-blur-xl shadow-[0_10px_28px_rgba(3,7,24,0.4)]"
+                className="justify-center px-5 py-3.5 rounded-2xl bg-white/[0.08] hover:bg-cyan-400/20 border border-cyan-300/45 hover:border-cyan-200/80 text-cyan-50 font-bold text-sm shadow-[0_0_24px_rgba(34,211,238,0.16)] hover:shadow-[0_0_32px_rgba(34,211,238,0.36)] flex items-center gap-2 transition-all duration-200 cursor-pointer min-h-[48px] backdrop-blur-xl whitespace-nowrap"
               >
-                <Trophy className="w-4 h-4 text-amber-300 shrink-0" aria-hidden="true" />
+                <Trophy className="w-4 h-4 text-amber-300 shrink-0 drop-shadow-[0_0_8px_rgba(251,191,36,0.85)]" aria-hidden="true" />
                 <span>
                   {examResult
                     ? `Xem Báo Cáo Cuối Tháng (${examResult.totalScore}/100đ)`
@@ -279,113 +282,95 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             </div>
           </div>
 
-          {/* 2 Cosmic Observatory KPI Cards (2-col balanced across every device) */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full lg:w-auto lg:shrink-0">
-            <div className="group relative overflow-hidden p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-fuchsia-400/22 via-[#141D58]/94 to-[#26125B]/96 backdrop-blur-2xl border border-fuchsia-300/55 hover:border-cyan-300/80 shadow-[0_20px_48px_rgba(168,85,247,0.26),inset_0_1px_0_rgba(255,255,255,0.25)] hover:shadow-[0_0_36px_rgba(217,70,239,0.42)] transition-all duration-200 min-w-0 lg:min-w-[206px] xl:min-w-[218px]">
-              <div className="pointer-events-none absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-fuchsia-400/25 blur-2xl" aria-hidden="true" />
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute top-0 inset-x-4 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_14px_rgba(217,70,239,0.7)]"
-              />
-              <div className="relative z-10 flex items-center justify-between gap-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.14em] sm:tracking-[0.2em] text-fuchsia-200">
-                <span>TIẾN ĐỘ</span>
-                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-fuchsia-400/22 border border-fuchsia-300/45 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(217,70,239,0.3)]">
-                  <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-200" aria-hidden="true" />
-                </span>
-              </div>
-              <div className="relative z-10 mt-2.5 sm:mt-3 flex items-center justify-between gap-2 sm:gap-3">
-                <div className="text-2xl sm:text-3xl font-black font-display text-white tabular-nums leading-none min-w-0">
+          {/* Right Unified Celestial Telemetry Instrument Deck */}
+          <div className="relative overflow-hidden rounded-3xl bg-[#070D28]/88 backdrop-blur-2xl border border-cyan-300/45 shadow-[0_24px_60px_rgba(2,6,23,0.8),0_0_42px_rgba(34,211,238,0.22),0_0_68px_rgba(217,70,239,0.16),inset_0_1px_0_rgba(255,255,255,0.2)] grid grid-cols-2 divide-x divide-cyan-300/20 w-full lg:w-auto lg:min-w-[430px] xl:min-w-[460px] shrink-0">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_18px_rgba(34,211,238,0.8)]"
+            />
+
+            {/* Telemetry Cell 1: Progress */}
+            <div className="p-4 sm:p-6 flex flex-col justify-between gap-3">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-cyan-300/90">
+                Tiến độ chặng
+              </span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-2xl sm:text-3xl font-black font-display text-white tabular-nums leading-none">
                   {completedCount}
-                  <span className="text-[11px] sm:text-xs font-sans font-bold text-cyan-200/80 ml-1">/ 30</span>
+                  <span className="text-xs font-mono font-bold text-slate-400 ml-1.5">/ 30</span>
                 </div>
-                <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-13 sm:h-13 shrink-0 drop-shadow-[0_0_12px_rgba(217,70,239,0.45)]" aria-hidden="true">
+                <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-[0_0_10px_rgba(56,189,248,0.4)]" aria-hidden="true">
                   <defs>
                     <linearGradient id="monthProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#67E8F9" />
-                      <stop offset="55%" stopColor="#E879F9" />
-                      <stop offset="100%" stopColor="#FDE047" />
+                      <stop offset="100%" stopColor="#A855F7" />
                     </linearGradient>
                   </defs>
-                  <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(232,121,249,0.22)" strokeWidth="1" strokeDasharray="2 3" />
-                  <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="4" />
+                  <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3.5" />
                   <circle
                     cx="24"
                     cy="24"
-                    r="17"
+                    r="18"
                     fill="none"
                     stroke="url(#monthProgressGrad)"
-                    strokeWidth="4"
+                    strokeWidth="3.5"
                     strokeLinecap="round"
-                    strokeDasharray={`${Math.max(4, Math.round((completedCount / 30) * 106.8))} 106.8`}
+                    strokeDasharray={`${Math.max(4, Math.round((completedCount / 30) * 113.1))} 113.1`}
                     transform="rotate(-90 24 24)"
                   />
-                  <text x="24" y="27.5" textAnchor="middle" className="fill-cyan-100 text-[10px] font-black tabular-nums">
+                  <text x="24" y="27.5" textAnchor="middle" className="fill-cyan-100 text-[10px] font-black font-mono tabular-nums">
                     {progressPct}%
                   </text>
                 </svg>
               </div>
-              <div className="relative z-10 mt-2.5 sm:mt-3 h-1 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  style={{ width: `${Math.max(completedCount > 0 ? 6 : 0, progressPct)}%` }}
-                  className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 transition-all duration-500"
-                />
-              </div>
+              <span className="text-xs text-slate-400 font-medium tabular-nums">
+                Đã hoàn thành {completedCount} ngày
+              </span>
             </div>
 
-            <div className="relative overflow-hidden p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-cyan-300/22 via-[#131C4B]/92 to-[#0E2656]/95 backdrop-blur-2xl border border-cyan-300/55 shadow-[0_20px_48px_rgba(34,211,238,0.25),inset_0_1px_0_rgba(255,255,255,0.25)] min-w-0 lg:min-w-[206px] xl:min-w-[218px]">
-              <div className="pointer-events-none absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-cyan-400/20 blur-2xl" aria-hidden="true" />
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute top-0 inset-x-4 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-emerald-400 to-teal-300 shadow-[0_0_14px_rgba(34,211,238,0.7)]"
-              />
-              <div className="relative z-10 flex items-center justify-between gap-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.14em] sm:tracking-[0.2em] text-cyan-200">
-                <span>BÀI THI</span>
-                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-cyan-400/22 border border-cyan-300/45 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(34,211,238,0.25)]">
-                  <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-300" aria-hidden="true" />
-                </span>
-              </div>
-              <div className="relative z-10 mt-2.5 sm:mt-3 flex items-center justify-between gap-2 sm:gap-3">
-                <div className="text-2xl sm:text-3xl font-black font-display text-white tabular-nums leading-none min-w-0">
+            {/* Telemetry Cell 2: Final Exam */}
+            <div className="p-4 sm:p-6 flex flex-col justify-between gap-3">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-amber-300/90">
+                Kiểm tra tháng
+              </span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="text-2xl sm:text-3xl font-black font-display text-white tabular-nums leading-none">
                   {examResult ? (
                     <>
                       {examResult.totalScore}
-                      <span className="text-[11px] sm:text-xs font-sans font-bold text-cyan-200/80 ml-1">/ 100</span>
+                      <span className="text-xs font-mono font-bold text-slate-400 ml-1.5">/ 100</span>
                     </>
                   ) : (
-                    <span className="text-sm sm:text-lg font-extrabold text-cyan-100">Chưa thi</span>
+                    <span className="text-base sm:text-lg font-extrabold text-slate-200">Chưa thi</span>
                   )}
                 </div>
-                <svg viewBox="0 0 48 48" className="w-10 h-10 sm:w-13 sm:h-13 shrink-0 drop-shadow-[0_0_12px_rgba(52,211,153,0.4)]" aria-hidden="true">
+                <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-[0_0_10px_rgba(52,211,153,0.4)]" aria-hidden="true">
                   <defs>
                     <linearGradient id="monthExamGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#67E8F9" />
                       <stop offset="100%" stopColor="#34D399" />
                     </linearGradient>
                   </defs>
-                  <circle cx="24" cy="24" r="21" fill="none" stroke="rgba(56,189,248,0.2)" strokeWidth="1" strokeDasharray="2 3" />
-                  <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="4" />
+                  <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3.5" />
                   <circle
                     cx="24"
                     cy="24"
-                    r="17"
+                    r="18"
                     fill="none"
                     stroke="url(#monthExamGrad)"
-                    strokeWidth="4"
+                    strokeWidth="3.5"
                     strokeLinecap="round"
-                    strokeDasharray={`${Math.max(4, Math.round(((examResult ? examResult.totalScore : 0) / 100) * 106.8))} 106.8`}
+                    strokeDasharray={`${Math.max(4, Math.round(((examResult ? examResult.totalScore : 0) / 100) * 113.1))} 113.1`}
                     transform="rotate(-90 24 24)"
                   />
-                  <text x="24" y="27.5" textAnchor="middle" className="fill-emerald-200 text-[10px] font-black tabular-nums">
+                  <text x="24" y="27.5" textAnchor="middle" className="fill-emerald-200 text-[10px] font-black font-mono tabular-nums">
                     {examResult ? `${examResult.totalScore}%` : '0%'}
                   </text>
                 </svg>
               </div>
-              <div className="relative z-10 mt-2.5 sm:mt-3 h-1 rounded-full bg-white/10 overflow-hidden">
-                <div
-                  style={{ width: `${examResult ? Math.max(6, examResult.totalScore) : 0}%` }}
-                  className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-emerald-400 to-teal-300 transition-all duration-500"
-                />
-              </div>
+              <span className="text-xs text-slate-400 font-medium">
+                {examResult ? 'Đã lưu bảng điểm' : 'Sẵn sàng cuối tháng'}
+              </span>
             </div>
           </div>
         </div>
@@ -476,10 +461,10 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                 className={`group relative overflow-hidden rounded-3xl p-6 border text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl ${
                   unlocked
                     ? isCurrentTarget
-                      ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.22),_transparent_55%),linear-gradient(145deg,_rgba(20,30,96,0.96),_rgba(40,18,96,0.96))] border-cyan-300/85 animate-cosmic-beacon hover:-translate-y-1.5 hover:border-cyan-200 hover:shadow-[0_0_40px_rgba(34,211,238,0.46),0_18px_46px_rgba(192,132,252,0.3)] cursor-pointer'
+                      ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_55%),linear-gradient(145deg,_rgba(20,30,96,0.96),_rgba(40,18,96,0.96))] border-cyan-300/95 animate-cosmic-beacon hover:-translate-y-1.5 hover:border-cyan-200 hover:shadow-[0_0_48px_rgba(34,211,238,0.52),0_18px_50px_rgba(192,132,252,0.36)] cursor-pointer'
                       : isDone
-                      ? 'bg-gradient-to-br from-[#12265B]/95 to-[#0D1A44]/95 border-emerald-400/60 hover:-translate-y-1.5 hover:border-cyan-300 hover:shadow-[0_0_34px_rgba(52,211,153,0.34),0_16px_40px_rgba(34,211,238,0.2)] shadow-lg cursor-pointer'
-                      : 'bg-gradient-to-br from-[#101A50]/95 via-[#13194D]/95 to-[#1B1248]/95 border-indigo-400/35 hover:-translate-y-1.5 hover:border-cyan-300 hover:shadow-[0_0_34px_rgba(34,211,238,0.36),0_18px_44px_rgba(168,85,247,0.24)] shadow-md cursor-pointer'
+                      ? 'bg-gradient-to-br from-[#12265B]/95 to-[#0D1A44]/95 border-emerald-400/65 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_20px_rgba(52,211,153,0.16)] hover:shadow-[0_0_42px_rgba(52,211,153,0.42),0_16px_44px_rgba(34,211,238,0.28)] cursor-pointer'
+                      : 'bg-gradient-to-br from-[#101A50]/95 via-[#13194D]/95 to-[#1B1248]/95 border-cyan-300/30 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_18px_rgba(34,211,238,0.1)] hover:shadow-[0_0_44px_rgba(34,211,238,0.44),0_18px_48px_rgba(168,85,247,0.32)] cursor-pointer'
                     : 'bg-[#070B22]/85 border-indigo-400/20 text-indigo-200/75 shadow-sm cursor-not-allowed'
                 }`}
               >
@@ -556,19 +541,19 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
         </div>
 
         {/* Final Assessment Callout Card (harmonized with deep Cosmic Observatory theme) */}
-        <div className="relative overflow-hidden mt-8 rounded-3xl bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(192,132,252,0.24),_transparent_52%),linear-gradient(135deg,_#0A1138_0%,_#181A5C_52%,_#2B1460_100%)] border border-cyan-300/45 p-6 sm:p-8 text-white shadow-[0_24px_60px_rgba(3,7,24,0.8),0_0_32px_rgba(56,189,248,0.16)] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="relative overflow-hidden mt-8 rounded-3xl bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(192,132,252,0.28),_transparent_52%),linear-gradient(135deg,_#0A1138_0%,_#181A5C_52%,_#2B1460_100%)] border border-cyan-300/60 p-6 sm:p-8 text-white shadow-[0_24px_64px_rgba(3,7,24,0.82),0_0_42px_rgba(56,189,248,0.26)] flex flex-col md:flex-row items-center justify-between gap-6">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-8 h-[2px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400"
+            className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 shadow-[0_0_18px_rgba(34,211,238,0.8)]"
           />
           <div className="relative z-10 space-y-2 max-w-2xl">
             <div className="flex items-center gap-2 text-xs font-bold text-cyan-200">
-              <Trophy className="w-4 h-4 text-amber-300" aria-hidden="true" />
+              <Trophy className="w-4 h-4 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.75)]" aria-hidden="true" />
               <span>Chặng Cuối {monthProgram.label}</span>
               <span aria-hidden="true" className="text-indigo-400">·</span>
               <span className="text-fuchsia-200">20 câu Cơ bản &amp; Tư duy Olympic</span>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold font-display bg-gradient-to-r from-white via-cyan-100 to-fuchsia-200 bg-clip-text text-transparent">
+            <h3 className="text-2xl sm:text-3xl font-extrabold font-display bg-gradient-to-r from-white via-cyan-100 to-fuchsia-200 bg-clip-text text-transparent cosmic-glow-title-cyan">
               Bài Kiểm Tra Tổng Kết &amp; Đánh Giá Năng Lực {monthProgram.label}
             </h3>
           </div>

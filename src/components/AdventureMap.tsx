@@ -14,6 +14,91 @@ interface AdventureMapProps {
   highlightLessonId?: string | null;
 }
 
+const LESSON_STATION_NUMBER_MAP: Record<string, number> = (() => {
+  const counts: Record<string, number> = {};
+  const map: Record<string, number> = {};
+  ALL_LESSONS.forEach((l) => {
+    counts[l.topicId] = (counts[l.topicId] || 0) + 1;
+    map[l.id] = counts[l.topicId];
+  });
+  return map;
+})();
+
+interface StationCardTheme {
+  card: string;
+  topBar: string;
+  spotlight: string;
+  stationBadge: string;
+  stationIcon: string;
+  actionBadge: string;
+  numberBadge: string;
+}
+
+const STATION_CARD_THEMES: StationCardTheme[] = [
+  {
+    card: 'bg-gradient-to-br from-[#0B3B66] via-[#0B2254] to-[#081238] border-cyan-400/90 hover:border-cyan-200 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_22px_rgba(34,211,238,0.28)] hover:shadow-[0_0_34px_rgba(34,211,238,0.62),0_14px_34px_rgba(56,189,248,0.36)]',
+    topBar: 'bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-400 shadow-[0_0_16px_rgba(34,211,238,0.9)]',
+    spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.36),transparent_70%)]',
+    stationBadge: 'bg-cyan-400/25 border-cyan-300/85 text-cyan-100 shadow-[0_0_12px_rgba(34,211,238,0.35)]',
+    stationIcon: 'text-cyan-200',
+    actionBadge: 'bg-gradient-to-r from-cyan-300 to-sky-300 border-cyan-100 text-slate-950 shadow-[0_0_14px_rgba(34,211,238,0.58)]',
+    numberBadge: 'bg-gradient-to-br from-cyan-400/38 via-sky-500/32 to-blue-600/38 border-cyan-200 text-white shadow-[0_0_24px_rgba(34,211,238,0.6),inset_0_1px_0_rgba(255,255,255,0.4)]',
+  },
+  {
+    card: 'bg-gradient-to-br from-[#4A1366] via-[#2D1154] to-[#170936] border-fuchsia-400/90 hover:border-fuchsia-200 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_22px_rgba(232,121,249,0.28)] hover:shadow-[0_0_34px_rgba(232,121,249,0.65),0_14px_34px_rgba(192,132,252,0.36)]',
+    topBar: 'bg-gradient-to-r from-fuchsia-300 via-pink-400 to-purple-400 shadow-[0_0_16px_rgba(232,121,249,0.9)]',
+    spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(232,121,249,0.36),transparent_70%)]',
+    stationBadge: 'bg-fuchsia-400/25 border-fuchsia-300/85 text-fuchsia-100 shadow-[0_0_12px_rgba(232,121,249,0.35)]',
+    stationIcon: 'text-fuchsia-200',
+    actionBadge: 'bg-gradient-to-r from-fuchsia-300 to-pink-300 border-fuchsia-100 text-slate-950 shadow-[0_0_14px_rgba(232,121,249,0.58)]',
+    numberBadge: 'bg-gradient-to-br from-fuchsia-400/38 via-purple-500/32 to-pink-500/38 border-fuchsia-200 text-white shadow-[0_0_24px_rgba(232,121,249,0.6),inset_0_1px_0_rgba(255,255,255,0.4)]',
+  },
+  {
+    card: 'bg-gradient-to-br from-[#5A2D0C] via-[#3A1C0E] to-[#1D0E12] border-amber-400/90 hover:border-amber-200 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_22px_rgba(251,191,36,0.28)] hover:shadow-[0_0_34px_rgba(251,191,36,0.65),0_14px_34px_rgba(249,115,22,0.36)]',
+    topBar: 'bg-gradient-to-r from-amber-300 via-yellow-300 to-orange-400 shadow-[0_0_16px_rgba(251,191,36,0.9)]',
+    spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(251,191,36,0.36),transparent_70%)]',
+    stationBadge: 'bg-amber-400/25 border-amber-300/85 text-amber-100 shadow-[0_0_12px_rgba(251,191,36,0.35)]',
+    stationIcon: 'text-amber-200',
+    actionBadge: 'bg-gradient-to-r from-amber-300 to-yellow-300 border-amber-100 text-slate-950 shadow-[0_0_14px_rgba(251,191,36,0.58)]',
+    numberBadge: 'bg-gradient-to-br from-amber-400/38 via-orange-500/32 to-yellow-500/38 border-amber-200 text-white shadow-[0_0_24px_rgba(251,191,36,0.6),inset_0_1px_0_rgba(255,255,255,0.4)]',
+  },
+  {
+    card: 'bg-gradient-to-br from-[#1B2C7A] via-[#151F5A] to-[#0B1038] border-indigo-300/90 hover:border-indigo-100 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_22px_rgba(129,140,248,0.32)] hover:shadow-[0_0_34px_rgba(129,140,248,0.65),0_14px_34px_rgba(96,165,250,0.38)]',
+    topBar: 'bg-gradient-to-r from-blue-300 via-indigo-300 to-violet-400 shadow-[0_0_16px_rgba(129,140,248,0.9)]',
+    spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(129,140,248,0.38),transparent_70%)]',
+    stationBadge: 'bg-indigo-400/30 border-indigo-200/85 text-indigo-100 shadow-[0_0_12px_rgba(129,140,248,0.38)]',
+    stationIcon: 'text-indigo-200',
+    actionBadge: 'bg-gradient-to-r from-indigo-300 to-blue-300 border-indigo-100 text-slate-950 shadow-[0_0_14px_rgba(129,140,248,0.58)]',
+    numberBadge: 'bg-gradient-to-br from-blue-400/38 via-indigo-500/35 to-violet-500/38 border-indigo-200 text-white shadow-[0_0_24px_rgba(129,140,248,0.6),inset_0_1px_0_rgba(255,255,255,0.4)]',
+  },
+  {
+    card: 'bg-gradient-to-br from-[#61123B] via-[#3E0E2D] to-[#1F071B] border-rose-400/90 hover:border-rose-200 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_22px_rgba(251,113,133,0.28)] hover:shadow-[0_0_34px_rgba(251,113,133,0.65),0_14px_34px_rgba(244,63,94,0.36)]',
+    topBar: 'bg-gradient-to-r from-rose-300 via-pink-400 to-orange-300 shadow-[0_0_16px_rgba(251,113,133,0.9)]',
+    spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(251,113,133,0.36),transparent_70%)]',
+    stationBadge: 'bg-rose-400/25 border-rose-300/85 text-rose-100 shadow-[0_0_12px_rgba(251,113,133,0.35)]',
+    stationIcon: 'text-rose-200',
+    actionBadge: 'bg-gradient-to-r from-rose-300 to-pink-300 border-rose-100 text-slate-950 shadow-[0_0_14px_rgba(251,113,133,0.58)]',
+    numberBadge: 'bg-gradient-to-br from-rose-400/38 via-pink-500/32 to-red-500/38 border-rose-200 text-white shadow-[0_0_24px_rgba(251,113,133,0.6),inset_0_1px_0_rgba(255,255,255,0.4)]',
+  },
+  {
+    card: 'bg-gradient-to-br from-[#124559] via-[#1B225A] to-[#0C1036] border-sky-300/90 hover:border-sky-100 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_22px_rgba(56,189,248,0.3)] hover:shadow-[0_0_34px_rgba(56,189,248,0.65),0_14px_34px_rgba(168,85,247,0.36)]',
+    topBar: 'bg-gradient-to-r from-sky-300 via-cyan-300 to-purple-400 shadow-[0_0_16px_rgba(56,189,248,0.9)]',
+    spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.36),transparent_70%)]',
+    stationBadge: 'bg-sky-400/25 border-sky-300/85 text-sky-100 shadow-[0_0_12px_rgba(56,189,248,0.35)]',
+    stationIcon: 'text-sky-200',
+    actionBadge: 'bg-gradient-to-r from-sky-300 to-cyan-200 border-sky-100 text-slate-950 shadow-[0_0_14px_rgba(56,189,248,0.58)]',
+    numberBadge: 'bg-gradient-to-br from-sky-400/38 via-cyan-500/32 to-purple-500/38 border-sky-200 text-white shadow-[0_0_24px_rgba(56,189,248,0.6),inset_0_1px_0_rgba(255,255,255,0.4)]',
+  },
+];
+
+const COMPLETED_CARD_THEME = {
+  card: 'bg-gradient-to-br from-[#065F46] via-[#073B3A] to-[#042127] border-emerald-300/95 hover:border-emerald-200 shadow-[0_10px_28px_rgba(3,7,24,0.68),0_0_24px_rgba(52,211,153,0.38)] hover:shadow-[0_0_36px_rgba(52,211,153,0.72),0_14px_34px_rgba(16,185,129,0.42)]',
+  topBar: 'bg-gradient-to-r from-emerald-300 via-lime-300 to-teal-300 shadow-[0_0_18px_rgba(52,211,153,0.95)]',
+  spotlight: 'bg-[radial-gradient(circle_at_50%_0%,rgba(52,211,153,0.38),transparent_70%)]',
+  actionBadge: 'bg-gradient-to-r from-emerald-300 to-lime-300 border-emerald-100 text-slate-950 shadow-[0_0_14px_rgba(52,211,153,0.65)]',
+  numberBadge: 'bg-gradient-to-br from-emerald-400/42 via-teal-500/36 to-lime-400/32 border-emerald-200 text-white shadow-[0_0_26px_rgba(52,211,153,0.7),inset_0_1px_0_rgba(255,255,255,0.45)]',
+};
+
 export const AdventureMap: React.FC<AdventureMapProps> = ({
   completedLessonIds,
   totalStars,
@@ -77,15 +162,15 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
       {selectedTopicId && focusedTopic ? (
         <div className="relative z-10 space-y-6 animate-in fade-in duration-200">
           {/* Cosmic Station Banner */}
-          <div className="relative overflow-hidden rounded-3xl border border-cyan-300/35 bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.24),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_rgba(168,85,247,0.24),_transparent_55%),linear-gradient(135deg,_rgba(10,16,52,0.98),_rgba(24,20,76,0.96))] p-6 md:p-8 text-white shadow-[0_24px_60px_rgba(3,7,24,0.75)]">
+          <div className="relative overflow-hidden rounded-3xl border border-cyan-300/50 bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.3),_transparent_52%),radial-gradient(ellipse_at_bottom_right,_rgba(168,85,247,0.28),_transparent_56%),linear-gradient(135deg,_rgba(10,16,52,0.98),_rgba(24,20,76,0.96))] p-6 md:p-8 text-white shadow-[0_24px_64px_rgba(3,7,24,0.82),0_0_40px_rgba(34,211,238,0.2)]">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-pink-500"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-pink-500 shadow-[0_0_18px_rgba(34,211,238,0.8)]"
             />
             <div className="relative z-10 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3 text-xs font-black uppercase tracking-wider">
-                  <span className="text-amber-300 inline-flex items-center gap-1.5">
+                  <span className="text-amber-300 inline-flex items-center gap-1.5 drop-shadow-[0_0_10px_rgba(251,191,36,0.65)]">
                     <Orbit className="w-4 h-4" aria-hidden="true" />
                     <span>Trạm Đang Thực Thi</span>
                   </span>
@@ -101,25 +186,29 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                     sound.playClick();
                     setSelectedTopicId(null);
                   }}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-cyan-400/20 border border-cyan-300/30 text-xs font-bold text-white transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-cyan-400/20 border border-cyan-300/40 hover:border-cyan-300/80 shadow-[0_0_16px_rgba(34,211,238,0.18)] text-xs font-bold text-white transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
                   <span>Xem toàn cảnh 6 Trạm</span>
                 </button>
               </div>
 
-              <div>
-                <h1 className="text-2xl md:text-4xl font-black font-display tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-300 bg-clip-text text-transparent">
+              <div className="relative">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-x-4 -inset-y-2 rounded-full bg-[radial-gradient(ellipse_at_left,_rgba(56,189,248,0.28),_transparent_65%)] blur-xl cosmic-light-bloom"
+                />
+                <h1 className="relative text-2xl md:text-4xl font-black font-display tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-300 bg-clip-text text-transparent cosmic-glow-title-cyan">
                   {focusedTopic.title}
                 </h1>
-                <p className="text-sm md:text-base text-indigo-100/90 font-medium mt-1.5">
+                <p className="relative text-sm md:text-base text-indigo-100/95 font-medium mt-1.5">
                   {focusedTopic.subtitle}
                 </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-3.5 text-xs font-bold pt-1">
-                <div className="bg-gradient-to-br from-cyan-400/20 via-[#131C4B]/90 to-fuchsia-500/20 border border-cyan-300/55 px-4 py-2.5 rounded-2xl flex items-center gap-2.5 text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.28)]">
-                  <Gem className="w-4 h-4 text-cyan-300 drop-shadow-[0_0_6px_rgba(34,211,238,0.85)]" aria-hidden="true" />
+                <div className="bg-gradient-to-br from-cyan-400/25 via-[#131C4B]/90 to-fuchsia-500/25 border border-cyan-300/65 px-4 py-2.5 rounded-2xl flex items-center gap-2.5 text-cyan-100 shadow-[0_0_28px_rgba(34,211,238,0.34)]">
+                  <Gem className="w-4 h-4 text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.9)]" aria-hidden="true" />
                   <span className="tabular-nums font-black">{completedInFocused * 3} Tinh thể tích lũy tại trạm</span>
                 </div>
               </div>
@@ -137,10 +226,13 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {focusedLessons.map((lesson) => {
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-3.5">
+              {focusedLessons.map((lesson, idx) => {
                 const isDone = completedLessonIds.includes(lesson.id);
                 const isHighlighted = highlightLessonId === lesson.id;
+                const stationIdx = Math.max(0, TOPICS.findIndex((t) => t.id === lesson.topicId));
+                const stationTheme = STATION_CARD_THEMES[stationIdx % STATION_CARD_THEMES.length];
+                const lessonNum = LESSON_STATION_NUMBER_MAP[lesson.id] ?? idx + 1;
 
                 return (
                   <button
@@ -151,65 +243,77 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                       sound.playClick();
                       onSelectLesson(lesson.id);
                     }}
-                    className={`group relative overflow-hidden p-5 rounded-3xl border text-left flex flex-col justify-between gap-3 transition-all duration-200 hover:-translate-y-1 cursor-pointer backdrop-blur-xl ${
+                    className={`group relative overflow-hidden p-2.5 sm:p-3 rounded-2xl border-2 text-left flex flex-col justify-between gap-2.5 min-h-[108px] w-full min-w-0 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer backdrop-blur-xl ${
                       isHighlighted
-                        ? 'bg-gradient-to-br from-[#1E2B72]/95 to-[#2D1864]/95 border-cyan-300 ring-2 ring-cyan-300/65 animate-cosmic-beacon'
+                        ? 'bg-gradient-to-br from-[#1E2B72] via-[#2A1D6E] to-[#13184A] border-amber-300 ring-2 ring-amber-300/75 shadow-[0_0_32px_rgba(251,191,36,0.55)] animate-cosmic-beacon'
                         : isDone
-                        ? 'bg-gradient-to-br from-[#0F2A56]/95 to-[#0B1C42]/95 border-emerald-400/55 hover:border-emerald-300 hover:shadow-[0_0_34px_rgba(52,211,153,0.34),0_16px_42px_rgba(34,211,238,0.2)] shadow-lg'
-                        : 'bg-gradient-to-br from-[#131E58]/95 to-[#0B1136]/95 border-indigo-400/35 hover:border-cyan-300 hover:shadow-[0_0_36px_rgba(34,211,238,0.38),0_18px_44px_rgba(168,85,247,0.26)] shadow-md'
+                        ? COMPLETED_CARD_THEME.card
+                        : stationTheme.card
                     }`}
                   >
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.24),transparent_68%)]"
+                      className={`pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                        isDone ? COMPLETED_CARD_THEME.spotlight : stationTheme.spotlight
+                      }`}
                     />
                     <span
                       aria-hidden="true"
-                      className={`pointer-events-none absolute top-0 inset-x-5 h-[2px] rounded-full transition-all duration-300 ${
+                      className={`pointer-events-none absolute top-0 inset-x-3 h-[3px] rounded-full transition-all duration-300 ${
                         isHighlighted
-                          ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 shadow-[0_0_16px_rgba(56,189,248,0.85)]'
+                          ? 'bg-gradient-to-r from-amber-300 via-cyan-300 to-fuchsia-400 shadow-[0_0_18px_rgba(251,191,36,0.95)]'
                           : isDone
-                          ? 'bg-gradient-to-r from-emerald-300 to-cyan-400 opacity-85 group-hover:opacity-100 group-hover:shadow-[0_0_16px_rgba(52,211,153,0.8)]'
-                          : 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 opacity-55 group-hover:opacity-100 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.85)]'
+                          ? COMPLETED_CARD_THEME.topBar
+                          : stationTheme.topBar
                       }`}
                     />
-                    <div className="relative z-10 flex items-start justify-between gap-2 w-full">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{lesson.mascot.avatar}</span>
-                        <span className="text-[11px] font-extrabold text-cyan-200 uppercase tracking-wider">
-                          {lesson.badgeTitle}
-                        </span>
-                      </div>
 
-                      <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="relative z-10 flex flex-wrap items-center justify-between gap-1 w-full min-w-0 pt-0.5">
+                      <span
+                        className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-black uppercase tracking-tight leading-tight whitespace-nowrap max-w-full ${stationTheme.stationBadge}`}
+                      >
+                        <Orbit className={`w-2.5 h-2.5 shrink-0 ${stationTheme.stationIcon}`} aria-hidden="true" />
+                        <span>Trạm 0{stationIdx + 1}</span>
+                      </span>
+
+                      <div className="flex items-center gap-1 max-w-full">
                         {isHighlighted && (
-                          <span className="inline-flex items-center gap-1.5 text-cyan-200 font-black text-[11px]">
-                            <span className="relative flex h-2 w-2" aria-hidden="true">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-300 opacity-75" />
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-300" />
-                            </span>
-                            Vừa thực hiện
+                          <span className="relative flex h-2 w-2 shrink-0" aria-label="Vừa thực hiện">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-85" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-300" />
                           </span>
                         )}
                         {isDone ? (
-                          <span className="flex items-center gap-1 text-[11px] font-black text-emerald-300">
-                            <CheckCircle className="w-3.5 h-3.5" aria-hidden="true" /> Xong
+                          <span
+                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-black leading-tight whitespace-nowrap max-w-full ${COMPLETED_CARD_THEME.actionBadge}`}
+                          >
+                            <CheckCircle className="w-2.5 h-2.5 shrink-0" aria-hidden="true" />
+                            <span>Xong</span>
                           </span>
                         ) : (
-                          <span className="flex items-center gap-1 text-[11px] font-bold text-cyan-300">
-                            <Play className="w-3 h-3 fill-cyan-300" aria-hidden="true" /> Bắt đầu
+                          <span
+                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-black leading-tight whitespace-nowrap max-w-full transition-all group-hover:brightness-110 ${stationTheme.actionBadge}`}
+                          >
+                            <Play className="w-2.5 h-2.5 fill-current shrink-0" aria-hidden="true" />
+                            <span>Bắt đầu</span>
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <p className="relative z-10 font-extrabold font-display text-white group-hover:text-cyan-200 text-base line-clamp-2 leading-snug transition-colors">
-                      {lesson.title}
-                    </p>
-
-                    <p className="relative z-10 text-xs text-indigo-200/80 line-clamp-1">
-                      {lesson.instruction}
-                    </p>
+                    <div className="relative z-10 flex items-center justify-center w-full min-w-0 py-0.5">
+                      <span
+                        className={`inline-flex items-center justify-center min-w-[3.4rem] max-w-full px-3.5 py-1.5 rounded-xl border-2 text-2xl sm:text-[28px] leading-none font-black font-display tabular-nums tracking-tight transition-all duration-200 ${
+                          isHighlighted
+                            ? 'bg-gradient-to-br from-amber-400/40 via-cyan-400/35 to-fuchsia-500/35 border-amber-200 text-white shadow-[0_0_26px_rgba(251,191,36,0.75)]'
+                            : isDone
+                            ? COMPLETED_CARD_THEME.numberBadge
+                            : stationTheme.numberBadge
+                        }`}
+                      >
+                        {lessonNum}
+                      </span>
+                    </div>
                   </button>
                 );
               })}
@@ -220,10 +324,10 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
         /* VIEW MODE 2: COSMIC OBSERVATORY OVERVIEW MAP */
         <div className="relative z-10 space-y-5 sm:space-y-7 animate-in fade-in duration-200">
           {/* Cosmic Observatory Hero Banner */}
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[28px] border border-cyan-300/35 bg-[radial-gradient(ellipse_at_12%_16%,_rgba(56,189,248,0.34),_transparent_46%),radial-gradient(ellipse_at_88%_18%,_rgba(192,132,252,0.3),_transparent_46%),radial-gradient(ellipse_at_70%_95%,_rgba(245,158,11,0.25),_transparent_52%),linear-gradient(130deg,_#05091F_0%,_#111648_48%,_#29115B_100%)] backdrop-blur-2xl p-5 sm:p-8 lg:p-11 text-white shadow-[0_24px_70px_rgba(3,7,24,0.8)]">
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-[28px] border border-cyan-300/50 bg-[radial-gradient(ellipse_at_12%_16%,_rgba(56,189,248,0.42),_transparent_48%),radial-gradient(ellipse_at_88%_18%,_rgba(192,132,252,0.36),_transparent_48%),radial-gradient(ellipse_at_70%_95%,_rgba(245,158,11,0.3),_transparent_52%),linear-gradient(130deg,_#05091F_0%,_#111648_48%,_#29115B_100%)] backdrop-blur-2xl p-5 sm:p-8 lg:p-11 text-white shadow-[0_26px_76px_rgba(3,7,24,0.86),0_0_46px_rgba(34,211,238,0.22),inset_0_1px_0_rgba(165,243,252,0.24)]">
             {/* Ambient Aurora Glow Orbs */}
-            <div className="pointer-events-none absolute -top-24 left-1/3 w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-cyan-400/18 blur-[100px]" aria-hidden="true" />
-            <div className="pointer-events-none absolute -bottom-24 right-1/4 w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-fuchsia-500/16 blur-[110px]" aria-hidden="true" />
+            <div className="pointer-events-none absolute -top-24 left-1/3 w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-cyan-400/25 blur-[100px] cosmic-light-bloom" aria-hidden="true" />
+            <div className="pointer-events-none absolute -bottom-24 right-1/4 w-72 sm:w-80 h-72 sm:h-80 rounded-full bg-fuchsia-500/22 blur-[110px] cosmic-light-bloom" aria-hidden="true" />
 
             {/* Flagship Ringed Planet, Comet, Constellation & Astrolabe SVG */}
             <svg
@@ -289,51 +393,55 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
             {/* Top & Bottom Hairline Neon Beams */}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 sm:inset-x-10 h-[2px] rounded-full bg-gradient-to-r from-transparent via-cyan-300/85 to-transparent shadow-[0_0_18px_rgba(34,211,238,0.65)]"
+              className="pointer-events-none absolute top-0 inset-x-6 sm:inset-x-10 h-[2.5px] rounded-full bg-gradient-to-r from-transparent via-cyan-300 to-transparent shadow-[0_0_24px_rgba(34,211,238,0.85)]"
             />
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-0 inset-x-6 sm:inset-x-10 h-[2px] rounded-full bg-gradient-to-r from-transparent via-amber-300/75 to-transparent shadow-[0_0_16px_rgba(251,191,36,0.5)]"
+              className="pointer-events-none absolute bottom-0 inset-x-6 sm:inset-x-10 h-[2.5px] rounded-full bg-gradient-to-r from-transparent via-amber-300 to-transparent shadow-[0_0_22px_rgba(251,191,36,0.72)]"
             />
 
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-8">
               <div className="w-full lg:max-w-3xl space-y-5 sm:space-y-6">
-                <div className="space-y-2.5 sm:space-y-3">
-                  <div className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.16em] sm:tracking-[0.26em] text-cyan-200/95">
-                    <Orbit className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0" aria-hidden="true" />
+                <div className="space-y-2.5 sm:space-y-3 relative">
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-x-6 top-2 bottom-0 rounded-full bg-[radial-gradient(ellipse_at_28%_55%,_rgba(56,189,248,0.3),_rgba(251,191,36,0.14)_48%,_transparent_74%)] blur-2xl cosmic-light-bloom"
+                  />
+                  <div className="relative inline-flex items-center gap-2 text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.16em] sm:tracking-[0.26em] text-cyan-100 drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]">
+                    <Orbit className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0 drop-shadow-[0_0_10px_rgba(251,191,36,0.85)]" aria-hidden="true" />
                     <span>Hành Trình Khám Phá 6 Trạm Vũ Trụ</span>
                   </div>
 
-                  <h1 className="font-display [text-wrap:balance]">
-                    <span className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 text-2xl sm:text-4xl lg:text-[46px] font-black uppercase tracking-tight leading-[1.12]">
-                      <span className="bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_6px_30px_rgba(56,189,248,0.48)]">
+                  <h1 className="relative font-display [text-wrap:balance]">
+                    <span className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 text-2xl sm:text-4xl lg:text-[46px] font-black uppercase tracking-tight leading-[1.12] drop-shadow-[0_0_26px_rgba(56,189,248,0.45)]">
+                      <span className="bg-gradient-to-r from-white via-cyan-100 to-sky-300 bg-clip-text text-transparent cosmic-glow-title-cyan">
                         TRẠM KHÔNG GIAN
                       </span>
-                      <span aria-hidden="true" className="text-amber-300 text-lg sm:text-2xl lg:text-3xl drop-shadow-[0_0_14px_rgba(251,191,36,0.85)]">
+                      <span aria-hidden="true" className="text-amber-300 text-lg sm:text-2xl lg:text-3xl drop-shadow-[0_0_20px_rgba(251,191,36,0.98)] animate-pulse">
                         ✦
                       </span>
-                      <span className="bg-gradient-to-r from-amber-200 via-yellow-100 to-orange-300 bg-clip-text text-transparent drop-shadow-[0_6px_28px_rgba(251,191,36,0.52)]">
+                      <span className="bg-gradient-to-r from-amber-100 via-yellow-200 to-orange-300 bg-clip-text text-transparent cosmic-glow-title-gold">
                         TOÁN TƯ DUY
                       </span>
                     </span>
                     <span
                       aria-hidden="true"
-                      className="block mt-2.5 sm:mt-3 h-1 w-28 sm:w-44 rounded-full bg-gradient-to-r from-amber-300 via-cyan-300 to-fuchsia-400 shadow-[0_0_20px_rgba(34,211,238,0.8)]"
+                      className="block mt-2.5 sm:mt-3 h-[4px] w-32 sm:w-52 rounded-full bg-gradient-to-r from-amber-300 via-cyan-300 to-fuchsia-400 shadow-[0_0_26px_rgba(34,211,238,0.95),0_0_42px_rgba(251,191,36,0.45)]"
                     />
                   </h1>
                 </div>
 
                 {/* Cosmic Telemetry Progress Pods (Responsive 2-col on mobile, inline on sm+) */}
                 <div className="grid grid-cols-2 sm:inline-flex items-stretch gap-2.5 sm:gap-4 w-full sm:w-auto text-xs sm:text-sm font-black">
-                  <div className="relative overflow-hidden bg-gradient-to-br from-cyan-400/22 via-indigo-500/28 to-fuchsia-500/22 border border-cyan-300/60 px-3 py-3 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl flex items-center gap-2.5 sm:gap-3.5 shadow-[0_12px_34px_rgba(34,211,238,0.24),inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-xl min-w-0">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-cyan-400/26 via-indigo-500/32 to-fuchsia-500/26 border border-cyan-300/75 px-3 py-3 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl flex items-center gap-2.5 sm:gap-3.5 shadow-[0_0_32px_rgba(34,211,238,0.34),0_12px_34px_rgba(34,211,238,0.24),inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-xl min-w-0">
                     <span
                       aria-hidden="true"
-                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-cyan-300 via-sky-400 to-fuchsia-400 text-slate-950 flex items-center justify-center shadow-[0_0_22px_rgba(34,211,238,0.7)] shrink-0 ring-2 ring-white/25"
+                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-cyan-300 via-sky-400 to-fuchsia-400 text-slate-950 flex items-center justify-center shadow-[0_0_26px_rgba(34,211,238,0.85)] shrink-0 ring-2 ring-white/35"
                     >
                       <Gem className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
                     </span>
                     <div className="flex flex-col leading-tight min-w-0">
-                      <span className="text-lg sm:text-2xl font-black text-white tabular-nums tracking-tight drop-shadow-[0_2px_10px_rgba(34,211,238,0.5)]">
+                      <span className="text-lg sm:text-2xl font-black text-white tabular-nums tracking-tight drop-shadow-[0_0_14px_rgba(34,211,238,0.72)]">
                         {totalStars}
                       </span>
                       <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide sm:tracking-wider text-cyan-200 mt-0.5 truncate">
@@ -342,17 +450,17 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                     </div>
                   </div>
 
-                  <div className="relative overflow-hidden bg-gradient-to-br from-amber-300/20 via-[#151E54]/90 to-emerald-400/20 border border-amber-300/50 px-3 py-3 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl flex items-center gap-2.5 sm:gap-3.5 shadow-[0_12px_32px_rgba(251,191,36,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-xl min-w-0">
+                  <div className="relative overflow-hidden bg-gradient-to-br from-amber-300/24 via-[#151E54]/90 to-emerald-400/24 border border-amber-300/65 px-3 py-3 sm:px-5 sm:py-3.5 rounded-xl sm:rounded-2xl flex items-center gap-2.5 sm:gap-3.5 shadow-[0_0_30px_rgba(251,191,36,0.28),0_12px_32px_rgba(251,191,36,0.22),inset_0_1px_0_rgba(255,255,255,0.26)] backdrop-blur-xl min-w-0">
                     <span
                       aria-hidden="true"
-                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-200 via-amber-400 to-emerald-400 text-slate-950 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.55)] shrink-0 ring-2 ring-white/25"
+                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-amber-200 via-amber-400 to-emerald-400 text-slate-950 flex items-center justify-center shadow-[0_0_24px_rgba(251,191,36,0.72)] shrink-0 ring-2 ring-white/35"
                     >
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
                     </span>
                     <div className="flex flex-col leading-tight min-w-0">
-                      <span className="text-lg sm:text-2xl font-black text-white tabular-nums tracking-tight">
+                      <span className="text-lg sm:text-2xl font-black text-white tabular-nums tracking-tight drop-shadow-[0_0_14px_rgba(251,191,36,0.58)]">
                         {completedLessonIds.length}
-                        <span className="text-amber-200/85 text-xs sm:text-sm font-extrabold"> / {ALL_LESSONS.length}</span>
+                        <span className="text-amber-200/90 text-xs sm:text-sm font-extrabold"> / {ALL_LESSONS.length}</span>
                       </span>
                       <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wide sm:tracking-wider text-amber-200 mt-0.5 truncate">
                         Thử thách hoàn thành
@@ -428,18 +536,18 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                   return (
                     <div
                       key={topic.id}
-                      className="group relative overflow-hidden bg-gradient-to-br from-[#131E58]/95 to-[#0B1136]/98 backdrop-blur-xl rounded-3xl border border-indigo-400/35 hover:border-cyan-300 shadow-[0_18px_46px_rgba(3,7,24,0.65)] hover:shadow-[0_0_40px_rgba(34,211,238,0.36),0_22px_54px_rgba(168,85,247,0.28)] transition-all duration-200 flex flex-col justify-between"
+                      className="group relative overflow-hidden bg-gradient-to-br from-[#131E58]/95 to-[#0B1136]/98 backdrop-blur-xl rounded-3xl border border-cyan-300/35 hover:border-cyan-200 shadow-[0_18px_46px_rgba(3,7,24,0.68),0_0_24px_rgba(34,211,238,0.12)] hover:shadow-[0_0_48px_rgba(34,211,238,0.44),0_22px_58px_rgba(168,85,247,0.34)] transition-all duration-200 flex flex-col justify-between"
                     >
                       <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.22),transparent_65%)]"
+                        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.28),transparent_65%)]"
                       />
                       <span
                         aria-hidden="true"
-                        className={`pointer-events-none absolute top-0 inset-x-5 h-[2px] rounded-full transition-all duration-300 ${
+                        className={`pointer-events-none absolute top-0 inset-x-5 h-[2.5px] rounded-full transition-all duration-300 ${
                           isAllCompleted
-                            ? 'bg-gradient-to-r from-emerald-300 to-cyan-400 group-hover:shadow-[0_0_16px_rgba(52,211,153,0.85)]'
-                            : 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 opacity-75 group-hover:opacity-100 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.85)]'
+                            ? 'bg-gradient-to-r from-emerald-300 to-cyan-400 shadow-[0_0_14px_rgba(52,211,153,0.65)] group-hover:shadow-[0_0_22px_rgba(52,211,153,0.95)]'
+                            : 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 opacity-85 shadow-[0_0_12px_rgba(56,189,248,0.45)] group-hover:opacity-100 group-hover:shadow-[0_0_22px_rgba(56,189,248,0.95)]'
                         }`}
                       />
 
@@ -560,7 +668,7 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
             <div className="space-y-6 animate-in fade-in duration-200">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black font-display uppercase tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-300 bg-clip-text text-transparent">
+                  <h2 className="text-xl sm:text-2xl font-black font-display uppercase tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-300 bg-clip-text text-transparent cosmic-glow-title-cyan">
                     TẤT CẢ CÁC TRẠM
                   </h2>
                   <p className="text-xs sm:text-sm text-cyan-200/85 font-medium mt-0.5">
@@ -634,14 +742,16 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
               </div>
 
               {/* All Lessons Cosmic Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-3.5">
                 {(allTopicFilter === 'all'
                   ? ALL_LESSONS
                   : ALL_LESSONS.filter((l) => l.topicId === allTopicFilter)
-                ).map((lesson) => {
+                ).map((lesson, idx) => {
                   const isDone = completedLessonIds.includes(lesson.id);
                   const isHighlighted = highlightLessonId === lesson.id;
-                  const stationIdx = TOPICS.findIndex((t) => t.id === lesson.topicId);
+                  const stationIdx = Math.max(0, TOPICS.findIndex((t) => t.id === lesson.topicId));
+                  const stationTheme = STATION_CARD_THEMES[stationIdx % STATION_CARD_THEMES.length];
+                  const lessonNum = LESSON_STATION_NUMBER_MAP[lesson.id] ?? idx + 1;
 
                   return (
                     <button
@@ -652,65 +762,75 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
                         sound.playClick();
                         onSelectLesson(lesson.id);
                       }}
-                      className={`group relative overflow-hidden p-5 rounded-3xl border text-left flex flex-col justify-between gap-3.5 transition-all duration-200 hover:-translate-y-1 cursor-pointer backdrop-blur-xl ${
+                      className={`group relative overflow-hidden p-2.5 sm:p-3 rounded-2xl border-2 text-left flex flex-col justify-between gap-2.5 min-h-[108px] w-full min-w-0 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer backdrop-blur-xl ${
                         isHighlighted
-                          ? 'bg-gradient-to-br from-[#1E2B72]/95 to-[#2D1864]/95 border-cyan-300 ring-2 ring-cyan-300/65 animate-cosmic-beacon'
+                          ? 'bg-gradient-to-br from-[#1E2B72] via-[#2A1D6E] to-[#13184A] border-amber-300 ring-2 ring-amber-300/75 shadow-[0_0_32px_rgba(251,191,36,0.55)] animate-cosmic-beacon'
                           : isDone
-                          ? 'bg-gradient-to-br from-[#0F2A56]/95 to-[#0B1C42]/95 border-emerald-400/55 shadow-[0_16px_40px_rgba(3,7,24,0.6)] hover:border-emerald-300 hover:shadow-[0_0_34px_rgba(52,211,153,0.34),0_16px_42px_rgba(34,211,238,0.2)]'
-                          : 'bg-gradient-to-br from-[#131E58]/95 to-[#0B1136]/98 border-indigo-400/35 hover:border-cyan-300 shadow-[0_16px_40px_rgba(3,7,24,0.6)] hover:shadow-[0_0_36px_rgba(34,211,238,0.38),0_18px_44px_rgba(168,85,247,0.26)]'
+                          ? COMPLETED_CARD_THEME.card
+                          : stationTheme.card
                       }`}
                     >
                       <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.24),transparent_68%)]"
+                        className={`pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                          isDone ? COMPLETED_CARD_THEME.spotlight : stationTheme.spotlight
+                        }`}
                       />
                       <span
                         aria-hidden="true"
-                        className={`pointer-events-none absolute top-0 inset-x-5 h-[2px] rounded-full transition-all duration-300 ${
+                        className={`pointer-events-none absolute top-0 inset-x-3 h-[3px] rounded-full transition-all duration-300 ${
                           isHighlighted
-                            ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 shadow-[0_0_16px_rgba(56,189,248,0.85)]'
+                            ? 'bg-gradient-to-r from-amber-300 via-cyan-300 to-fuchsia-400 shadow-[0_0_18px_rgba(251,191,36,0.95)]'
                             : isDone
-                            ? 'bg-gradient-to-r from-emerald-300 to-cyan-400 opacity-85 group-hover:opacity-100 group-hover:shadow-[0_0_16px_rgba(52,211,153,0.8)]'
-                            : 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 opacity-55 group-hover:opacity-100 group-hover:shadow-[0_0_16px_rgba(56,189,248,0.85)]'
+                            ? COMPLETED_CARD_THEME.topBar
+                            : stationTheme.topBar
                         }`}
                       />
 
-                      <div className="relative z-10 space-y-3 w-full">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-cyan-200 uppercase tracking-wider">
-                            <Orbit className="w-3.5 h-3.5 text-cyan-300 shrink-0" aria-hidden="true" />
-                            <span>Trạm 0{stationIdx + 1} · {lesson.badgeTitle}</span>
-                          </span>
+                      <div className="relative z-10 flex flex-wrap items-center justify-between gap-1 w-full min-w-0 pt-0.5">
+                        <span
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-black uppercase tracking-tight leading-tight whitespace-nowrap max-w-full ${stationTheme.stationBadge}`}
+                        >
+                          <Orbit className={`w-2.5 h-2.5 shrink-0 ${stationTheme.stationIcon}`} aria-hidden="true" />
+                          <span>Trạm 0{stationIdx + 1}</span>
+                        </span>
+
+                        <div className="flex items-center gap-1 max-w-full">
+                          {isHighlighted && (
+                            <span className="relative flex h-2 w-2 shrink-0" aria-label="Vừa thực hiện">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-85" />
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-300" />
+                            </span>
+                          )}
                           {isDone ? (
-                            <span className="flex items-center gap-1 text-[11px] font-black text-emerald-300 shrink-0">
-                              <CheckCircle className="w-3.5 h-3.5" aria-hidden="true" /> Đã xong
+                            <span
+                              className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-black leading-tight whitespace-nowrap max-w-full ${COMPLETED_CARD_THEME.actionBadge}`}
+                            >
+                              <CheckCircle className="w-2.5 h-2.5 shrink-0" aria-hidden="true" />
+                              <span>Xong</span>
                             </span>
                           ) : (
-                            <span className="flex items-center gap-1 text-[11px] font-bold text-cyan-300 shrink-0">
-                              <Play className="w-3 h-3 fill-cyan-300" aria-hidden="true" /> Bắt đầu
+                            <span
+                              className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[10px] font-black leading-tight whitespace-nowrap max-w-full transition-all group-hover:brightness-110 ${stationTheme.actionBadge}`}
+                            >
+                              <Play className="w-2.5 h-2.5 fill-current shrink-0" aria-hidden="true" />
+                              <span>Bắt đầu</span>
                             </span>
                           )}
                         </div>
-
-                        <div className="flex items-start gap-3">
-                          <span className="text-3xl p-2.5 bg-[#080E2B]/90 rounded-2xl border border-cyan-300/25 shrink-0">
-                            {lesson.mascot.avatar}
-                          </span>
-                          <div className="min-w-0">
-                            <h3 className="font-extrabold font-display text-white group-hover:text-cyan-200 text-sm md:text-base leading-snug transition-colors">
-                              {lesson.title}
-                            </h3>
-                            <p className="text-xs text-indigo-200/80 line-clamp-2 mt-1">
-                              {lesson.instruction}
-                            </p>
-                          </div>
-                        </div>
                       </div>
 
-                      <div className="relative z-10 w-full pt-3 border-t border-white/10 flex items-center justify-between gap-2 text-xs font-bold">
-                        <span className="text-indigo-300/80 truncate">{lesson.topicName}</span>
-                        <span className="text-cyan-300 flex items-center gap-1 shrink-0 group-hover:translate-x-1 transition-transform">
-                          Luyện tập ngay <Play className="w-3 h-3 fill-cyan-300" aria-hidden="true" />
+                      <div className="relative z-10 flex items-center justify-center w-full min-w-0 py-0.5">
+                        <span
+                          className={`inline-flex items-center justify-center min-w-[3.4rem] max-w-full px-3.5 py-1.5 rounded-xl border-2 text-2xl sm:text-[28px] leading-none font-black font-display tabular-nums tracking-tight transition-all duration-200 ${
+                            isHighlighted
+                              ? 'bg-gradient-to-br from-amber-400/40 via-cyan-400/35 to-fuchsia-500/35 border-amber-200 text-white shadow-[0_0_26px_rgba(251,191,36,0.75)]'
+                              : isDone
+                              ? COMPLETED_CARD_THEME.numberBadge
+                              : stationTheme.numberBadge
+                          }`}
+                        >
+                          {lessonNum}
                         </span>
                       </div>
                     </button>

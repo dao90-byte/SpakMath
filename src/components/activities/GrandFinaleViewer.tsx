@@ -132,9 +132,9 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
   return (
     <div className="space-y-6 flex flex-col items-center w-full max-w-2xl mx-auto select-none">
       {/* Trophy & Progress header */}
-      <div className="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-white rounded-3xl p-5 md:p-6 text-center w-full shadow-lg border-2 border-yellow-300">
-        <div className="inline-flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2">
-          <Trophy className="w-4 h-4 text-amber-200" />
+      <div className="bg-[radial-gradient(ellipse_at_top_left,_rgba(251,191,36,0.34),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(217,70,239,0.28),_transparent_55%),linear-gradient(135deg,_#121A4F_0%,_#1D1252_55%,_#241145_100%)] text-white rounded-3xl p-5 md:p-6 text-center w-full shadow-[0_20px_54px_rgba(3,7,24,0.85),0_0_36px_rgba(251,191,36,0.28)] border-2 border-amber-300/70">
+        <div className="inline-flex items-center gap-2 bg-amber-400/20 border border-amber-300/50 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-2 text-amber-200">
+          <Trophy className="w-4 h-4 text-amber-300" />
           {title}
         </div>
         <h2 className="text-xl md:text-2xl font-black font-display">
@@ -263,29 +263,29 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
         </div>
       ) : (
         /* Certificate & Trophy Celebration */
-        <div className="w-full bg-gradient-to-b from-amber-50 via-white to-amber-50 rounded-3xl border-4 border-amber-400 p-6 md:p-8 shadow-xl text-center space-y-4 relative overflow-hidden">
-          <div className="absolute top-2 right-2 text-amber-300/40 text-7xl select-none pointer-events-none">
+        <div className="w-full bg-[radial-gradient(ellipse_at_top,_rgba(251,191,36,0.26),_transparent_55%),radial-gradient(ellipse_at_bottom_right,_rgba(217,70,239,0.22),_transparent_55%),linear-gradient(160deg,_#0A1138_0%,_#15114A_55%,_#090D2E_100%)] rounded-3xl border-2 border-amber-300/75 p-6 md:p-8 shadow-[0_28px_72px_rgba(3,7,24,0.88),0_0_48px_rgba(251,191,36,0.28)] text-center space-y-4 relative overflow-hidden">
+          <div className="absolute top-2 right-2 text-amber-300/25 text-7xl select-none pointer-events-none">
             🏆
           </div>
 
-          <div className="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto shadow-inner border-2 border-amber-300">
-            <Trophy className="w-10 h-10 animate-pulse text-amber-500" />
+          <div className="w-20 h-20 bg-amber-400/20 text-amber-300 rounded-full flex items-center justify-center mx-auto shadow-[0_0_28px_rgba(251,191,36,0.45)] border-2 border-amber-300/70">
+            <Trophy className="w-10 h-10 animate-pulse text-amber-300" />
           </div>
 
-          <span className="inline-block text-xs font-black uppercase tracking-widest text-amber-800 bg-amber-200/80 px-3 py-1 rounded-full">
+          <span className="inline-block text-xs font-black uppercase tracking-widest text-amber-200 bg-amber-400/20 border border-amber-300/50 px-3 py-1 rounded-full">
             Chứng Nhận Danh Dự
           </span>
 
-          <h2 className="text-2xl md:text-3xl font-black text-slate-900 font-display">
+          <h2 className="text-2xl md:text-3xl font-black text-amber-100 font-display cosmic-glow-title-gold">
             VƯƠNG MIỆN QUÁN QUÂN TOÁN TƯ DUY
           </h2>
 
-          <p className="text-sm md:text-base text-slate-700 max-w-md mx-auto font-medium">
+          <p className="text-sm md:text-base text-slate-100 max-w-md mx-auto font-medium">
             Chúc mừng bạn đã xuất sắc vượt qua toàn bộ Đấu Trường Siêu Thử Thách! Bạn đã trả lời đúng{' '}
-            <strong className="text-amber-600 font-black">{score}/{totalRounds}</strong> câu hỏi thử thách đỉnh cao.
+            <strong className="text-amber-300 font-black">{score}/{totalRounds}</strong> câu hỏi thử thách đỉnh cao.
           </p>
 
-          <div className="flex items-center justify-center gap-1 text-amber-500 text-2xl my-2">
+          <div className="flex items-center justify-center gap-1 text-amber-400 text-2xl my-2">
             {'⭐⭐⭐⭐⭐'.split('').map((s, idx) => (
               <span key={idx} className="animate-bounce" style={{ animationDelay: `${idx * 100}ms` }}>
                 {s}
@@ -293,15 +293,15 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
             ))}
           </div>
 
-          <div className="p-4 bg-amber-100/60 rounded-2xl border border-amber-300 text-xs text-amber-950 font-bold max-w-sm mx-auto">
-            Huy hiệu: <strong className="text-amber-800">Hiệp Sĩ Toán Học Xuất Sắc Lớp 3</strong>
+          <div className="p-4 bg-amber-400/15 rounded-2xl border border-amber-300/45 text-xs text-amber-100 font-bold max-w-sm mx-auto">
+            Huy hiệu: <strong className="text-amber-200">Hiệp Sĩ Toán Học Xuất Sắc Lớp 3</strong>
           </div>
 
           <div className="pt-4 flex justify-center">
             <button
               type="button"
               onClick={handleRestart}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white border-2 border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/10 border border-cyan-300/45 text-white font-bold text-xs hover:bg-cyan-400/20 transition-all cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" /> Thử sức lại
             </button>

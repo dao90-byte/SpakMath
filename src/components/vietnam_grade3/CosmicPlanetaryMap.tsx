@@ -41,59 +41,67 @@ export const CosmicPlanetaryMap: React.FC<CosmicPlanetaryMapProps> = ({
   ) || PLANETS_METADATA[0];
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#0B0F19] via-[#0D1322] to-[#080B14] border-2 border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.12)] p-5 sm:p-8 text-white font-sans mb-8">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#0B0F19] via-[#0D1322] to-[#080B14] border-2 border-cyan-400/55 shadow-[0_0_70px_rgba(0,240,255,0.22),0_26px_70px_rgba(2,6,23,0.85),inset_0_1px_0_rgba(255,255,255,0.15)] p-5 sm:p-8 text-white font-sans mb-8">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 inset-x-10 h-[2px] rounded-full bg-gradient-to-r from-transparent via-cyan-300 to-transparent shadow-[0_0_20px_rgba(34,211,238,0.8)]"
+      />
       {/* Background Starfield & Colorful Nebulas */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-32 left-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-[100px] animate-cosmic-twinkle" />
-        <div className="absolute top-1/2 -right-20 w-80 h-80 bg-purple-600/15 rounded-full blur-[110px] animate-cosmic-twinkle" style={{ animationDelay: '2s' }} />
-        <div className="absolute -bottom-20 left-10 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px]" />
+        <div className="absolute -top-32 left-1/4 w-96 h-96 bg-cyan-500/24 rounded-full blur-[100px] animate-cosmic-twinkle" />
+        <div className="absolute top-1/2 -right-20 w-80 h-80 bg-purple-600/24 rounded-full blur-[110px] animate-cosmic-twinkle" style={{ animationDelay: '2s' }} />
+        <div className="absolute -bottom-20 left-10 w-96 h-96 bg-amber-500/18 rounded-full blur-[120px]" />
         
         {/* Subtle Constellation Grid */}
         <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#00F0FF_1px,transparent_1px),linear-gradient(to_bottom,#00F0FF_1px,transparent_1px)] bg-[size:3rem_3rem]" />
       </div>
 
       {/* Header Bar */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-cyan-500/20">
-        <div>
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-cyan-950/80 text-cyan-300 border border-cyan-400/50 shadow-[0_0_12px_rgba(0,240,255,0.3)] font-mono">
-              <Compass className="w-3.5 h-3.5 animate-spin-slow text-cyan-400" />
+      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-cyan-400/30">
+        <div className="relative">
+          <div
+            aria-hidden="true"
+            className="cosmic-light-bloom -left-8 -top-6 w-80 h-28 bg-gradient-to-r from-cyan-400/35 via-sky-300/25 to-fuchsia-500/25"
+          />
+          <div className="relative flex flex-wrap items-center gap-2 mb-2">
+            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-cyan-950/85 text-cyan-200 border border-cyan-300/60 shadow-[0_0_18px_rgba(0,240,255,0.42)] font-mono">
+              <Compass className="w-3.5 h-3.5 animate-spin-slow text-cyan-300" />
               Bản Đồ Hệ Mặt Trời Tri Thức
             </span>
-            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-950/80 text-amber-300 border border-amber-400/50 shadow-[0_0_12px_rgba(251,191,36,0.3)]">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 animate-spin-slow" />
+            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-950/85 text-amber-200 border border-amber-300/60 shadow-[0_0_18px_rgba(251,191,36,0.42)]">
+              <Star className="w-3.5 h-3.5 fill-amber-300 text-amber-300 animate-spin-slow" />
               {progress.totalStars} Tinh Thể Sao
             </span>
-            <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-purple-950/80 text-purple-300 border border-purple-400/50 font-mono">
-              <Rocket className="w-3.5 h-3.5 text-purple-400" />
+            <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-black bg-purple-950/85 text-purple-200 border border-purple-300/60 shadow-[0_0_16px_rgba(192,132,252,0.35)] font-mono">
+              <Rocket className="w-3.5 h-3.5 text-purple-300" />
               Toán 3 SGK
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-cyan-300 flex items-center gap-2.5">
+          <h2 className="relative text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-cyan-300 cosmic-glow-title-cyan flex items-center gap-2.5">
             <span>Hành Trình Chinh Phục 7 Hành Tinh Toán Học</span>
-            <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-cyan-300 drop-shadow-[0_0_14px_rgba(34,211,238,0.9)] animate-pulse" />
           </h2>
-          <p className="text-xs sm:text-sm text-cyan-200/80 mt-1.5 max-w-2xl font-medium leading-relaxed">
+          <p className="relative text-xs sm:text-sm text-cyan-100/90 mt-1.5 max-w-2xl font-medium leading-relaxed">
             Mỗi bài học là một hành tinh tri thức rực rỡ. Khám phá bản chất, kích hoạt Lõi Năng Lượng và hoàn thành thử thách để thắp sáng dải ngân hà!
           </p>
         </div>
 
         {/* Global Progress Dashboard Capsule */}
-        <div className="bg-slate-900/90 border-2 border-cyan-500/40 rounded-2xl p-4 min-w-[240px] shadow-[0_0_20px_rgba(0,240,255,0.15)] backdrop-blur-md">
+        <div className="bg-slate-900/92 border-2 border-cyan-400/55 rounded-2xl p-4 min-w-[240px] shadow-[0_0_32px_rgba(0,240,255,0.28),inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-md">
           <div className="flex items-center justify-between text-xs font-bold mb-2">
-            <span className="text-cyan-300 uppercase tracking-wider font-mono">Đã Chinh Phục:</span>
-            <span className="font-mono text-cyan-400 font-black text-sm">{conqueredCount} / {totalPlanets} Hành Tinh</span>
+            <span className="text-cyan-200 uppercase tracking-wider font-mono">Đã Chinh Phục:</span>
+            <span className="font-mono text-cyan-300 font-black text-sm drop-shadow-[0_0_10px_rgba(34,211,238,0.65)]">{conqueredCount} / {totalPlanets} Hành Tinh</span>
           </div>
-          <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-cyan-500/30">
+          <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden p-0.5 border border-cyan-400/45 shadow-inner">
             <div 
-              className="h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-400 rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(0,240,255,0.8)]"
+              className="h-full bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-400 rounded-full transition-all duration-700 shadow-[0_0_18px_rgba(0,240,255,0.95)]"
               style={{ width: `${percentComplete}%` }}
             />
           </div>
-          <div className="flex items-center justify-between text-[11px] text-slate-300 font-bold mt-2 font-mono">
+          <div className="flex items-center justify-between text-[11px] text-slate-200 font-bold mt-2 font-mono">
             <span>Tiến độ ngân hà</span>
-            <span className="text-emerald-400 font-black">{percentComplete}%</span>
+            <span className="text-emerald-300 font-black drop-shadow-[0_0_8px_rgba(52,211,153,0.65)]">{percentComplete}%</span>
           </div>
         </div>
       </div>

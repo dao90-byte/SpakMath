@@ -100,7 +100,7 @@ export const CattleFenceViewer: React.FC<CattleFenceProps> = ({ onCompleted }) =
       {/* Rules Notice */}
       <div className="bg-emerald-100/90 border-2 border-emerald-300 rounded-2xl p-4 text-center max-w-lg w-full">
         <p className="text-xs font-bold text-emerald-800 uppercase tracking-wide">
-          Hàng rào bảo vệ đàn bò (Trang 77 & 87)
+          Hàng rào bảo vệ đàn bò
         </p>
         <p className="text-sm md:text-base font-black text-emerald-950 mt-1">
           Dựng hàng rào khép kín bao quanh tất cả chú bò 🐮, không chứa cây xương rồng 🌵 nào!

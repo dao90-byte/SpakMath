@@ -288,53 +288,57 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   ).length;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_rgba(30,58,138,0.48),_transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(126,34,206,0.32),_transparent_55%),linear-gradient(180deg,_#040715_0%,_#0B1232_45%,_#15103A_100%)] text-white pb-16 relative overflow-hidden">
-      {/* Deep Space Starfield, Orbital Rings & Nebula Glows */}
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.14),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white pb-16 relative overflow-hidden">
+      {/* Deep Space Starfield, Orbital Rings & Multi-Spectrum Aurora Blooms */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-28 left-1/4 w-[480px] h-[480px] rounded-full bg-cyan-500/18 blur-[145px]" />
-        <div className="absolute top-1/3 -right-24 w-[440px] h-[440px] rounded-full bg-purple-500/20 blur-[145px]" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full bg-amber-400/14 blur-[155px]" />
+        <div className="absolute -top-28 left-1/5 w-[540px] h-[540px] rounded-full bg-cyan-400/28 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] rounded-full bg-fuchsia-500/26 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[540px] h-[540px] rounded-full bg-amber-400/18 blur-[155px] cosmic-light-bloom" />
         <svg
           viewBox="0 0 1440 900"
           preserveAspectRatio="xMidYMid slice"
-          className="w-full h-full opacity-65"
+          className="w-full h-full opacity-80"
         >
-          <circle cx="1220" cy="140" r="260" fill="none" stroke="rgba(56,189,248,0.14)" strokeWidth="1" strokeDasharray="6 10" />
-          <circle cx="1220" cy="140" r="370" fill="none" stroke="rgba(251,191,36,0.1)" strokeWidth="1" />
-          <circle cx="180" cy="760" r="240" fill="none" stroke="rgba(168,85,247,0.13)" strokeWidth="1" strokeDasharray="4 10" />
-          <circle cx="110" cy="95" r="1.6" fill="#67E8F9" />
-          <circle cx="290" cy="160" r="1.4" fill="#FDE68A" />
-          <circle cx="640" cy="210" r="1.8" fill="#67E8F9" />
-          <circle cx="880" cy="90" r="1.5" fill="#F9A8D4" />
-          <circle cx="1090" cy="240" r="2" fill="#FDE68A" />
-          <circle cx="195" cy="490" r="1.7" fill="#FDE68A" />
-          <circle cx="520" cy="640" r="1.4" fill="#67E8F9" />
-          <circle cx="1160" cy="680" r="1.8" fill="#F9A8D4" />
+          <circle cx="1220" cy="140" r="260" fill="none" stroke="rgba(103,232,249,0.22)" strokeWidth="1.2" strokeDasharray="6 10" />
+          <circle cx="1220" cy="140" r="370" fill="none" stroke="rgba(251,191,36,0.16)" strokeWidth="1" />
+          <circle cx="180" cy="760" r="240" fill="none" stroke="rgba(232,121,249,0.2)" strokeWidth="1.2" strokeDasharray="4 10" />
+          <circle cx="110" cy="95" r="1.8" fill="#67E8F9" />
+          <circle cx="290" cy="160" r="1.6" fill="#FDE68A" />
+          <circle cx="640" cy="210" r="2" fill="#67E8F9" />
+          <circle cx="880" cy="90" r="1.7" fill="#F9A8D4" />
+          <circle cx="1090" cy="240" r="2.2" fill="#FDE68A" />
+          <circle cx="195" cy="490" r="1.9" fill="#FDE68A" />
+          <circle cx="520" cy="640" r="1.6" fill="#67E8F9" />
+          <circle cx="1160" cy="680" r="2" fill="#F9A8D4" />
         </svg>
       </div>
 
       {/* Top Cosmic Mission Command Bar */}
-      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.14),_transparent_50%),radial-gradient(ellipse_at_top_right,_rgba(168,85,247,0.16),_transparent_50%),linear-gradient(180deg,_rgba(7,11,32,0.95),_rgba(11,17,46,0.92))] border-b border-cyan-300/25 px-4 py-3.5 shadow-[0_18px_46px_rgba(3,7,24,0.72)] overflow-hidden">
+      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.32),_transparent_50%),radial-gradient(ellipse_at_top_right,_rgba(217,70,239,0.34),_transparent_50%),linear-gradient(180deg,_rgba(5,9,30,0.97),_rgba(11,15,48,0.94))] border-b border-cyan-300/55 px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.24)] overflow-hidden">
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent shadow-[0_0_12px_rgba(34,211,238,0.5)]"
+          className="pointer-events-none absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 opacity-95 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-300/90 to-transparent shadow-[0_0_22px_rgba(34,211,238,0.75)]"
         />
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-2.5 rounded-xl bg-white/[0.09] hover:bg-cyan-400/18 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/25 hover:border-cyan-300/60 cursor-pointer transition-all duration-200 min-h-[44px] whitespace-nowrap"
+              className="px-3.5 py-2.5 rounded-xl bg-white/[0.09] hover:bg-cyan-400/20 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/45 hover:border-cyan-200/80 shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:shadow-[0_0_28px_rgba(34,211,238,0.45)] cursor-pointer transition-all duration-200 min-h-[44px] whitespace-nowrap"
             >
               <ArrowLeft className="w-4 h-4 text-cyan-300" aria-hidden="true" />
               <span>Quay Về Lịch {finalExam.monthLabel}</span>
             </button>
             <div>
               <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-300">
-                <span className="w-2 h-2 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.85)]" aria-hidden="true" />
-                <span>Lớp 3 · {finalExam.monthLabel}</span>
+                <span className="w-2 h-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(251,191,36,1)]" aria-hidden="true" />
+                <span className="drop-shadow-[0_0_8px_rgba(251,191,36,0.45)]">Lớp 3 · {finalExam.monthLabel}</span>
               </div>
-              <h2 className="text-base sm:text-xl font-extrabold font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-0.5">
+              <h2 className="text-base sm:text-xl font-extrabold font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-0.5 cosmic-glow-title-cyan">
                 {finalExam.title}
               </h2>
             </div>
@@ -344,7 +348,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             <button
               type="button"
               onClick={onOpenScratchpad}
-              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 hover:from-amber-200 hover:to-pink-400 text-slate-950 font-black text-xs flex items-center gap-1.5 ring-1 ring-amber-200/85 shadow-[0_8px_24px_rgba(251,191,36,0.4)] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 min-h-[44px]"
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 hover:from-amber-200 hover:to-pink-400 text-slate-950 font-black text-xs flex items-center gap-1.5 ring-1 ring-amber-200/90 shadow-[0_8px_28px_rgba(251,191,36,0.52),0_0_32px_rgba(236,72,153,0.28)] hover:shadow-[0_12px_36px_rgba(251,191,36,0.72),0_0_42px_rgba(236,72,153,0.42)] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 min-h-[44px]"
             >
               <PenTool className="w-4 h-4" aria-hidden="true" />
               <span>Bảng Vẽ Nháp</span>
@@ -354,7 +358,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <button
                 type="button"
                 onClick={handleRetakeExam}
-                className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 border border-white/20 cursor-pointer transition-colors duration-200 min-h-[44px]"
+                className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-cyan-400/20 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/35 hover:border-cyan-300/75 hover:shadow-[0_0_20px_rgba(34,211,238,0.35)] cursor-pointer transition-all duration-200 min-h-[44px]"
               >
                 <RotateCcw className="w-4 h-4" aria-hidden="true" />
                 <span>Làm Lại Đề Thi</span>
@@ -368,10 +372,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
       {!isSubmitted ? (
         <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6">
           {/* Student Name & Part Switcher Banner */}
-          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.12),_transparent_45%),linear-gradient(135deg,_rgba(14,22,62,0.95),_rgba(19,16,58,0.95))] backdrop-blur-2xl border border-cyan-300/30 p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-[0_16px_42px_rgba(3,7,24,0.65),inset_0_1px_0_rgba(255,255,255,0.1)]">
+          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] rounded-full bg-gradient-to-r from-cyan-300/75 via-indigo-400/60 to-amber-300/75"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
             />
             <div className="flex flex-wrap items-center gap-3">
               <label htmlFor="exam-student-name" className="text-xs font-extrabold text-cyan-200 uppercase tracking-wider">
@@ -416,10 +420,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
           </div>
 
           {/* Constellation 20 Question Number Navigator */}
-          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.14),_transparent_45%),linear-gradient(135deg,_rgba(14,22,62,0.95),_rgba(19,16,58,0.95))] backdrop-blur-2xl border border-cyan-300/30 p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-[0_18px_46px_rgba(3,7,24,0.65),inset_0_1px_0_rgba(255,255,255,0.1)]">
+          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] rounded-full bg-gradient-to-r from-cyan-300/75 via-indigo-400/60 to-amber-300/75"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
             />
             <div role="group" aria-label="Danh sách 20 câu thi" className="flex flex-wrap gap-1.5">
               {examQuestions.map((q, idx) => {
@@ -466,12 +470,12 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <InMonthVisualModels model={currentQ.visualModel} isAnswered={false} />
             </div>
 
-            <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.15),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(236,72,153,0.14),_transparent_50%),linear-gradient(170deg,_rgba(19,29,82,0.97),_rgba(8,13,40,0.99))] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_28px_72px_rgba(3,7,24,0.85),inset_0_1px_0_rgba(255,255,255,0.15)] border border-indigo-300/40">
+            <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.24),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(34,211,238,0.22),_transparent_52%),radial-gradient(ellipse_at_15%_20%,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(165deg,_rgba(14,22,68,0.97),_rgba(18,12,56,0.98)_55%,_rgba(6,10,34,0.99)_100%)] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.2)] border border-cyan-300/50">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-pink-500 shadow-[0_0_18px_rgba(34,211,238,0.65)]"
+                className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
               />
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/15">
                 <span
                   className={`font-black text-xs uppercase tracking-wider ${
                     currentQ.part === 'A'
@@ -487,7 +491,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 </span>
               </div>
 
-              <div className="rounded-2xl bg-[#070B22]/80 border border-white/10 p-4 sm:p-5 mb-6 shadow-inner">
+              <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.16),_transparent_58%),linear-gradient(160deg,_rgba(5,9,34,0.95),_rgba(12,15,48,0.96))] border border-cyan-300/35 p-4 sm:p-5 mb-6 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5),0_0_24px_rgba(34,211,238,0.12)]">
                 <p className="text-base sm:text-lg font-extrabold text-white leading-relaxed">
                   {currentQ.prompt}
                 </p>

@@ -52,7 +52,7 @@ export const CircularMazeViewer: React.FC<CircularMazeProps> = ({ onCompleted })
       {/* Rules Notice */}
       <div className="bg-sky-100/90 border-2 border-sky-300 rounded-2xl p-4 text-center max-w-lg w-full">
         <p className="text-xs font-bold text-sky-800 uppercase tracking-wide">
-          Thử thách mê cung tròn xoắn ốc (Trang 74)
+          Thử thách mê cung tròn xoắn ốc
         </p>
         <p className="text-sm md:text-base font-black text-sky-950 mt-1">
           Tìm đường nối giữa 2 mũi tên sao cho tạo thành 1 đường đi liền mạch!
@@ -63,25 +63,25 @@ export const CircularMazeViewer: React.FC<CircularMazeProps> = ({ onCompleted })
       </div>
 
       {/* SVG Circular Labyrinth */}
-      <div className="relative bg-white p-6 rounded-3xl border-4 border-slate-700 shadow-xl inline-block">
-        <svg viewBox="0 0 200 200" className="w-64 h-64 sm:w-80 sm:h-80 select-none">
+      <div className="relative bg-[#050A24]/95 p-6 rounded-3xl border-2 border-cyan-300/55 shadow-[0_20px_50px_rgba(3,7,24,0.8),0_0_32px_rgba(34,211,238,0.22)] inline-block">
+        <svg viewBox="0 0 200 200" className="w-64 h-64 sm:w-80 sm:h-80 select-none drop-shadow-[0_0_10px_rgba(34,211,238,0.35)]">
           {/* Concentric maze circles with gaps matching page 74 */}
-          <circle cx="100" cy="100" r="90" fill="none" stroke="#334155" strokeWidth="2.5" strokeDasharray="120 15 80 15 150 20" />
-          <circle cx="100" cy="100" r="75" fill="none" stroke="#334155" strokeWidth="2.5" strokeDasharray="90 15 110 20 80 15" />
-          <circle cx="100" cy="100" r="60" fill="none" stroke="#334155" strokeWidth="2.5" strokeDasharray="60 15 90 15 70 15" />
-          <circle cx="100" cy="100" r="45" fill="none" stroke="#334155" strokeWidth="2.5" strokeDasharray="50 15 70 15 50 15" />
-          <circle cx="100" cy="100" r="30" fill="none" stroke="#334155" strokeWidth="2.5" strokeDasharray="40 15 45 15" />
-          <circle cx="100" cy="100" r="15" fill="#fef08a" stroke="#ca8a04" strokeWidth="2" />
+          <circle cx="100" cy="100" r="90" fill="none" stroke="#67E8F9" strokeWidth="2.5" strokeDasharray="120 15 80 15 150 20" />
+          <circle cx="100" cy="100" r="75" fill="none" stroke="#67E8F9" strokeWidth="2.5" strokeDasharray="90 15 110 20 80 15" />
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#67E8F9" strokeWidth="2.5" strokeDasharray="60 15 90 15 70 15" />
+          <circle cx="100" cy="100" r="45" fill="none" stroke="#67E8F9" strokeWidth="2.5" strokeDasharray="50 15 70 15 50 15" />
+          <circle cx="100" cy="100" r="30" fill="none" stroke="#67E8F9" strokeWidth="2.5" strokeDasharray="40 15 45 15" />
+          <circle cx="100" cy="100" r="15" fill="rgba(251,191,36,0.28)" stroke="#FDE047" strokeWidth="2" />
 
           {/* Radial partition walls */}
-          <line x1="100" y1="10" x2="100" y2="40" stroke="#334155" strokeWidth="2.5" />
-          <line x1="10" y1="100" x2="40" y2="100" stroke="#334155" strokeWidth="2.5" />
-          <line x1="160" y1="100" x2="190" y2="100" stroke="#334155" strokeWidth="2.5" />
-          <line x1="100" y1="160" x2="100" y2="190" stroke="#334155" strokeWidth="2.5" />
-          <line x1="35" y1="35" x2="55" y2="55" stroke="#334155" strokeWidth="2.5" />
-          <line x1="145" y1="145" x2="165" y2="165" stroke="#334155" strokeWidth="2.5" />
-          <line x1="145" y1="55" x2="165" y2="35" stroke="#334155" strokeWidth="2.5" />
-          <line x1="35" y1="165" x2="55" y2="145" stroke="#334155" strokeWidth="2.5" />
+          <line x1="100" y1="10" x2="100" y2="40" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="100" y1="100" x2="40" y2="100" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="160" y1="100" x2="190" y2="100" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="100" y1="160" x2="100" y2="190" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="35" y1="35" x2="55" y2="55" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="145" y1="145" x2="165" y2="165" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="145" y1="55" x2="165" y2="35" stroke="#67E8F9" strokeWidth="2.5" />
+          <line x1="35" y1="165" x2="55" y2="145" stroke="#67E8F9" strokeWidth="2.5" />
 
           {/* Solution path trace (red line) drawn up to currentStep */}
           {currentStep > 0 && (

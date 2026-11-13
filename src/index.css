@@ -173,18 +173,45 @@
 @keyframes cosmicBeaconPulse {
   0%, 100% {
     box-shadow:
-      0 0 24px rgba(34, 211, 238, 0.28),
-      0 0 44px rgba(168, 85, 247, 0.16);
+      0 0 28px rgba(34, 211, 238, 0.36),
+      0 0 54px rgba(168, 85, 247, 0.22);
   }
   50% {
     box-shadow:
-      0 0 38px rgba(34, 211, 238, 0.48),
-      0 0 64px rgba(217, 70, 239, 0.28);
+      0 0 46px rgba(34, 211, 238, 0.6),
+      0 0 80px rgba(217, 70, 239, 0.36);
   }
 }
 
 .animate-cosmic-beacon {
-  animation: cosmicBeaconPulse 3.2s ease-in-out infinite;
+  animation: cosmicBeaconPulse 3s ease-in-out infinite;
+}
+
+@keyframes cosmicLightPulse {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.cosmic-light-bloom {
+  animation: cosmicLightPulse 4.2s ease-in-out infinite;
+}
+
+.cosmic-glow-title-cyan {
+  filter:
+    drop-shadow(0 0 20px rgba(56, 189, 248, 0.82))
+    drop-shadow(0 0 46px rgba(217, 70, 239, 0.42));
+}
+
+.cosmic-glow-title-gold {
+  filter:
+    drop-shadow(0 0 20px rgba(251, 191, 36, 0.85))
+    drop-shadow(0 0 44px rgba(236, 72, 153, 0.45));
 }
 
 /* System-Wide Luminous Cosmic Target Effect on Hovered/Focused Controls */
@@ -202,23 +229,185 @@ main [role="button"] {
 header button:not(:disabled):hover,
 main button:not(:disabled):hover,
 main [role="button"]:hover {
-  filter: brightness(1.06) drop-shadow(0 0 14px rgba(56, 189, 248, 0.42));
+  filter: brightness(1.08) drop-shadow(0 0 18px rgba(56, 189, 248, 0.56));
 }
 
 .cosmic-activity-stage button:not(:disabled):hover {
-  filter: brightness(1.03) drop-shadow(0 0 10px rgba(56, 189, 248, 0.28));
+  filter: brightness(1.06) drop-shadow(0 0 16px rgba(56, 189, 248, 0.48));
 }
 
-/* Cosmic Observatory Stage for LessonContainer Activities */
-.cosmic-activity-stage > div > .bg-white,
-.cosmic-activity-stage > div > div > .bg-white,
-.cosmic-activity-stage .bg-white.rounded-3xl {
-  background: rgba(248, 250, 255, 0.97);
-  border-color: rgba(103, 232, 249, 0.45);
+/* ============================================================================
+   COSMIC OBSERVATORY EXERCISE STAGE (.cosmic-activity-stage)
+   Harmonizes all Spark Math exercise & puzzle boards with the deep cosmic theme
+   ============================================================================ */
+.cosmic-activity-stage .bg-white,
+.cosmic-activity-stage .bg-slate-50,
+.cosmic-activity-stage .bg-slate-50\/70,
+.cosmic-activity-stage .bg-slate-50\/50,
+.cosmic-activity-stage .bg-slate-50\/40,
+.cosmic-activity-stage .bg-slate-100 {
+  background: radial-gradient(ellipse at top right, rgba(34, 211, 238, 0.12), transparent 55%),
+    radial-gradient(ellipse at bottom left, rgba(217, 70, 239, 0.1), transparent 55%),
+    rgba(9, 15, 48, 0.88);
+  color: #f8fafc;
+  border-color: rgba(103, 232, 249, 0.36);
   box-shadow:
-    0 22px 50px rgba(3, 7, 24, 0.62),
-    0 0 28px rgba(56, 189, 248, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 18px 44px rgba(3, 7, 24, 0.65),
+    0 0 24px rgba(34, 211, 238, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.cosmic-activity-stage .bg-slate-200 {
+  background: rgba(30, 41, 88, 0.88);
+  color: #e2e8f0;
+  border-color: rgba(129, 140, 248, 0.35);
+}
+
+/* Tinted semantic cards & puzzle region blocks inside .cosmic-activity-stage */
+.cosmic-activity-stage .bg-amber-50,
+.cosmic-activity-stage .bg-amber-50\/90,
+.cosmic-activity-stage .bg-amber-50\/80,
+.cosmic-activity-stage .bg-amber-50\/70,
+.cosmic-activity-stage .bg-amber-50\/50,
+.cosmic-activity-stage .bg-amber-100,
+.cosmic-activity-stage .bg-amber-100\/90,
+.cosmic-activity-stage .bg-amber-100\/60,
+.cosmic-activity-stage .bg-yellow-100 {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fef3c7;
+  border-color: rgba(252, 211, 77, 0.45);
+}
+
+.cosmic-activity-stage .bg-sky-50,
+.cosmic-activity-stage .bg-sky-100,
+.cosmic-activity-stage .bg-sky-100\/90,
+.cosmic-activity-stage .bg-sky-200 {
+  background: rgba(56, 189, 248, 0.2);
+  color: #e0f2fe;
+  border-color: rgba(103, 232, 249, 0.5);
+}
+
+.cosmic-activity-stage .bg-emerald-50,
+.cosmic-activity-stage .bg-emerald-50\/70,
+.cosmic-activity-stage .bg-emerald-100,
+.cosmic-activity-stage .bg-emerald-100\/60 {
+  background: rgba(16, 185, 129, 0.22);
+  color: #d1fae5;
+  border-color: rgba(52, 211, 153, 0.55);
+}
+
+.cosmic-activity-stage .bg-rose-50,
+.cosmic-activity-stage .bg-rose-50\/60,
+.cosmic-activity-stage .bg-rose-50\/50,
+.cosmic-activity-stage .bg-rose-100,
+.cosmic-activity-stage .bg-rose-100\/90,
+.cosmic-activity-stage .bg-rose-200 {
+  background: rgba(244, 63, 94, 0.2);
+  color: #ffe4e6;
+  border-color: rgba(251, 113, 133, 0.5);
+}
+
+.cosmic-activity-stage .bg-purple-100,
+.cosmic-activity-stage .bg-indigo-100,
+.cosmic-activity-stage .bg-teal-100 {
+  background: rgba(168, 85, 247, 0.22);
+  color: #f3e8ff;
+  border-color: rgba(192, 132, 252, 0.48);
+}
+
+/* Preserve solid high-intent fill surfaces */
+.cosmic-activity-stage .bg-amber-300 {
+  background: linear-gradient(135deg, #fde047, #f59e0b);
+  color: #020617;
+}
+.cosmic-activity-stage .bg-amber-400,
+.cosmic-activity-stage .bg-amber-500 {
+  color: #020617;
+}
+.cosmic-activity-stage .bg-emerald-500,
+.cosmic-activity-stage .bg-emerald-600,
+.cosmic-activity-stage .bg-sky-500,
+.cosmic-activity-stage .bg-sky-600,
+.cosmic-activity-stage .bg-rose-500 {
+  color: #ffffff;
+}
+
+/* Borders inside cosmic exercise workspace */
+.cosmic-activity-stage .border-slate-100,
+.cosmic-activity-stage .border-slate-200,
+.cosmic-activity-stage .border-slate-300 {
+  border-color: rgba(103, 232, 249, 0.28);
+}
+.cosmic-activity-stage .border-slate-700,
+.cosmic-activity-stage .border-b-slate-700,
+.cosmic-activity-stage .border-r-slate-700 {
+  border-color: rgba(103, 232, 249, 0.55);
+}
+.cosmic-activity-stage .bg-slate-800 {
+  background-color: #67e8f9;
+  color: #020617;
+}
+
+/* Crisp cosmic contrast for formerly dark-ink utility classes */
+.cosmic-activity-stage .text-slate-900,
+.cosmic-activity-stage .text-slate-800,
+.cosmic-activity-stage .text-slate-700 {
+  color: #f8fafc;
+}
+.cosmic-activity-stage .text-slate-600,
+.cosmic-activity-stage .text-slate-500,
+.cosmic-activity-stage .text-slate-400 {
+  color: #cbd5e1;
+}
+.cosmic-activity-stage .text-amber-950,
+.cosmic-activity-stage .text-amber-900,
+.cosmic-activity-stage .text-amber-800,
+.cosmic-activity-stage .text-amber-700,
+.cosmic-activity-stage .text-amber-600 {
+  color: #fde68a;
+}
+.cosmic-activity-stage .text-sky-950,
+.cosmic-activity-stage .text-sky-800,
+.cosmic-activity-stage .text-sky-700 {
+  color: #bae6fd;
+}
+.cosmic-activity-stage .text-rose-950,
+.cosmic-activity-stage .text-rose-900,
+.cosmic-activity-stage .text-rose-800,
+.cosmic-activity-stage .text-rose-700,
+.cosmic-activity-stage .text-rose-600 {
+  color: #fda4af;
+}
+.cosmic-activity-stage .text-emerald-950,
+.cosmic-activity-stage .text-emerald-900,
+.cosmic-activity-stage .text-emerald-800,
+.cosmic-activity-stage .text-emerald-700,
+.cosmic-activity-stage .text-emerald-600 {
+  color: #a7f3d0;
+}
+
+/* Keep dark ink when sitting inside solid light-colored pills/buttons */
+.cosmic-activity-stage .bg-amber-300 .text-slate-900,
+.cosmic-activity-stage .bg-amber-300 .text-slate-800,
+.cosmic-activity-stage .bg-amber-300 .text-amber-900,
+.cosmic-activity-stage .bg-amber-400 .text-slate-900,
+.cosmic-activity-stage .bg-amber-400 .text-amber-950,
+.cosmic-activity-stage .bg-amber-200 .text-amber-950,
+.cosmic-activity-stage .bg-amber-200\/80 {
+  color: #0f172a;
+}
+
+/* Dark cosmic input wells inside exercises */
+.cosmic-activity-stage input[type="text"],
+.cosmic-activity-stage input[type="number"],
+.cosmic-activity-stage textarea {
+  background: rgba(4, 8, 28, 0.92);
+  color: #ffffff;
+  border-color: rgba(103, 232, 249, 0.42);
+}
+.cosmic-activity-stage input::placeholder,
+.cosmic-activity-stage textarea::placeholder {
+  color: rgba(148, 163, 184, 0.72);
 }
 
 /* Brighten unboxed helper text sitting directly on the dark cosmic observatory stage */
@@ -229,7 +418,7 @@ main [role="button"]:hover {
 .cosmic-activity-stage > div > div > div.text-slate-500,
 .cosmic-activity-stage > div > div > p.text-slate-500,
 .cosmic-activity-stage > div > div > span.text-slate-500 {
-  color: rgba(203, 213, 225, 0.94);
+  color: rgba(226, 232, 240, 0.95);
 }
 
 /* Respect prefers-reduced-motion per UI/UX Pro Max accessibility standard */

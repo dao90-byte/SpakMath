@@ -69,21 +69,29 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
       />
 
       {/* Prominent Periodic Assessment Cosmic Gate */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950/80 to-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-indigo-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 animate-scale-in text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-slate-900 via-indigo-950/90 to-slate-900 rounded-3xl p-5 sm:p-6 border-2 border-cyan-400/50 shadow-[0_0_48px_rgba(34,211,238,0.2),0_20px_50px_rgba(2,6,23,0.75)] flex flex-col md:flex-row items-center justify-between gap-4 animate-scale-in text-white relative overflow-hidden">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 inset-x-10 h-[2px] rounded-full bg-gradient-to-r from-transparent via-amber-300 via-50% to-transparent shadow-[0_0_18px_rgba(251,191,36,0.75)]"
+        />
+        <div
+          aria-hidden="true"
+          className="cosmic-light-bloom -left-8 -top-6 w-64 h-36 bg-gradient-to-r from-amber-400/25 via-cyan-400/20 to-fuchsia-500/20"
+        />
         <div className="flex items-center gap-4 relative z-10">
-          <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(251,191,36,0.4)] shrink-0">
+          <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-amber-300 to-yellow-200 text-slate-950 flex items-center justify-center text-2xl shadow-[0_0_26px_rgba(251,191,36,0.65)] shrink-0">
             📜
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-400/30 font-mono">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/25 text-amber-200 px-2.5 py-0.5 rounded-full border border-amber-300/50 shadow-[0_0_12px_rgba(251,191,36,0.3)] font-mono">
                 TRẠM ĐÁNH GIÁ THIÊN HÀ · CHỦ ĐỀ 4
               </span>
             </div>
-            <h3 className="text-base sm:text-lg font-black text-white leading-snug">
+            <h3 className="text-base sm:text-lg font-black text-white leading-snug drop-shadow-[0_0_14px_rgba(255,255,255,0.28)]">
               Bài Kiểm Tra Định Kỳ Năng Lực Học Phần
             </h3>
-            <p className="text-xs text-slate-300 mt-0.5 leading-relaxed font-medium">
+            <p className="text-xs text-slate-200 mt-0.5 leading-relaxed font-medium">
               10 thử thách vũ trụ bao quát 4 cấp độ nhận thức: Nhận biết, Thông hiểu, Vận dụng và Vận dụng cao.
             </p>
           </div>
@@ -95,7 +103,7 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
             sound.playClick();
             onOpenAssessment();
           }}
-          className="relative z-10 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-[0_0_15px_rgba(0,240,255,0.35)] active:scale-95 transition-transform flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center"
+          className="relative z-10 px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-[0_0_26px_rgba(0,240,255,0.55)] hover:shadow-[0_0_36px_rgba(0,240,255,0.78)] active:scale-95 transition-all flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center"
         >
           <ClipboardCheck className="w-4 h-4 text-slate-950" />
           <span>{assessmentScore !== undefined && assessmentScore !== null ? `Kiểm tra lại (${assessmentScore}/10 điểm)` : 'Khai Hỏa Kiểm Tra Ngay'}</span>
@@ -106,16 +114,20 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
       {/* Planetary Exploration Stations List */}
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <div>
-            <span className="text-xs font-bold text-cyan-400 block font-mono uppercase tracking-wider">
+          <div className="relative">
+            <div
+              aria-hidden="true"
+              className="cosmic-light-bloom -left-6 -top-4 w-72 h-20 bg-gradient-to-r from-cyan-400/30 via-sky-300/20 to-indigo-500/20"
+            />
+            <span className="relative text-xs font-bold text-cyan-300 block font-mono uppercase tracking-wider">
               DANH MỤC TRẠM HÀNH TINH
             </span>
-            <h2 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-indigo-300 drop-shadow-[0_0_15px_rgba(0,240,255,0.3)] flex items-center gap-2">
+            <h2 className="relative text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-sky-100 to-indigo-200 cosmic-glow-title-cyan flex items-center gap-2">
               <span>Học Phần 1: Phép Nhân & Phép Chia Trong Phạm Vi 100</span>
-              <Rocket className="w-5 h-5 text-cyan-400" />
+              <Rocket className="w-5 h-5 text-cyan-300 drop-shadow-[0_0_12px_rgba(34,211,238,0.85)]" />
             </h2>
           </div>
-          <span className="text-xs font-bold text-cyan-300 bg-slate-900 px-3 py-1.5 rounded-xl border border-cyan-500/30 font-mono">
+          <span className="text-xs font-bold text-cyan-200 bg-slate-900/95 px-3 py-1.5 rounded-xl border border-cyan-400/50 shadow-[0_0_16px_rgba(34,211,238,0.25)] font-mono">
             7 HÀNH TINH
           </span>
         </div>
@@ -130,8 +142,12 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
             return (
               <div
                 key={lesson.id}
-                className="bg-[#0B0F19] rounded-3xl border-2 border-slate-800 hover:border-cyan-500/60 shadow-md hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all p-5 sm:p-6 flex flex-col justify-between group text-white relative overflow-hidden"
+                className="bg-[#0B0F19]/95 rounded-3xl border-2 border-cyan-400/30 hover:border-cyan-300/80 shadow-[0_14px_38px_rgba(2,6,23,0.7),0_0_22px_rgba(34,211,238,0.1)] hover:shadow-[0_20px_52px_rgba(2,6,23,0.85),0_0_38px_rgba(0,240,255,0.3)] transition-all duration-300 p-5 sm:p-6 flex flex-col justify-between group text-white relative overflow-hidden"
               >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute top-0 inset-x-8 h-[2px] rounded-full bg-gradient-to-r from-transparent via-cyan-300/65 to-transparent opacity-70 group-hover:opacity-100 transition-opacity"
+                />
                 <div>
                   {/* Card Header */}
                   <div className="flex items-center justify-between gap-2 mb-2.5">

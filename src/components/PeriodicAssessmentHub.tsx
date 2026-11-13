@@ -115,14 +115,18 @@ export const PeriodicAssessmentHub: React.FC<PeriodicAssessmentHubProps> = ({
             </button>
           </div>
 
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black font-display tracking-tight flex items-center gap-2.5">
-              <Brain className="w-7 h-7 text-cyan-300 shrink-0 drop-shadow-[0_0_10px_rgba(34,211,238,0.7)]" aria-hidden="true" />
-              <span className="bg-gradient-to-r from-white via-cyan-100 to-fuchsia-300 bg-clip-text text-transparent">
+          <div className="relative">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-4 -inset-y-2 rounded-full bg-[radial-gradient(ellipse_at_left,_rgba(56,189,248,0.26),_rgba(217,70,239,0.14)_48%,_transparent_72%)] blur-2xl cosmic-light-bloom"
+            />
+            <h1 className="relative text-2xl md:text-3xl font-black font-display tracking-tight flex items-center gap-2.5">
+              <Brain className="w-7 h-7 text-cyan-300 shrink-0 drop-shadow-[0_0_16px_rgba(34,211,238,0.85)]" aria-hidden="true" />
+              <span className="bg-gradient-to-r from-white via-cyan-100 to-fuchsia-300 bg-clip-text text-transparent cosmic-glow-title-cyan">
                 Hệ Thống Bài Kiểm Tra Định Kỳ
               </span>
             </h1>
-            <p className="text-sm md:text-base text-indigo-100/90 font-medium mt-1.5 max-w-2xl leading-relaxed">
+            <p className="relative text-sm md:text-base text-indigo-100/95 font-medium mt-1.5 max-w-2xl leading-relaxed">
               Các bài kiểm tra phương pháp luận sau mỗi mô hình tư duy cốt lõi (So sánh hơn - kém, Biểu đồ tranh, Thể tích, Sudoku ma trận, Hàng ngũ) và Đấu trường kiểm tra định kỳ tổng hợp quy mô lớn.
             </p>
           </div>
@@ -224,11 +228,11 @@ export const PeriodicAssessmentHub: React.FC<PeriodicAssessmentHubProps> = ({
       <div className="relative z-10 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg md:text-xl font-black font-display bg-gradient-to-r from-cyan-200 via-white to-fuchsia-300 bg-clip-text text-transparent flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-cyan-300 shrink-0" aria-hidden="true" />
+            <h2 className="text-lg md:text-xl font-black font-display bg-gradient-to-r from-cyan-200 via-white to-fuchsia-300 bg-clip-text text-transparent cosmic-glow-title-cyan flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-cyan-300 shrink-0 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]" aria-hidden="true" />
               <span>Danh Sách Bài Kiểm Tra Định Kỳ Theo Mô Hình Tư Duy</span>
             </h2>
-            <p className="text-xs text-cyan-200/80 font-medium mt-0.5">
+            <p className="text-xs text-cyan-200/85 font-medium mt-0.5">
               Chốt chặn bắt buộc để mở khóa bài học kế tiếp trong mỗi chuyên đề
             </p>
           </div>

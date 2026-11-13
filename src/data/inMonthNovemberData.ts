@@ -1,3 +1,6 @@
+import type { SingaporeCPASpec } from '../types/singaporeCPA';
+import { attachCPAToQuestion } from '../utils/singaporeCPABuilder';
+
 export type InMonthStageId = 'warmup' | 'visualModel' | 'practice' | 'challenge';
 
 export type InMonthSkillDomain = 'bar_model' | 'remainder' | 'interval' | 'measurement';
@@ -14,6 +17,8 @@ export interface InMonthVisualModelConfig {
   type: 'bar_model' | 'remainder_groups' | 'interval_model' | 'measurement_lab';
   title: string;
   subtitle?: string;
+  // Standardized Singapore CPA Specification (Concrete - Pictorial - Abstract)
+  cpaSpec?: SingaporeCPASpec;
   // For bar_model
   bars?: BarModelSegment[];
   totalBracketLabel?: string;
@@ -1883,18 +1888,27 @@ function buildReviewDay(day: number): InMonthDayPlan {
 
 export const NOVEMBER_IN_MONTH_DAYS: InMonthDayPlan[] = Array.from({ length: 30 }, (_, i) => {
   const day = i + 1;
-  if (day <= 7) return buildWeek1Day(day);
-  if (day <= 14) return buildWeek2Day(day);
-  if (day <= 21) return buildWeek3Day(day);
-  if (day <= 28) return buildWeek4Day(day);
-  return buildReviewDay(day);
+  const rawPlan =
+    day <= 7
+      ? buildWeek1Day(day)
+      : day <= 14
+      ? buildWeek2Day(day)
+      : day <= 21
+      ? buildWeek3Day(day)
+      : day <= 28
+      ? buildWeek4Day(day)
+      : buildReviewDay(day);
+  return {
+    ...rawPlan,
+    questions: rawPlan.questions.map((q, idx) => attachCPAToQuestion(q, day, idx + 1)),
+  };
 });
 
 // ============================================================================
 // FINAL NOVEMBER EXAM (2 PARTS: PART A BASIC + PART B OLYMPIAD · 20 QUESTIONS)
 // ============================================================================
 
-export const NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
+const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
   id: 'in-month-november-final-exam',
   monthLabel: 'Tháng 11',
   title: 'Kỳ Thi Đánh Giá Năng Lực Cuối Tháng 11 — Chuẩn Singapore Math F3',
@@ -2315,4 +2329,9 @@ export const NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       }
     }
   ]
+};
+
+export const NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
+  ...RAW_NOVEMBER_FINAL_EXAM,
+  questions: RAW_NOVEMBER_FINAL_EXAM.questions.map((q) => attachCPAToQuestion(q)),
 };

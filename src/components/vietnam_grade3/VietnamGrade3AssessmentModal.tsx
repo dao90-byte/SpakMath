@@ -87,30 +87,31 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
 
   // Competency level classification
   const getCompetencyBadge = (score: number) => {
-    if (score >= 9) return { label: 'Xuất sắc (Nắm trọn bản chất & vận dụng cao)', color: 'text-emerald-700 bg-emerald-100 border-emerald-300' };
-    if (score >= 7) return { label: 'Đạt chuẩn năng lực tốt (Nắm vững kiến thức SGK)', color: 'text-sky-700 bg-sky-100 border-sky-300' };
-    if (score >= 5) return { label: 'Đạt mức cơ bản (Cần rèn luyện thêm bài toán 2 bước)', color: 'text-amber-700 bg-amber-100 border-amber-300' };
-    return { label: 'Cần ôn tập lại (Xem lại video Socratic)', color: 'text-rose-700 bg-rose-100 border-rose-300' };
+    if (score >= 9) return { label: 'Xuất sắc (Nắm trọn bản chất & vận dụng cao)', color: 'text-emerald-200 bg-emerald-500/20 border-emerald-400/50' };
+    if (score >= 7) return { label: 'Đạt chuẩn năng lực tốt (Nắm vững kiến thức SGK)', color: 'text-cyan-200 bg-cyan-500/20 border-cyan-300/50' };
+    if (score >= 5) return { label: 'Đạt mức cơ bản (Cần rèn luyện thêm bài toán 2 bước)', color: 'text-amber-200 bg-amber-500/20 border-amber-400/50' };
+    return { label: 'Cần ôn tập lại (Xem lại video Socratic)', color: 'text-rose-200 bg-rose-500/20 border-rose-400/50' };
   };
 
   const badgeInfo = getCompetencyBadge(finalScore);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto font-sans">
-      <div className="bg-[#0B0F19] rounded-3xl max-w-3xl w-full border-2 border-indigo-500/50 shadow-[0_0_50px_rgba(99,102,241,0.25)] overflow-hidden my-auto max-h-[92vh] flex flex-col animate-scale-in text-white relative">
-        {/* Subtle ambient light */}
-        <div className="absolute -top-20 -right-20 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 bg-[#030617]/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto font-sans">
+      <div className="relative bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.2),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.18),_transparent_55%),linear-gradient(160deg,_rgba(15,24,68,0.98),_rgba(7,12,38,0.99))] rounded-3xl max-w-3xl w-full border border-cyan-300/45 shadow-[0_28px_70px_rgba(3,7,24,0.88),0_0_42px_rgba(34,211,238,0.18)] overflow-hidden my-auto max-h-[92vh] flex flex-col animate-scale-in text-white">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-fuchsia-400 shadow-[0_0_16px_rgba(34,211,238,0.7)] z-20"
+        />
 
         {/* Modal Top Bar */}
-        <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 text-white p-5 flex items-center justify-between gap-3 shrink-0 border-b border-indigo-500/30 relative z-10">
+        <div className="bg-[#060B24]/90 text-white p-5 flex items-center justify-between gap-3 shrink-0 border-b border-cyan-300/25 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-lg shadow-[0_0_12px_rgba(251,191,36,0.4)]">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-300 to-yellow-300 text-slate-950 flex items-center justify-center font-black text-lg shadow-[0_0_16px_rgba(251,191,36,0.45)]">
               📝
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-400/40 font-mono">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-200 px-2.5 py-0.5 rounded-full border border-amber-300/40 font-mono">
                   TRẠM ĐÁNH GIÁ ĐỊNH KỲ
                 </span>
                 <span className="text-xs text-cyan-200 hidden sm:inline font-medium">
@@ -126,7 +127,7 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-2 rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 border border-white/15 hover:border-cyan-300/60 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] text-white transition-all"
           >
             <X className="w-5 h-5" />
           </button>
@@ -285,8 +286,8 @@ export const VietnamGrade3AssessmentModal: React.FC<VietnamGrade3AssessmentModal
                 Điểm số: <span className="text-amber-400">{finalScore} / {totalCount}</span>
               </h3>
 
-              <div className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-black border text-center">
-                <span className={`px-3 py-1 rounded-full border ${badgeInfo.color}`}>
+              <div className="mt-3 flex justify-center">
+                <span className={`px-3.5 py-1.5 rounded-full text-xs font-black border ${badgeInfo.color}`}>
                   {badgeInfo.label}
                 </span>
               </div>

@@ -354,7 +354,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
       lessonTitle: lesson.title,
       topicName: lesson.topicName,
       topicId: lesson.topicId,
-      questionPrompt: `[${lesson.badgeTitle}] ${lesson.title}: ${lesson.instruction}`,
+      questionPrompt: `[${lesson.badgeTitle.replace(/\s*·\s*Trang\b.*$/i, '').trim()}] ${lesson.title}: ${lesson.instruction}`,
       userAnswer: 'Chủ động lưu để ôn luyện thêm',
       correctAnswer: 'Hoàn thành thử thách bài học này',
       explanation: `Bí kíp từ ${lesson.mascot.name}: ${lesson.mascot.message}`,
@@ -527,19 +527,19 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
       </div>
 
       {/* Flagship Lesson Cosmic Observatory Header */}
-      <div className="relative overflow-hidden rounded-[26px] sm:rounded-[30px] p-5 sm:p-6 md:p-7 text-white bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.22),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.20),_transparent_52%),linear-gradient(155deg,_#080E2B_0%,_#11194A_58%,_#1B1348_100%)] border border-cyan-300/25 shadow-[0_24px_64px_rgba(3,7,24,0.78),inset_0_1px_0_rgba(255,255,255,0.16)]">
+      <div className="relative overflow-hidden rounded-[26px] sm:rounded-[30px] p-5 sm:p-6 md:p-7 text-white bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.28),_transparent_52%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.24),_transparent_54%),linear-gradient(155deg,_#080E2B_0%,_#11194A_58%,_#1B1348_100%)] border border-cyan-300/45 shadow-[0_24px_64px_rgba(3,7,24,0.82),0_0_38px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]">
         {/* Top aurora spectrum bar */}
         <div
           aria-hidden="true"
           className={`pointer-events-none absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r ${
             topic?.bgGradient ?? 'from-cyan-400 via-indigo-400 to-amber-300'
-          } opacity-90`}
+          } opacity-95 shadow-[0_0_18px_rgba(34,211,238,0.75)]`}
         />
         <div
           aria-hidden="true"
           className={`pointer-events-none absolute -right-14 -top-14 w-64 h-64 rounded-full bg-gradient-to-br ${
             topic?.bgGradient ?? 'from-cyan-500 to-indigo-600'
-          } opacity-20 blur-3xl`}
+          } opacity-28 blur-3xl cosmic-light-bloom`}
         />
 
         {/* Orbital astrolabe decorative emblem */}
@@ -567,7 +567,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
               {lesson.topicName}
             </span>
             <span className="bg-white/[0.08] border border-white/15 text-slate-100 px-3 py-1 rounded-xl">
-              {lesson.badgeTitle}
+              {lesson.badgeTitle.replace(/\s*·\s*Trang\b.*$/i, '').trim()}
             </span>
             {isLessonFinished && (
               <span className="bg-gradient-to-r from-emerald-400/25 to-cyan-400/20 border border-emerald-300/50 text-emerald-200 px-3 py-1 rounded-xl flex items-center gap-1.5 font-black shadow-[0_0_16px_rgba(16,185,129,0.2)]">
@@ -590,7 +590,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
           </div>
         </div>
 
-        <h1 className="relative z-10 mt-3.5 text-xl sm:text-2xl md:text-3xl font-black font-display tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent leading-snug max-w-4xl drop-shadow-[0_2px_18px_rgba(34,211,238,0.22)]">
+        <h1 className="relative z-10 mt-3.5 text-xl sm:text-2xl md:text-3xl font-black font-display tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent leading-snug max-w-4xl cosmic-glow-title-cyan">
           {lesson.title}
         </h1>
       </div>
@@ -598,28 +598,33 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
       {/* Activity Workspace (keyed so state resets between lessons) - Deep Cosmic Observatory Console */}
       <div
         key={lesson.id}
-        className="rounded-[28px] sm:rounded-[32px] p-[2px] bg-gradient-to-br from-cyan-300/70 via-indigo-400/50 to-amber-300/65 shadow-[0_30px_84px_rgba(3,7,24,0.88),0_0_44px_rgba(34,211,238,0.12)]"
+        className="rounded-[28px] sm:rounded-[32px] p-[2px] bg-gradient-to-br from-cyan-300/85 via-fuchsia-400/70 to-amber-300/85 shadow-[0_32px_90px_rgba(3,7,24,0.9),0_0_64px_rgba(34,211,238,0.28),0_0_84px_rgba(217,70,239,0.18)]"
       >
-        <div className="cosmic-activity-stage relative overflow-hidden rounded-[26px] sm:rounded-[30px] bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.17),_transparent_48%),radial-gradient(ellipse_at_bottom_right,_rgba(251,191,36,0.13),_transparent_48%),radial-gradient(ellipse_at_50%_0%,_rgba(129,140,248,0.14),_transparent_62%),linear-gradient(160deg,_#060B24_0%,_#0D1540_52%,_#171142_100%)] p-3.5 sm:p-6 md:p-8 text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+        <div className="cosmic-activity-stage relative overflow-hidden rounded-[26px] sm:rounded-[30px] bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.24),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_rgba(251,191,36,0.18),_transparent_50%),radial-gradient(ellipse_at_75%_15%,_rgba(217,70,239,0.22),_transparent_55%),linear-gradient(160deg,_#050922_0%,_#0C133E_50%,_#1A1048_100%)] p-3.5 sm:p-6 md:p-8 text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.22)]">
           {/* Top luminous hairline beam */}
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-8 h-[2px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 opacity-85 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+            className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 opacity-95 shadow-[0_0_24px_rgba(34,211,238,0.9)]"
           />
 
+          {/* Breathing multi-spectrum aurora blooms */}
+          <div className="pointer-events-none absolute -top-20 -left-16 w-72 h-72 rounded-full bg-cyan-400/22 blur-[105px] cosmic-light-bloom" aria-hidden="true" />
+          <div className="pointer-events-none absolute top-1/3 -right-16 w-72 h-72 rounded-full bg-fuchsia-500/22 blur-[110px] cosmic-light-bloom" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-24 left-1/3 w-72 h-72 rounded-full bg-amber-400/15 blur-[110px] cosmic-light-bloom" aria-hidden="true" />
+
           {/* Subtle cosmic orbital grid & starfield backdrop */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-55" aria-hidden="true">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-70" aria-hidden="true">
             <svg viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
-              <circle cx="1060" cy="110" r="190" fill="none" stroke="rgba(103,232,249,0.11)" strokeWidth="1" strokeDasharray="6 10" />
-              <circle cx="1060" cy="110" r="270" fill="none" stroke="rgba(251,191,36,0.08)" strokeWidth="1" />
-              <circle cx="130" cy="610" r="210" fill="none" stroke="rgba(168,85,247,0.11)" strokeWidth="1" strokeDasharray="4 9" />
-              <circle cx="140" cy="90" r="1.6" fill="#67E8F9" />
-              <circle cx="380" cy="52" r="1.4" fill="#FDE68A" />
-              <circle cx="720" cy="70" r="1.5" fill="#FFFFFF" />
-              <circle cx="960" cy="180" r="1.8" fill="#67E8F9" />
-              <circle cx="1120" cy="430" r="1.5" fill="#F9A8D4" />
-              <circle cx="240" cy="520" r="1.6" fill="#FDE68A" />
-              <circle cx="640" cy="660" r="1.4" fill="#67E8F9" />
+              <circle cx="1060" cy="110" r="190" fill="none" stroke="rgba(103,232,249,0.16)" strokeWidth="1" strokeDasharray="6 10" />
+              <circle cx="1060" cy="110" r="270" fill="none" stroke="rgba(251,191,36,0.12)" strokeWidth="1" />
+              <circle cx="130" cy="610" r="210" fill="none" stroke="rgba(232,121,249,0.16)" strokeWidth="1" strokeDasharray="4 9" />
+              <circle cx="140" cy="90" r="1.8" fill="#67E8F9" />
+              <circle cx="380" cy="52" r="1.6" fill="#FDE68A" />
+              <circle cx="720" cy="70" r="1.6" fill="#FFFFFF" />
+              <circle cx="960" cy="180" r="2" fill="#67E8F9" />
+              <circle cx="1120" cy="430" r="1.7" fill="#F9A8D4" />
+              <circle cx="240" cy="520" r="1.8" fill="#FDE68A" />
+              <circle cx="640" cy="660" r="1.6" fill="#67E8F9" />
             </svg>
           </div>
 
