@@ -39,8 +39,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const [showSolution, setShowSolution] = useState(false);
+  const [wrongAttemptsMap, setWrongAttemptsMap] = useState<Record<string, number>>({});
   const [showTeacherNotes, setShowTeacherNotes] = useState(false);
   const [answeredExercises, setAnsweredExercises] = useState<Record<string, boolean>>({});
 
@@ -81,19 +80,18 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
 
   const handleSubmitAnswer = () => {
     if (!selectedAnswer || isAnswerSubmitted) return;
-    setIsAnswerSubmitted(true);
 
     const correct = String(selectedAnswer).trim() === String(currentExercise.correctAnswer).trim();
-    setIsCorrect(correct);
 
     if (correct) {
+      setIsAnswerSubmitted(true);
+      setIsCorrect(true);
       sound.playCorrect();
       const updatedAnswered = { ...answeredExercises, [currentExercise.id]: true };
       setAnsweredExercises(updatedAnswered);
       const doneCount = Object.keys(updatedAnswered).length;
       markExerciseCompleted(lesson.id, doneCount, lesson.exercises.length);
 
-      // If last exercise, mark lesson complete
       const willBeAllDone = lesson.exercises.every(
         (ex) => ex.id === currentExercise.id || answeredExercises[ex.id] === true
       );
@@ -101,8 +99,12 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
         onLessonCompleted(lesson.id);
       }
     } else {
-      sound.playWrong();
-      setShowSolution(true);
+      // Do NOT report wrong or show solution steps; silently count wrong attempts and allow retry
+      setWrongAttemptsMap((prev) => ({
+        ...prev,
+        [currentExercise.id]: (prev[currentExercise.id] || 0) + 1,
+      }));
+      setSelectedAnswer(null);
     }
   };
 
@@ -111,23 +113,11 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
     setSelectedAnswer(null);
     setIsAnswerSubmitted(false);
     setIsCorrect(false);
-    setShowHint(false);
-    setShowSolution(false);
 
     if (exerciseIndex < lesson.exercises.length - 1) {
       setExerciseIndex((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  };
-
-  const handleRetryExercise = () => {
-    sound.playClick();
-    setSelectedAnswer(null);
-    setIsAnswerSubmitted(false);
-    setIsCorrect(false);
-    setShowHint(false);
-    setShowSolution(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -413,20 +403,8 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
             </div>
           )}
 
-          {/* Action Bar: Submit / Hint / Next */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-5 border-t border-slate-800 relative z-10">
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setShowHint(!showHint);
-              }}
-              className="text-xs sm:text-sm font-bold text-amber-300 hover:text-white flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 transition-colors shadow-xs"
-            >
-              <Lightbulb className="w-4 h-4 text-amber-400" />
-              <span>Gợi ý tư duy</span>
-            </button>
-
+          {/* Action Bar: Submit / Next */}
+          <div className="flex flex-wrap items-center justify-end gap-3 pt-5 border-t border-slate-800 relative z-10">
             {!isAnswerSubmitted ? (
               <button
                 type="button"
@@ -442,17 +420,11 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                 <CheckCircle2 className="w-4 h-4" />
               </button>
             ) : (
-              <div className="flex flex-wrap items-center gap-3">
-                {!isCorrect && (
-                  <button
-                    type="button"
-                    onClick={handleRetryExercise}
-                    className="px-5 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-bold text-xs sm:text-sm hover:bg-slate-800 transition-colors flex items-center gap-1.5"
-                  >
-                    <RotateCcw className="w-4 h-4 text-cyan-400" />
-                    <span>Thử lại</span>
-                  </button>
-                )}
+              <div className="flex flex-wrap items-center justify-between w-full gap-3">
+                <div className="flex items-center gap-2 text-emerald-300 font-black text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <span>Chính xác tuyệt vời!</span>
+                </div>
 
                 {exerciseIndex < lesson.exercises.length - 1 ? (
                   <button
@@ -497,33 +469,16 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
             )}
           </div>
 
-          {/* Elevated Cosmic Hint Card */}
-          {showHint && (
+          {/* Hint appears ONLY after 4 wrong attempts */}
+          {!isAnswerSubmitted && (wrongAttemptsMap[currentExercise.id] || 0) >= 4 && (
             <div className="mt-5 p-4 sm:p-5 bg-amber-950/40 border-2 border-amber-400/60 rounded-2xl text-xs sm:text-sm text-amber-100 animate-fade-in flex items-start gap-3.5 shadow-[0_0_20px_rgba(251,191,36,0.15)] relative z-10">
               <div className="w-8 h-8 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
                 💡
               </div>
               <div className="flex-1">
-                <strong className="block font-black text-amber-300 mb-0.5">Gợi ý tư duy:</strong>
+                <strong className="block font-black text-amber-300 mb-0.5">Gợi ý:</strong>
                 <p className="leading-relaxed font-bold text-amber-100">{currentExercise.hint}</p>
               </div>
-            </div>
-          )}
-
-          {/* Elevated Cosmic Solution Steps Card */}
-          {showSolution && (
-            <div className="mt-5 p-4 sm:p-5 bg-emerald-950/40 border-2 border-emerald-400/60 rounded-2xl text-xs sm:text-sm animate-fade-in shadow-[0_0_20px_rgba(16,185,129,0.15)] relative z-10 text-emerald-100">
-              <div className="font-black text-emerald-300 flex items-center gap-2 mb-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span className="text-sm font-black">Các bước giải thích bản chất:</span>
-              </div>
-              <ol className="list-decimal pl-5 space-y-1.5 text-slate-200 font-bold">
-                {currentExercise.solutionSteps.map((step, sIdx) => (
-                  <li key={sIdx} className="leading-relaxed">
-                    {step}
-                  </li>
-                ))}
-              </ol>
             </div>
           )}
         </div>
