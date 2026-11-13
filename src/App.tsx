@@ -19,10 +19,13 @@ import { VietnamGrade3Hub } from './components/vietnam_grade3/VietnamGrade3Hub';
 import { VietnamGrade3LessonRunner } from './components/vietnam_grade3/VietnamGrade3LessonRunner';
 import { VietnamGrade3AssessmentModal } from './components/vietnam_grade3/VietnamGrade3AssessmentModal';
 import { VIETNAM_GRADE_3_LESSONS, VietnamGrade3Lesson } from './data/vietnamGrade3LessonsData';
+import { InMonthDayPlan } from './data/inMonthNovemberData';
 import {
-  NOVEMBER_IN_MONTH_DAYS,
-  InMonthDayPlan,
-} from './data/inMonthNovemberData';
+  GRADE_3_IN_MONTH_PROGRAMS,
+  InMonthMonthProgram,
+  getMonthStorageKeys,
+} from './data/inMonthGrade3Catalog';
+import { InMonthGradeHub } from './components/in_month/InMonthGradeHub';
 import {
   InMonthCalendarHub,
   InMonthDayProgress,
@@ -61,7 +64,7 @@ export default function App() {
   const [programMode, setProgramMode] = useState<'thinking' | 'textbook' | 'inmonth'>(() => {
     try {
       const saved = localStorage.getItem('spark_math_program_mode_v2');
-      if (saved === 'thinking' || saved === 'textbook' || saved === 'inmonth') {
+      if (saved === 'thinking' || saved === 'inmonth') {
         return saved;
       }
       return 'inmonth';
@@ -70,26 +73,83 @@ export default function App() {
     }
   });
 
-  // IN MONTH November state
+  // IN MONTH Grade 3 multi-month hierarchy state
+  // Always open directly into the active/in-progress month on startup
+  const ACTIVE_MONTH_STORAGE_KEY = 'spark_math_inmonth_active_month_number';
+
+  const resolveInitialActiveMonthNumber = (): number => {
+    try {
+      const saved = localStorage.getItem(ACTIVE_MONTH_STORAGE_KEY);
+      if (saved) {
+        const parsed = parseInt(saved, 10);
+        if (GRADE_3_IN_MONTH_PROGRAMS.some((m) => m.monthNumber === parsed)) {
+          return parsed;
+        }
+      }
+      // Auto-detect an in-progress month if none was explicitly stored yet
+      for (const prog of GRADE_3_IN_MONTH_PROGRAMS) {
+        const keys = getMonthStorageKeys(prog.monthNumber);
+        const rawCompleted = localStorage.getItem(keys.completedDaysKey);
+        if (rawCompleted) {
+          const parsedDays = JSON.parse(rawCompleted);
+          const count = Object.keys(parsedDays || {}).length;
+          if (count > 0 && count < 30) {
+            return prog.monthNumber;
+          }
+        }
+        for (let d = 1; d <= 30; d++) {
+          if (localStorage.getItem(keys.dayProgressKey(d))) {
+            return prog.monthNumber;
+          }
+        }
+      }
+    } catch {
+      // Ignore storage errors
+    }
+    return 11; // Default active month: Tháng 11
+  };
+
+  const [lastActiveMonthNumber, setLastActiveMonthNumber] = useState<number>(
+    resolveInitialActiveMonthNumber
+  );
+  const [selectedInMonthNumber, setSelectedInMonthNumber] = useState<number | null>(
+    resolveInitialActiveMonthNumber
+  );
   const [activeInMonthDay, setActiveInMonthDay] = useState<InMonthDayPlan | null>(null);
   const [isInMonthExamOpen, setIsInMonthExamOpen] = useState<boolean>(false);
 
-  const [inMonthCompletedDays, setInMonthCompletedDays] = useState<Record<number, InMonthDayProgress>>(() => {
-    try {
-      const saved = localStorage.getItem('spark_math_inmonth_nov_completed_days');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
+  const [inMonthCompletedByMonth, setInMonthCompletedByMonth] = useState<
+    Record<number, Record<number, InMonthDayProgress>>
+  >(() => {
+    const initial: Record<number, Record<number, InMonthDayProgress>> = {};
+    GRADE_3_IN_MONTH_PROGRAMS.forEach((prog) => {
+      try {
+        const saved = localStorage.getItem(
+          getMonthStorageKeys(prog.monthNumber).completedDaysKey
+        );
+        initial[prog.monthNumber] = saved ? JSON.parse(saved) : {};
+      } catch {
+        initial[prog.monthNumber] = {};
+      }
+    });
+    return initial;
   });
 
-  const [inMonthExamResult, setInMonthExamResult] = useState<InMonthExamSavedResult | null>(() => {
-    try {
-      const saved = localStorage.getItem('spark_math_inmonth_nov_exam_result');
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
+  const [inMonthExamByMonth, setInMonthExamByMonth] = useState<
+    Record<number, InMonthExamSavedResult | null>
+  >(() => {
+    const initial: Record<number, InMonthExamSavedResult | null> = {};
+    GRADE_3_IN_MONTH_PROGRAMS.forEach((prog) => {
+      try {
+        const saved = localStorage.getItem(
+          getMonthStorageKeys(prog.monthNumber).examResultKey
+        );
+        initial[prog.monthNumber] = saved ? JSON.parse(saved) : null;
+      } catch {
+        initial[prog.monthNumber] = null;
+      }
+    });
+    return initial;
   });
 
   const [activeVnLesson, setActiveVnLesson] = useState<VietnamGrade3Lesson | null>(null);
@@ -117,17 +177,13 @@ export default function App() {
     try {
       localStorage.setItem('spark_math_program_mode_v2', programMode);
       localStorage.setItem('spark_math_vn_completed_lessons', JSON.stringify(vnCompletedLessonIds));
-      localStorage.setItem('spark_math_inmonth_nov_completed_days', JSON.stringify(inMonthCompletedDays));
-      if (inMonthExamResult !== null) {
-        localStorage.setItem('spark_math_inmonth_nov_exam_result', JSON.stringify(inMonthExamResult));
-      }
       if (vnAssessmentScore !== null) {
         localStorage.setItem('spark_math_vn_assessment_score', JSON.stringify(vnAssessmentScore));
       }
     } catch {
       // Ignore
     }
-  }, [programMode, vnCompletedLessonIds, vnAssessmentScore, inMonthCompletedDays, inMonthExamResult]);
+  }, [programMode, vnCompletedLessonIds, vnAssessmentScore]);
 
   const handleVnLessonCompleted = (lessonId: string) => {
     if (!vnCompletedLessonIds.includes(lessonId)) {
@@ -136,26 +192,76 @@ export default function App() {
     }
   };
 
+  const activeMonthProgram: InMonthMonthProgram | null =
+    selectedInMonthNumber !== null
+      ? GRADE_3_IN_MONTH_PROGRAMS.find((m) => m.monthNumber === selectedInMonthNumber) || null
+      : null;
+
+  const setActiveMonthAndPersist = (monthNumber: number) => {
+    setLastActiveMonthNumber(monthNumber);
+    setSelectedInMonthNumber(monthNumber);
+    try {
+      localStorage.setItem(ACTIVE_MONTH_STORAGE_KEY, String(monthNumber));
+    } catch {
+      // Ignore storage errors
+    }
+  };
+
   const handleInMonthDayCompleted = (
+    monthNumber: number,
     dayNumber: number,
     score: number,
     totalQuestions: number,
     elapsedSeconds: number
   ) => {
-    const existing = inMonthCompletedDays[dayNumber];
-    setInMonthCompletedDays((prev) => ({
+    setInMonthCompletedByMonth((prev) => {
+      const monthMap = prev[monthNumber] || {};
+      const existing = monthMap[dayNumber];
+      const nextMonthMap: Record<number, InMonthDayProgress> = {
+        ...monthMap,
+        [dayNumber]: {
+          day: dayNumber,
+          score: existing ? Math.max(existing.score, score) : score,
+          totalQuestions,
+          elapsedSeconds,
+          completedAt: new Date().toLocaleDateString('vi-VN'),
+        },
+      };
+      try {
+        localStorage.setItem(
+          getMonthStorageKeys(monthNumber).completedDaysKey,
+          JSON.stringify(nextMonthMap)
+        );
+      } catch {
+        // Ignore storage write error
+      }
+      if (!existing) {
+        setTotalStars((stars) => stars + 5);
+      }
+      return {
+        ...prev,
+        [monthNumber]: nextMonthMap,
+      };
+    });
+  };
+
+  const handleSaveInMonthExamResult = (
+    monthNumber: number,
+    res: InMonthExamSavedResult
+  ) => {
+    setInMonthExamByMonth((prev) => ({
       ...prev,
-      [dayNumber]: {
-        day: dayNumber,
-        score: existing ? Math.max(existing.score, score) : score,
-        totalQuestions,
-        elapsedSeconds,
-        completedAt: new Date().toLocaleDateString('vi-VN'),
-      },
+      [monthNumber]: res,
     }));
-    if (!existing) {
-      setTotalStars((prev) => prev + 5);
+    try {
+      localStorage.setItem(
+        getMonthStorageKeys(monthNumber).examResultKey,
+        JSON.stringify(res)
+      );
+    } catch {
+      // Ignore storage write error
     }
+    setTotalStars((prev) => prev + 10);
   };
 
   // Track reactive updates to mistake notebook and programming error collector
@@ -221,14 +327,8 @@ export default function App() {
     (l) => l.id === activeLessonId
   );
 
-  const isCosmicMode = programMode === 'textbook' || programMode === 'inmonth';
-
   return (
-    <div className={`min-h-screen flex flex-col font-sans relative transition-colors duration-500 ${
-      isCosmicMode
-        ? 'bg-[#060913] text-white selection:bg-cyan-400 selection:text-slate-950'
-        : 'bg-gradient-to-b from-amber-50/40 via-sky-50/20 to-slate-100/50 text-slate-800'
-    }`}>
+    <div className="min-h-screen flex flex-col font-sans relative transition-colors duration-500 bg-[radial-gradient(ellipse_at_top,_rgba(30,58,138,0.48),_transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(126,34,206,0.3),_transparent_55%),linear-gradient(180deg,_#040715_0%,_#0B1232_45%,_#15103A_100%)] text-white selection:bg-cyan-400 selection:text-slate-950">
       {/* Top Bar Navigation */}
       <Navbar
         currentTab={activeTab}
@@ -243,6 +343,21 @@ export default function App() {
         programMode={programMode}
         onToggleProgramMode={(m) => {
           sound.playClick();
+          if (m === 'inmonth') {
+            if (
+              programMode === 'inmonth' &&
+              selectedInMonthNumber !== null &&
+              !activeInMonthDay &&
+              !isInMonthExamOpen
+            ) {
+              setSelectedInMonthNumber(null);
+            } else {
+              setSelectedInMonthNumber(lastActiveMonthNumber);
+            }
+          } else {
+            setSelectedInMonthNumber(null);
+            setActiveTab('map');
+          }
           setProgramMode(m);
           setActiveLessonId(null);
           setActiveVnLesson(null);
@@ -269,22 +384,42 @@ export default function App() {
       {/* Main View Area */}
       {programMode === 'inmonth' ? (
         /* ======================================================== */
-        /* CHƯƠNG TRÌNH IN MONTH — THÁNG 11 (30 NGÀY SINGAPORE MATH) */
+        /* CHƯƠNG TRÌNH IN MONTH — LỚP 3 -> CÁC THÁNG -> 30 NGÀY */
         /* ======================================================== */
         <main className="flex-1 w-full">
-          {isInMonthExamOpen ? (
-            <InMonthFinalExamModal
-              savedResult={inMonthExamResult}
-              onSaveResult={(res) => {
-                setInMonthExamResult(res);
-                setTotalStars((prev) => prev + 10);
+          {!activeMonthProgram ? (
+            <InMonthGradeHub
+              onSelectMonth={(monthProgram) => {
+                setActiveMonthAndPersist(monthProgram.monthNumber);
+                setActiveInMonthDay(null);
+                setIsInMonthExamOpen(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+              onQuickStartDay={(monthProgram, dayNumber) => {
+                const targetDay =
+                  monthProgram.days.find((d) => d.dayNumber === dayNumber) ||
+                  monthProgram.days[0];
+                setActiveMonthAndPersist(monthProgram.monthNumber);
+                setActiveInMonthDay(targetDay);
+                setIsInMonthExamOpen(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          ) : isInMonthExamOpen ? (
+            <InMonthFinalExamModal
+              key={activeMonthProgram.monthNumber}
+              monthNumber={activeMonthProgram.monthNumber}
+              finalExam={activeMonthProgram.finalExam}
+              savedResult={inMonthExamByMonth[activeMonthProgram.monthNumber] || null}
+              onSaveResult={(res) =>
+                handleSaveInMonthExamResult(activeMonthProgram.monthNumber, res)
+              }
               onClose={() => {
                 setIsInMonthExamOpen(false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onJumpToDay={(dayNum) => {
-                const found = NOVEMBER_IN_MONTH_DAYS.find((d) => d.dayNumber === dayNum);
+                const found = activeMonthProgram.days.find((d) => d.dayNumber === dayNum);
                 if (found) {
                   setIsInMonthExamOpen(false);
                   setActiveInMonthDay(found);
@@ -295,14 +430,26 @@ export default function App() {
             />
           ) : activeInMonthDay ? (
             <InMonthDailyRunner
+              monthNumber={activeMonthProgram.monthNumber}
+              monthLabel={activeMonthProgram.label}
               dayPlan={activeInMonthDay}
               onBack={() => {
                 setActiveInMonthDay(null);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              onCompleteDay={handleInMonthDayCompleted}
+              onCompleteDay={(dayNum, score, totalQ, elapsed) =>
+                handleInMonthDayCompleted(
+                  activeMonthProgram.monthNumber,
+                  dayNum,
+                  score,
+                  totalQ,
+                  elapsed
+                )
+              }
               onSelectNextDay={(nextDayNum) => {
-                const nextPlan = NOVEMBER_IN_MONTH_DAYS.find((d) => d.dayNumber === nextDayNum);
+                const nextPlan = activeMonthProgram.days.find(
+                  (d) => d.dayNumber === nextDayNum
+                );
                 if (nextPlan) {
                   setActiveInMonthDay(nextPlan);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -317,14 +464,27 @@ export default function App() {
             />
           ) : (
             <InMonthCalendarHub
-              completedDays={inMonthCompletedDays}
-              examResult={inMonthExamResult}
+              monthProgram={activeMonthProgram}
+              completedDays={inMonthCompletedByMonth[activeMonthProgram.monthNumber] || {}}
+              examResult={inMonthExamByMonth[activeMonthProgram.monthNumber] || null}
               onSelectDay={(dayPlan) => {
                 setActiveInMonthDay(dayPlan);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onOpenExam={() => {
                 setIsInMonthExamOpen(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onBackToGrade={() => {
+                setSelectedInMonthNumber(null);
+                setActiveInMonthDay(null);
+                setIsInMonthExamOpen(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onSwitchMonth={(nextMonthProgram) => {
+                setActiveMonthAndPersist(nextMonthProgram.monthNumber);
+                setActiveInMonthDay(null);
+                setIsInMonthExamOpen(false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />
@@ -373,43 +533,6 @@ export default function App() {
             /* CHƯƠNG TRÌNH TOÁN TƯ DUY (SPARK MATH) */
             /* ======================================================== */
             <>
-              {!activeLessonId && activeTab === 'map' && (
-                <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 border-2 border-amber-300 animate-fade-in">
-                  <div className="flex items-center gap-3.5">
-                    <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner shrink-0 border border-white/20">
-                      🧠
-                    </span>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
-                          BÀI KIỂM TRA ĐỊNH KỲ
-                        </span>
-                        <span className="text-xs text-amber-100 font-bold hidden sm:inline">
-                          · Khảo sát phương pháp luận sau cụm bài tập
-                        </span>
-                      </div>
-                      <h3 className="text-sm sm:text-base font-black leading-snug">
-                        Mô Hình Tư Duy: So Sánh Hơn - Kém (Sơ Đồ Thanh &amp; Bản Chất Phép Trừ)
-                      </h3>
-                      <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-                        Khảo sát định kỳ 5 bước: <em>Ít hơn là gì? Nhiều hơn là gì? Vì sao dùng phép trừ? Bình 18L &amp; 12L và bài toán san sẻ nước.</em>
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sound.playClick();
-                      setActivePeriodicAssessmentId('periodic-comparison-bar-model');
-                      setIsPeriodicRunnerOpen(true);
-                    }}
-                    className="px-5 py-2.5 rounded-xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform flex items-center gap-2 shrink-0 self-stretch md:self-auto justify-center cursor-pointer"
-                  >
-                    <span>Vào Bài Kiểm Tra Định Kỳ</span>
-                    <span className="text-base">→</span>
-                  </button>
-                </div>
-              )}
               {activeLessonId && currentLesson ? (
                 <LessonContainer
                   lesson={currentLesson}

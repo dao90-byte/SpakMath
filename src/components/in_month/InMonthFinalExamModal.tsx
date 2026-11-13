@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import {
-  NOVEMBER_FINAL_EXAM,
+  InMonthFinalExam,
   InMonthSkillDomain,
 } from '../../data/inMonthNovemberData';
+import { getMonthStorageKeys } from '../../data/inMonthGrade3Catalog';
 import { InMonthVisualModels } from './InMonthVisualModels';
 import { sound } from '../../utils/soundEffects';
 import {
@@ -38,6 +39,8 @@ export interface InMonthExamSavedResult {
 }
 
 interface InMonthFinalExamModalProps {
+  monthNumber: number;
+  finalExam: InMonthFinalExam;
   savedResult: InMonthExamSavedResult | null;
   onSaveResult: (result: InMonthExamSavedResult) => void;
   onClose: () => void;
@@ -93,8 +96,6 @@ const PILLAR_META: Record<
   },
 };
 
-const EXAM_DRAFT_KEY = 'spark_math_inmonth_nov_exam_draft';
-
 function fireExamCelebration() {
   const cosmicColors = ['#FBBF24', '#EC4899', '#22D3EE', '#34D399', '#A855F7', '#FFFFFF'];
   confetti({
@@ -122,16 +123,20 @@ function fireExamCelebration() {
 }
 
 export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
+  monthNumber,
+  finalExam,
   savedResult,
   onSaveResult,
   onClose,
   onJumpToDay,
   onOpenScratchpad,
 }) => {
+  const examDraftKey = getMonthStorageKeys(monthNumber).examDraftKey;
+
   const [studentName, setStudentName] = useState(() => {
     if (savedResult?.studentName) return savedResult.studentName;
     try {
-      const raw = localStorage.getItem(EXAM_DRAFT_KEY);
+      const raw = localStorage.getItem(examDraftKey);
       if (raw) return JSON.parse(raw).studentName || 'Phi Hành Gia Nhí';
     } catch {
       // ignore
@@ -141,7 +146,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   const [currentIdx, setCurrentIdx] = useState(() => {
     if (savedResult) return 0;
     try {
-      const raw = localStorage.getItem(EXAM_DRAFT_KEY);
+      const raw = localStorage.getItem(examDraftKey);
       if (raw) return Math.min(Math.max(0, JSON.parse(raw).currentIdx || 0), 19);
     } catch {
       // ignore
@@ -151,7 +156,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   const [answers, setAnswers] = useState<Record<string, string>>(() => {
     if (savedResult?.answers) return savedResult.answers;
     try {
-      const raw = localStorage.getItem(EXAM_DRAFT_KEY);
+      const raw = localStorage.getItem(examDraftKey);
       if (raw) return JSON.parse(raw).answers || {};
     } catch {
       // ignore
@@ -165,15 +170,15 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
     if (isSubmitted) return;
     try {
       localStorage.setItem(
-        EXAM_DRAFT_KEY,
+        examDraftKey,
         JSON.stringify({ studentName, currentIdx, answers })
       );
     } catch {
       // ignore
     }
-  }, [studentName, currentIdx, answers, isSubmitted]);
+  }, [examDraftKey, studentName, currentIdx, answers, isSubmitted]);
 
-  const examQuestions = NOVEMBER_FINAL_EXAM.questions;
+  const examQuestions = finalExam.questions;
   const currentQ = examQuestions[currentIdx];
   const currentExamInputSpec = getInMonthQuestionInputSpec(currentQ.correctAnswer);
 
@@ -205,7 +210,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
     };
 
     try {
-      localStorage.removeItem(EXAM_DRAFT_KEY);
+      localStorage.removeItem(examDraftKey);
     } catch {
       // ignore
     }
@@ -219,7 +224,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
 
   const handleRetakeExam = () => {
     try {
-      localStorage.removeItem(EXAM_DRAFT_KEY);
+      localStorage.removeItem(examDraftKey);
     } catch {
       // ignore
     }
@@ -283,25 +288,54 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   ).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#090D24] via-[#131B42] to-[#1D1548] text-white pb-16">
-      {/* Top Bar */}
-      <div className="sticky top-0 z-30 backdrop-blur-md bg-[#090D24]/90 border-b border-indigo-400/25 px-4 py-3 shadow-lg">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_rgba(30,58,138,0.48),_transparent_60%),radial-gradient(ellipse_at_bottom_right,_rgba(126,34,206,0.32),_transparent_55%),linear-gradient(180deg,_#040715_0%,_#0B1232_45%,_#15103A_100%)] text-white pb-16 relative overflow-hidden">
+      {/* Deep Space Starfield, Orbital Rings & Nebula Glows */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
+        <div className="absolute -top-28 left-1/4 w-[480px] h-[480px] rounded-full bg-cyan-500/18 blur-[145px]" />
+        <div className="absolute top-1/3 -right-24 w-[440px] h-[440px] rounded-full bg-purple-500/20 blur-[145px]" />
+        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full bg-amber-400/14 blur-[155px]" />
+        <svg
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+          className="w-full h-full opacity-65"
+        >
+          <circle cx="1220" cy="140" r="260" fill="none" stroke="rgba(56,189,248,0.14)" strokeWidth="1" strokeDasharray="6 10" />
+          <circle cx="1220" cy="140" r="370" fill="none" stroke="rgba(251,191,36,0.1)" strokeWidth="1" />
+          <circle cx="180" cy="760" r="240" fill="none" stroke="rgba(168,85,247,0.13)" strokeWidth="1" strokeDasharray="4 10" />
+          <circle cx="110" cy="95" r="1.6" fill="#67E8F9" />
+          <circle cx="290" cy="160" r="1.4" fill="#FDE68A" />
+          <circle cx="640" cy="210" r="1.8" fill="#67E8F9" />
+          <circle cx="880" cy="90" r="1.5" fill="#F9A8D4" />
+          <circle cx="1090" cy="240" r="2" fill="#FDE68A" />
+          <circle cx="195" cy="490" r="1.7" fill="#FDE68A" />
+          <circle cx="520" cy="640" r="1.4" fill="#67E8F9" />
+          <circle cx="1160" cy="680" r="1.8" fill="#F9A8D4" />
+        </svg>
+      </div>
+
+      {/* Top Cosmic Mission Command Bar */}
+      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.14),_transparent_50%),radial-gradient(ellipse_at_top_right,_rgba(168,85,247,0.16),_transparent_50%),linear-gradient(180deg,_rgba(7,11,32,0.95),_rgba(11,17,46,0.92))] border-b border-cyan-300/25 px-4 py-3.5 shadow-[0_18px_46px_rgba(3,7,24,0.72)] overflow-hidden">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent shadow-[0_0_12px_rgba(34,211,238,0.5)]"
+        />
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 border border-white/15 cursor-pointer transition-colors duration-200 min-h-[44px]"
+              className="px-3.5 py-2.5 rounded-xl bg-white/[0.09] hover:bg-cyan-400/18 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/25 hover:border-cyan-300/60 cursor-pointer transition-all duration-200 min-h-[44px] whitespace-nowrap"
             >
-              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-              <span>Quay Về Lịch Tháng 11</span>
+              <ArrowLeft className="w-4 h-4 text-cyan-300" aria-hidden="true" />
+              <span>Quay Về Lịch {finalExam.monthLabel}</span>
             </button>
             <div>
-              <span className="px-2.5 py-0.5 rounded-lg bg-amber-400 text-slate-950 font-black text-xs uppercase">
-                {NOVEMBER_FINAL_EXAM.monthLabel}
-              </span>
-              <h2 className="text-base sm:text-xl font-extrabold font-display text-white mt-0.5">
-                {NOVEMBER_FINAL_EXAM.title}
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-300">
+                <span className="w-2 h-2 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.85)]" aria-hidden="true" />
+                <span>Lớp 3 · {finalExam.monthLabel}</span>
+              </div>
+              <h2 className="text-base sm:text-xl font-extrabold font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-0.5">
+                {finalExam.title}
               </h2>
             </div>
           </div>
@@ -310,7 +344,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             <button
               type="button"
               onClick={onOpenScratchpad}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all duration-200 min-h-[44px]"
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 hover:from-amber-200 hover:to-pink-400 text-slate-950 font-black text-xs flex items-center gap-1.5 ring-1 ring-amber-200/85 shadow-[0_8px_24px_rgba(251,191,36,0.4)] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 min-h-[44px]"
             >
               <PenTool className="w-4 h-4" aria-hidden="true" />
               <span>Bảng Vẽ Nháp</span>
@@ -320,7 +354,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <button
                 type="button"
                 onClick={handleRetakeExam}
-                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 border border-white/20 cursor-pointer transition-colors duration-200 min-h-[44px]"
+                className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 border border-white/20 cursor-pointer transition-colors duration-200 min-h-[44px]"
               >
                 <RotateCcw className="w-4 h-4" aria-hidden="true" />
                 <span>Làm Lại Đề Thi</span>
@@ -332,11 +366,15 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
 
       {/* Mode 1: Taking the Exam */}
       {!isSubmitted ? (
-        <div className="max-w-7xl mx-auto px-4 mt-6">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6">
           {/* Student Name & Part Switcher Banner */}
-          <div className="cosmic-glass rounded-2xl p-4 mb-5 flex flex-wrap items-center justify-between gap-4">
+          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.12),_transparent_45%),linear-gradient(135deg,_rgba(14,22,62,0.95),_rgba(19,16,58,0.95))] backdrop-blur-2xl border border-cyan-300/30 p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-[0_16px_42px_rgba(3,7,24,0.65),inset_0_1px_0_rgba(255,255,255,0.1)]">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] rounded-full bg-gradient-to-r from-cyan-300/75 via-indigo-400/60 to-amber-300/75"
+            />
             <div className="flex flex-wrap items-center gap-3">
-              <label htmlFor="exam-student-name" className="text-xs font-extrabold text-indigo-200 uppercase">
+              <label htmlFor="exam-student-name" className="text-xs font-extrabold text-cyan-200 uppercase tracking-wider">
                 Họ tên thí sinh trên Chứng nhận:
               </label>
               <input
@@ -344,7 +382,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 type="text"
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
-                className="px-3.5 py-2 rounded-xl bg-indigo-950/90 text-white font-black text-sm border-2 border-amber-400/70 focus:border-cyan-300 focus:outline-none min-h-[42px] placeholder:text-indigo-400"
+                className="px-4 py-2 rounded-xl bg-[#070B22]/90 text-white font-black text-sm border-2 border-amber-300/65 focus:border-cyan-300 focus:outline-none min-h-[42px] placeholder:text-indigo-400 shadow-inner"
                 placeholder="Nhập tên của em..."
               />
             </div>
@@ -356,7 +394,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 onClick={() => setCurrentIdx(0)}
                 className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
                   currentQ.part === 'A'
-                    ? 'bg-cyan-400 text-slate-950 shadow-md'
+                    ? 'bg-gradient-to-r from-cyan-300 to-sky-400 text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.35)]'
                     : 'bg-white/10 text-indigo-200 hover:bg-white/20'
                 }`}
               >
@@ -368,7 +406,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 onClick={() => setCurrentIdx(10)}
                 className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
                   currentQ.part === 'B'
-                    ? 'bg-amber-400 text-slate-950 shadow-md'
+                    ? 'bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 text-slate-950 shadow-[0_0_20px_rgba(251,191,36,0.35)]'
                     : 'bg-white/10 text-indigo-200 hover:bg-white/20'
                 }`}
               >
@@ -377,8 +415,12 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             </div>
           </div>
 
-          {/* 20 Question Number Navigator */}
-          <div className="cosmic-glass rounded-2xl p-3.5 mb-6 flex flex-wrap items-center justify-between gap-3">
+          {/* Constellation 20 Question Number Navigator */}
+          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.14),_transparent_45%),linear-gradient(135deg,_rgba(14,22,62,0.95),_rgba(19,16,58,0.95))] backdrop-blur-2xl border border-cyan-300/30 p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-[0_18px_46px_rgba(3,7,24,0.65),inset_0_1px_0_rgba(255,255,255,0.1)]">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] rounded-full bg-gradient-to-r from-cyan-300/75 via-indigo-400/60 to-amber-300/75"
+            />
             <div role="group" aria-label="Danh sách 20 câu thi" className="flex flex-wrap gap-1.5">
               {examQuestions.map((q, idx) => {
                 const hasAns = (answers[q.id] || '').trim() !== '';
@@ -392,10 +434,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                     onClick={() => setCurrentIdx(idx)}
                     className={`w-10 h-10 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer tabular-nums ${
                       isCurr
-                        ? 'bg-amber-400 text-slate-950 ring-2 ring-white shadow-md'
+                        ? 'bg-gradient-to-br from-amber-300 via-orange-400 to-pink-500 text-slate-950 ring-2 ring-amber-200 shadow-[0_0_22px_rgba(251,191,36,0.55)] scale-105'
                         : hasAns
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white/10 text-indigo-200 hover:bg-white/20'
+                        ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border border-cyan-300/60 shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+                        : 'bg-indigo-900/55 text-indigo-200 border border-indigo-400/25 hover:border-cyan-300/65 hover:bg-cyan-500/20'
                     }`}
                   >
                     {idx + 1}
@@ -405,13 +447,13 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-xs font-bold text-indigo-200 tabular-nums">
-                Đã trả lời: <strong className="text-white">{answeredCount}/20</strong>
+              <span className="px-3.5 py-2 rounded-xl bg-[#080E2B]/85 border border-cyan-300/25 text-xs font-bold text-indigo-200 tabular-nums">
+                Đã trả lời: <strong className="text-cyan-300">{answeredCount}/20</strong>
               </span>
               <button
                 type="button"
                 onClick={handleSubmitExam}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-black text-xs shadow-lg cursor-pointer transition-all duration-200 min-h-[42px]"
+                className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-500 hover:brightness-110 text-slate-950 font-black text-xs shadow-[0_8px_24px_rgba(52,211,153,0.35)] cursor-pointer transition-all duration-200 min-h-[42px]"
               >
                 Nộp Bài &amp; Xem Đánh Giá Năng Lực
               </button>
@@ -424,17 +466,20 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <InMonthVisualModels model={currentQ.visualModel} isAnswered={false} />
             </div>
 
-            <div className="lg:col-span-5 bg-[#111942]/90 backdrop-blur-xl text-white rounded-3xl p-6 shadow-2xl border border-indigo-400/35 relative overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-400 via-amber-400 to-pink-500" />
-              <div className="flex items-center justify-between mb-3 pt-1">
+            <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.15),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(236,72,153,0.14),_transparent_50%),linear-gradient(170deg,_rgba(19,29,82,0.97),_rgba(8,13,40,0.99))] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_28px_72px_rgba(3,7,24,0.85),inset_0_1px_0_rgba(255,255,255,0.15)] border border-indigo-300/40">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-pink-500 shadow-[0_0_18px_rgba(34,211,238,0.65)]"
+              />
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
                 <span
-                  className={`px-3 py-1 rounded-xl font-black text-xs uppercase border ${
+                  className={`font-black text-xs uppercase tracking-wider ${
                     currentQ.part === 'A'
-                      ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400/40'
-                      : 'bg-amber-400/20 text-amber-200 border-amber-400/40'
+                      ? 'text-cyan-300'
+                      : 'text-amber-300'
                   }`}
                 >
-                  Câu {currentIdx + 1}/20 •{' '}
+                  Câu {currentIdx + 1}/20 ·{' '}
                   {currentQ.part === 'A' ? 'Phần A: Cơ Bản' : 'Phần B: Olympic'}
                 </span>
                 <span className="text-xs font-black text-amber-300 tabular-nums">
@@ -442,14 +487,14 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 </span>
               </div>
 
-              <div className="rounded-2xl bg-indigo-950/75 border border-indigo-400/25 p-4 mb-5">
+              <div className="rounded-2xl bg-[#070B22]/80 border border-white/10 p-4 sm:p-5 mb-6 shadow-inner">
                 <p className="text-base sm:text-lg font-extrabold text-white leading-relaxed">
                   {currentQ.prompt}
                 </p>
               </div>
 
               {currentExamInputSpec.mode === 'choice' ? (
-                <div role="group" aria-label="Các lựa chọn đáp án" className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+                <div role="group" aria-label="Các lựa chọn đáp án" className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
                   {currentQ.options.map((opt, oIdx) => {
                     const selected = (answers[currentQ.id] || '').trim() === opt.trim();
                     return (
@@ -461,17 +506,17 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                           sound.playClick();
                           handleSelectOption(opt);
                         }}
-                        className={`p-3.5 rounded-2xl border-2 font-black text-left transition-all duration-200 cursor-pointer tabular-nums min-h-[54px] active:scale-[0.98] flex items-center gap-2.5 ${
+                        className={`p-4 rounded-2xl border-2 font-black text-left transition-all duration-200 cursor-pointer tabular-nums min-h-[56px] active:scale-[0.98] flex items-center gap-2.5 ${
                           selected
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 border-cyan-300 text-white shadow-lg shadow-cyan-500/25'
-                            : 'bg-indigo-950/65 border-indigo-400/25 text-indigo-100 hover:border-cyan-400/60 hover:bg-indigo-900/70'
+                            ? 'bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 border-amber-200 text-slate-950 shadow-[0_8px_26px_rgba(251,191,36,0.42)]'
+                            : 'bg-[#080E2B]/90 border-indigo-400/28 text-white hover:border-cyan-300/80 hover:bg-indigo-900/55 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]'
                         }`}
                       >
                         <span
                           className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
                             selected
-                              ? 'bg-white text-blue-700'
-                              : 'bg-indigo-800/80 text-cyan-200 border border-indigo-400/30'
+                              ? 'bg-slate-950 text-amber-300'
+                              : 'bg-white/10 text-cyan-200 border border-cyan-300/25'
                           }`}
                         >
                           {String.fromCharCode(65 + oIdx)}
@@ -482,8 +527,8 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                   })}
                 </div>
               ) : (
-                <div className="mb-5 p-4 rounded-2xl bg-indigo-950/75 border border-indigo-400/30 space-y-2.5">
-                  <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-extrabold uppercase tracking-wider text-cyan-200">
+                <div className="mb-6 p-4 rounded-2xl bg-[#070B22]/90 border border-cyan-300/35 shadow-[inset_0_2px_12px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.1)] space-y-2.5">
+                  <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-cyan-300">
                     Nhập câu trả lời của em
                   </label>
                   <div className="flex items-center gap-2.5">
@@ -499,10 +544,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                         }
                       }}
                       placeholder="Nhập đáp án..."
-                      className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-900/90 border-2 border-indigo-400/40 focus:border-cyan-300 focus:outline-none text-white font-black text-lg tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm"
+                      className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-xl tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm transition-all"
                     />
                     {currentExamInputSpec.mode === 'text_number' && currentExamInputSpec.unitLabel && (
-                      <span className="px-3.5 py-3.5 rounded-xl bg-indigo-900/80 border border-indigo-400/30 text-cyan-200 font-black text-sm shrink-0">
+                      <span className="px-4 py-3.5 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-sm shrink-0">
                         {currentExamInputSpec.unitLabel}
                       </span>
                     )}
@@ -510,7 +555,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 </div>
               )}
 
-              <div className="flex items-center justify-between gap-3 pt-4 border-t border-indigo-400/20">
+              <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
                 <button
                   type="button"
                   disabled={currentIdx === 0}
@@ -529,7 +574,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                         Math.min(examQuestions.length - 1, prev + 1)
                       )
                     }
-                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors duration-200 min-h-[44px] shadow-md"
+                    className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-400 to-indigo-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1 cursor-pointer transition-all duration-200 min-h-[46px] shadow-[0_8px_24px_rgba(34,211,238,0.35)]"
                   >
                     <span>Câu tiếp theo</span>
                     <ChevronRight className="w-4 h-4" aria-hidden="true" />
@@ -538,7 +583,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                   <button
                     type="button"
                     onClick={handleSubmitExam}
-                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition-all duration-200 min-h-[44px]"
+                    className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-[0_10px_28px_rgba(251,191,36,0.4)] cursor-pointer transition-all duration-200 min-h-[46px]"
                   >
                     <Trophy className="w-4 h-4" aria-hidden="true" />
                     <span>Hoàn Tất &amp; Xem Đánh Giá</span>
@@ -563,7 +608,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               }`}
             >
               <Award className="w-4 h-4" aria-hidden="true" />
-              <span>Báo Cáo Đánh Giá Năng Lực &amp; Chứng Nhận Tháng 11</span>
+              <span>Báo Cáo Đánh Giá Năng Lực &amp; Chứng Nhận {finalExam.monthLabel}</span>
             </button>
             <button
               type="button"
@@ -588,13 +633,13 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                   <div className="lg:col-span-7 space-y-3">
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-400/20 border border-amber-300/40 text-amber-300 text-xs font-black uppercase">
                       <ShieldCheck className="w-4 h-4" aria-hidden="true" />
-                      <span>Chứng Nhận Hoàn Thành IN MONTH • Tháng 11</span>
+                      <span>Chứng Nhận Hoàn Thành IN MONTH • {finalExam.monthLabel}</span>
                     </div>
                     <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-white">
                       Chúc mừng {studentName}!
                     </h3>
                     <p className="text-sm text-indigo-100 leading-relaxed">
-                      Đã hoàn thành chương trình Toán Tư Duy Singapore <strong>IN MONTH — Tháng 11</strong> (Toán đố Sơ đồ thanh, Phép chia có dư, Toán khoảng cách &amp; Đo lường chuẩn quốc tế).
+                      Đã hoàn thành chương trình Toán Tư Duy Singapore Lớp 3 <strong>IN MONTH — {finalExam.monthLabel}</strong> ({finalExam.title}).
                     </p>
                     <div
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r ${rankInfo.badgeColor} font-black text-xs sm:text-sm shadow-md`}
@@ -634,7 +679,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <div className="bg-[#111942]/90 backdrop-blur-xl text-white rounded-3xl p-6 shadow-xl border border-indigo-400/35">
                 <h4 className="text-lg sm:text-xl font-extrabold font-display text-white mb-4 flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-cyan-300" aria-hidden="true" />
-                  <span>Đánh Giá Chi Tiết Theo 4 Trụ Cột Năng Lực Tháng 11</span>
+                  <span>Đánh Giá Chi Tiết Theo 4 Trụ Cột Năng Lực {finalExam.monthLabel}</span>
                 </h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -712,7 +757,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             <div className="bg-[#111942]/90 backdrop-blur-xl text-white rounded-3xl p-6 shadow-xl border border-indigo-400/35 space-y-4">
               <h4 className="text-lg sm:text-xl font-extrabold font-display text-white flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-cyan-300" aria-hidden="true" />
-                <span>Chi Tiết Đáp Án &amp; Giải Thích 20 Câu Đề Thi Tháng 11</span>
+                <span>Chi Tiết Đáp Án &amp; Giải Thích 20 Câu Đề Thi {finalExam.monthLabel}</span>
               </h4>
               <div className="space-y-3">
                 {examQuestions.map((q, idx) => {

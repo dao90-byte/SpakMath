@@ -4,17 +4,15 @@ import { sound } from '../utils/soundEffects';
 import {
   ArrowLeft,
   ArrowRight,
-  Pencil,
   CheckCircle,
-  Star,
   ChevronLeft,
   ChevronRight,
   Sparkles,
   BookMarked,
   BookmarkCheck,
   Bug,
-  Lock,
-  KeyRound
+  Gem,
+  Trophy,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { setCurrentLessonContext, recordMistake } from '../utils/mistakeManager';
@@ -44,11 +42,7 @@ import { TreasureVaultViewer } from './activities/TreasureVaultViewer';
 import { CubeCounterViewer } from './activities/CubeCounterViewer';
 import { GrandFinaleViewer } from './activities/GrandFinaleViewer';
 
-import {
-  PERIODIC_ASSESSMENTS,
-  getCompletedPeriodicIds,
-  isTeacherUnlocked
-} from '../data/periodicAssessmentsData';
+
 
 interface LessonContainerProps {
   lesson: LessonQuestion;
@@ -321,17 +315,13 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   isCompleted,
   onLessonChange,
   onBackToMap,
-  onOpenScratchpad,
   onOpenMistakes,
   onOpenDevConsole,
-  onOpenPeriodicAssessment,
-  onOpenTeacherUnlock,
   onLessonCompleted
 }) => {
   const [justFinishedId, setJustFinishedId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [showAutoPeriodicModal, setShowAutoPeriodicModal] = useState<boolean>(false);
 
   // Sync lesson context for automatic mistake recording
   useEffect(() => {
@@ -385,17 +375,6 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
   const justFinished = justFinishedId === lesson.id;
   const isLessonFinished = isCompleted || justFinished;
 
-  // Check if current lesson triggers a periodic assessment checkpoint
-  const matchingAssessment = PERIODIC_ASSESSMENTS.find(
-    (a) => a.prerequisiteLessonIds[a.prerequisiteLessonIds.length - 1] === lesson.id
-  );
-  const isAssessmentPassed = matchingAssessment
-    ? getCompletedPeriodicIds().includes(matchingAssessment.id)
-    : true;
-  const isTeacherModeActive = isTeacherUnlocked();
-  const isNextLockedByAssessment =
-    matchingAssessment && !isAssessmentPassed && !isTeacherModeActive;
-
   const handleCompleted = () => {
     setJustFinishedId(lesson.id);
     onLessonCompleted(lesson.id);
@@ -404,20 +383,9 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
       spread: 70,
       origin: { y: 0.6 }
     });
-
-    // AUTO-POPUP: Check if this lesson triggers an uncompleted Periodic Assessment for the thinking model
-    if (matchingAssessment && !isAssessmentPassed) {
-      sound.playVictory();
-      setShowAutoPeriodicModal(true);
-    }
   };
 
   const handleNextClick = () => {
-    if (isNextLockedByAssessment && matchingAssessment) {
-      sound.playWrong();
-      setShowAutoPeriodicModal(true);
-      return;
-    }
     if (nextLesson) {
       sound.playClick();
       onLessonChange(nextLesson.id);
@@ -435,77 +403,17 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const stationProgressPercent =
+    stationLessons.length > 0
+      ? Math.round(((stationIndex + 1) / stationLessons.length) * 100)
+      : 0;
+
   return (
-    <div className="space-y-6 pb-28 relative">
-      {/* Auto-Appearing Periodic Assessment Milestone Modal */}
-      {showAutoPeriodicModal && matchingAssessment && (
-        <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 max-w-lg w-full p-6 text-center space-y-4 relative overflow-hidden animate-in zoom-in-95">
-            <div className="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-orange-500 text-white flex items-center justify-center text-4xl shadow-lg ring-4 ring-amber-200 animate-bounce-slow">
-              {matchingAssessment.icon || '🏆'}
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-300">
-                CHÚC MỪNG HOÀN THÀNH MÔ HÌNH TƯ DUY! 🎉
-              </span>
-              <h3 className="text-lg sm:text-xl font-black text-slate-900 mt-2 leading-snug">
-                {matchingAssessment.thinkingModelName}
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
-                Bé vừa xuất sắc vượt qua toàn bộ thử thách nền tảng! Hệ thống đã tự động kích hoạt{' '}
-                <strong>{matchingAssessment.title}</strong> để bé chuẩn hóa phương pháp luận và nhận Chứng Nhận Tinh Hoa!
-              </p>
-            </div>
-
-            <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 text-left text-xs space-y-2">
-              <div className="font-black text-amber-950 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>Nội dung khảo sát phương pháp luận:</span>
-              </div>
-              <ul className="text-slate-700 space-y-1">
-                {matchingAssessment.keyRuleSummary.slice(0, 2).map((rule, idx) => (
-                  <li key={idx} className="flex items-start gap-1.5">
-                    <span className="text-amber-600 font-bold">✓</span>
-                    <span>{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="space-y-2 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setShowAutoPeriodicModal(false);
-                  if (onOpenPeriodicAssessment) {
-                    onOpenPeriodicAssessment(matchingAssessment.id);
-                  }
-                }}
-                className="w-full py-3.5 px-6 rounded-2xl font-black text-sm bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white shadow-lg shadow-orange-300/50 hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>Bắt Đầu Bài Kiểm Tra Định Kỳ Ngay</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  setShowAutoPeriodicModal(false);
-                }}
-                className="w-full py-2 px-4 rounded-xl text-xs font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
-              >
-                Để sau, em tiếp tục xem lại bài
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    <div className="space-y-4 sm:space-y-5 pb-28 relative">
 
       {/* Toast Notification for Mistake Collection */}
       {toastMessage && (
-        <div className="fixed top-20 right-4 z-50 bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs md:text-sm font-bold border border-amber-400 animate-in fade-in slide-in-from-top-4">
+        <div className="fixed top-20 right-4 z-50 bg-[#0B1232]/95 backdrop-blur-xl text-white px-4 py-3 rounded-2xl shadow-[0_20px_50px_rgba(3,7,24,0.85)] flex items-center gap-3 text-xs md:text-sm font-bold border border-amber-400/50 animate-in fade-in slide-in-from-top-4">
           <span className="text-xl">📖</span>
           <span>{toastMessage}</span>
           {onOpenMistakes && (
@@ -515,7 +423,7 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
                 setToastMessage(null);
                 onOpenMistakes();
               }}
-              className="ml-2 px-2.5 py-1 rounded-xl bg-amber-400 text-amber-950 font-black text-xs hover:bg-amber-300 transition-colors"
+              className="ml-2 px-2.5 py-1 rounded-xl bg-amber-400 text-amber-950 font-black text-xs hover:bg-amber-300 transition-colors cursor-pointer"
             >
               Mở sổ
             </button>
@@ -523,20 +431,20 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
         </div>
       )}
 
-      {/* Top actions bar with immediate navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      {/* Top Cosmic Command Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-2xl bg-[#090F2D]/82 backdrop-blur-xl border border-cyan-300/20 px-3 py-2.5 shadow-[0_14px_36px_rgba(3,7,24,0.58)]">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => {
               sound.playClick();
               onBackToMap();
             }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border-2 border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-2 min-h-[40px] rounded-xl bg-white/[0.07] border border-white/15 text-xs sm:text-sm font-bold text-slate-100 hover:bg-cyan-400/15 hover:border-cyan-300/45 transition-all cursor-pointer"
             title={`Quay về ${lesson.topicName}`}
           >
-            <ArrowLeft className="w-4 h-4 text-emerald-600" />
-            <span>Về {lesson.topicName || 'bản đồ'}</span>
+            <ArrowLeft className="w-4 h-4 text-cyan-300 shrink-0" aria-hidden="true" />
+            <span className="truncate max-w-[160px] sm:max-w-none">Về {lesson.topicName || 'bản đồ'}</span>
           </button>
 
           {/* Quick previous button within station */}
@@ -544,31 +452,33 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
             type="button"
             disabled={!prevLesson}
             onClick={() => prevLesson && goTo(prevLesson.id)}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed shadow-xs transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-xl bg-white/[0.06] border border-white/15 text-xs font-bold text-slate-200 hover:bg-white/[0.12] hover:border-cyan-300/35 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
             title="Bài trước trong trạm"
           >
-            <ChevronLeft className="w-4 h-4" /> Trước
+            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+            <span>Trước</span>
           </button>
 
-          {/* Quick next button at top - unlocked for inspection */}
+          {/* Quick next button at top */}
           {nextLesson ? (
             <button
               type="button"
               onClick={handleNextClick}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold shadow-xs transition-all active:scale-95 bg-amber-400 hover:bg-amber-300 text-amber-950 font-black ring-2 ring-amber-300"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-black transition-all active:scale-95 bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 hover:brightness-105 text-slate-950 ring-1 ring-amber-200/70 shadow-[0_0_20px_rgba(251,191,36,0.3)] cursor-pointer"
               title="Chuyển sang bài tiếp theo trong trạm"
             >
               <span>Tiếp</span>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </button>
           ) : (
             <button
               type="button"
               onClick={onBackToMap}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-black bg-emerald-100 border border-emerald-300 text-emerald-800 shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] rounded-xl text-xs font-black bg-emerald-400/20 border border-emerald-300/45 text-emerald-200 hover:bg-emerald-400/30 transition-colors cursor-pointer"
               title="Đã là bài cuối cùng trong trạm này"
             >
-              <span>Trạm hoàn tất 🏆</span>
+              <Trophy className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+              <span>Trạm hoàn tất</span>
             </button>
           )}
         </div>
@@ -578,27 +488,27 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
           <button
             type="button"
             onClick={handleBookmarkTricky}
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs md:text-sm font-bold shadow-xs transition-all active:scale-95 ${
+            className={`inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-95 cursor-pointer ${
               isBookmarked
-                ? 'bg-emerald-100 border-2 border-emerald-300 text-emerald-800'
-                : 'bg-rose-50 border-2 border-rose-200 text-rose-800 hover:bg-rose-100'
+                ? 'bg-emerald-400/20 border border-emerald-300/45 text-emerald-200'
+                : 'bg-rose-500/15 border border-rose-400/35 text-rose-200 hover:bg-rose-500/25'
             }`}
             title="Lưu thử thách này vào Sổ Thu Thập Lỗi để tự ôn luyện"
           >
             {isBookmarked ? (
               <>
-                <BookmarkCheck className="w-4 h-4 text-emerald-600" />
+                <BookmarkCheck className="w-4 h-4 text-emerald-300 shrink-0" aria-hidden="true" />
                 <span className="hidden xs:inline">Đã thu thập!</span>
               </>
             ) : (
               <>
-                <BookMarked className="w-4 h-4 text-rose-600" />
+                <BookMarked className="w-4 h-4 text-rose-300 shrink-0" aria-hidden="true" />
                 <span className="hidden xs:inline">Thu thập câu khó</span>
               </>
             )}
           </button>
 
-          {/* Report Exercise Issue button (Logic, Display, Interaction, Code) */}
+          {/* Report Exercise Issue button */}
           {onOpenDevConsole && (
             <button
               type="button"
@@ -606,153 +516,156 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
                 sound.playClick();
                 onOpenDevConsole(true);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs md:text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 shadow-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-xl bg-white/[0.06] border border-white/15 text-xs sm:text-sm font-bold text-slate-200 hover:bg-rose-500/15 hover:text-rose-200 hover:border-rose-400/40 transition-colors cursor-pointer"
               title="Báo lỗi bài tập này: Lỗi logic, hiển thị, tương tác hoặc lỗi lập trình"
             >
-              <Bug className="w-4 h-4 text-rose-500" />
+              <Bug className="w-4 h-4 text-rose-400 shrink-0" aria-hidden="true" />
               <span className="hidden sm:inline">Báo lỗi bài này</span>
             </button>
           )}
-
-          {/* Scratchpad button */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playClick();
-              onOpenScratchpad();
-            }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 border-2 border-amber-300 text-sm font-bold text-amber-900 hover:bg-amber-200 shadow-xs transition-colors"
-          >
-            <Pencil className="w-4 h-4" /> Giấy nháp
-          </button>
         </div>
       </div>
 
-      {/* Lesson header */}
-      <div
-        className={`rounded-3xl p-6 md:p-8 text-white shadow-lg bg-gradient-to-r ${
-          topic?.bgGradient ?? 'from-emerald-500 to-teal-600'
-        }`}
-      >
-        <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider">
-          <span className="bg-black/20 px-2.5 py-1 rounded-full">{lesson.topicName}</span>
-          <span className="bg-white/25 px-2.5 py-1 rounded-full">{lesson.badgeTitle}</span>
-          {isCompleted && (
-            <span className="bg-amber-400 text-amber-950 px-2.5 py-1 rounded-full flex items-center gap-1 font-bold">
-              <CheckCircle className="w-3.5 h-3.5" /> Đã hoàn thành
+      {/* Flagship Lesson Cosmic Observatory Header */}
+      <div className="relative overflow-hidden rounded-[26px] sm:rounded-[30px] p-5 sm:p-6 md:p-7 text-white bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.22),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.20),_transparent_52%),linear-gradient(155deg,_#080E2B_0%,_#11194A_58%,_#1B1348_100%)] border border-cyan-300/25 shadow-[0_24px_64px_rgba(3,7,24,0.78),inset_0_1px_0_rgba(255,255,255,0.16)]">
+        {/* Top aurora spectrum bar */}
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r ${
+            topic?.bgGradient ?? 'from-cyan-400 via-indigo-400 to-amber-300'
+          } opacity-90`}
+        />
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute -right-14 -top-14 w-64 h-64 rounded-full bg-gradient-to-br ${
+            topic?.bgGradient ?? 'from-cyan-500 to-indigo-600'
+          } opacity-20 blur-3xl`}
+        />
+
+        {/* Orbital astrolabe decorative emblem */}
+        <div className="pointer-events-none absolute right-5 top-4 opacity-35 hidden sm:block" aria-hidden="true">
+          <svg width="112" height="112" viewBox="0 0 112 112" fill="none">
+            <circle cx="56" cy="56" r="44" stroke="url(#lessonOrbRing)" strokeWidth="1.2" strokeDasharray="5 5" />
+            <ellipse cx="56" cy="56" rx="50" ry="18" transform="rotate(-22 56 56)" stroke="rgba(251,191,36,0.45)" strokeWidth="1" />
+            <circle cx="56" cy="56" r="24" stroke="rgba(103,232,249,0.5)" strokeWidth="1.1" />
+            <circle cx="88" cy="24" r="3" fill="#67e8f9" />
+            <circle cx="22" cy="82" r="2.5" fill="#fde047" />
+            <circle cx="56" cy="56" r="5" fill="rgba(253,224,71,0.7)" />
+            <defs>
+              <linearGradient id="lessonOrbRing" x1="12" y1="12" x2="100" y2="100">
+                <stop stopColor="#67e8f9" />
+                <stop offset="0.5" stopColor="#a78bfa" />
+                <stop offset="1" stopColor="#fde047" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2.5">
+          <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-wider">
+            <span className="bg-cyan-400/15 border border-cyan-300/35 text-cyan-200 px-3 py-1 rounded-xl shadow-[0_0_16px_rgba(34,211,238,0.14)]">
+              {lesson.topicName}
             </span>
-          )}
-        </div>
-        <h1 className="mt-3 text-2xl md:text-3xl font-black font-display tracking-tight">{lesson.title}</h1>
-        <p className="mt-2 text-sm md:text-base font-medium text-white/90">{lesson.instruction}</p>
-      </div>
+            <span className="bg-white/[0.08] border border-white/15 text-slate-100 px-3 py-1 rounded-xl">
+              {lesson.badgeTitle}
+            </span>
+            {isLessonFinished && (
+              <span className="bg-gradient-to-r from-emerald-400/25 to-cyan-400/20 border border-emerald-300/50 text-emerald-200 px-3 py-1 rounded-xl flex items-center gap-1.5 font-black shadow-[0_0_16px_rgba(16,185,129,0.2)]">
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
+                <span>Đã hoàn thành</span>
+              </span>
+            )}
+          </div>
 
-      {/* Mascot speech */}
-      <div className="flex items-start gap-3 bg-white rounded-3xl border-2 border-slate-100 p-4 shadow-sm">
-        <span className="text-4xl">{lesson.mascot.avatar}</span>
-        <div>
-          <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">{lesson.mascot.name}</p>
-          <p className="text-sm md:text-base font-semibold text-slate-800">{lesson.mascot.message}</p>
-        </div>
-      </div>
-
-      {/* Activity (keyed so state resets between lessons) */}
-      <div key={lesson.id} className="bg-white/80 rounded-3xl border-2 border-slate-100 p-4 md:p-6 shadow-sm">
-        {renderActivity(lesson.activity, handleCompleted)}
-      </div>
-
-      {/* Mandatory Periodic Assessment Checkpoint Barrier */}
-      {isNextLockedByAssessment && matchingAssessment && (
-        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 border-2 border-amber-300 rounded-3xl p-5 md:p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shrink-0 shadow-inner">
-              🔒
+          <div className="flex items-center gap-2.5 bg-[#070B22]/75 border border-cyan-300/25 rounded-xl px-3 py-1.5">
+            <span className="text-xs font-black text-amber-200 tabular-nums">
+              Bài {stationIndex + 1} / {stationLessons.length}
+            </span>
+            <div className="w-16 h-1.5 rounded-full bg-slate-900 border border-white/10 overflow-hidden hidden xs:block">
+              <div
+                style={{ width: `${stationProgressPercent}%` }}
+                className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-orange-400 transition-all duration-300"
+              />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2.5 py-0.5 rounded-full">
-                  CHỐT CHẶN BẮT BUỘC
-                </span>
-                <span className="text-xs text-amber-100 font-bold">
-                  Hoàn thành cụm mô hình tư duy
-                </span>
-              </div>
-              <h3 className="text-base sm:text-lg font-black mt-1">
-                {matchingAssessment.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-amber-100 mt-0.5 leading-relaxed">
-                Bé đã hoàn thành xong cụm bài tập của mô hình này! Hãy làm bài kiểm tra định kỳ để hệ thống hóa kiến thức và mở khóa các bài học tiếp theo nhé.
-              </p>
+          </div>
+        </div>
+
+        <h1 className="relative z-10 mt-3.5 text-xl sm:text-2xl md:text-3xl font-black font-display tracking-tight bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent leading-snug max-w-4xl drop-shadow-[0_2px_18px_rgba(34,211,238,0.22)]">
+          {lesson.title}
+        </h1>
+      </div>
+
+      {/* Activity Workspace (keyed so state resets between lessons) - Deep Cosmic Observatory Console */}
+      <div
+        key={lesson.id}
+        className="rounded-[28px] sm:rounded-[32px] p-[2px] bg-gradient-to-br from-cyan-300/70 via-indigo-400/50 to-amber-300/65 shadow-[0_30px_84px_rgba(3,7,24,0.88),0_0_44px_rgba(34,211,238,0.12)]"
+      >
+        <div className="cosmic-activity-stage relative overflow-hidden rounded-[26px] sm:rounded-[30px] bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.17),_transparent_48%),radial-gradient(ellipse_at_bottom_right,_rgba(251,191,36,0.13),_transparent_48%),radial-gradient(ellipse_at_50%_0%,_rgba(129,140,248,0.14),_transparent_62%),linear-gradient(160deg,_#060B24_0%,_#0D1540_52%,_#171142_100%)] p-3.5 sm:p-6 md:p-8 text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+          {/* Top luminous hairline beam */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-0 inset-x-8 h-[2px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 opacity-85 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+          />
+
+          {/* Subtle cosmic orbital grid & starfield backdrop */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-55" aria-hidden="true">
+            <svg viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice" className="w-full h-full">
+              <circle cx="1060" cy="110" r="190" fill="none" stroke="rgba(103,232,249,0.11)" strokeWidth="1" strokeDasharray="6 10" />
+              <circle cx="1060" cy="110" r="270" fill="none" stroke="rgba(251,191,36,0.08)" strokeWidth="1" />
+              <circle cx="130" cy="610" r="210" fill="none" stroke="rgba(168,85,247,0.11)" strokeWidth="1" strokeDasharray="4 9" />
+              <circle cx="140" cy="90" r="1.6" fill="#67E8F9" />
+              <circle cx="380" cy="52" r="1.4" fill="#FDE68A" />
+              <circle cx="720" cy="70" r="1.5" fill="#FFFFFF" />
+              <circle cx="960" cy="180" r="1.8" fill="#67E8F9" />
+              <circle cx="1120" cy="430" r="1.5" fill="#F9A8D4" />
+              <circle cx="240" cy="520" r="1.6" fill="#FDE68A" />
+              <circle cx="640" cy="660" r="1.4" fill="#67E8F9" />
+            </svg>
+          </div>
+
+          {/* Observatory Stage Top HUD Strip */}
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-white/12">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-400/12 border border-cyan-300/30 text-[11px] sm:text-xs font-black uppercase tracking-wider text-cyan-200 shadow-[0_0_16px_rgba(34,211,238,0.12)]">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" aria-hidden="true" />
+              <span>Trạm Thử Thách Tương Tác</span>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#070B22]/80 border border-amber-300/30 text-[11px] sm:text-xs font-extrabold text-amber-200">
+              <Gem className="w-3.5 h-3.5 text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.85)] shrink-0" aria-hidden="true" />
+              <span>Thưởng: +3 Tinh thể</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0 w-full md:w-auto justify-end">
-            {onOpenTeacherUnlock && (
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  onOpenTeacherUnlock();
-                }}
-                className="px-3.5 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold border border-white/30 whitespace-nowrap active:scale-95 transition-all flex items-center gap-1.5"
-                title="Cổng dành cho giáo viên"
-              >
-                <KeyRound className="w-3.5 h-3.5" />
-                <span>Giáo Viên</span>
-              </button>
-            )}
-
-            {onOpenPeriodicAssessment && (
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playClick();
-                  onOpenPeriodicAssessment(matchingAssessment.id);
-                }}
-                className="px-5 py-2.5 rounded-2xl bg-white text-orange-600 hover:bg-amber-50 font-black text-xs sm:text-sm shadow-md active:scale-95 transition-transform flex items-center gap-2 whitespace-nowrap"
-              >
-                <span>Làm Bài Kiểm Tra Định Kỳ Ngay</span>
-                <span>→</span>
-              </button>
-            )}
+          {/* Interactive Activity Content */}
+          <div className="relative z-10">
+            {renderActivity(lesson.activity, handleCompleted)}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Immediate In-Situ Completion Card: Visible right below activity without scrolling */}
       {(justFinished || isCompleted) && (
-        <div className="bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 border-2 border-emerald-300 rounded-3xl p-5 md:p-6 text-white shadow-xl flex items-center gap-4 transition-all">
-          <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl shrink-0 shadow-inner">
-            ⭐
+        <div className="relative overflow-hidden bg-[radial-gradient(ellipse_at_left,_rgba(52,211,153,0.28),_transparent_55%),linear-gradient(135deg,_rgba(6,78,59,0.88),_rgba(14,116,144,0.86))] border border-emerald-300/50 rounded-3xl p-5 md:p-6 text-white shadow-[0_20px_50px_rgba(16,185,129,0.28)] backdrop-blur-xl flex items-center gap-4 transition-all animate-fade-in">
+          <div className="w-14 h-14 rounded-2xl bg-cyan-300/20 border border-cyan-200/45 flex items-center justify-center shrink-0 shadow-[0_0_24px_rgba(34,211,238,0.3)]">
+            <Gem className="w-8 h-8 text-cyan-200 drop-shadow-[0_0_10px_rgba(34,211,238,0.85)]" aria-hidden="true" />
           </div>
           <div>
-            <p className="text-lg md:text-xl font-black flex items-center gap-2">
-              <span>🎉 Xuất sắc! Thử thách đã hoàn thành!</span>
+            <p className="text-base sm:text-lg md:text-xl font-black flex items-center gap-2 text-emerald-100">
+              <span>Xuất sắc! Thử thách đã hoàn thành!</span>
             </p>
-            <p className="text-xs md:text-sm text-white/90 font-medium mt-0.5">
-              Bạn đã nhận được thêm 3 ngôi sao thông thái! Hãy bấm nút &quot;Bài tiếp theo&quot; ở thanh điều hướng bên dưới để tiếp tục hành trình.
+            <p className="text-xs md:text-sm text-cyan-50/90 font-medium mt-0.5">
+              Bạn đã nhận được thêm 3 tinh thể thông thái! Hãy bấm nút &quot;Bài tiếp theo&quot; ở thanh điều hướng bên dưới để tiếp tục hành trình.
             </p>
           </div>
         </div>
       )}
 
-      {/* Regular bottom in-flow Navigation */}
-      <div className="flex items-center justify-between gap-3 pt-2">
-        <button
-          type="button"
-          disabled={!prevLesson}
-          onClick={() => prevLesson && goTo(prevLesson.id)}
-          className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-white border-2 border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" /> Bài trước
-        </button>
-        <span className="text-xs font-bold text-slate-500">
-          Bài {stationIndex + 1} / {stationLessons.length} · {lesson.topicName}
-        </span>
-      </div>
-
       {/* Sticky Bottom Floating Dock: Always visible on screen so you never need to scroll */}
-      <aside aria-label="Thanh điều hướng nhanh bài học" className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-2.5 shadow-[0_-6px_25px_rgba(0,0,0,0.1)]">
+      <aside aria-label="Thanh điều hướng nhanh bài học" className="fixed bottom-0 left-0 right-0 z-30 bg-[#060A1E]/94 backdrop-blur-2xl border-t border-cyan-300/25 px-3 sm:px-4 py-2.5 shadow-[0_-12px_40px_rgba(3,7,24,0.85)]">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-300/60 to-transparent"
+        />
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Left actions */}
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -762,66 +675,55 @@ export const LessonContainer: React.FC<LessonContainerProps> = ({
                 sound.playClick();
                 onBackToMap();
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 border border-white/15 hover:border-cyan-300/45 text-xs font-bold text-slate-100 transition-colors cursor-pointer"
               title={`Quay về ${lesson.topicName}`}
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="hidden xs:inline">Về {lesson.topicName || 'bản đồ'}</span>
+              <ArrowLeft className="w-3.5 h-3.5 text-cyan-300 shrink-0" aria-hidden="true" />
+              <span className="hidden xs:inline truncate max-w-[120px] sm:max-w-none">Về {lesson.topicName || 'bản đồ'}</span>
             </button>
             <button
               type="button"
               disabled={!prevLesson}
               onClick={() => prevLesson && goTo(prevLesson.id)}
-              className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-2 min-h-[40px] rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 text-xs font-bold text-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
               title="Bài trước trong trạm"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
+              <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
               <span className="hidden sm:inline">Bài trước</span>
             </button>
           </div>
 
           {/* Center progress pill */}
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-600 truncate max-w-[180px] sm:max-w-xs md:max-w-md">
-            <span className={`w-2 h-2 rounded-full shrink-0 ${isLessonFinished ? 'bg-amber-400 animate-ping' : 'bg-slate-400'}`} />
-            <span className="truncate">{lesson.title}</span>
-            <span className="text-amber-800 font-extrabold bg-amber-100 px-2 py-0.5 rounded-full shrink-0 text-[11px]">
-              Trạm: {stationIndex + 1}/{stationLessons.length}
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-200 truncate max-w-[155px] sm:max-w-xs md:max-w-md">
+            <span className={`w-2 h-2 rounded-full shrink-0 ${isLessonFinished ? 'bg-amber-400 animate-ping' : 'bg-cyan-400/80'}`} />
+            <span className="truncate hidden sm:inline">{lesson.title}</span>
+            <span className="text-amber-200 font-extrabold bg-amber-400/20 border border-amber-300/35 px-2.5 py-0.5 rounded-xl shrink-0 text-[11px] tabular-nums">
+              Bài {stationIndex + 1}/{stationLessons.length}
             </span>
           </div>
 
           {/* Right immediate next button */}
           <div className="flex items-center gap-2 shrink-0">
-            {isNextLockedByAssessment ? (
+            {nextLesson ? (
               <button
                 type="button"
                 onClick={handleNextClick}
-                className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md transition-all active:scale-95 bg-gradient-to-r from-amber-600 to-orange-600 text-white ring-4 ring-orange-300/60 shadow-orange-200 cursor-pointer hover:opacity-95"
-                title="Cần hoàn thành Bài Kiểm Tra Định Kỳ để mở khóa bài tiếp theo"
-              >
-                <Lock className="w-3.5 h-3.5 text-amber-200" />
-                <span>Kiểm Tra Định Kỳ Để Mở Khóa</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            ) : nextLesson ? (
-              <button
-                type="button"
-                onClick={handleNextClick}
-                className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-black shadow-md transition-all active:scale-95 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 ring-4 ring-amber-300/60 shadow-amber-200 cursor-pointer hover:opacity-95"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 min-h-[42px] rounded-2xl text-xs sm:text-sm font-black shadow-[0_0_24px_rgba(251,191,36,0.38)] transition-all active:scale-95 bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 text-slate-950 ring-2 ring-amber-300/50 cursor-pointer hover:brightness-105"
                 title="Chuyển sang bài tiếp theo trong trạm"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-900 fill-amber-900" />
+                <Sparkles className="w-3.5 h-3.5 text-slate-950 fill-slate-950 shrink-0" aria-hidden="true" />
                 <span>Bài tiếp theo</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={onBackToMap}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black bg-emerald-600 hover:bg-emerald-700 text-white shadow-md active:scale-95 transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 min-h-[42px] rounded-2xl text-xs sm:text-sm font-black bg-gradient-to-r from-emerald-400 to-cyan-400 hover:brightness-105 text-slate-950 shadow-[0_0_24px_rgba(52,211,153,0.35)] active:scale-95 transition-all cursor-pointer"
                 title="Bé đã hoàn thành xuất sắc tất cả bài tập trong trạm này!"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-amber-200" />
-                <span>Hoàn thành Trạm! 🏆</span>
+                <Trophy className="w-4 h-4 text-slate-950 shrink-0" aria-hidden="true" />
+                <span>Hoàn thành Trạm!</span>
               </button>
             )}
           </div>

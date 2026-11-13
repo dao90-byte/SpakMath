@@ -18,8 +18,8 @@
     font-family: 'Nunito', system-ui, -apple-system, sans-serif;
     font-size: 16px;
     line-height: 1.5;
-    color: #1e293b;
-    background-color: #f8fafc;
+    color: #f8fafc;
+    background-color: #040715;
     user-select: none;
     -webkit-user-select: none;
     overflow-x: hidden;
@@ -30,10 +30,11 @@
     font-weight: 800;
   }
 
-  button, a, input, select, textarea {
+  button, a, input, select, textarea, [role="button"] {
     &:focus-visible {
-      outline: 2px solid #FBBF24;
+      outline: 2px solid #67E8F9;
       outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 24px rgba(192, 132, 252, 0.45);
     }
   }
 }
@@ -167,6 +168,68 @@
 
 .neon-solar-glow {
   animation: solarPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes cosmicBeaconPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 24px rgba(34, 211, 238, 0.28),
+      0 0 44px rgba(168, 85, 247, 0.16);
+  }
+  50% {
+    box-shadow:
+      0 0 38px rgba(34, 211, 238, 0.48),
+      0 0 64px rgba(217, 70, 239, 0.28);
+  }
+}
+
+.animate-cosmic-beacon {
+  animation: cosmicBeaconPulse 3.2s ease-in-out infinite;
+}
+
+/* System-Wide Luminous Cosmic Target Effect on Hovered/Focused Controls */
+header button:not(:disabled),
+main button:not(:disabled),
+main [role="button"] {
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 200ms ease,
+    box-shadow 220ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease;
+}
+
+header button:not(:disabled):hover,
+main button:not(:disabled):hover,
+main [role="button"]:hover {
+  filter: brightness(1.06) drop-shadow(0 0 14px rgba(56, 189, 248, 0.42));
+}
+
+.cosmic-activity-stage button:not(:disabled):hover {
+  filter: brightness(1.03) drop-shadow(0 0 10px rgba(56, 189, 248, 0.28));
+}
+
+/* Cosmic Observatory Stage for LessonContainer Activities */
+.cosmic-activity-stage > div > .bg-white,
+.cosmic-activity-stage > div > div > .bg-white,
+.cosmic-activity-stage .bg-white.rounded-3xl {
+  background: rgba(248, 250, 255, 0.97);
+  border-color: rgba(103, 232, 249, 0.45);
+  box-shadow:
+    0 22px 50px rgba(3, 7, 24, 0.62),
+    0 0 28px rgba(56, 189, 248, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Brighten unboxed helper text sitting directly on the dark cosmic observatory stage */
+.cosmic-activity-stage > div > div > .text-slate-500,
+.cosmic-activity-stage > div > div > .text-slate-600,
+.cosmic-activity-stage > div > div > .text-slate-400,
+.cosmic-activity-stage > div > div > .text-slate-700,
+.cosmic-activity-stage > div > div > div.text-slate-500,
+.cosmic-activity-stage > div > div > p.text-slate-500,
+.cosmic-activity-stage > div > div > span.text-slate-500 {
+  color: rgba(203, 213, 225, 0.94);
 }
 
 /* Respect prefers-reduced-motion per UI/UX Pro Max accessibility standard */

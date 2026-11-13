@@ -4,14 +4,8 @@ import {
   Volume2,
   VolumeX,
   Pencil,
-  Star,
-  Award,
-  Compass,
-  BookOpen,
-  BookMarked,
+  Gem,
   KeyRound,
-  ClipboardCheck,
-  Calendar,
   Brain,
   Rocket,
   Orbit,
@@ -43,7 +37,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenTeacherUnlock,
   isTeacherMode = false,
   starsCount,
-  unresolvedMistakesCount = 0,
 }) => {
   const [isMuted, setIsMuted] = useState(sound.getMuted());
 
@@ -52,16 +45,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     setIsMuted(next);
   };
 
-  const isCosmicTheme = programMode === 'textbook' || programMode === 'inmonth';
-
   return (
-    <header
-      className={`sticky top-0 z-40 backdrop-blur-xl transition-colors duration-300 border-b ${
-        isCosmicTheme
-          ? 'bg-[#0B1026]/92 border-indigo-400/20 text-white shadow-[0_8px_32px_rgba(6,10,28,0.65)]'
-          : 'bg-white/95 border-slate-200/90 text-slate-800 shadow-xs'
-      }`}
-    >
+    <header className="sticky top-0 z-40 backdrop-blur-2xl transition-colors duration-300 border-b bg-[#070B1E]/92 border-cyan-300/20 text-white shadow-[0_10px_36px_rgba(3,7,24,0.72)]">
       {/* Primary 3-Zone Scientific Header Bar */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between gap-3">
         {/* Zone 1 (Left): Minimal Brand Identity */}
@@ -71,6 +56,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             sound.playClick();
             if (programMode === 'thinking') {
               onSelectTab('map');
+            } else if (programMode === 'inmonth') {
+              onToggleProgramMode('inmonth');
             }
           }}
           aria-label="Trang chủ chương trình"
@@ -79,9 +66,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span
             className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-md border ${
               programMode === 'thinking'
-                ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 border-amber-300'
+                ? 'bg-gradient-to-br from-cyan-300 via-sky-400 to-fuchsia-500 text-slate-950 border-cyan-200/80 shadow-[0_0_20px_rgba(34,211,238,0.45)]'
                 : programMode === 'inmonth'
-                ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white border-amber-300/60'
+                ? 'bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-500 text-white border-cyan-300/60 shadow-[0_0_20px_rgba(168,85,247,0.45)]'
                 : 'bg-gradient-to-br from-cyan-400 to-blue-600 text-slate-950 border-cyan-300'
             }`}
           >
@@ -93,32 +80,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Rocket className="w-5 h-5" aria-hidden="true" />
             )}
           </span>
-          <span
-            className={`hidden sm:inline-block text-lg md:text-xl font-extrabold font-display tracking-tight leading-none ${
-              programMode === 'thinking'
-                ? 'text-amber-600'
-                : programMode === 'inmonth'
-                ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-300 to-cyan-300'
-                : 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-sky-400'
-            }`}
-          >
-            {programMode === 'thinking'
-              ? 'Spark Math'
-              : programMode === 'inmonth'
-              ? 'IN MONTH'
-              : 'Vũ Trụ Toán'}
-          </span>
         </button>
 
         {/* Zone 2 (Center): Balanced Segmented Program Switcher */}
         <div
           role="group"
           aria-label="Chọn chương trình học"
-          className={`flex items-center p-1 rounded-2xl border text-xs md:text-sm font-black transition-colors duration-200 ${
-            isCosmicTheme
-              ? 'bg-slate-900/90 border-indigo-400/30 shadow-inner'
-              : 'bg-slate-100/90 border-slate-200'
-          }`}
+          className="flex items-center gap-1.5 p-1.5 rounded-2xl border text-xs md:text-sm font-black transition-colors duration-200 bg-[#0B1233]/95 border-cyan-300/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_8px_28px_rgba(3,7,24,0.65)]"
         >
           <button
             type="button"
@@ -127,16 +95,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               sound.playClick();
               onToggleProgramMode('thinking');
             }}
-            className={`px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 cursor-pointer min-h-[38px] whitespace-nowrap ${
+            className={`px-3.5 sm:px-4.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 cursor-pointer min-h-[38px] whitespace-nowrap ${
               programMode === 'thinking'
-                ? 'bg-white text-amber-700 shadow-sm ring-1 ring-slate-200'
-                : isCosmicTheme
-                ? 'text-slate-300 hover:text-white hover:bg-white/10'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 font-black ring-1 ring-cyan-100/80 shadow-[0_0_24px_rgba(34,211,238,0.48),0_0_32px_rgba(232,121,249,0.24),inset_0_1px_0_rgba(255,255,255,0.65)]'
+                : 'text-cyan-200/85 hover:text-white bg-white/[0.03] hover:bg-cyan-400/15 border border-transparent hover:border-cyan-300/50 hover:shadow-[0_0_18px_rgba(34,211,238,0.3)]'
             }`}
           >
             <Brain className="w-4 h-4 shrink-0" aria-hidden="true" />
-            <span>Toán Tư Duy</span>
+            <span>SUPER MINDMATH</span>
           </button>
 
           <button
@@ -146,51 +112,25 @@ export const Navbar: React.FC<NavbarProps> = ({
               sound.playClick();
               onToggleProgramMode('inmonth');
             }}
-            className={`px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 cursor-pointer min-h-[38px] whitespace-nowrap ${
+            className={`relative overflow-hidden px-3.5 sm:px-4.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 cursor-pointer min-h-[38px] whitespace-nowrap ${
               programMode === 'inmonth'
-                ? 'bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 text-slate-950 font-black shadow-[0_4px_16px_rgba(251,191,36,0.4)]'
-                : isCosmicTheme
-                ? 'text-amber-300 hover:text-white hover:bg-white/10'
-                : 'text-indigo-700 hover:text-indigo-950 hover:bg-white/60'
+                ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 font-black ring-1 ring-cyan-100/80 shadow-[0_0_24px_rgba(34,211,238,0.48),0_0_34px_rgba(232,121,249,0.28),inset_0_1px_0_rgba(255,255,255,0.65)]'
+                : 'text-cyan-100/90 hover:text-white bg-white/[0.04] hover:bg-fuchsia-400/15 border border-cyan-300/20 hover:border-cyan-300/55 hover:shadow-[0_0_18px_rgba(34,211,238,0.3)] shadow-inner'
             }`}
           >
-            <Calendar className="w-4 h-4 shrink-0" aria-hidden="true" />
-            <span>IN MONTH</span>
-          </button>
-
-          <button
-            type="button"
-            aria-pressed={programMode === 'textbook'}
-            onClick={() => {
-              sound.playClick();
-              onToggleProgramMode('textbook');
-            }}
-            className={`px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 flex items-center gap-1.5 cursor-pointer min-h-[38px] whitespace-nowrap ${
-              programMode === 'textbook'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-600 text-slate-950 font-black shadow-[0_4px_16px_rgba(34,211,238,0.35)]'
-                : isCosmicTheme
-                ? 'text-slate-300 hover:text-white hover:bg-white/10'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-            }`}
-          >
-            <Rocket className="w-4 h-4 shrink-0" aria-hidden="true" />
-            <span className="hidden sm:inline">SGK Lớp 3</span>
-            <span className="sm:hidden">SGK 3</span>
+            <Orbit className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <span className="tracking-tight">MINDMATH K12</span>
           </button>
         </div>
 
         {/* Zone 3 (Right): Compact Essential Utility Controls */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Star Counter */}
+          {/* Crystal Counter */}
           <div
-            aria-label={`Tổng số sao: ${starsCount}`}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border font-black text-xs md:text-sm min-h-[40px] ${
-              isCosmicTheme
-                ? 'bg-amber-400/15 border-amber-300/40 text-amber-200'
-                : 'bg-amber-50 border-amber-200 text-amber-900'
-            }`}
+            aria-label={`Tổng số tinh thể: ${starsCount}`}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border font-black text-xs md:text-sm min-h-[40px] bg-gradient-to-r from-cyan-400/20 via-indigo-500/20 to-fuchsia-500/20 border-cyan-300/45 text-cyan-100 shadow-[0_0_18px_rgba(34,211,238,0.22)]"
           >
-            <Star className="w-4 h-4 fill-amber-400 text-amber-400" aria-hidden="true" />
+            <Gem className="w-4 h-4 text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.85)]" aria-hidden="true" />
             <span className="tabular-nums">{starsCount}</span>
           </div>
 
@@ -200,11 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={handleToggleSound}
             aria-label={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
             title={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
-            className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-colors duration-200 cursor-pointer ${
-              isCosmicTheme
-                ? 'bg-white/10 hover:bg-white/20 border-white/15 text-white'
-                : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700'
-            }`}
+            className="w-10 h-10 rounded-xl border flex items-center justify-center transition-all duration-200 cursor-pointer bg-white/[0.08] hover:bg-cyan-400/15 border-white/15 hover:border-cyan-300/60 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] text-white"
           >
             {isMuted ? (
               <VolumeX className="w-4 h-4 text-rose-400" aria-hidden="true" />
@@ -225,10 +161,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               title={isTeacherMode ? 'Chế độ giáo viên: Đã mở' : 'Cổng giáo viên'}
               className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all duration-200 cursor-pointer ${
                 isTeacherMode
-                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-2 ring-emerald-400/30'
-                  : isCosmicTheme
-                  ? 'bg-white/10 hover:bg-white/20 border-white/15 text-amber-300'
-                  : 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700'
+                  ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 ring-2 ring-emerald-400/30 hover:shadow-[0_0_18px_rgba(52,211,153,0.45)]'
+                  : 'bg-white/[0.08] hover:bg-cyan-400/15 border-white/15 hover:border-cyan-300/60 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] text-cyan-200'
               }`}
             >
               <KeyRound className="w-4 h-4" aria-hidden="true" />
@@ -243,7 +177,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onOpenScratchpad();
             }}
             aria-label="Mở bảng vẽ nháp"
-            className="px-3.5 py-2 text-xs md:text-sm font-black text-slate-950 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 rounded-xl shadow-md transition-all duration-200 active:scale-95 flex items-center gap-1.5 whitespace-nowrap cursor-pointer min-h-[40px]"
+            className="px-3.5 py-2 text-xs md:text-sm font-black text-slate-950 bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.38)] hover:shadow-[0_0_28px_rgba(34,211,238,0.6)] transition-all duration-200 active:scale-95 flex items-center gap-1.5 whitespace-nowrap cursor-pointer min-h-[40px]"
           >
             <Pencil className="w-4 h-4" aria-hidden="true" />
             <span className="hidden sm:inline">Bảng Nháp</span>
@@ -251,105 +185,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Slim Secondary Sub-Nav (Shown only in Toán Tư Duy mode to keep top bar clean) */}
-      {programMode === 'thinking' && (
-        <nav
-          aria-label="Điều hướng Toán Tư Duy"
-          className="border-t border-slate-100 bg-slate-50/80 px-4 md:px-6"
-        >
-          <div className="max-w-7xl mx-auto flex items-center gap-2 sm:gap-6 overflow-x-auto scrollbar-none text-xs md:text-sm font-bold text-slate-600 h-11">
-            <button
-              type="button"
-              aria-pressed={currentTab === 'map'}
-              onClick={() => {
-                sound.playClick();
-                onSelectTab('map');
-              }}
-              className={`flex items-center gap-1.5 h-full border-b-2 transition-colors duration-200 whitespace-nowrap shrink-0 cursor-pointer ${
-                currentTab === 'map'
-                  ? 'text-amber-700 border-amber-500 font-black'
-                  : 'border-transparent hover:text-slate-900'
-              }`}
-            >
-              <Compass className="w-4 h-4" aria-hidden="true" />
-              <span>Bản đồ</span>
-            </button>
-
-            <button
-              type="button"
-              aria-pressed={currentTab === 'lessons'}
-              onClick={() => {
-                sound.playClick();
-                onSelectTab('lessons');
-              }}
-              className={`flex items-center gap-1.5 h-full border-b-2 transition-colors duration-200 whitespace-nowrap shrink-0 cursor-pointer ${
-                currentTab === 'lessons'
-                  ? 'text-amber-700 border-amber-500 font-black'
-                  : 'border-transparent hover:text-slate-900'
-              }`}
-            >
-              <BookOpen className="w-4 h-4" aria-hidden="true" />
-              <span>Bài tập</span>
-            </button>
-
-            <button
-              type="button"
-              aria-pressed={currentTab === 'periodic'}
-              onClick={() => {
-                sound.playClick();
-                onSelectTab('periodic');
-              }}
-              className={`flex items-center gap-1.5 h-full border-b-2 transition-colors duration-200 whitespace-nowrap shrink-0 cursor-pointer ${
-                currentTab === 'periodic'
-                  ? 'text-amber-700 border-amber-500 font-black'
-                  : 'border-transparent hover:text-slate-900'
-              }`}
-            >
-              <ClipboardCheck className="w-4 h-4 text-amber-600" aria-hidden="true" />
-              <span>Kiểm tra định kỳ</span>
-            </button>
-
-            <button
-              type="button"
-              aria-pressed={currentTab === 'review'}
-              onClick={() => {
-                sound.playClick();
-                onSelectTab('review');
-              }}
-              className={`flex items-center gap-1.5 h-full border-b-2 transition-colors duration-200 whitespace-nowrap shrink-0 cursor-pointer ${
-                currentTab === 'review'
-                  ? 'text-amber-700 border-amber-500 font-black'
-                  : 'border-transparent hover:text-slate-900'
-              }`}
-            >
-              <BookMarked className="w-4 h-4 text-rose-500" aria-hidden="true" />
-              <span>Sổ ôn tập</span>
-              {unresolvedMistakesCount > 0 && (
-                <span className="bg-rose-600 text-white font-black text-[10px] px-1.5 py-0.5 rounded-full leading-tight tabular-nums">
-                  {unresolvedMistakesCount}
-                </span>
-              )}
-            </button>
-
-            <button
-              type="button"
-              aria-pressed={currentTab === 'assessment'}
-              onClick={() => {
-                sound.playClick();
-                onSelectTab('assessment');
-              }}
-              className={`flex items-center gap-1.5 h-full border-b-2 transition-colors duration-200 whitespace-nowrap shrink-0 cursor-pointer ${
-                currentTab === 'assessment'
-                  ? 'text-amber-700 border-amber-500 font-black'
-                  : 'border-transparent hover:text-slate-900'
-              }`}
-            >
-              <Award className="w-4 h-4" aria-hidden="true" />
-              <span>Tự đánh giá</span>
-            </button>
-          </div>
-        </nav>
-      )}
     </header>
   );
 };
