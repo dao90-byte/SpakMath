@@ -26,16 +26,28 @@ import {
   Play,
   Gem,
   PartyPopper,
+  BellRing,
+  Calculator,
+  MessageSquareQuote,
+  Lock,
 } from 'lucide-react';
+import {
+  InMonthWeeklyTest,
+  InMonthWeeklyTestSavedResult,
+} from '../../data/inMonthWeeklyTestsData';
 
 interface InMonthDailyRunnerProps {
   monthNumber: number;
   monthLabel: string;
   dayPlan: InMonthDayPlan;
+  weeklyTestForThisDay?: InMonthWeeklyTest | null;
+  weeklyTestResult?: InMonthWeeklyTestSavedResult | null;
+  isTeacherMode?: boolean;
   onBack: () => void;
   onCompleteDay: (dayNumber: number, score: number, totalQuestions: number, elapsedSeconds: number) => void;
   onSelectNextDay: (nextDayNumber: number) => void;
   onOpenExam: () => void;
+  onOpenWeeklyTest?: (weeklyTest: InMonthWeeklyTest) => void;
   onOpenScratchpad: () => void;
 }
 
@@ -121,10 +133,14 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   monthNumber,
   monthLabel,
   dayPlan,
+  weeklyTestForThisDay,
+  weeklyTestResult,
+  isTeacherMode = false,
   onBack,
   onCompleteDay,
   onSelectNextDay,
   onOpenExam,
+  onOpenWeeklyTest,
 }) => {
   const questions = dayPlan.questions;
 
@@ -197,10 +213,10 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   const shouldShowHint = !isSolved && wrongAttempts >= 4;
   const inputSpec = getInMonthQuestionInputSpec(currentQ.correctAnswer);
 
-  // Furthest reachable question index (only allow jumping up to the first unsolved question)
+  // Furthest reachable question index (Teacher Mode unlocks all stages/questions for instant inspection)
   const firstUnsolvedIdx = questions.findIndex((q) => !solvedMap[q.id]);
   const maxReachableIdx =
-    firstUnsolvedIdx === -1 ? questions.length - 1 : firstUnsolvedIdx;
+    isTeacherMode || firstUnsolvedIdx === -1 ? questions.length - 1 : firstUnsolvedIdx;
 
   const solvedCount = Object.values(solvedMap).filter(Boolean).length;
   const isAllDayCompleted = solvedCount === questions.length;
@@ -341,6 +357,12 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(251,191,36,1)]" aria-hidden="true" />
                   <span>Ngày {dayPlan.dayNumber}/30</span>
                 </span>
+                {weeklyTestForThisDay && (
+                  <span className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-fuchsia-500/30 to-cyan-500/25 border border-fuchsia-300/65 text-fuchsia-100 font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-[0_0_16px_rgba(232,121,249,0.35)]">
+                    <BellRing className="w-3 h-3 text-amber-300" aria-hidden="true" />
+                    <span>Ngày cuối {dayPlan.weekTitle} · Có Kiểm tra 15p</span>
+                  </span>
+                )}
               </div>
               <h2 className="text-base sm:text-xl font-black font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-1 cosmic-glow-title-cyan">
                 {dayPlan.title}
@@ -414,8 +436,66 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
         </div>
       </div>
 
+      {/* PRE-ANNOUNCEMENT BANNER AT THE OPENING OF THE LAST DAY OF THE WEEK */}
+      {weeklyTestForThisDay && (
+        <div className="relative z-10 max-w-7xl mx-auto px-4 mt-5">
+          <div
+            className={`relative overflow-hidden rounded-3xl border p-4 sm:p-5 backdrop-blur-2xl transition-all ${
+              currentQ.stage === 'warmup'
+                ? 'bg-[radial-gradient(ellipse_at_top_left,_rgba(251,191,36,0.28),_transparent_52%),radial-gradient(ellipse_at_bottom_right,_rgba(232,121,249,0.26),_transparent_52%),linear-gradient(135deg,_rgba(24,16,64,0.96),_rgba(12,20,58,0.96))] border-amber-300/80 shadow-[0_18px_48px_rgba(251,191,36,0.24),0_0_34px_rgba(232,121,249,0.22)]'
+                : 'bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.18),_transparent_55%),linear-gradient(135deg,_rgba(14,18,54,0.92),_rgba(22,14,58,0.92))] border-cyan-300/50 shadow-[0_12px_32px_rgba(3,7,24,0.65)]'
+            }`}
+          >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-amber-300 via-fuchsia-400 to-cyan-300 shadow-[0_0_18px_rgba(251,191,36,0.85)]"
+            />
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-start gap-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-fuchsia-500 text-slate-950 flex items-center justify-center shrink-0 shadow-[0_0_24px_rgba(251,191,36,0.55)]">
+                  <BellRing className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider">
+                    <span className="text-amber-300">
+                      Thông Báo Trước Ở Phần Mở Đầu · Ngày Cuối Tuần {weeklyTestForThisDay.weekNumber}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-white/10 border border-cyan-300/40 text-cyan-200 text-[11px]">
+                      15 Phút · 6 Tính Toán + 4 Nghị Luận
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-bold text-white leading-relaxed">
+                    Hôm nay là ngày học cuối cùng của <strong>{dayPlan.weekTitle}</strong>! Ngay sau khi hoàn thành bài học hôm nay, em sẽ thực hiện{' '}
+                    <strong className="text-amber-200">{weeklyTestForThisDay.title}</strong> (15 phút · gồm 6 câu Tính toán &amp; 4 câu Nghị luận).{' '}
+                    {weeklyTestForThisDay.unlocksDayNumber
+                      ? `Em cần hoàn thành và đạt từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp (bắt đầu từ Ngày ${weeklyTestForThisDay.unlocksDayNumber}).`
+                      : `Em hãy hoàn thành bài kiểm tra với kết quả từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để khép lại trọn vẹn 5 tuần học!`}
+                  </p>
+                </div>
+              </div>
+
+              {(isAllDayCompleted || isTeacherMode) && onOpenWeeklyTest && (
+                <button
+                  type="button"
+                  onClick={() => onOpenWeeklyTest(weeklyTestForThisDay)}
+                  className="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-2 shrink-0 shadow-[0_0_28px_rgba(251,191,36,0.5)] cursor-pointer transition-all whitespace-nowrap"
+                >
+                  <Sparkles className="w-4 h-4" aria-hidden="true" />
+                  <span>
+                    {weeklyTestResult?.passed
+                      ? `Xem Kiểm Tra 15p (${weeklyTestResult.totalScore}/100đ)`
+                      : 'Làm Bài Kiểm Tra 15 Phút Ngay'}
+                  </span>
+                  <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Constellation Question Progress Matrix Strip */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 mt-5">
         <div className="relative overflow-hidden flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_32px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(255,255,255,0.14)]">
           <span
             aria-hidden="true"
@@ -471,7 +551,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 text-slate-950 font-black flex items-center gap-1.5 ring-1 ring-amber-200/80 shadow-[0_8px_24px_rgba(251,191,36,0.42)] cursor-pointer whitespace-nowrap"
               >
                 <PartyPopper className="w-4 h-4" aria-hidden="true" />
-                <span>Xem Chúc Mừng</span>
+                <span>
+                  {weeklyTestForThisDay && !weeklyTestResult?.passed
+                    ? 'Mở Bài Kiểm Tra 15 Phút'
+                    : 'Xem Chúc Mừng'}
+                </span>
               </button>
             )}
           </div>
@@ -545,48 +629,8 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
             </p>
           </div>
 
-          {/* Answer Input (for Calculation questions) or Choice Cards (for non-calculation questions) */}
-          {inputSpec.mode === 'choice' ? (
-            <div role="group" aria-label="Các lựa chọn đáp án" className="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              {currentQ.options.map((opt, oIdx) => {
-                const isSelected = currentAnswer.trim() === opt.trim();
-                const isRightOption = isSolved && opt.trim() === currentQ.correctAnswer.trim();
-
-                return (
-                  <button
-                    key={oIdx}
-                    type="button"
-                    disabled={isSolved}
-                    aria-pressed={isSelected}
-                    onClick={() => handleSelectOption(opt)}
-                    className={`p-4 rounded-2xl border-2 font-black text-left transition-all duration-200 flex items-center justify-between gap-2 cursor-pointer tabular-nums min-h-[56px] active:scale-[0.98] ${
-                      isRightOption
-                        ? 'bg-emerald-500/25 border-emerald-400 text-emerald-100 shadow-[0_0_26px_rgba(16,185,129,0.4)]'
-                        : isSelected
-                        ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 border-cyan-100 text-slate-950 shadow-[0_0_30px_rgba(56,189,248,0.58),0_0_38px_rgba(232,121,249,0.34)]'
-                        : 'bg-[#080E32]/92 border-cyan-300/30 text-white hover:border-cyan-300 hover:bg-indigo-900/65 hover:shadow-[0_0_26px_rgba(34,211,238,0.42)]'
-                    }`}
-                  >
-                    <span className="flex items-center gap-2.5 text-sm">
-                      <span
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
-                          isRightOption
-                            ? 'bg-emerald-400 text-slate-950'
-                            : isSelected
-                            ? 'bg-slate-950 text-cyan-300'
-                            : 'bg-cyan-400/15 text-cyan-200 border border-cyan-300/35'
-                        }`}
-                      >
-                        {String.fromCharCode(65 + oIdx)}
-                      </span>
-                      <span>{opt}</span>
-                    </span>
-                    {isRightOption && <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" aria-hidden="true" />}
-                  </button>
-                );
-              })}
-            </div>
-          ) : inputSpec.mode === 'division_remainder' ? (
+          {/* Blank Direct Input Form (for all exercise questions) */}
+          {inputSpec.mode === 'division_remainder' ? (
             (() => {
               const { quotient, remainder } = parseDivisionRemainderAnswer(currentAnswer);
               return (
@@ -652,17 +696,17 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                   id={`q-ans-${currentQ.id}`}
                   ref={answerInputRef}
                   type="text"
-                  inputMode="numeric"
+                  inputMode={inputSpec.mode === 'text_number' ? 'numeric' : 'text'}
                   disabled={isSolved}
                   value={currentAnswer}
                   onChange={(e) => handleSelectOption(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') handleCheckAnswer();
                   }}
-                  placeholder="Nhập đáp án..."
+                  placeholder={inputSpec.mode === 'text_number' ? 'Nhập đáp án...' : 'Nhập câu trả lời...'}
                   className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-xl tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm disabled:opacity-70 transition-all"
                 />
-                {inputSpec.unitLabel && (
+                {inputSpec.mode === 'text_number' && inputSpec.unitLabel && (
                   <span className="px-4 py-3.5 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-sm shrink-0">
                     {inputSpec.unitLabel}
                   </span>
@@ -721,7 +765,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-pink-500 to-purple-500 hover:brightness-110 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-[0_10px_28px_rgba(236,72,153,0.45)] cursor-pointer transition-all duration-200 min-h-[48px] animate-fade-in"
               >
                 <Trophy className="w-4 h-4" aria-hidden="true" />
-                <span>Hoàn Thành Ngày {dayPlan.dayNumber}</span>
+                <span>
+                  {weeklyTestForThisDay
+                    ? `Hoàn Thành Ngày ${dayPlan.dayNumber} & Kiểm Tra 15p`
+                    : `Hoàn Thành Ngày ${dayPlan.dayNumber}`}
+                </span>
               </button>
             )}
           </div>
@@ -736,7 +784,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
           aria-labelledby="celebration-title"
           className="fixed inset-0 z-50 bg-[#050817]/85 backdrop-blur-md flex items-center justify-center p-4"
         >
-          <div className="relative bg-gradient-to-b from-[#172158] via-[#1C1A5E] to-[#12163D] text-white rounded-3xl max-w-md w-full p-7 shadow-[0_0_60px_rgba(251,191,36,0.35)] border-2 border-amber-300 text-center animate-fade-in overflow-hidden">
+          <div className="relative bg-gradient-to-b from-[#172158] via-[#1C1A5E] to-[#12163D] text-white rounded-3xl max-w-lg w-full p-7 shadow-[0_0_60px_rgba(251,191,36,0.35)] border-2 border-amber-300 text-center animate-fade-in overflow-hidden">
             {/* Festive Glow Ring */}
             <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-amber-400/20 blur-3xl" aria-hidden="true" />
 
@@ -760,7 +808,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 {dayPlan.title}
               </h3>
 
-              <div className="grid grid-cols-2 gap-3 my-5">
+              <div className="grid grid-cols-2 gap-3 my-4">
                 <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400/50">
                   <div className="text-xs text-emerald-200 font-bold">Hoàn thành</div>
                   <div className="text-2xl font-extrabold font-display text-white tabular-nums mt-0.5">
@@ -775,26 +823,108 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 </div>
               </div>
 
+              {/* IF THIS IS THE LAST DAY OF A WEEK WITH A 15-MINUTE WEEKLY TEST */}
+              {weeklyTestForThisDay && onOpenWeeklyTest && (
+                <div className="my-4 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_right,_rgba(232,121,249,0.28),_transparent_55%),linear-gradient(145deg,_rgba(15,23,66,0.95),_rgba(30,15,72,0.95))] border-2 border-fuchsia-300/75 text-left space-y-2.5 shadow-[0_0_32px_rgba(232,121,249,0.28)]">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4" aria-hidden="true" />
+                      <span>Bài Kiểm Tra 15 Phút Cuối Tuần {weeklyTestForThisDay.weekNumber}</span>
+                    </span>
+                    <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-white/10 text-cyan-200">
+                      Cần đạt ≥ {weeklyTestForThisDay.passingScore}/100đ
+                    </span>
+                  </div>
+                  <p className="text-xs text-indigo-100 leading-relaxed">
+                    Em đã hoàn thành ngày học cuối của <strong>{dayPlan.weekTitle}</strong>! Hãy thực hiện Bài Kiểm Tra 15 Phút gồm{' '}
+                    <strong>6 câu Tính Toán (60đ)</strong> và <strong>4 câu Nghị Luận Tư Duy (40đ)</strong> để mở khóa các bài học của tuần kế tiếp.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-cyan-200">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-300/40">
+                      <Calculator className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                      6 câu Tính toán
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-fuchsia-500/20 border border-fuchsia-300/40">
+                      <MessageSquareQuote className="w-3.5 h-3.5 text-fuchsia-300" aria-hidden="true" />
+                      4 câu Nghị luận
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2.5">
-                {isAllDayCompleted && (
-                  dayPlan.dayNumber < 30 ? (
+                {weeklyTestForThisDay && onOpenWeeklyTest ? (
+                  <>
                     <button
                       type="button"
-                      onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
-                      className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 hover:brightness-110 text-slate-950 font-black text-sm shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[50px]"
-                    >
-                      <span>Học Tiếp Ngày {dayPlan.dayNumber + 1}</span>
-                      <ChevronRight className="w-4 h-4" aria-hidden="true" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={onOpenExam}
-                      className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-sm shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[50px]"
+                      onClick={() => onOpenWeeklyTest(weeklyTestForThisDay)}
+                      className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 hover:brightness-110 text-slate-950 font-black text-sm shadow-[0_0_32px_rgba(251,191,36,0.5)] flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[52px]"
                     >
                       <Sparkles className="w-4 h-4" aria-hidden="true" />
-                      <span>Kiểm Tra Cuối {monthLabel}</span>
+                      <span>
+                        {weeklyTestResult?.passed
+                          ? `Xem / Làm Lại Kiểm Tra 15p (${weeklyTestResult.totalScore}/100đ)`
+                          : `Bắt Đầu Bài Kiểm Tra 15 Phút Tuần ${weeklyTestForThisDay.weekNumber}`}
+                      </span>
+                      <ChevronRight className="w-4 h-4" aria-hidden="true" />
                     </button>
+
+                    {weeklyTestResult?.passed || isTeacherMode ? (
+                      dayPlan.dayNumber < 30 ? (
+                        <button
+                          type="button"
+                          onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
+                          className="w-full py-3 rounded-2xl bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/70 text-emerald-100 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all min-h-[46px]"
+                        >
+                          <span>
+                            {weeklyTestResult?.passed
+                              ? `Học Tiếp Ngày ${dayPlan.dayNumber + 1} (Đã mở khóa)`
+                              : `Học Tiếp Ngày ${dayPlan.dayNumber + 1} (Chế độ Giáo viên)`}
+                          </span>
+                          <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={onOpenExam}
+                          className="w-full py-3 rounded-2xl bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/70 text-emerald-100 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all min-h-[46px]"
+                        >
+                          <Sparkles className="w-4 h-4" aria-hidden="true" />
+                          <span>Kiểm Tra Cuối {monthLabel}</span>
+                        </button>
+                      )
+                    ) : (
+                      <div className="px-3.5 py-2.5 rounded-xl bg-slate-950/75 border border-amber-300/35 text-[11px] font-bold text-amber-200 flex items-center justify-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-amber-300 shrink-0" aria-hidden="true" />
+                        <span>
+                          {dayPlan.dayNumber < 30
+                            ? `Hoàn thành Kiểm tra 15p (≥ 70đ) để mở khóa Ngày ${dayPlan.dayNumber + 1}`
+                            : 'Hoàn thành Kiểm tra 15p Tuần 5 để hoàn tất trọn vẹn 5 tuần'}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  isAllDayCompleted && (
+                    dayPlan.dayNumber < 30 ? (
+                      <button
+                        type="button"
+                        onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
+                        className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 hover:brightness-110 text-slate-950 font-black text-sm shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[50px]"
+                      >
+                        <span>Học Tiếp Ngày {dayPlan.dayNumber + 1}</span>
+                        <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={onOpenExam}
+                        className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-black text-sm shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[50px]"
+                      >
+                        <Sparkles className="w-4 h-4" aria-hidden="true" />
+                        <span>Kiểm Tra Cuối {monthLabel}</span>
+                      </button>
+                    )
                   )
                 )}
 

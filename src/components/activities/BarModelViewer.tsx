@@ -183,34 +183,6 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
                 )}
               </div>
 
-              {q.options && q.options.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {q.options.map((opt, oIdx) => {
-                    const isPicked = inputValues[q.id] === opt;
-                    return (
-                      <button
-                        key={oIdx}
-                        type="button"
-                        disabled={isCorrect}
-                        onClick={() => {
-                          setInputValues((prev) => ({ ...prev, [q.id]: opt }));
-                          handleCheck(q.id, q.correctAnswer, opt);
-                        }}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
-                          isCorrect && opt === q.correctAnswer
-                            ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
-                            : isPicked
-                            ? 'bg-amber-200 text-amber-950 border-amber-400'
-                            : 'bg-slate-50 hover:bg-amber-50 text-slate-700 border-slate-200 hover:border-amber-300'
-                        }`}
-                      >
-                        {opt}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
               <div className="flex items-center gap-2">
                 <input
                   type="text"
@@ -223,7 +195,7 @@ export const BarModelViewer: React.FC<BarModelViewerProps> = ({
                     }
                   }}
                   onKeyDown={(e) => e.key === 'Enter' && handleCheck(q.id, q.correctAnswer)}
-                  placeholder="Hoặc tự nhập kết quả..."
+                  placeholder="Nhập kết quả của em..."
                   disabled={isCorrect}
                   className={`flex-1 px-3.5 py-2.5 rounded-xl border-2 text-sm font-bold text-slate-800 focus:outline-none transition-all ${
                     isCorrect

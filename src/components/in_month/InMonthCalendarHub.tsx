@@ -4,6 +4,10 @@ import {
   InMonthMonthProgram,
   getMonthStorageKeys,
 } from '../../data/inMonthGrade3Catalog';
+import {
+  InMonthWeeklyTest,
+  InMonthWeeklyTestSavedResult,
+} from '../../data/inMonthWeeklyTestsData';
 import { InMonthExamSavedResult } from './InMonthFinalExamModal';
 import {
   Lock,
@@ -15,6 +19,9 @@ import {
   ChevronRight,
   ArrowLeft,
   Orbit,
+  Clock,
+  Calculator,
+  MessageSquareQuote,
 } from 'lucide-react';
 
 export interface InMonthDayProgress {
@@ -29,8 +36,11 @@ interface InMonthCalendarHubProps {
   monthProgram: InMonthMonthProgram;
   completedDays: Record<number, InMonthDayProgress>;
   examResult: InMonthExamSavedResult | null;
+  weeklyTestResults?: Record<number, InMonthWeeklyTestSavedResult>;
+  isTeacherMode?: boolean;
   onSelectDay: (dayPlan: InMonthDayPlan) => void;
   onOpenExam: () => void;
+  onOpenWeeklyTest?: (weeklyTest: InMonthWeeklyTest) => void;
   onBackToGrade: () => void;
   onSwitchMonth?: (monthProgram: InMonthMonthProgram) => void;
 }
@@ -55,12 +65,16 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
   monthProgram,
   completedDays,
   examResult,
+  weeklyTestResults = {},
+  isTeacherMode = false,
   onSelectDay,
   onOpenExam,
+  onOpenWeeklyTest,
   onBackToGrade,
 }) => {
   const [selectedWeek, setSelectedWeek] = useState<number | 'all'>('all');
   const [unlockAllPreview, setUnlockAllPreview] = useState<boolean>(false);
+  const effectiveUnlockAll = unlockAllPreview || isTeacherMode;
 
   useEffect(() => {
     setSelectedWeek('all');
@@ -68,12 +82,34 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
 
   const completedCount = Object.keys(completedDays).length;
   const progressPct = Math.round((completedCount / 30) * 100);
+  const weeklyTests = monthProgram.weeklyTests || [];
 
-  // Sequential unlock: Day 1 is open; Day N opens when Day N-1 is completed (or when unlockAllPreview is toggled)
+  // Sequential unlock + Weekly 15-minute test gate:
+  // Day 1 is open; Day N opens when Day N-1 is completed AND all prior weeks' 15-minute tests are passed
+  const getBlockingWeeklyTestForDay = (dayNum: number): InMonthWeeklyTest | null => {
+    if (effectiveUnlockAll || weeklyTests.length === 0) return null;
+    for (const wt of weeklyTests) {
+      if (wt.triggerAfterDayNumber < dayNum) {
+        const res = weeklyTestResults[wt.weekNumber];
+        if (!res || !res.passed) {
+          return wt;
+        }
+      }
+    }
+    return null;
+  };
+
   const isDayUnlocked = (dayNum: number) => {
-    if (unlockAllPreview) return true;
+    if (effectiveUnlockAll) return true;
     if (dayNum === 1) return true;
-    return !!completedDays[dayNum - 1];
+    if (!completedDays[dayNum - 1]) return false;
+    if (getBlockingWeeklyTestForDay(dayNum)) return false;
+    return true;
+  };
+
+  const isWeeklyTestUnlocked = (wt: InMonthWeeklyTest) => {
+    if (effectiveUnlockAll) return true;
+    return !!completedDays[wt.triggerAfterDayNumber];
   };
 
   const nextActiveDayNumber = (() => {
@@ -81,6 +117,15 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
       if (!completedDays[d]) return d;
     }
     return 30;
+  })();
+
+  const pendingWeeklyTest: InMonthWeeklyTest | null = (() => {
+    for (const wt of weeklyTests) {
+      if (completedDays[wt.triggerAfterDayNumber] && !weeklyTestResults[wt.weekNumber]?.passed) {
+        return wt;
+      }
+    }
+    return null;
   })();
 
   const filteredDays =
@@ -251,21 +296,33 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             </div>
 
             <div className="relative flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3.5 pt-1">
-              <button
-                type="button"
-                onClick={() => {
-                  const target =
-                    monthProgram.days.find(
-                      (d) => d.dayNumber === nextActiveDayNumber
-                    ) || monthProgram.days[0];
-                  onSelectDay(target);
-                }}
-                className="justify-center px-6 sm:px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-200 to-fuchsia-300 hover:from-cyan-200 hover:via-white hover:to-fuchsia-200 text-slate-950 font-black text-sm sm:text-base ring-2 ring-cyan-200/90 shadow-[0_0_38px_rgba(34,211,238,0.72),0_0_72px_rgba(217,70,239,0.48),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_0_54px_rgba(34,211,238,0.92),0_0_92px_rgba(217,70,239,0.68)] flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer min-h-[48px] whitespace-nowrap"
-              >
-                <Sparkles className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span>Bắt Đầu Ngay: Ngày {nextActiveDayNumber}/30</span>
-                <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-              </button>
+              {pendingWeeklyTest && onOpenWeeklyTest ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenWeeklyTest(pendingWeeklyTest)}
+                  className="justify-center px-6 sm:px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-300 to-fuchsia-300 hover:from-amber-200 hover:via-white hover:to-fuchsia-200 text-slate-950 font-black text-sm sm:text-base ring-2 ring-amber-200/90 shadow-[0_0_38px_rgba(251,191,36,0.72),0_0_72px_rgba(217,70,239,0.48),inset_0_1px_0_rgba(255,255,255,0.95)] flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer min-h-[48px] whitespace-nowrap"
+                >
+                  <Sparkles className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>Làm Kiểm Tra 15 Phút Tuần {pendingWeeklyTest.weekNumber} (Mở khóa tuần tiếp)</span>
+                  <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const target =
+                      monthProgram.days.find(
+                        (d) => d.dayNumber === nextActiveDayNumber
+                      ) || monthProgram.days[0];
+                    onSelectDay(target);
+                  }}
+                  className="justify-center px-6 sm:px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-200 to-fuchsia-300 hover:from-cyan-200 hover:via-white hover:to-fuchsia-200 text-slate-950 font-black text-sm sm:text-base ring-2 ring-cyan-200/90 shadow-[0_0_38px_rgba(34,211,238,0.72),0_0_72px_rgba(217,70,239,0.48),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_0_54px_rgba(34,211,238,0.92),0_0_92px_rgba(217,70,239,0.68)] flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer min-h-[48px] whitespace-nowrap"
+                >
+                  <Sparkles className="w-4 h-4 shrink-0" aria-hidden="true" />
+                  <span>Bắt Đầu Ngay: Ngày {nextActiveDayNumber}/30</span>
+                  <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
+                </button>
+              )}
 
               <button
                 type="button"
@@ -382,7 +439,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
           <div
             role="group"
             aria-label="Lọc theo tuần"
-            className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_right,_rgba(192,132,252,0.24),_transparent_50%),linear-gradient(135deg,_rgba(8,12,44,0.96),_rgba(24,17,68,0.94))] border border-cyan-300/45 shadow-[0_14px_40px_rgba(3,7,24,0.74),0_0_26px_rgba(56,189,248,0.16),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-2xl"
+            className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.26),_transparent_50%),radial-gradient(ellipse_at_right,_rgba(192,132,252,0.28),_transparent_50%),linear-gradient(135deg,_rgba(8,12,44,0.97),_rgba(24,17,68,0.95))] border border-cyan-300/55 shadow-[0_16px_44px_rgba(3,7,24,0.78),0_0_32px_rgba(56,189,248,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] backdrop-blur-2xl"
           >
             <button
               type="button"
@@ -396,37 +453,63 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             >
               Tất cả 30 ngày
             </button>
-            {monthProgram.weeksMeta.map((w) => (
-              <button
-                key={w.weekNumber}
-                type="button"
-                aria-pressed={selectedWeek === w.weekNumber}
-                onClick={() => setSelectedWeek(w.weekNumber)}
-                className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] transition-all duration-200 cursor-pointer whitespace-nowrap min-h-[40px] sm:min-h-[42px] ${
-                  selectedWeek === w.weekNumber
-                    ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 font-black shadow-[0_0_26px_rgba(34,211,238,0.52),0_0_18px_rgba(232,121,249,0.32),inset_0_1px_0_rgba(255,255,255,0.8)] ring-1 ring-cyan-100/90'
-                    : 'bg-indigo-950/60 text-cyan-50 hover:text-white hover:bg-gradient-to-r hover:from-cyan-400/20 hover:to-fuchsia-400/20 border border-indigo-300/25 hover:border-cyan-300/65 font-bold'
-                }`}
-              >
-                {w.shortLabel}
-              </button>
-            ))}
+            {monthProgram.weeksMeta.map((w) => {
+              const wt = weeklyTests.find((item) => item.weekNumber === w.weekNumber);
+              const wtRes = wt ? weeklyTestResults[wt.weekNumber] : undefined;
+              const isSelected = selectedWeek === w.weekNumber;
+
+              return (
+                <button
+                  key={w.weekNumber}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedWeek(w.weekNumber)}
+                  className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[13px] transition-all duration-200 cursor-pointer whitespace-nowrap min-h-[40px] sm:min-h-[42px] inline-flex items-center gap-2 ${
+                    isSelected
+                      ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 font-black shadow-[0_0_28px_rgba(34,211,238,0.6),0_0_20px_rgba(232,121,249,0.38),inset_0_1px_0_rgba(255,255,255,0.85)] ring-1 ring-cyan-100/95'
+                      : 'bg-indigo-950/70 text-cyan-50 hover:text-white hover:bg-gradient-to-r hover:from-cyan-400/25 hover:to-fuchsia-400/25 border border-cyan-300/35 hover:border-cyan-200/80 shadow-[0_0_16px_rgba(34,211,238,0.14)] font-bold'
+                  }`}
+                >
+                  <span>{w.shortLabel}</span>
+                  {wt && (
+                    <span
+                      className={`px-1.5 py-0.5 rounded-md text-[10px] font-black tabular-nums ${
+                        wtRes?.passed
+                          ? isSelected
+                            ? 'bg-slate-950/90 text-emerald-300'
+                            : 'bg-emerald-500/25 border border-emerald-300/60 text-emerald-200'
+                          : isSelected
+                          ? 'bg-slate-950/85 text-amber-300'
+                          : 'bg-amber-400/20 border border-amber-300/50 text-amber-200'
+                      }`}
+                    >
+                      {wtRes?.passed ? `✓ ${wtRes.totalScore}đ` : '15p'}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <button
             type="button"
-            aria-pressed={unlockAllPreview}
-            onClick={() => setUnlockAllPreview(!unlockAllPreview)}
-            className={`px-4 sm:px-5 py-2.5 rounded-2xl font-extrabold text-xs sm:text-[13px] flex items-center gap-2 border transition-all duration-200 cursor-pointer min-h-[44px] whitespace-nowrap backdrop-blur-xl shadow-[0_12px_28px_rgba(3,7,24,0.5)] ${
-              unlockAllPreview
-                ? 'bg-emerald-500/22 border-emerald-300/70 text-emerald-100 shadow-[0_0_22px_rgba(52,211,153,0.28)]'
-                : 'bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.16),_transparent_60%),linear-gradient(135deg,_rgba(8,12,44,0.96),_rgba(24,17,68,0.94))] border-cyan-300/40 text-white hover:border-cyan-300/75 hover:bg-cyan-400/15'
+            aria-pressed={effectiveUnlockAll}
+            disabled={isTeacherMode}
+            onClick={() => {
+              if (!isTeacherMode) setUnlockAllPreview(!unlockAllPreview);
+            }}
+            className={`px-4 sm:px-5 py-2.5 rounded-2xl font-extrabold text-xs sm:text-[13px] flex items-center gap-2 border transition-all duration-200 min-h-[44px] whitespace-nowrap backdrop-blur-xl shadow-[0_12px_28px_rgba(3,7,24,0.5)] ${
+              isTeacherMode
+                ? 'bg-emerald-500/25 border-emerald-300/80 text-emerald-100 shadow-[0_0_24px_rgba(52,211,153,0.34)] cursor-default'
+                : effectiveUnlockAll
+                ? 'bg-emerald-500/22 border-emerald-300/70 text-emerald-100 shadow-[0_0_22px_rgba(52,211,153,0.28)] cursor-pointer'
+                : 'bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.16),_transparent_60%),linear-gradient(135deg,_rgba(8,12,44,0.96),_rgba(24,17,68,0.94))] border-cyan-300/40 text-white hover:border-cyan-300/75 hover:bg-cyan-400/15 cursor-pointer'
             }`}
           >
-            {unlockAllPreview ? (
+            {effectiveUnlockAll ? (
               <>
                 <Unlock className="w-4 h-4 text-emerald-300 shrink-0" aria-hidden="true" />
-                <span>Mở Toàn Bộ 30 Ngày</span>
+                <span>{isTeacherMode ? 'Chế độ Giáo viên: Đã mở 30 ngày' : 'Mở Toàn Bộ 30 Ngày'}</span>
               </>
             ) : (
               <>
@@ -437,105 +520,228 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
           </button>
         </div>
 
-        {/* 30-Day Cosmic Grid (matching Grade Hub zero-pill card design) */}
+        {/* 30-Day Cosmic Grid + End-of-Week 15-Minute Test Gate Cards (for Tháng 11) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredDays.map((dayPlan) => {
             const unlocked = isDayUnlocked(dayPlan.dayNumber);
+            const blockingWeeklyTest = !unlocked
+              ? getBlockingWeeklyTestForDay(dayPlan.dayNumber)
+              : null;
             const progress = completedDays[dayPlan.dayNumber];
             const isDone = !!progress;
             const savedCount = isDone
               ? dayPlan.questions.length
               : getSavedDaySolvedCount(monthProgram.monthNumber, dayPlan.dayNumber);
-            const isCurrentTarget = dayPlan.dayNumber === nextActiveDayNumber;
+            const isCurrentTarget = dayPlan.dayNumber === nextActiveDayNumber && unlocked;
             const cleanTitle = dayPlan.title.replace(/^Ngày\s+\d+\s*:\s*/i, '');
 
+            const weeklyTestAfterThisDay = weeklyTests.find(
+              (wt) => wt.triggerAfterDayNumber === dayPlan.dayNumber
+            );
+
             return (
-              <button
-                key={dayPlan.id}
-                type="button"
-                disabled={!unlocked}
-                onClick={() => {
-                  if (unlocked) onSelectDay(dayPlan);
-                }}
-                aria-label={`Ngày ${dayPlan.dayNumber}: ${cleanTitle}`}
-                className={`group relative overflow-hidden rounded-3xl p-6 border text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl ${
-                  unlocked
-                    ? isCurrentTarget
-                      ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_55%),linear-gradient(145deg,_rgba(20,30,96,0.96),_rgba(40,18,96,0.96))] border-cyan-300/95 animate-cosmic-beacon hover:-translate-y-1.5 hover:border-cyan-200 hover:shadow-[0_0_48px_rgba(34,211,238,0.52),0_18px_50px_rgba(192,132,252,0.36)] cursor-pointer'
-                      : isDone
-                      ? 'bg-gradient-to-br from-[#12265B]/95 to-[#0D1A44]/95 border-emerald-400/65 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_20px_rgba(52,211,153,0.16)] hover:shadow-[0_0_42px_rgba(52,211,153,0.42),0_16px_44px_rgba(34,211,238,0.28)] cursor-pointer'
-                      : 'bg-gradient-to-br from-[#101A50]/95 via-[#13194D]/95 to-[#1B1248]/95 border-cyan-300/30 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_18px_rgba(34,211,238,0.1)] hover:shadow-[0_0_44px_rgba(34,211,238,0.44),0_18px_48px_rgba(168,85,247,0.32)] cursor-pointer'
-                    : 'bg-[#070B22]/85 border-indigo-400/20 text-indigo-200/75 shadow-sm cursor-not-allowed'
-                }`}
-              >
-                {unlocked && (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.18),_transparent_60%),radial-gradient(ellipse_at_bottom_left,_rgba(217,70,239,0.14),_transparent_60%)]"
-                    />
-                    <span
-                      aria-hidden="true"
-                      className={`pointer-events-none absolute top-0 inset-x-5 h-[2.5px] rounded-full transition-all ${
-                        isCurrentTarget
-                          ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 opacity-100 shadow-[0_0_16px_rgba(34,211,238,0.85)]'
-                          : isDone
-                          ? 'bg-gradient-to-r from-emerald-300 to-cyan-400 opacity-85 group-hover:opacity-100'
-                          : 'bg-gradient-to-r from-cyan-400 to-fuchsia-400 opacity-50 group-hover:opacity-100 group-hover:shadow-[0_0_14px_rgba(34,211,238,0.8)]'
-                      }`}
-                    />
-                  </>
-                )}
-                <div className="relative z-10 w-full space-y-3">
-                  {/* Quiet Unboxed Metadata Kicker (Zero-Pill Rule, identical to Grade Hub) */}
-                  <div className="flex items-center justify-between gap-2 text-xs font-bold">
-                    <div className="flex items-center gap-1.5 text-cyan-300 min-w-0">
-                      {isCurrentTarget && unlocked && (
-                        <span className="w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.95)] animate-ping shrink-0" aria-hidden="true" />
+              <React.Fragment key={dayPlan.id}>
+                <button
+                  type="button"
+                  disabled={!unlocked}
+                  onClick={() => {
+                    if (unlocked) onSelectDay(dayPlan);
+                  }}
+                  aria-label={`Ngày ${dayPlan.dayNumber}: ${cleanTitle}`}
+                  className={`group relative overflow-hidden rounded-3xl p-6 border text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl ${
+                    unlocked
+                      ? isCurrentTarget
+                        ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_55%),linear-gradient(145deg,_rgba(20,30,96,0.96),_rgba(40,18,96,0.96))] border-cyan-300/95 animate-cosmic-beacon hover:-translate-y-1.5 hover:border-cyan-200 hover:shadow-[0_0_48px_rgba(34,211,238,0.52),0_18px_50px_rgba(192,132,252,0.36)] cursor-pointer'
+                        : isDone
+                        ? 'bg-gradient-to-br from-[#12265B]/95 to-[#0D1A44]/95 border-emerald-400/65 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_20px_rgba(52,211,153,0.16)] hover:shadow-[0_0_42px_rgba(52,211,153,0.42),0_16px_44px_rgba(34,211,238,0.28)] cursor-pointer'
+                        : 'bg-gradient-to-br from-[#101A50]/95 via-[#13194D]/95 to-[#1B1248]/95 border-cyan-300/30 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_18px_rgba(34,211,238,0.1)] hover:shadow-[0_0_44px_rgba(34,211,238,0.44),0_18px_48px_rgba(168,85,247,0.32)] cursor-pointer'
+                      : 'bg-[#070B22]/85 border-indigo-400/20 text-indigo-200/75 shadow-sm cursor-not-allowed'
+                  }`}
+                >
+                  {unlocked && (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.18),_transparent_60%),radial-gradient(ellipse_at_bottom_left,_rgba(217,70,239,0.14),_transparent_60%)]"
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none absolute top-0 inset-x-5 h-[2.5px] rounded-full transition-all ${
+                          isCurrentTarget
+                            ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 opacity-100 shadow-[0_0_16px_rgba(34,211,238,0.85)]'
+                            : isDone
+                            ? 'bg-gradient-to-r from-emerald-300 to-cyan-400 opacity-85 group-hover:opacity-100'
+                            : 'bg-gradient-to-r from-cyan-400 to-fuchsia-400 opacity-50 group-hover:opacity-100 group-hover:shadow-[0_0_14px_rgba(34,211,238,0.8)]'
+                        }`}
+                      />
+                    </>
+                  )}
+                  <div className="relative z-10 w-full space-y-3">
+                    <div className="flex items-center justify-between gap-2 text-xs font-bold">
+                      <div className="flex items-center gap-1.5 text-cyan-300 min-w-0">
+                        {isCurrentTarget && unlocked && (
+                          <span className="w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.95)] animate-ping shrink-0" aria-hidden="true" />
+                        )}
+                        <span className="text-sm font-extrabold text-white tabular-nums whitespace-nowrap shrink-0">
+                          Ngày {dayPlan.dayNumber}
+                        </span>
+                        <span aria-hidden="true" className="text-indigo-400 shrink-0">·</span>
+                        <span className="truncate text-cyan-200/90 font-semibold">
+                          {dayPlan.topicTag}
+                        </span>
+                      </div>
+
+                      {isDone ? (
+                        <span className="text-emerald-300 font-black inline-flex items-center gap-1 tabular-nums whitespace-nowrap shrink-0">
+                          <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                          {progress.score}/{progress.totalQuestions}
+                        </span>
+                      ) : savedCount > 0 && unlocked ? (
+                        <span className="text-cyan-300 font-black tabular-nums whitespace-nowrap shrink-0">
+                          {savedCount}/{dayPlan.questions.length} câu
+                        </span>
+                      ) : unlocked ? (
+                        <span className="text-cyan-200 group-hover:text-fuchsia-200 font-black inline-flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+                          Sẵn sàng
+                        </span>
+                      ) : blockingWeeklyTest && completedDays[dayPlan.dayNumber - 1] ? (
+                        <span className="text-amber-300/90 font-bold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
+                          <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                          Chờ KT Tuần {blockingWeeklyTest.weekNumber}
+                        </span>
+                      ) : (
+                        <span className="text-indigo-300/70 font-semibold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
+                          <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                          Chưa mở
+                        </span>
                       )}
-                      <span className="text-sm font-extrabold text-white tabular-nums whitespace-nowrap shrink-0">
-                        Ngày {dayPlan.dayNumber}
-                      </span>
-                      <span aria-hidden="true" className="text-indigo-400 shrink-0">·</span>
-                      <span className="truncate text-cyan-200/90 font-semibold">
-                        {dayPlan.topicTag}
-                      </span>
                     </div>
 
-                    {isDone ? (
-                      <span className="text-emerald-300 font-black inline-flex items-center gap-1 tabular-nums whitespace-nowrap shrink-0">
-                        <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-                        {progress.score}/{progress.totalQuestions}
-                      </span>
-                    ) : savedCount > 0 ? (
-                      <span className="text-cyan-300 font-black tabular-nums whitespace-nowrap shrink-0">
-                        {savedCount}/{dayPlan.questions.length} câu
-                      </span>
-                    ) : unlocked ? (
-                      <span className="text-cyan-200 group-hover:text-fuchsia-200 font-black inline-flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
-                        Sẵn sàng
-                      </span>
-                    ) : (
-                      <span className="text-indigo-300/70 font-semibold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
-                        <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-                        Chưa mở
-                      </span>
+                    <h3
+                      className={`text-lg font-extrabold font-display leading-snug tracking-tight ${
+                        unlocked
+                          ? 'text-white group-hover:text-cyan-200 transition-colors'
+                          : 'text-indigo-200/75'
+                      }`}
+                    >
+                      {cleanTitle}
+                    </h3>
+
+                    {weeklyTestAfterThisDay && (
+                      <div className="pt-1 flex items-center gap-1.5 text-[11px] font-bold text-amber-300/95">
+                        <Clock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        <span>Cuối bài có Kiểm tra 15 phút Tuần {dayPlan.weekNumber}</span>
+                      </div>
                     )}
                   </div>
+                </button>
 
-                  {/* Day Lesson Title */}
-                  <h3
-                    className={`text-lg font-extrabold font-display leading-snug tracking-tight ${
-                      unlocked
-                        ? 'text-white group-hover:text-cyan-200 transition-colors'
-                        : 'text-indigo-200/75'
-                    }`}
-                  >
-                    {cleanTitle}
-                  </h3>
-                </div>
-              </button>
+                {weeklyTestAfterThisDay && onOpenWeeklyTest && (
+                  (() => {
+                    const wtUnlocked = isWeeklyTestUnlocked(weeklyTestAfterThisDay);
+                    const wtResult = weeklyTestResults[weeklyTestAfterThisDay.weekNumber];
+                    const isPassed = !!wtResult?.passed;
+
+                    return (
+                      <button
+                        type="button"
+                        disabled={!wtUnlocked}
+                        onClick={() => {
+                          if (wtUnlocked) onOpenWeeklyTest(weeklyTestAfterThisDay);
+                        }}
+                        className={`group relative overflow-hidden rounded-3xl p-6 border-2 text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl sm:col-span-2 lg:col-span-3 ${
+                          wtUnlocked
+                            ? isPassed
+                              ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(52,211,153,0.26),_transparent_55%),linear-gradient(135deg,_rgba(10,32,62,0.96),_rgba(18,22,64,0.96))] border-emerald-300/80 hover:-translate-y-1 shadow-[0_18px_46px_rgba(3,7,24,0.72),0_0_32px_rgba(52,211,153,0.26)] cursor-pointer'
+                              : 'bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.3),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(232,121,249,0.28),_transparent_55%),linear-gradient(135deg,_rgba(24,16,68,0.97),_rgba(42,14,72,0.97))] border-amber-300/90 hover:-translate-y-1 shadow-[0_20px_52px_rgba(3,7,24,0.82),0_0_38px_rgba(251,191,36,0.34)] cursor-pointer'
+                            : 'bg-[#080C26]/90 border-fuchsia-400/25 text-indigo-200/75 cursor-not-allowed'
+                        }`}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none absolute top-0 inset-x-8 h-[3px] rounded-full ${
+                            wtUnlocked
+                              ? isPassed
+                                ? 'bg-gradient-to-r from-emerald-300 via-cyan-300 to-amber-300 shadow-[0_0_18px_rgba(52,211,153,0.8)]'
+                                : 'bg-gradient-to-r from-amber-300 via-fuchsia-400 to-cyan-300 shadow-[0_0_20px_rgba(251,191,36,0.9)]'
+                              : 'bg-gradient-to-r from-indigo-400/30 to-fuchsia-400/30'
+                          }`}
+                        />
+
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="space-y-2">
+                            <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider">
+                              <span
+                                className={`px-3 py-1 rounded-xl inline-flex items-center gap-1.5 border ${
+                                  isPassed
+                                    ? 'bg-emerald-500/25 border-emerald-300/70 text-emerald-200'
+                                    : wtUnlocked
+                                    ? 'bg-amber-400/25 border-amber-300/75 text-amber-200'
+                                    : 'bg-white/5 border-white/15 text-indigo-300'
+                                }`}
+                              >
+                                <Clock className="w-3.5 h-3.5" aria-hidden="true" />
+                                <span>Bài Kiểm Tra 15 Phút · Cuối Tuần {weeklyTestAfterThisDay.weekNumber}</span>
+                              </span>
+
+                              <span className="inline-flex items-center gap-1 text-cyan-200">
+                                <Calculator className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                                <span>6 câu Tính toán (60đ)</span>
+                              </span>
+                              <span aria-hidden="true" className="text-indigo-400">·</span>
+                              <span className="inline-flex items-center gap-1 text-fuchsia-200">
+                                <MessageSquareQuote className="w-3.5 h-3.5 text-fuchsia-300" aria-hidden="true" />
+                                <span>4 câu Nghị luận (40đ)</span>
+                              </span>
+                            </div>
+
+                            <h3 className="text-xl sm:text-2xl font-black font-display text-white">
+                              {weeklyTestAfterThisDay.title}
+                            </h3>
+
+                            <p className="text-xs sm:text-sm text-indigo-100/90">
+                              {isPassed
+                                ? `Đã vượt qua xuất sắc với ${wtResult.totalScore}/100 điểm (Tính toán: ${wtResult.calculationScore}/60đ · Nghị luận: ${wtResult.reasoningScore}/40đ). ${
+                                    weeklyTestAfterThisDay.unlocksDayNumber
+                                      ? `Đã mở khóa Tuần ${weeklyTestAfterThisDay.weekNumber + 1} (từ Ngày ${weeklyTestAfterThisDay.unlocksDayNumber})!`
+                                      : 'Đã hoàn tất trọn vẹn 5 tuần học!'
+                                  }`
+                                : wtUnlocked
+                                ? `Cần đạt từ ${weeklyTestAfterThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp.`
+                                : `Hoàn thành bài học Ngày ${weeklyTestAfterThisDay.triggerAfterDayNumber} để mở bài kiểm tra 15 phút này.`}
+                            </p>
+                          </div>
+
+                          <div className="shrink-0">
+                            {isPassed ? (
+                              <span className="px-5 py-3 rounded-2xl bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-[0_0_26px_rgba(52,211,153,0.45)]">
+                                <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                                <span>Đã Đạt {wtResult.totalScore}/100đ · Xem / Làm Lại</span>
+                              </span>
+                            ) : wtUnlocked ? (
+                              <span className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 text-slate-950 font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-[0_0_32px_rgba(251,191,36,0.5)]">
+                                <Sparkles className="w-4 h-4" aria-hidden="true" />
+                                <span>
+                                  {wtResult
+                                    ? `Làm Lại Ngay (${wtResult.totalScore}/100đ)`
+                                    : 'Làm Kiểm Tra 15 Phút'}
+                                </span>
+                                <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                              </span>
+                            ) : (
+                              <span className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-indigo-300 font-bold text-xs inline-flex items-center gap-1.5">
+                                <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                                <span>Mở sau Ngày {weeklyTestAfterThisDay.triggerAfterDayNumber}</span>
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })()
+                )}
+              </React.Fragment>
             );
           })}
         </div>

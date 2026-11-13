@@ -35,6 +35,11 @@ import {
   InMonthFinalExamModal,
   InMonthExamSavedResult,
 } from './components/in_month/InMonthFinalExamModal';
+import { InMonthWeeklyTestModal } from './components/in_month/InMonthWeeklyTestModal';
+import {
+  InMonthWeeklyTest,
+  InMonthWeeklyTestSavedResult,
+} from './data/inMonthWeeklyTestsData';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'map' | 'lessons' | 'periodic' | 'review' | 'assessment'>('map');
@@ -117,6 +122,9 @@ export default function App() {
   );
   const [activeInMonthDay, setActiveInMonthDay] = useState<InMonthDayPlan | null>(null);
   const [isInMonthExamOpen, setIsInMonthExamOpen] = useState<boolean>(false);
+  const [activeInMonthWeeklyTest, setActiveInMonthWeeklyTest] = useState<InMonthWeeklyTest | null>(
+    null
+  );
 
   const [inMonthCompletedByMonth, setInMonthCompletedByMonth] = useState<
     Record<number, Record<number, InMonthDayProgress>>
@@ -147,6 +155,23 @@ export default function App() {
         initial[prog.monthNumber] = saved ? JSON.parse(saved) : null;
       } catch {
         initial[prog.monthNumber] = null;
+      }
+    });
+    return initial;
+  });
+
+  const [inMonthWeeklyTestsByMonth, setInMonthWeeklyTestsByMonth] = useState<
+    Record<number, Record<number, InMonthWeeklyTestSavedResult>>
+  >(() => {
+    const initial: Record<number, Record<number, InMonthWeeklyTestSavedResult>> = {};
+    GRADE_3_IN_MONTH_PROGRAMS.forEach((prog) => {
+      try {
+        const saved = localStorage.getItem(
+          getMonthStorageKeys(prog.monthNumber).weeklyTestsResultKey
+        );
+        initial[prog.monthNumber] = saved ? JSON.parse(saved) : {};
+      } catch {
+        initial[prog.monthNumber] = {};
       }
     });
     return initial;
@@ -264,6 +289,35 @@ export default function App() {
     setTotalStars((prev) => prev + 10);
   };
 
+  const handleSaveInMonthWeeklyTestResult = (
+    monthNumber: number,
+    res: InMonthWeeklyTestSavedResult
+  ) => {
+    setInMonthWeeklyTestsByMonth((prev) => {
+      const monthMap = prev[monthNumber] || {};
+      const existing = monthMap[res.weekNumber];
+      const nextMonthMap: Record<number, InMonthWeeklyTestSavedResult> = {
+        ...monthMap,
+        [res.weekNumber]: res,
+      };
+      try {
+        localStorage.setItem(
+          getMonthStorageKeys(monthNumber).weeklyTestsResultKey,
+          JSON.stringify(nextMonthMap)
+        );
+      } catch {
+        // Ignore storage write error
+      }
+      if (res.passed && !existing?.passed) {
+        setTotalStars((stars) => stars + 8);
+      }
+      return {
+        ...prev,
+        [monthNumber]: nextMonthMap,
+      };
+    });
+  };
+
   // Track reactive updates to mistake notebook and programming error collector
   useEffect(() => {
     const handleMistakeUpdate = () => {
@@ -363,6 +417,7 @@ export default function App() {
           setActiveVnLesson(null);
           setActiveInMonthDay(null);
           setIsInMonthExamOpen(false);
+          setActiveInMonthWeeklyTest(null);
         }}
         onOpenScratchpad={() => setIsScratchpadOpen(true)}
         onOpenMistakes={() => setIsMistakeNotebookOpen(true)}
@@ -393,6 +448,7 @@ export default function App() {
                 setActiveMonthAndPersist(monthProgram.monthNumber);
                 setActiveInMonthDay(null);
                 setIsInMonthExamOpen(false);
+                setActiveInMonthWeeklyTest(null);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onQuickStartDay={(monthProgram, dayNumber) => {
@@ -402,8 +458,44 @@ export default function App() {
                 setActiveMonthAndPersist(monthProgram.monthNumber);
                 setActiveInMonthDay(targetDay);
                 setIsInMonthExamOpen(false);
+                setActiveInMonthWeeklyTest(null);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+            />
+          ) : activeInMonthWeeklyTest ? (
+            <InMonthWeeklyTestModal
+              key={`${activeMonthProgram.monthNumber}-w${activeInMonthWeeklyTest.weekNumber}`}
+              monthNumber={activeMonthProgram.monthNumber}
+              weeklyTest={activeInMonthWeeklyTest}
+              savedResult={
+                (inMonthWeeklyTestsByMonth[activeMonthProgram.monthNumber] || {})[
+                  activeInMonthWeeklyTest.weekNumber
+                ] || null
+              }
+              onSaveResult={(res) =>
+                handleSaveInMonthWeeklyTestResult(activeMonthProgram.monthNumber, res)
+              }
+              onClose={() => {
+                setActiveInMonthWeeklyTest(null);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onUnlockAndContinueNextWeek={(nextDayNum) => {
+                const nextPlan = activeMonthProgram.days.find(
+                  (d) => d.dayNumber === nextDayNum
+                );
+                setActiveInMonthWeeklyTest(null);
+                if (nextPlan) {
+                  setActiveInMonthDay(nextPlan);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onOpenFinalExam={() => {
+                setActiveInMonthWeeklyTest(null);
+                setActiveInMonthDay(null);
+                setIsInMonthExamOpen(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onOpenScratchpad={() => setIsScratchpadOpen(true)}
             />
           ) : isInMonthExamOpen ? (
             <InMonthFinalExamModal
@@ -429,44 +521,67 @@ export default function App() {
               onOpenScratchpad={() => setIsScratchpadOpen(true)}
             />
           ) : activeInMonthDay ? (
-            <InMonthDailyRunner
-              monthNumber={activeMonthProgram.monthNumber}
-              monthLabel={activeMonthProgram.label}
-              dayPlan={activeInMonthDay}
-              onBack={() => {
-                setActiveInMonthDay(null);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onCompleteDay={(dayNum, score, totalQ, elapsed) =>
-                handleInMonthDayCompleted(
-                  activeMonthProgram.monthNumber,
-                  dayNum,
-                  score,
-                  totalQ,
-                  elapsed
-                )
-              }
-              onSelectNextDay={(nextDayNum) => {
-                const nextPlan = activeMonthProgram.days.find(
-                  (d) => d.dayNumber === nextDayNum
-                );
-                if (nextPlan) {
-                  setActiveInMonthDay(nextPlan);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }}
-              onOpenExam={() => {
-                setActiveInMonthDay(null);
-                setIsInMonthExamOpen(true);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onOpenScratchpad={() => setIsScratchpadOpen(true)}
-            />
+            (() => {
+              const weeklyTestForThisDay =
+                activeMonthProgram.weeklyTests?.find(
+                  (wt) => wt.triggerAfterDayNumber === activeInMonthDay.dayNumber
+                ) || null;
+              const weeklyTestResult = weeklyTestForThisDay
+                ? (inMonthWeeklyTestsByMonth[activeMonthProgram.monthNumber] || {})[
+                    weeklyTestForThisDay.weekNumber
+                  ] || null
+                : null;
+
+              return (
+                <InMonthDailyRunner
+                  monthNumber={activeMonthProgram.monthNumber}
+                  monthLabel={activeMonthProgram.label}
+                  dayPlan={activeInMonthDay}
+                  weeklyTestForThisDay={weeklyTestForThisDay}
+                  weeklyTestResult={weeklyTestResult}
+                  isTeacherMode={isTeacherMode}
+                  onBack={() => {
+                    setActiveInMonthDay(null);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onCompleteDay={(dayNum, score, totalQ, elapsed) =>
+                    handleInMonthDayCompleted(
+                      activeMonthProgram.monthNumber,
+                      dayNum,
+                      score,
+                      totalQ,
+                      elapsed
+                    )
+                  }
+                  onSelectNextDay={(nextDayNum) => {
+                    const nextPlan = activeMonthProgram.days.find(
+                      (d) => d.dayNumber === nextDayNum
+                    );
+                    if (nextPlan) {
+                      setActiveInMonthDay(nextPlan);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  onOpenExam={() => {
+                    setActiveInMonthDay(null);
+                    setIsInMonthExamOpen(true);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onOpenWeeklyTest={(wt) => {
+                    setActiveInMonthWeeklyTest(wt);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onOpenScratchpad={() => setIsScratchpadOpen(true)}
+                />
+              );
+            })()
           ) : (
             <InMonthCalendarHub
               monthProgram={activeMonthProgram}
               completedDays={inMonthCompletedByMonth[activeMonthProgram.monthNumber] || {}}
               examResult={inMonthExamByMonth[activeMonthProgram.monthNumber] || null}
+              weeklyTestResults={inMonthWeeklyTestsByMonth[activeMonthProgram.monthNumber] || {}}
+              isTeacherMode={isTeacherMode}
               onSelectDay={(dayPlan) => {
                 setActiveInMonthDay(dayPlan);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -475,16 +590,22 @@ export default function App() {
                 setIsInMonthExamOpen(true);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
+              onOpenWeeklyTest={(wt) => {
+                setActiveInMonthWeeklyTest(wt);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               onBackToGrade={() => {
                 setSelectedInMonthNumber(null);
                 setActiveInMonthDay(null);
                 setIsInMonthExamOpen(false);
+                setActiveInMonthWeeklyTest(null);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onSwitchMonth={(nextMonthProgram) => {
                 setActiveMonthAndPersist(nextMonthProgram.monthNumber);
                 setActiveInMonthDay(null);
                 setIsInMonthExamOpen(false);
+                setActiveInMonthWeeklyTest(null);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />
@@ -521,6 +642,7 @@ export default function App() {
               <VietnamGrade3Hub
                 completedLessonIds={vnCompletedLessonIds}
                 assessmentScore={vnAssessmentScore}
+                isTeacherMode={isTeacherMode}
                 onSelectLesson={(lesson) => {
                   setActiveVnLesson(lesson);
                   window.scrollTo({ top: 0, behavior: 'smooth' });

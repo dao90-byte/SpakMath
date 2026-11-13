@@ -50,9 +50,27 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
       return userNum === correctNum;
     }
 
-    // Substring match for non-numeric answers (e.g. user typed "A" or "Bình A")
+    // Standalone single-letter vessel code (e.g. "B" for "Chai B", "Y" for "Bể Y")
+    const vesselLetterMatch = cleanCorrect.match(/(?:^|\s)([a-z])$/);
+    if (!userNum && !correctNum && vesselLetterMatch && cleanUser === vesselLetterMatch[1]) {
+      return true;
+    }
+
+    // Specific verbal answers like "Có biến đổi theo bình" or "Bằng nhau"
     if (!userNum && !correctNum) {
-      if (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect)) return true;
+      if (
+        cleanCorrect.startsWith('có') &&
+        (cleanUser === 'có' || cleanUser === 'co')
+      ) {
+        return true;
+      }
+      if (
+        cleanUser.length >= 3 &&
+        !cleanUser.includes('không') &&
+        (cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect))
+      ) {
+        return true;
+      }
     }
 
     return false;
@@ -161,42 +179,13 @@ export const VolumeComparison: React.FC<VolumeComparisonProps> = ({
                 {isWrong && <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />}
               </div>
 
-              {/* Option Pills + Direct Input Form */}
+              {/* Direct Input Form */}
               <div className="space-y-2.5">
-                {q.options && q.options.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {q.options.map((opt, oIdx) => {
-                      const isPicked = inputValues[q.id] === opt;
-                      return (
-                        <button
-                          key={oIdx}
-                          type="button"
-                          disabled={isCorrect}
-                          onClick={() => {
-                            sound.playClick();
-                            setInputValues((prev) => ({ ...prev, [q.id]: opt }));
-                            handleCheckAnswer(q.id, q.correctAnswer, opt);
-                          }}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all active:scale-95 ${
-                            isCorrect && opt === q.correctAnswer
-                              ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
-                              : isPicked
-                              ? 'bg-sky-200 text-sky-950 border-sky-400'
-                              : 'bg-slate-50 hover:bg-sky-50 text-slate-700 border-slate-200 hover:border-sky-300'
-                          }`}
-                        >
-                          {opt}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     inputMode="text"
-                    placeholder="Hoặc tự nhập câu trả lời của em..."
+                    placeholder="Nhập câu trả lời của em..."
                     value={inputValues[q.id] || ''}
                     disabled={isCorrect}
                     onChange={(e) => {

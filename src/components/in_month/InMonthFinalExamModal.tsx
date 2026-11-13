@@ -497,67 +497,32 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 </p>
               </div>
 
-              {currentExamInputSpec.mode === 'choice' ? (
-                <div role="group" aria-label="Các lựa chọn đáp án" className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                  {currentQ.options.map((opt, oIdx) => {
-                    const selected = (answers[currentQ.id] || '').trim() === opt.trim();
-                    return (
-                      <button
-                        key={oIdx}
-                        type="button"
-                        aria-pressed={selected}
-                        onClick={() => {
-                          sound.playClick();
-                          handleSelectOption(opt);
-                        }}
-                        className={`p-4 rounded-2xl border-2 font-black text-left transition-all duration-200 cursor-pointer tabular-nums min-h-[56px] active:scale-[0.98] flex items-center gap-2.5 ${
-                          selected
-                            ? 'bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 border-amber-200 text-slate-950 shadow-[0_8px_26px_rgba(251,191,36,0.42)]'
-                            : 'bg-[#080E2B]/90 border-indigo-400/28 text-white hover:border-cyan-300/80 hover:bg-indigo-900/55 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]'
-                        }`}
-                      >
-                        <span
-                          className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
-                            selected
-                              ? 'bg-slate-950 text-amber-300'
-                              : 'bg-white/10 text-cyan-200 border border-cyan-300/25'
-                          }`}
-                        >
-                          {String.fromCharCode(65 + oIdx)}
-                        </span>
-                        <span className="text-sm">{opt}</span>
-                      </button>
-                    );
-                  })}
+              <div className="mb-6 p-4 rounded-2xl bg-[#070B22]/90 border border-cyan-300/35 shadow-[inset_0_2px_12px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.1)] space-y-2.5">
+                <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-cyan-300">
+                  Nhập câu trả lời của em
+                </label>
+                <div className="flex items-center gap-2.5">
+                  <input
+                    id={`exam-ans-${currentQ.id}`}
+                    type="text"
+                    inputMode={currentExamInputSpec.mode === 'text_number' ? 'numeric' : 'text'}
+                    value={answers[currentQ.id] || ''}
+                    onChange={(e) => handleSelectOption(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && currentIdx < examQuestions.length - 1) {
+                        setCurrentIdx((prev) => Math.min(examQuestions.length - 1, prev + 1));
+                      }
+                    }}
+                    placeholder={currentExamInputSpec.mode === 'text_number' ? 'Nhập đáp án...' : 'Nhập câu trả lời...'}
+                    className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-xl tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm transition-all"
+                  />
+                  {currentExamInputSpec.mode === 'text_number' && currentExamInputSpec.unitLabel && (
+                    <span className="px-4 py-3.5 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-sm shrink-0">
+                      {currentExamInputSpec.unitLabel}
+                    </span>
+                  )}
                 </div>
-              ) : (
-                <div className="mb-6 p-4 rounded-2xl bg-[#070B22]/90 border border-cyan-300/35 shadow-[inset_0_2px_12px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.1)] space-y-2.5">
-                  <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-cyan-300">
-                    Nhập câu trả lời của em
-                  </label>
-                  <div className="flex items-center gap-2.5">
-                    <input
-                      id={`exam-ans-${currentQ.id}`}
-                      type="text"
-                      inputMode="numeric"
-                      value={answers[currentQ.id] || ''}
-                      onChange={(e) => handleSelectOption(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && currentIdx < examQuestions.length - 1) {
-                          setCurrentIdx((prev) => Math.min(examQuestions.length - 1, prev + 1));
-                        }
-                      }}
-                      placeholder="Nhập đáp án..."
-                      className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-xl tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm transition-all"
-                    />
-                    {currentExamInputSpec.mode === 'text_number' && currentExamInputSpec.unitLabel && (
-                      <span className="px-4 py-3.5 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-sm shrink-0">
-                        {currentExamInputSpec.unitLabel}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
+              </div>
 
               <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
                 <button

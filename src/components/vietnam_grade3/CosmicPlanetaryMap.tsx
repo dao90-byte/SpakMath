@@ -21,12 +21,14 @@ import {
 
 interface CosmicPlanetaryMapProps {
   progress: CosmicProgressData;
+  isTeacherMode?: boolean;
   onSelectLesson: (lessonId: string) => void;
   activeLessonId?: string;
 }
 
 export const CosmicPlanetaryMap: React.FC<CosmicPlanetaryMapProps> = ({
   progress,
+  isTeacherMode = false,
   onSelectLesson,
   activeLessonId
 }) => {
@@ -156,7 +158,7 @@ export const CosmicPlanetaryMap: React.FC<CosmicPlanetaryMapProps> = ({
 
             {/* 7 Orbiting Planetary Stations */}
             {PLANETS_METADATA.map((planet, idx) => {
-              const isUnlocked = progress.unlockedLessons.includes(planet.lessonId);
+              const isUnlocked = isTeacherMode || progress.unlockedLessons.includes(planet.lessonId);
               const isConquered = progress.conqueredLessons.includes(planet.lessonId);
               const isActive = activeLessonId === planet.lessonId;
               const isHovered = hoveredPlanetId === planet.lessonId;
@@ -263,7 +265,7 @@ export const CosmicPlanetaryMap: React.FC<CosmicPlanetaryMapProps> = ({
       {/* ==================================================================== */}
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {PLANETS_METADATA.map((planet, index) => {
-          const isUnlocked = progress.unlockedLessons.includes(planet.lessonId);
+          const isUnlocked = isTeacherMode || progress.unlockedLessons.includes(planet.lessonId);
           const isConquered = progress.conqueredLessons.includes(planet.lessonId);
           const isActive = activeLessonId === planet.lessonId;
           const exProgress = progress.exerciseProgress[planet.lessonId];

@@ -43,7 +43,7 @@ export interface InMonthVisualModelConfig {
   primaryReading?: string;
   secondaryReading?: string;
   conversionRule?: string;
-  chartItems?: { label: string; value: number; unit: string; color: string }[];
+  chartItems?: { label: string; value: number; unit: string; color: string; masked?: boolean }[];
 }
 
 export interface InMonthQuestion {
@@ -673,7 +673,7 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q3`,
       stage: 'visualModel',
       skillDomain: 'remainder',
-      prompt: `Tìm số bị chia $X$, biết $X$ chia cho ${q3Divisor} được thương là ${q3Quot} và số dư là ${q3Rem}.`,
+      prompt: `Tìm số bị chia X, biết X chia cho ${q3Divisor} được thương là ${q3Quot} và số dư là ${q3Rem}.`,
       options: makeOptions(q3Ans, [`${q3Divisor * q3Quot}`, `${q3Dividend - q3Rem}`, `${q3Dividend + 2}`]),
       correctAnswer: q3Ans,
       hint: `Công thức: Số bị chia = Thương × Số chia + Số dư.`,
@@ -1770,7 +1770,7 @@ function buildReviewDay(day: number): InMonthDayPlan {
       id: `nov-d${day}-q8`,
       stage: 'practice',
       skillDomain: 'interval',
-      prompt: `Để cắt một thanh thép dài thành ${6 + k} đoạn ngắn, máy cắt lazer cần thực hiện bao nhiêu lần cắt? Nếu mỗi lần cắt hết 4 giây thì mất tất cả bao nhiêu giây?`,
+      prompt: `Để cắt một thanh thép dài thành ${6 + k} đoạn ngắn bằng máy cắt lazer, biết mỗi lần cắt hết 4 giây, hỏi mất tất cả bao nhiêu giây để cắt xong?`,
       options: makeOptions(`${(5 + k) * 4} giây`, [`${(6 + k) * 4} giây`, `${(7 + k) * 4} giây`, `${(5 + k) * 3} giây`]),
       correctAnswer: `${(5 + k) * 4} giây`,
       hint: `Số lần cắt = Số đoạn - 1 = ${6 + k} - 1 = ${5 + k} lần cắt!`,

@@ -163,49 +163,24 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
                   <span key={i}>{selectedOption.icon}</span>
                 ))
               ) : (
-                'Chờ chọn/nhập...'
+                'Chờ nhập...'
               )}
             </div>
             <span className="text-xs font-bold text-slate-500 mt-1">
-              {selectedOption ? selectedOption.label : 'Chưa chọn'}
+              {selectedOption ? selectedOption.label : 'Chưa nhập'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Answer Form with Option Pills + Direct Input */}
+      {/* Direct Input Answer Form */}
       <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
         <h4 className="font-black text-slate-800 text-base">
           Cần bao nhiêu {correctOption?.icon || 'vật phẩm'} để đĩa cân thăng bằng?
         </h4>
 
-        {targetQuestion.options && targetQuestion.options.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2">
-            {targetQuestion.options.map((opt) => (
-              <button
-                key={opt.id}
-                type="button"
-                disabled={isSuccess}
-                onClick={() => {
-                  setInputValue(String(opt.count));
-                  handleCheck(opt.count);
-                }}
-                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black border-2 transition-all active:scale-95 ${
-                  isSuccess && opt.id === targetQuestion.correctOptionId
-                    ? 'bg-emerald-500 text-white border-emerald-600'
-                    : inputValue === String(opt.count)
-                    ? 'bg-rose-200 text-rose-950 border-rose-400'
-                    : 'bg-slate-50 hover:bg-rose-50 text-slate-700 border-slate-200 hover:border-rose-300'
-                }`}
-              >
-                {opt.icon} {opt.label}
-              </button>
-            ))}
-          </div>
-        )}
-
         <p className="text-xs text-slate-500">
-          Hoặc tự nhập con số chính xác vào ô dưới đây:
+          Tự tính toán và nhập con số chính xác vào ô trống bên dưới:
         </p>
 
         <div className="flex items-center justify-center gap-3">
@@ -219,8 +194,8 @@ export const BalanceScaleViewer: React.FC<BalanceScaleViewerProps> = ({
                 setErrorMessage(null);
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
-              placeholder="Nhập số lượng..."
-              className="w-40 px-4 py-3 rounded-2xl border-2 border-rose-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-rose-200 shadow-inner"
+              placeholder="Nhập số..."
+              className="w-40 pl-4 pr-11 py-3 rounded-2xl border-2 border-rose-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-rose-200 shadow-inner"
             />
             <span className="absolute right-3 top-3.5 text-xs font-bold text-slate-400 pointer-events-none">
               {correctOption?.icon || 'quả'}

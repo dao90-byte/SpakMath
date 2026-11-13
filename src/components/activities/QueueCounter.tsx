@@ -189,39 +189,14 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
         </div>
       </div>
 
-      {/* Answer Form with Option Pills + Direct Input */}
+      {/* Direct Input Answer Form */}
       <div className="w-full max-w-md bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-4 text-center">
         <h4 className="font-black text-slate-800 text-base">
           {promptTitle}
         </h4>
 
-        {options && options.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-2">
-            {options.map((opt, idx) => (
-              <button
-                key={idx}
-                type="button"
-                disabled={isSuccess}
-                onClick={() => {
-                  setInputValue(String(opt));
-                  handleCheck(opt);
-                }}
-                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-black border-2 transition-all active:scale-95 ${
-                  isSuccess && opt === correctTotal
-                    ? 'bg-emerald-500 text-white border-emerald-600'
-                    : inputValue === String(opt)
-                    ? 'bg-amber-200 text-amber-950 border-amber-400'
-                    : 'bg-slate-50 hover:bg-amber-50 text-slate-700 border-slate-200 hover:border-amber-300'
-                }`}
-              >
-                {opt} bạn
-              </button>
-            ))}
-          </div>
-        )}
-
         <p className="text-xs text-slate-500">
-          Hoặc tự nhập con số chính xác vào ô dưới đây:
+          Tự tính toán và nhập con số chính xác vào ô trống bên dưới:
         </p>
 
         <div className="flex items-center justify-center gap-3">
@@ -235,8 +210,8 @@ export const QueueCounter: React.FC<QueueCounterProps> = ({
                 setErrorMessage(null);
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
-              placeholder="Nhập số bạn..."
-              className="w-40 px-4 py-3 rounded-2xl border-2 border-amber-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200 shadow-inner"
+              placeholder="Nhập số..."
+              className="w-40 pl-4 pr-11 py-3 rounded-2xl border-2 border-amber-300 text-xl font-black text-center text-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-200 shadow-inner"
             />
             <span className="absolute right-3 top-3.5 text-xs font-bold text-slate-400 pointer-events-none">
               bạn

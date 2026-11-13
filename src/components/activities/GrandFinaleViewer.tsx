@@ -52,23 +52,6 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
     return false;
   };
 
-  const handleSelectOption = (opt: { id: string; text: string; isCorrect: boolean }) => {
-    if (isAnsweredCorrect) return;
-    sound.playClick();
-    setTypedInput(opt.text);
-    if (opt.isCorrect) {
-      sound.playCorrect();
-      sound.playStarCollect();
-      setIsAnsweredCorrect(true);
-      setShowExplanation(true);
-      setErrorMessage(null);
-      setSelectedAnswers((prev) => ({ ...prev, [currentQ.id]: opt.id }));
-    } else {
-      sound.playWrong();
-      setErrorMessage('Chưa chính xác. Em hãy phân tích đề bài và kiểm tra lại phép tính nhé!');
-    }
-  };
-
   const handleCheckAnswer = () => {
     if (!typedInput.trim() || isAnsweredCorrect) return;
     const correctOpt = currentQ.options.find((o) => o.isCorrect);
@@ -172,35 +155,12 @@ export const GrandFinaleViewer: React.FC<GrandFinaleViewerProps> = ({
             {currentQ.question}
           </h3>
 
-          {/* Clickable Options + Typed Answer Input */}
+          {/* Direct Typed Answer Input */}
           <div className="space-y-3 pt-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {currentQ.options.map((opt) => {
-                const isPicked = typedInput === opt.text;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    disabled={isAnsweredCorrect}
-                    onClick={() => handleSelectOption(opt)}
-                    className={`p-3.5 rounded-2xl border-2 text-left font-bold text-sm md:text-base transition-all active:scale-95 ${
-                      isPicked
-                        ? isAnsweredCorrect
-                          ? 'bg-emerald-100 border-emerald-500 text-emerald-900 ring-2 ring-emerald-300'
-                          : 'bg-rose-50 border-rose-400 text-rose-900'
-                        : 'bg-slate-50 hover:bg-amber-50 border-slate-200 hover:border-amber-300 text-slate-800'
-                    }`}
-                  >
-                    {opt.text}
-                  </button>
-                );
-              })}
-            </div>
-
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
               <input
                 type="text"
-                placeholder="Hoặc tự tay nhập câu trả lời của em..."
+                placeholder="Tự tay nhập câu trả lời của em..."
                 value={typedInput}
                 disabled={isAnsweredCorrect}
                 onChange={(e) => {

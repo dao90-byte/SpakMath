@@ -68,7 +68,26 @@ export function isInMonthAnswerCorrect(
   const spec = getInMonthQuestionInputSpec(trimmedCorrect);
 
   if (spec.mode === 'choice') {
-    return trimmedInput.toLowerCase() === trimmedCorrect.toLowerCase();
+    const u = trimmedInput.toLowerCase().replace(/\s+/g, ' ');
+    const c = trimmedCorrect.toLowerCase().replace(/\s+/g, ' ');
+    if (u === c) return true;
+    // Allow omitting "màu " prefix (e.g. "đỏ" matches "màu đỏ", "lục" matches "màu lục")
+    const cNoColorPrefix = c.replace(/^màu\s+/i, '');
+    const uNoColorPrefix = u.replace(/^màu\s+/i, '');
+    if (cNoColorPrefix && uNoColorPrefix === cNoColorPrefix) return true;
+    // Allow numeric weekday formats ("thứ 2" <-> "thứ hai", ..., "thứ 7" <-> "thứ bảy", "cn" <-> "chủ nhật")
+    const weekdayMap: Record<string, string[]> = {
+      'thứ hai': ['thứ 2', 't2'],
+      'thứ ba': ['thứ 3', 't3'],
+      'thứ tư': ['thứ 4', 't4'],
+      'thứ năm': ['thứ 5', 't5'],
+      'thứ sáu': ['thứ 6', 't6'],
+      'thứ bảy': ['thứ 7', 't7'],
+      'chủ nhật': ['cn'],
+    };
+    const aliases = weekdayMap[c];
+    if (aliases && aliases.includes(u)) return true;
+    return false;
   }
 
   if (spec.mode === 'division_remainder') {

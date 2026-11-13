@@ -7,6 +7,10 @@ import {
   NOVEMBER_IN_MONTH_DAYS,
   NOVEMBER_FINAL_EXAM,
 } from './inMonthNovemberData';
+import {
+  InMonthWeeklyTest,
+  NOVEMBER_WEEKLY_TESTS,
+} from './inMonthWeeklyTestsData';
 
 export interface InMonthWeekMeta {
   weekNumber: 1 | 2 | 3 | 4 | 5;
@@ -32,6 +36,11 @@ export interface InMonthMonthProgram {
   days: InMonthDayPlan[];
   finalExam: InMonthFinalExam;
   weeksMeta: InMonthWeekMeta[];
+  /**
+   * Optional 15-minute weekly tests (Calculation + Reasoning) at the end of each week.
+   * Currently populated for Month 11 (Tháng 11); ready to be attached whenever a new month's content is designed.
+   */
+  weeklyTests?: InMonthWeeklyTest[];
 }
 
 function makeOptions(correct: string, distractors: string[]): string[] {
@@ -1093,6 +1102,7 @@ const NOVEMBER_PROGRAM: InMonthMonthProgram = {
   days: NOVEMBER_IN_MONTH_DAYS,
   finalExam: NOVEMBER_FINAL_EXAM,
   weeksMeta: NOVEMBER_WEEKS_META,
+  weeklyTests: NOVEMBER_WEEKLY_TESTS,
 };
 
 // Academic order of Grade 3 Spark Math F3: Tháng 6..12 (Year 1) then Tháng 1..5 (Year 2)
@@ -1109,6 +1119,8 @@ export function getMonthStorageKeys(monthNumber: number) {
       completedDaysKey: 'spark_math_inmonth_nov_completed_days',
       examResultKey: 'spark_math_inmonth_nov_exam_result',
       examDraftKey: 'spark_math_inmonth_nov_exam_draft',
+      weeklyTestsResultKey: 'spark_math_inmonth_nov_weekly_tests',
+      weeklyTestDraftKey: (weekNumber: number) => `spark_math_inmonth_nov_weekly_draft_w${weekNumber}`,
       dayProgressKey: (day: number) => `spark_math_inmonth_nov_day_progress_${day}`,
     };
   }
@@ -1116,6 +1128,8 @@ export function getMonthStorageKeys(monthNumber: number) {
     completedDaysKey: `spark_math_inmonth_g3_m${monthNumber}_completed_days`,
     examResultKey: `spark_math_inmonth_g3_m${monthNumber}_exam_result`,
     examDraftKey: `spark_math_inmonth_g3_m${monthNumber}_exam_draft`,
+    weeklyTestsResultKey: `spark_math_inmonth_g3_m${monthNumber}_weekly_tests`,
+    weeklyTestDraftKey: (weekNumber: number) => `spark_math_inmonth_g3_m${monthNumber}_weekly_draft_w${weekNumber}`,
     dayProgressKey: (day: number) => `spark_math_inmonth_g3_m${monthNumber}_day_progress_${day}`,
   };
 }

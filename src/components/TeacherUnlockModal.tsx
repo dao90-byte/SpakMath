@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KeyRound, X, CheckCircle2, AlertCircle, Lock, Unlock, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/soundEffects';
@@ -19,6 +19,15 @@ export const TeacherUnlockModal: React.FC<TeacherUnlockModalProps> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isCurrentlyUnlocked, setIsCurrentlyUnlocked] = useState(isTeacherUnlocked());
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsCurrentlyUnlocked(isTeacherUnlocked());
+      setPasswordInput('');
+      setErrorMsg(null);
+      setShowSuccessToast(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

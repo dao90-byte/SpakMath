@@ -2245,7 +2245,16 @@ function maskExplanationToGuided(raw: string, primaryNum: number): string {
 /**
  * Attaches `cpaSpec` to a question or exam question.
  */
-export function attachCPAToQuestion<T extends InMonthQuestion | InMonthExamQuestion>(
+export function attachCPAToQuestion<
+  T extends {
+    id: string;
+    prompt: string;
+    correctAnswer: string;
+    visualModel: InMonthVisualModelConfig;
+    stepByStepExplanation?: string[];
+    explanation?: string;
+  }
+>(
   q: T,
   dayNumber?: number,
   qIndex1Based?: number

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../../utils/soundEffects';
-import { Check, RotateCcw, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export type SequenceType = 'numbers' | 'domino' | 'beads' | 'pyramid';
 
@@ -43,41 +43,59 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
 }) => {
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
   const [typedInput, setTypedInput] = useState('');
+  const [dominoTop, setDominoTop] = useState('');
+  const [dominoBottom, setDominoBottom] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const selectedChoice = choices.find((c) => c.id === selectedChoiceId);
   const correctChoice = choices.find((c) => c.id === correctChoiceId);
 
-  const handleSelectChoice = (choiceId: string) => {
-    sound.playClick();
-    setSelectedChoiceId(choiceId);
-
-    if (choiceId === correctChoiceId) {
-      sound.playCorrect();
-      setIsSuccess(true);
-      setErrorMessage(null);
-      setTimeout(() => {
-        sound.playVictory();
-        onCompleted();
-      }, 500);
-    } else {
-      sound.playWrong();
-      setErrorMessage('Chưa chính xác, em hãy quan sát kỹ quy luật tăng/giảm hoặc lặp lại nhé!');
-    }
-  };
+  const stripChoiceLabel = (raw: string) =>
+    raw
+      .replace(/\(chính xác\)|\(đúng\)/gi, '')
+      .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
 
   const handleCheckInput = () => {
     sound.playClick();
-    const clean = typedInput.trim().toLowerCase();
-    if (!clean) return;
+    if (!correctChoice) return;
 
-    // Check if matches label, sublabel, or id of correctChoice
-    const isMatch =
-      correctChoice &&
-      (correctChoice.label.trim().toLowerCase() === clean ||
-        clean.replace(/\D/g, '') === correctChoice.label.trim().replace(/\D/g, '') ||
-        (correctChoice.subLabel && correctChoice.subLabel.trim().toLowerCase() === clean));
+    let isMatch = false;
+
+    if (sequenceType === 'domino') {
+      const topClean = dominoTop.trim();
+      const botClean = dominoBottom.trim();
+      if (!topClean || !botClean) return;
+      isMatch =
+        topClean === correctChoice.label.trim() &&
+        botClean === (correctChoice.subLabel || '').trim();
+    } else {
+      const clean = typedInput.trim().toLowerCase();
+      if (!clean) return;
+
+      const cleanLabel = stripChoiceLabel(correctChoice.label);
+      const cleanIcon = (correctChoice.icon || '').trim().toLowerCase();
+      const hasLettersInLabel = /[a-z]/i.test(cleanLabel) && /\d/.test(cleanLabel);
+
+      if (clean === cleanLabel || (cleanIcon && clean === cleanIcon)) {
+        isMatch = true;
+      } else if (hasLettersInLabel) {
+        // Alphanumeric codes like "E9" must match exact letters + digits
+        isMatch = clean.replace(/\s+/g, '') === cleanLabel.replace(/\s+/g, '');
+      } else {
+        const userDigits = clean.replace(/\D/g, '');
+        const labelDigits = cleanLabel.replace(/\D/g, '');
+        if (userDigits && labelDigits) {
+          isMatch = userDigits === labelDigits;
+        } else if (!userDigits && !labelDigits && clean.length >= 2) {
+          // Color / bead name matching (e.g. "đỏ" matches "hạt đỏ")
+          isMatch = cleanLabel.includes(clean) || clean.includes(cleanLabel);
+        }
+      }
+    }
 
     if (isMatch) {
       setSelectedChoiceId(correctChoiceId);
@@ -92,12 +110,6 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
       sound.playWrong();
       setErrorMessage('Chưa chính xác rồi em ơi! 🤔 Gợi mở tư duy: Em hãy so sánh sự thay đổi hoặc khoảng cách giữa các số/hình liền kề nhau để nhận ra quy luật nhé!');
     }
-  };
-
-  const handleReset = () => {
-    sound.playClick();
-    setSelectedChoiceId(null);
-    setIsSuccess(false);
   };
 
   // Group pyramid items into rows from top (1 item) down to base (N items)
@@ -242,11 +254,11 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
                     }`}
                   >
                     <span className="text-xl font-black text-purple-900">
-                      {selectedChoice ? selectedChoice.label : '?'}
+                      {selectedChoice ? selectedChoice.label : (dominoTop || '?')}
                     </span>
                     <div className="w-full h-0.5 bg-slate-300 my-1" />
                     <span className="text-xl font-black text-purple-900">
-                      {selectedChoice ? selectedChoice.subLabel : '?'}
+                      {selectedChoice ? selectedChoice.subLabel : (dominoBottom || '?')}
                     </span>
                   </div>
                 );
@@ -310,73 +322,107 @@ export const SequencePatternBoard: React.FC<SequencePatternBoardProps> = ({
         )}
       </div>
 
-      {/* Choice Buttons + Direct typing input box */}
+      {/* Direct typing input box (no multiple choice) */}
       <div className="w-full max-w-xl bg-white p-6 rounded-3xl border-2 border-purple-200 shadow-sm space-y-4 text-center">
-        {choices.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="font-black text-slate-700 text-xs sm:text-sm uppercase tracking-wider">
-              Chọn nhanh đáp án hoặc tự nhập vào ô bên dưới:
-            </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              {choices.map((ch) => {
-                const isSelected = selectedChoiceId === ch.id;
-                return (
-                  <button
-                    key={ch.id}
-                    type="button"
-                    disabled={isSuccess}
-                    onClick={() => {
-                      setTypedInput(ch.label);
-                      handleSelectChoice(ch.id);
-                    }}
-                    className={`p-3 rounded-2xl border-2 font-black text-base sm:text-lg transition-all active:scale-95 flex flex-col items-center justify-center ${
-                      isSelected
-                        ? ch.id === correctChoiceId
-                          ? 'bg-emerald-100 border-emerald-500 text-emerald-900 ring-2 ring-emerald-300'
-                          : 'bg-rose-100 border-rose-400 text-rose-900'
-                        : 'bg-purple-50/70 hover:bg-purple-100 border-purple-200 text-purple-950'
-                    }`}
-                  >
-                    <span>{ch.icon || ch.label}</span>
-                  </button>
-                );
-              })}
+        <h4 className="font-black text-slate-700 text-xs sm:text-sm uppercase tracking-wider">
+          {sequenceType === 'domino'
+            ? 'Tự tính quy luật và nhập hai số của quân Domino bí mật:'
+            : sequenceType === 'beads'
+            ? 'Tự tìm quy luật và nhập tên màu hạt (hoặc biểu tượng) vào ô trống:'
+            : 'Tự tìm quy luật và nhập kết quả chính xác vào ô trống:'}
+        </h4>
+
+        {sequenceType === 'domino' ? (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-black text-slate-600">Nửa trên:</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={dominoTop}
+                disabled={isSuccess}
+                onChange={(e) => {
+                  setDominoTop(e.target.value);
+                  setErrorMessage(null);
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
+                placeholder="?"
+                className={`w-20 px-3 py-2.5 rounded-2xl border-2 text-lg font-black text-center outline-none transition-all ${
+                  isSuccess
+                    ? 'bg-emerald-50 border-emerald-400 text-emerald-800 cursor-default'
+                    : 'border-purple-300 text-slate-800 focus:ring-4 focus:ring-purple-200 focus:border-purple-500'
+                }`}
+              />
             </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-black text-slate-600">Nửa dưới:</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={dominoBottom}
+                disabled={isSuccess}
+                onChange={(e) => {
+                  setDominoBottom(e.target.value);
+                  setErrorMessage(null);
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
+                placeholder="?"
+                className={`w-20 px-3 py-2.5 rounded-2xl border-2 text-lg font-black text-center outline-none transition-all ${
+                  isSuccess
+                    ? 'bg-emerald-50 border-emerald-400 text-emerald-800 cursor-default'
+                    : 'border-purple-300 text-slate-800 focus:ring-4 focus:ring-purple-200 focus:border-purple-500'
+                }`}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleCheckInput}
+              disabled={isSuccess || !dominoTop.trim() || !dominoBottom.trim()}
+              className={`px-6 py-3 rounded-2xl font-black text-sm shadow-md transition-all active:scale-95 ${
+                isSuccess
+                  ? 'bg-emerald-600 text-white cursor-default'
+                  : dominoTop.trim() && dominoBottom.trim()
+                  ? 'bg-purple-600 hover:bg-purple-500 text-white'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              }`}
+            >
+              {isSuccess ? 'Đúng ✓' : 'Kiểm tra'}
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-3 pt-1">
+            <input
+              type="text"
+              value={typedInput}
+              disabled={isSuccess}
+              onChange={(e) => {
+                setTypedInput(e.target.value);
+                setErrorMessage(null);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
+              placeholder="Nhập kết quả của em..."
+              className={`flex-1 px-4 py-3 rounded-2xl border-2 text-base font-bold text-center outline-none transition-all ${
+                isSuccess
+                  ? 'bg-emerald-50 border-emerald-400 text-emerald-800 font-black cursor-default'
+                  : 'border-purple-300 text-slate-800 focus:ring-4 focus:ring-purple-200 focus:border-purple-500'
+              }`}
+            />
+            <button
+              type="button"
+              onClick={handleCheckInput}
+              disabled={isSuccess || !typedInput.trim()}
+              className={`px-6 py-3 rounded-2xl font-black text-sm shadow-md transition-all active:scale-95 ${
+                isSuccess
+                  ? 'bg-emerald-600 text-white cursor-default'
+                  : typedInput.trim()
+                  ? 'bg-purple-600 hover:bg-purple-500 text-white'
+                  : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              }`}
+            >
+              {isSuccess ? 'Đúng ✓' : 'Kiểm tra'}
+            </button>
           </div>
         )}
-
-        <div className="flex items-center justify-center gap-3 pt-1">
-          <input
-            type="text"
-            value={typedInput}
-            disabled={isSuccess}
-            onChange={(e) => {
-              setTypedInput(e.target.value);
-              setErrorMessage(null);
-            }}
-            onKeyDown={(e) => e.key === 'Enter' && handleCheckInput()}
-            placeholder="Hoặc tự nhập kết quả của em..."
-            className={`flex-1 px-4 py-3 rounded-2xl border-2 text-base font-bold text-center outline-none transition-all ${
-              isSuccess
-                ? 'bg-emerald-50 border-emerald-400 text-emerald-800 font-black cursor-default'
-                : 'border-purple-300 text-slate-800 focus:ring-4 focus:ring-purple-200 focus:border-purple-500'
-            }`}
-          />
-          <button
-            type="button"
-            onClick={handleCheckInput}
-            disabled={isSuccess || !typedInput.trim()}
-            className={`px-6 py-3 rounded-2xl font-black text-sm shadow-md transition-all active:scale-95 ${
-              isSuccess
-                ? 'bg-emerald-600 text-white cursor-default'
-                : typedInput.trim()
-                ? 'bg-purple-600 hover:bg-purple-500 text-white'
-                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-            }`}
-          >
-            {isSuccess ? 'Đúng ✓' : 'Kiểm tra'}
-          </button>
-        </div>
 
         {errorMessage && (
           <div className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 py-2.5 px-3 rounded-xl animate-shake text-left">

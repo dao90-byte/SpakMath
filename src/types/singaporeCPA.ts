@@ -136,7 +136,7 @@ export interface MeasurementPictorialSpec {
   primaryReading?: string;
   secondaryReading?: string;
   conversionRule?: string;
-  chartItems?: { label: string; value: number; unit: string; color: string }[];
+  chartItems?: { label: string; value: number; unit: string; color: string; masked?: boolean }[];
 }
 
 export type CPAPictorialLayer =

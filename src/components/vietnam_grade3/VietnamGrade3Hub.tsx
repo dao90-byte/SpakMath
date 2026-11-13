@@ -29,6 +29,7 @@ import {
 interface VietnamGrade3HubProps {
   completedLessonIds: string[];
   assessmentScore?: number | null;
+  isTeacherMode?: boolean;
   onSelectLesson: (lesson: VietnamGrade3Lesson) => void;
   onOpenAssessment: () => void;
 }
@@ -36,6 +37,7 @@ interface VietnamGrade3HubProps {
 export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
   completedLessonIds,
   assessmentScore,
+  isTeacherMode = false,
   onSelectLesson,
   onOpenAssessment
 }) => {
@@ -65,6 +67,7 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
       {/* Interactive Solar System & Planetary Conquest Map */}
       <CosmicPlanetaryMap 
         progress={cosmicProgress}
+        isTeacherMode={isTeacherMode}
         onSelectLesson={handleSelectPlanetLesson}
       />
 
@@ -136,7 +139,7 @@ export const VietnamGrade3Hub: React.FC<VietnamGrade3HubProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {lessons.map((lesson) => {
             const isDone = completedLessonIds.includes(lesson.id) || cosmicProgress.conqueredLessons.includes(lesson.id);
-            const isUnlocked = cosmicProgress.unlockedLessons.includes(lesson.id);
+            const isUnlocked = isTeacherMode || cosmicProgress.unlockedLessons.includes(lesson.id);
             const planetMeta = PLANETS_METADATA.find(p => p.lessonId === lesson.id);
 
             return (
