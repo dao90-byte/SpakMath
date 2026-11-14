@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { GalaxyBackdrop } from './components/GalaxyBackdrop';
 import { ALL_LESSONS, LessonQuestion } from './data/lessonsData';
 import { Navbar } from './components/Navbar';
 import { AdventureMap } from './components/AdventureMap';
@@ -382,7 +383,10 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative transition-colors duration-500 bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.14),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white selection:bg-cyan-400 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col font-sans relative transition-colors duration-500 mm-cosmic-canvas text-[color:var(--mm-ink-primary)] selection:bg-[color:var(--mm-cyan-brightFill)] selection:text-[#020412]">
+      {/* System-Wide Galaxy Starfield & Milky Way Backdrop */}
+      <GalaxyBackdrop />
+
       {/* Top Bar Navigation */}
       <Navbar
         currentTab={activeTab}
@@ -441,7 +445,7 @@ export default function App() {
         /* ======================================================== */
         /* CHƯƠNG TRÌNH IN MONTH — LỚP 3 -> CÁC THÁNG -> 30 NGÀY */
         /* ======================================================== */
-        <main className="flex-1 w-full">
+        <main className="relative z-10 flex-1 w-full">
           {!activeMonthProgram ? (
             <InMonthGradeHub
               onSelectMonth={(monthProgram) => {
@@ -612,7 +616,7 @@ export default function App() {
           )}
         </main>
       ) : (
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 pt-6">
+        <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 md:px-6 pt-6">
           {programMode === 'textbook' ? (
             /* ======================================================== */
             /* CHƯƠNG TRÌNH TOÁN LỚP 3 TIỂU HỌC VIỆT NAM (KẾT NỐI TRI THỨC) */

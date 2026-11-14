@@ -1,74 +1,74 @@
 @import "tailwindcss";
 
 :root {
-  /* Cosmic Observatory Surfaces (60% Canvas / 30% Structural Surfaces) */
-  --mm-canvas: oklch(13.5% 0.036 262);
-  --mm-canvas-mid: oklch(16.5% 0.044 264);
-  --mm-surface-1: oklch(18.5% 0.044 264);
-  --mm-surface-2: oklch(22.5% 0.048 264);
-  --mm-surface-inset: oklch(12.0% 0.032 262);
+  /* Cosmic Observatory Surfaces (Deepened 60% Canvas / 30% Structural Surfaces) */
+  --mm-canvas: oklch(9.5% 0.032 260);
+  --mm-canvas-mid: oklch(14.0% 0.046 264);
+  --mm-surface-1: oklch(17.5% 0.052 264);
+  --mm-surface-2: oklch(23.5% 0.056 262);
+  --mm-surface-inset: oklch(7.5% 0.028 258);
 
   /* APCA-Calibrated Inks against --mm-canvas */
-  --mm-ink-primary: oklch(97.50% 0.0080 250);   /* APCA Lc 102 */
-  --mm-ink-secondary: oklch(88.91% 0.0240 256); /* APCA Lc 84 */
-  --mm-ink-muted: oklch(78.40% 0.0320 258);     /* APCA Lc 64 */
+  --mm-ink-primary: oklch(97.32% 0.0080 250);   /* APCA Lc 102 */
+  --mm-ink-secondary: oklch(88.85% 0.0260 256); /* APCA Lc 84 */
+  --mm-ink-muted: oklch(78.73% 0.0340 258);     /* APCA Lc 65 */
 
   /* Harmonizer maxCommonChroma Semantic Hue Ramps (APCA Lc calibrated) */
-  --mm-neutral-tint: oklch(44.96% 0.0320 262);
-  --mm-neutral-border: oklch(53.63% 0.0320 262);
-  --mm-neutral-fill: oklch(58.30% 0.0320 262);
-  --mm-neutral-accent: oklch(78.48% 0.0320 262);
-  --mm-neutral-brightFill: oklch(79.48% 0.0320 262);
-  --mm-neutral-text: oklch(87.99% 0.0320 262);
-  --mm-neutral-bright: oklch(93.66% 0.0297 262);
+  --mm-neutral-tint: oklch(46.20% 0.0360 262);
+  --mm-neutral-border: oklch(54.80% 0.0360 262);
+  --mm-neutral-fill: oklch(59.63% 0.0360 262);
+  --mm-neutral-accent: oklch(79.40% 0.0360 262);
+  --mm-neutral-brightFill: oklch(80.46% 0.0360 262);
+  --mm-neutral-text: oklch(88.90% 0.0360 262);
+  --mm-neutral-bright: oklch(94.30% 0.0266 262);
 
-  --mm-cyan-tint: oklch(44.13% 0.0700 205);
-  --mm-cyan-border: oklch(52.13% 0.0884 205);
-  --mm-cyan-fill: oklch(56.80% 0.0963 205);
-  --mm-cyan-accent: oklch(76.94% 0.1172 205);
-  --mm-cyan-brightFill: oklch(78.15% 0.1088 205);
-  --mm-cyan-text: oklch(87.32% 0.0606 205);
-  --mm-cyan-bright: oklch(93.66% 0.0297 205);
+  --mm-cyan-tint: oklch(45.10% 0.0772 205);
+  --mm-cyan-border: oklch(53.40% 0.0912 205);
+  --mm-cyan-fill: oklch(58.07% 0.0978 205);
+  --mm-cyan-accent: oklch(77.90% 0.1106 205);
+  --mm-cyan-brightFill: oklch(79.25% 0.1034 205);
+  --mm-cyan-text: oklch(88.20% 0.0531 205);
+  --mm-cyan-bright: oklch(94.30% 0.0266 205);
 
-  --mm-azure-tint: oklch(44.79% 0.0700 245);
-  --mm-azure-border: oklch(53.30% 0.0884 245);
-  --mm-azure-fill: oklch(57.80% 0.0963 245);
-  --mm-azure-accent: oklch(77.98% 0.1172 245);
-  --mm-azure-brightFill: oklch(79.32% 0.1088 245);
-  --mm-azure-text: oklch(87.82% 0.0606 245);
-  --mm-azure-bright: oklch(93.66% 0.0297 245);
+  --mm-azure-tint: oklch(45.80% 0.0772 245);
+  --mm-azure-border: oklch(54.50% 0.0912 245);
+  --mm-azure-fill: oklch(59.24% 0.0978 245);
+  --mm-azure-accent: oklch(78.90% 0.1106 245);
+  --mm-azure-brightFill: oklch(80.29% 0.1034 245);
+  --mm-azure-text: oklch(88.70% 0.0531 245);
+  --mm-azure-bright: oklch(94.30% 0.0266 245);
 
-  --mm-violet-tint: oklch(45.71% 0.0700 312);
-  --mm-violet-border: oklch(54.47% 0.0884 312);
-  --mm-violet-fill: oklch(59.22% 0.0963 312);
-  --mm-violet-accent: oklch(79.65% 0.1172 312);
-  --mm-violet-brightFill: oklch(80.82% 0.1088 312);
-  --mm-violet-text: oklch(88.49% 0.0606 312);
-  --mm-violet-bright: oklch(94.00% 0.0297 312);
+  --mm-violet-tint: oklch(46.80% 0.0772 312);
+  --mm-violet-border: oklch(55.70% 0.0912 312);
+  --mm-violet-fill: oklch(60.58% 0.0978 312);
+  --mm-violet-accent: oklch(80.60% 0.1106 312);
+  --mm-violet-brightFill: oklch(81.59% 0.1034 312);
+  --mm-violet-text: oklch(89.30% 0.0531 312);
+  --mm-violet-bright: oklch(94.60% 0.0266 312);
 
-  --mm-amber-tint: oklch(45.29% 0.0700 78);
-  --mm-amber-border: oklch(53.63% 0.0884 78);
-  --mm-amber-fill: oklch(58.64% 0.0963 78);
-  --mm-amber-accent: oklch(78.65% 0.1172 78);
-  --mm-amber-brightFill: oklch(79.78% 0.1088 78);
-  --mm-amber-text: oklch(88.07% 0.0606 78);
-  --mm-amber-bright: oklch(93.83% 0.0297 78);
+  --mm-amber-tint: oklch(46.30% 0.0772 78);
+  --mm-amber-border: oklch(54.90% 0.0912 78);
+  --mm-amber-fill: oklch(59.71% 0.0978 78);
+  --mm-amber-accent: oklch(79.60% 0.1106 78);
+  --mm-amber-brightFill: oklch(80.63% 0.1034 78);
+  --mm-amber-text: oklch(88.90% 0.0531 78);
+  --mm-amber-bright: oklch(94.45% 0.0266 78);
 
-  --mm-emerald-tint: oklch(44.13% 0.0700 158);
-  --mm-emerald-border: oklch(52.47% 0.0884 158);
-  --mm-emerald-fill: oklch(56.80% 0.0963 158);
-  --mm-emerald-accent: oklch(76.98% 0.1172 158);
-  --mm-emerald-brightFill: oklch(77.98% 0.1088 158);
-  --mm-emerald-text: oklch(87.24% 0.0606 158);
-  --mm-emerald-bright: oklch(93.50% 0.0297 158);
+  --mm-emerald-tint: oklch(45.10% 0.0772 158);
+  --mm-emerald-border: oklch(53.70% 0.0912 158);
+  --mm-emerald-fill: oklch(58.50% 0.0978 158);
+  --mm-emerald-accent: oklch(77.95% 0.1106 158);
+  --mm-emerald-brightFill: oklch(79.25% 0.1034 158);
+  --mm-emerald-text: oklch(88.15% 0.0531 158);
+  --mm-emerald-bright: oklch(94.15% 0.0266 158);
 
-  --mm-rose-tint: oklch(45.69% 0.0700 18);
-  --mm-rose-border: oklch(54.47% 0.0884 18);
-  --mm-rose-fill: oklch(59.30% 0.0963 18);
-  --mm-rose-accent: oklch(79.65% 0.1172 18);
-  --mm-rose-brightFill: oklch(80.65% 0.1088 18);
-  --mm-rose-text: oklch(88.49% 0.0606 18);
-  --mm-rose-bright: oklch(93.95% 0.0297 18);
+  --mm-rose-tint: oklch(46.80% 0.0772 18);
+  --mm-rose-border: oklch(55.70% 0.0912 18);
+  --mm-rose-fill: oklch(60.49% 0.0978 18);
+  --mm-rose-accent: oklch(80.60% 0.1106 18);
+  --mm-rose-brightFill: oklch(81.67% 0.1034 18);
+  --mm-rose-text: oklch(89.30% 0.0531 18);
+  --mm-rose-bright: oklch(94.55% 0.0266 18);
 
   /* Global Theme Tokens synced with OKLCH/APCA Palette */
   --color-primary: var(--mm-cyan-brightFill);
@@ -77,10 +77,10 @@
   --color-cosmic-bg: var(--mm-canvas);
   --color-cosmic-surface: var(--mm-surface-1);
   --color-ring: var(--mm-cyan-accent);
-  --shadow-sm: 0 1px 2px color-mix(in oklch, var(--mm-canvas) 65%, black);
-  --shadow-md: 0 6px 18px color-mix(in oklch, var(--mm-canvas) 75%, black);
-  --shadow-lg: 0 14px 34px color-mix(in oklch, var(--mm-canvas) 82%, black);
-  --shadow-xl: 0 24px 56px color-mix(in oklch, var(--mm-canvas) 88%, black);
+  --shadow-sm: 0 2px 4px rgba(1, 3, 14, 0.65);
+  --shadow-md: 0 10px 24px -4px rgba(1, 3, 14, 0.78), 0 0 0 1px color-mix(in oklch, var(--mm-cyan-border) 20%, transparent);
+  --shadow-lg: 0 18px 40px -8px rgba(1, 3, 14, 0.85), 0 0 0 1px color-mix(in oklch, var(--mm-cyan-border) 24%, transparent);
+  --shadow-xl: 0 28px 64px -12px rgba(1, 3, 14, 0.92), 0 0 0 1px color-mix(in oklch, var(--mm-cyan-border) 28%, transparent);
 }
 
 @layer base {
@@ -111,25 +111,46 @@
   }
 }
 
-/* Standardized MindMath K12 OKLCH Cosmic Surfaces */
+/* Standardized MindMath K12 OKLCH Cosmic Surfaces with Galaxy Starfield & Deep Layering */
 .mm-cosmic-canvas {
-  background:
-    radial-gradient(ellipse at 16% 14%, color-mix(in oklch, var(--mm-cyan-accent) 16%, transparent), transparent 52%),
-    radial-gradient(ellipse at 84% 20%, color-mix(in oklch, var(--mm-violet-accent) 18%, transparent), transparent 54%),
-    radial-gradient(ellipse at 50% 90%, color-mix(in oklch, var(--mm-amber-accent) 10%, transparent), transparent 56%),
-    linear-gradient(180deg, var(--mm-canvas) 0%, var(--mm-canvas-mid) 52%, var(--mm-surface-1) 100%);
+  background-color: var(--mm-canvas);
+  background-image:
+    radial-gradient(1.2px 1.2px at 8% 18%, rgba(224, 247, 255, 0.72) 50%, transparent 100%),
+    radial-gradient(1px 1px at 22% 42%, rgba(196, 181, 253, 0.6) 50%, transparent 100%),
+    radial-gradient(1.4px 1.4px at 37% 12%, rgba(165, 243, 252, 0.78) 50%, transparent 100%),
+    radial-gradient(1px 1px at 54% 28%, rgba(255, 255, 255, 0.65) 50%, transparent 100%),
+    radial-gradient(1.3px 1.3px at 69% 16%, rgba(221, 214, 254, 0.72) 50%, transparent 100%),
+    radial-gradient(1px 1px at 83% 38%, rgba(186, 230, 253, 0.62) 50%, transparent 100%),
+    radial-gradient(1.2px 1.2px at 92% 72%, rgba(255, 255, 255, 0.68) 50%, transparent 100%),
+    radial-gradient(1px 1px at 14% 78%, rgba(165, 243, 252, 0.58) 50%, transparent 100%),
+    radial-gradient(ellipse 74% 52% at 14% 10%, color-mix(in oklch, var(--mm-cyan-fill) 20%, transparent), transparent 62%),
+    radial-gradient(ellipse 70% 54% at 86% 16%, color-mix(in oklch, var(--mm-violet-fill) 24%, transparent), transparent 64%),
+    radial-gradient(ellipse 68% 48% at 50% 92%, color-mix(in oklch, var(--mm-azure-fill) 18%, transparent), transparent 62%),
+    linear-gradient(180deg, var(--mm-canvas) 0%, var(--mm-canvas-mid) 56%, color-mix(in oklch, var(--mm-surface-1) 92%, var(--mm-canvas)) 100%);
   color: var(--mm-ink-primary);
 }
 
 .mm-surface-card {
-  background: linear-gradient(155deg, color-mix(in oklch, var(--mm-surface-2) 92%, transparent), color-mix(in oklch, var(--mm-surface-1) 96%, transparent));
+  background:
+    radial-gradient(ellipse at 12% 0%, color-mix(in oklch, var(--mm-cyan-accent) 11%, transparent), transparent 55%),
+    radial-gradient(ellipse at 88% 100%, color-mix(in oklch, var(--mm-violet-accent) 10%, transparent), transparent 55%),
+    linear-gradient(160deg, color-mix(in oklch, var(--mm-surface-2) 94%, transparent) 0%, color-mix(in oklch, var(--mm-surface-1) 98%, transparent) 62%, color-mix(in oklch, var(--mm-canvas-mid) 98%, transparent) 100%);
   border-color: color-mix(in oklch, var(--mm-cyan-border) 48%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(1, 3, 14, 0.55),
+    0 16px 38px -10px rgba(1, 3, 14, 0.88),
+    0 0 28px -14px color-mix(in oklch, var(--mm-cyan-accent) 22%, transparent);
   color: var(--mm-ink-primary);
 }
 
 .mm-surface-inset {
-  background: color-mix(in oklch, var(--mm-surface-inset) 96%, transparent);
-  border-color: color-mix(in oklch, var(--mm-cyan-border) 42%, transparent);
+  background: linear-gradient(180deg, var(--mm-surface-inset) 0%, color-mix(in oklch, var(--mm-canvas) 95%, black) 100%);
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 38%, transparent);
+  box-shadow:
+    inset 0 2px 8px rgba(1, 3, 14, 0.84),
+    inset 0 0 0 1px rgba(1, 3, 14, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.05);
   color: var(--mm-ink-primary);
 }
 
@@ -234,6 +255,76 @@
 
 .animate-spin-slow {
   animation: orbitSpinSlow 24s linear infinite;
+}
+
+@keyframes softSkyGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 16px rgba(56, 189, 248, 0.24),
+      0 0 6px rgba(165, 243, 252, 0.2),
+      0 4px 12px rgba(1, 3, 16, 0.72),
+      inset 0 1px 0 rgba(224, 247, 255, 0.36),
+      inset 0 -2px 0 rgba(2, 6, 23, 0.32);
+  }
+  50% {
+    box-shadow:
+      0 0 26px rgba(56, 189, 248, 0.44),
+      0 0 12px rgba(165, 243, 252, 0.36),
+      0 4px 14px rgba(1, 3, 16, 0.72),
+      inset 0 1px 0 rgba(255, 255, 255, 0.54),
+      inset 0 -2px 0 rgba(2, 6, 23, 0.28);
+  }
+}
+
+.animate-soft-sky-glow {
+  animation: softSkyGlow 3.2s ease-in-out infinite;
+}
+
+@keyframes galaxyNebulaDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.62;
+  }
+  50% {
+    transform: translate3d(1.5%, -1.2%, 0) scale(1.03);
+    opacity: 0.76;
+  }
+}
+
+.animate-galaxy-drift {
+  animation: galaxyNebulaDrift 18s ease-in-out infinite;
+}
+
+@keyframes galaxyShootingStar {
+  0% {
+    transform: translate3d(-15vw, -10vh, 0) rotate(24deg) scaleX(0.4);
+    opacity: 0;
+  }
+  6% {
+    opacity: 0.72;
+  }
+  18% {
+    transform: translate3d(110vw, 48vh, 0) rotate(24deg) scaleX(1);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(110vw, 48vh, 0) rotate(24deg) scaleX(1);
+    opacity: 0;
+  }
+}
+
+.galaxy-shooting-star {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  width: 140px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent 0%, rgba(165, 243, 252, 0.35) 55%, rgba(255, 255, 255, 0.95) 100%);
+  box-shadow: 0 0 12px rgba(103, 232, 249, 0.75);
+  border-radius: 9999px;
+  opacity: 0;
+  animation: galaxyShootingStar 14s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  animation-delay: 2.5s;
 }
 
 @keyframes neonCyanPulse {

@@ -32,24 +32,24 @@ const toOklch = converter('oklch');
 
 export const MINDMATH_COSMIC_SURFACES = {
   canvas: {
-    oklch: 'oklch(13.5% 0.036 262)',
-    hex: '#05081d',
+    oklch: 'oklch(9.5% 0.032 260)',
+    hex: '#020412',
   },
   canvasMid: {
-    oklch: 'oklch(16.5% 0.044 264)',
-    hex: '#090f2f',
+    oklch: 'oklch(14.0% 0.046 264)',
+    hex: '#060b27',
   },
   surface1: {
-    oklch: 'oklch(18.5% 0.044 264)',
-    hex: '#0b1130',
+    oklch: 'oklch(17.5% 0.052 264)',
+    hex: '#0a1033',
   },
   surface2: {
-    oklch: 'oklch(22.5% 0.048 264)',
-    hex: '#121a43',
+    oklch: 'oklch(23.5% 0.056 262)',
+    hex: '#131d4c',
   },
   surfaceInset: {
-    oklch: 'oklch(12.0% 0.032 262)',
-    hex: '#04071a',
+    oklch: 'oklch(7.5% 0.028 258)',
+    hex: '#01030d',
   },
 } as const;
 
@@ -70,15 +70,15 @@ interface LevelSpec {
 }
 
 const LEVEL_SPECS: LevelSpec[] = [
-  { key: 'tint', apcaLc: 16, chromaCap: 0.07 },
-  { key: 'border', apcaLc: 26, chromaCap: 0.09 },
-  // Calibrated so white (#ffffff) text inside solid bars/badges reaches APCA Lc >= 73
-  { key: 'fill', apcaLc: 32, chromaCap: 0.14 },
-  { key: 'accent', apcaLc: 64, chromaCap: 0.15 },
-  // Calibrated so dark cosmic (#05081d) text on bright CTA buttons reaches APCA Lc >= 67
-  { key: 'brightFill', apcaLc: 66, chromaCap: 0.14 },
-  { key: 'text', apcaLc: 82, chromaCap: 0.12 },
-  { key: 'bright', apcaLc: 94, chromaCap: 0.07 },
+  { key: 'tint', apcaLc: 18, chromaCap: 0.085 },
+  { key: 'border', apcaLc: 28, chromaCap: 0.11 },
+  // Calibrated so white (#ffffff) text inside solid bars/badges reaches APCA Lc >= 71
+  { key: 'fill', apcaLc: 34, chromaCap: 0.165 },
+  { key: 'accent', apcaLc: 66, chromaCap: 0.17 },
+  // Calibrated so dark cosmic (#020412) text on bright CTA buttons reaches APCA Lc >= 70
+  { key: 'brightFill', apcaLc: 68, chromaCap: 0.155 },
+  { key: 'text', apcaLc: 84, chromaCap: 0.125 },
+  { key: 'bright', apcaLc: 95, chromaCap: 0.075 },
 ];
 
 const BRAND_HUE_KEYS: Exclude<MindMathHueKey, 'neutral'>[] = [
@@ -154,7 +154,7 @@ function buildHarmonizedPalette(): {
     const levelMap = {} as Record<MindMathLevelKey, OklchApcaSwatch>;
     for (const spec of LEVEL_SPECS) {
       const commonC = commonChromaByLevel[spec.key];
-      const chroma = hueKey === 'neutral' ? Math.min(0.032, commonC) : commonC;
+      const chroma = hueKey === 'neutral' ? Math.min(0.036, commonC) : commonC;
       levelMap[spec.key] = buildSwatch(hueAngle, spec.apcaLc, chroma);
     }
     scales[hueKey] = levelMap;
@@ -165,8 +165,8 @@ function buildHarmonizedPalette(): {
     commonChromaByLevel,
     inks: {
       primary: buildSwatch(250, 102, 0.008),
-      secondary: buildSwatch(256, 84, 0.024),
-      muted: buildSwatch(258, 64, 0.032),
+      secondary: buildSwatch(256, 84, 0.026),
+      muted: buildSwatch(258, 65, 0.034),
     },
   };
 }
@@ -219,7 +219,7 @@ export function harmonizeCpaFillColor(rawColor?: string): string {
     if (!parsed) return fallback;
     const hue = Number.isFinite(parsed.h) ? (parsed.h as number) : MINDMATH_HUE_ANGLES.cyan;
     const commonC = MINDMATH_OKLCH_PALETTE.commonChromaByLevel.fill;
-    const swatch = buildSwatch(hue, 32, commonC);
+    const swatch = buildSwatch(hue, 34, commonC);
     harmonizedFillCache.set(rawColor, swatch.hex);
     return swatch.hex;
   } catch {
@@ -238,7 +238,7 @@ export function getApcaReadableInk(bgHex: string): '#FFFFFF' | '#05081D' {
 
   try {
     const lightContrast = Math.abs(calcContrast('#ffffff', bgHex, 'apca'));
-    const darkContrast = Math.abs(calcContrast('#05081d', bgHex, 'apca'));
+    const darkContrast = Math.abs(calcContrast('#020412', bgHex, 'apca'));
     const chosen = lightContrast >= darkContrast ? '#FFFFFF' : '#05081D';
     inkCache.set(bgHex, chosen);
     return chosen;
