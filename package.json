@@ -16,9 +16,12 @@
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/culori": "^4.0.1",
     "@types/katex": "^0.16.8",
     "@vitejs/plugin-react": "^6.1.1",
+    "apcach": "^0.6.4",
     "canvas-confetti": "^1.9.4",
+    "culori": "^4.0.2",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "katex": "^0.19.1",

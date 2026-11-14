@@ -282,19 +282,19 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
   const liveScores = computeScores(selectedAnswers, reasoningTexts);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.25),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.26),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.16),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white pb-20 relative overflow-hidden">
+    <div className="min-h-screen mm-cosmic-canvas pb-20 relative overflow-hidden">
       {/* Ambient Starfield & Nebula Glows */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-24 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-400/25 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute top-1/3 -right-20 w-[480px] h-[480px] rounded-full bg-fuchsia-500/25 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full bg-amber-400/18 blur-[150px] cosmic-light-bloom" />
+        <div className="absolute -top-24 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-400/20 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/3 -right-20 w-[480px] h-[480px] rounded-full bg-fuchsia-500/18 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full bg-amber-400/14 blur-[150px] cosmic-light-bloom" />
       </div>
 
       {/* Top Sticky 15-Minute Assessment Command Bar */}
-      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_15%_0%,_rgba(34,211,238,0.34),_transparent_52%),radial-gradient(ellipse_at_85%_0%,_rgba(217,70,239,0.34),_transparent_52%),linear-gradient(180deg,_rgba(5,9,30,0.97),_rgba(11,15,48,0.94))] border-b border-cyan-300/55 px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.24)]">
+      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[color:color-mix(in_oklch,var(--mm-surface-inset)_94%,transparent)] border-b border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.18)]">
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 opacity-95 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
+          className="pointer-events-none absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] opacity-95 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
         />
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -384,31 +384,31 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
       <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6 space-y-6">
         {/* RESULT SUMMARY CARD WHEN SUBMITTED */}
         {isSubmitted && (
-          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_52%),radial-gradient(ellipse_at_bottom_left,_rgba(217,70,239,0.26),_transparent_52%),linear-gradient(145deg,_rgba(11,18,56,0.97),_rgba(24,13,66,0.97))] border-2 border-cyan-300/65 p-6 sm:p-8 shadow-[0_28px_72px_rgba(3,7,24,0.88),0_0_44px_rgba(34,211,238,0.25)] animate-fade-in">
+          <div className="relative overflow-hidden rounded-3xl mm-surface-card border-2 border-[color:var(--mm-cyan-border)] p-6 sm:p-8 shadow-[0_28px_72px_rgba(3,7,24,0.88),0_0_44px_rgba(34,211,238,0.2)] animate-fade-in">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-8 h-[3px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 shadow-[0_0_20px_rgba(34,211,238,0.85)]"
+              className="pointer-events-none absolute top-0 inset-x-8 h-[3px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-amber-brightFill)] to-[color:var(--mm-violet-accent)] shadow-[0_0_20px_rgba(34,211,238,0.85)]"
             />
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
               <div className="space-y-2.5 max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border text-xs font-black uppercase tracking-wider bg-white/10 border-cyan-300/50 text-cyan-200">
-                  <Award className="w-4 h-4 text-amber-300" aria-hidden="true" />
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border text-xs font-black uppercase tracking-wider bg-white/10 border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-text)]">
+                  <Award className="w-4 h-4 text-[color:var(--mm-amber-accent)]" aria-hidden="true" />
                   <span>Kết Quả Kiểm Tra 15 Phút · {weeklyTest.weekTitle}</span>
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-black font-display text-white">
+                <h2 className="text-2xl sm:text-3xl font-black font-display text-[color:var(--mm-ink-primary)]">
                   {liveScores.passed ? (
-                    <span className="bg-gradient-to-r from-emerald-300 via-cyan-200 to-amber-200 bg-clip-text text-transparent">
+                    <span className="text-[color:var(--mm-emerald-text)]">
                       Xuất Sắc! Em Đã Vượt Qua Bài Kiểm Tra Tuần {weeklyTest.weekNumber}
                     </span>
                   ) : (
-                    <span className="bg-gradient-to-r from-amber-200 via-orange-300 to-rose-300 bg-clip-text text-transparent">
+                    <span className="text-[color:var(--mm-amber-text)]">
                       Chưa Đạt Mốc Mở Khóa ({weeklyTest.passingScore}/100 điểm)
                     </span>
                   )}
                 </h2>
 
-                <p className="text-sm text-indigo-100/90 leading-relaxed">
+                <p className="text-sm text-[color:var(--mm-ink-secondary)] leading-relaxed">
                   {liveScores.passed
                     ? weeklyTest.unlocksDayNumber
                       ? `Chúc mừng em! Đạt ${liveScores.totalScore}/100 điểm (≥ ${weeklyTest.passingScore}%). Toàn bộ bài học của Tuần ${weeklyTest.weekNumber + 1} (bắt đầu từ Ngày ${weeklyTest.unlocksDayNumber}) đã chính thức được mở khóa!`
@@ -419,31 +419,31 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
 
               {/* Score Breakdown Pills */}
               <div className="grid grid-cols-3 gap-3 w-full lg:w-auto shrink-0">
-                <div className="p-4 rounded-2xl bg-[#070D2D]/90 border border-cyan-300/45 text-center">
-                  <div className="text-[11px] font-bold uppercase text-cyan-300">Tính Toán</div>
-                  <div className="text-2xl font-black font-display text-white tabular-nums mt-1">
+                <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] text-center">
+                  <div className="text-[11px] font-bold uppercase text-[color:var(--mm-cyan-text)]">Tính Toán</div>
+                  <div className="text-2xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums mt-1">
                     {liveScores.calculationScore}
-                    <span className="text-xs text-slate-400 font-normal">/60</span>
+                    <span className="text-xs text-[color:var(--mm-ink-muted)] font-normal">/60</span>
                   </div>
                 </div>
-                <div className="p-4 rounded-2xl bg-[#070D2D]/90 border border-fuchsia-300/45 text-center">
-                  <div className="text-[11px] font-bold uppercase text-fuchsia-300">Nghị Luận</div>
-                  <div className="text-2xl font-black font-display text-white tabular-nums mt-1">
+                <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_58%,transparent)] text-center">
+                  <div className="text-[11px] font-bold uppercase text-[color:var(--mm-violet-text)]">Nghị Luận</div>
+                  <div className="text-2xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums mt-1">
                     {liveScores.reasoningScore}
-                    <span className="text-xs text-slate-400 font-normal">/40</span>
+                    <span className="text-xs text-[color:var(--mm-ink-muted)] font-normal">/40</span>
                   </div>
                 </div>
                 <div
                   className={`p-4 rounded-2xl border text-center ${
                     liveScores.passed
-                      ? 'bg-emerald-500/20 border-emerald-300/70 shadow-[0_0_24px_rgba(52,211,153,0.3)]'
-                      : 'bg-rose-500/20 border-rose-300/70 shadow-[0_0_24px_rgba(244,63,94,0.3)]'
+                      ? 'bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_55%,transparent)] border-[color:var(--mm-emerald-border)]'
+                      : 'bg-[color:color-mix(in_oklch,var(--mm-rose-tint)_55%,transparent)] border-[color:var(--mm-rose-border)]'
                   }`}
                 >
-                  <div className="text-[11px] font-bold uppercase text-amber-200">Tổng Điểm</div>
-                  <div className="text-2xl font-black font-display text-white tabular-nums mt-1">
+                  <div className="text-[11px] font-bold uppercase text-[color:var(--mm-amber-text)]">Tổng Điểm</div>
+                  <div className="text-2xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums mt-1">
                     {liveScores.totalScore}
-                    <span className="text-xs text-slate-300 font-normal">/100</span>
+                    <span className="text-xs text-[color:var(--mm-ink-secondary)] font-normal">/100</span>
                   </div>
                 </div>
               </div>
@@ -503,9 +503,9 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
         )}
 
         {/* QUESTION MATRIX NAVIGATOR (1..6 Calculation, 7..10 Reasoning) */}
-        <div className="rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.2),_transparent_50%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.2),_transparent_50%),linear-gradient(135deg,_rgba(10,16,50,0.95),_rgba(22,13,60,0.95))] border border-cyan-300/45 p-4 shadow-[0_18px_46px_rgba(3,7,24,0.72)] flex flex-wrap items-center justify-between gap-4">
+        <div className="rounded-3xl mm-surface-card border p-4 shadow-[0_18px_46px_rgba(3,7,24,0.72)] flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-black uppercase tracking-wider text-cyan-300 mr-1 flex items-center gap-1">
+            <span className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)] mr-1 flex items-center gap-1">
               <Calculator className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Tính toán:</span>
             </span>
@@ -521,14 +521,14 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   onClick={() => setCurrentIdx(idx)}
                   className={`w-10 h-10 rounded-xl font-black text-xs transition-all flex items-center justify-center tabular-nums cursor-pointer ${
                     isCurr
-                      ? 'bg-gradient-to-br from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 ring-2 ring-cyan-100 scale-105 shadow-[0_0_22px_rgba(34,211,238,0.6)]'
+                      ? 'bg-[color:var(--mm-cyan-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-cyan-bright)] scale-105 shadow-[0_0_22px_rgba(34,211,238,0.55)]'
                       : isSubmitted
                       ? isRightAfterSubmit
-                        ? 'bg-emerald-500/30 border border-emerald-400 text-emerald-100'
-                        : 'bg-rose-500/30 border border-rose-400 text-rose-100'
+                        ? 'bg-[color:var(--mm-emerald-fill)] border border-[color:var(--mm-emerald-accent)] text-white'
+                        : 'bg-[color:var(--mm-rose-fill)] border border-[color:var(--mm-rose-accent)] text-white'
                       : done
-                      ? 'bg-cyan-500/25 border border-cyan-300/70 text-cyan-100'
-                      : 'bg-indigo-950/70 border border-white/15 text-indigo-200 hover:border-cyan-300/50'
+                      ? 'bg-[color:var(--mm-cyan-fill)] border border-[color:var(--mm-cyan-accent)] text-white'
+                      : 'bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_45%,transparent)] text-[color:var(--mm-ink-secondary)] hover:border-[color:var(--mm-cyan-accent)]'
                   }`}
                 >
                   {idx + 1}
@@ -536,7 +536,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
               );
             })}
 
-            <span className="text-xs font-black uppercase tracking-wider text-fuchsia-300 ml-3 mr-1 flex items-center gap-1">
+            <span className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-violet-text)] ml-3 mr-1 flex items-center gap-1">
               <MessageSquareQuote className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Nghị luận:</span>
             </span>
@@ -560,16 +560,16 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   onClick={() => setCurrentIdx(idx)}
                   className={`w-10 h-10 rounded-xl font-black text-xs transition-all flex items-center justify-center tabular-nums cursor-pointer ${
                     isCurr
-                      ? 'bg-gradient-to-br from-fuchsia-300 via-amber-200 to-cyan-300 text-slate-950 ring-2 ring-fuchsia-100 scale-105 shadow-[0_0_22px_rgba(232,121,249,0.6)]'
+                      ? 'bg-[color:var(--mm-violet-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-violet-bright)] scale-105 shadow-[0_0_22px_rgba(232,121,249,0.55)]'
                       : isSubmitted
                       ? fullRight
-                        ? 'bg-emerald-500/30 border border-emerald-400 text-emerald-100'
+                        ? 'bg-[color:var(--mm-emerald-fill)] border border-[color:var(--mm-emerald-accent)] text-white'
                         : isOptionRight || isTextRight
-                        ? 'bg-amber-500/30 border border-amber-300 text-amber-100'
-                        : 'bg-rose-500/30 border border-rose-400 text-rose-100'
+                        ? 'bg-[color:var(--mm-amber-fill)] border border-[color:var(--mm-amber-accent)] text-white'
+                        : 'bg-[color:var(--mm-rose-fill)] border border-[color:var(--mm-rose-accent)] text-white'
                       : done
-                      ? 'bg-fuchsia-500/25 border border-fuchsia-300/70 text-fuchsia-100'
-                      : 'bg-indigo-950/70 border border-white/15 text-indigo-200 hover:border-fuchsia-300/50'
+                      ? 'bg-[color:var(--mm-violet-fill)] border border-[color:var(--mm-violet-accent)] text-white'
+                      : 'bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_45%,transparent)] text-[color:var(--mm-ink-secondary)] hover:border-[color:var(--mm-violet-accent)]'
                   }`}
                 >
                   {idx + 1}
@@ -578,9 +578,9 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
             })}
           </div>
 
-          <div className="text-xs font-bold text-cyan-200 tabular-nums">
-            Đã làm: <span className="text-amber-300 font-black">{completedCount}/10</span> câu · Đạt tối thiểu:{' '}
-            <span className="text-emerald-300 font-black">{weeklyTest.passingScore}/100đ</span>
+          <div className="text-xs font-bold text-[color:var(--mm-cyan-text)] tabular-nums">
+            Đã làm: <span className="text-[color:var(--mm-amber-text)] font-black">{completedCount}/10</span> câu · Đạt tối thiểu:{' '}
+            <span className="text-[color:var(--mm-emerald-text)] font-black">{weeklyTest.passingScore}/100đ</span>
           </div>
         </div>
 
@@ -591,25 +591,25 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
             <InMonthVisualModels model={currentQ.visualModel} isAnswered={isSubmitted} />
 
             {isSubmitted && (
-              <div className="rounded-3xl bg-[radial-gradient(ellipse_at_top_left,_rgba(52,211,153,0.2),_transparent_55%),linear-gradient(145deg,_rgba(8,22,48,0.96),_rgba(14,16,52,0.96))] border border-emerald-300/55 p-5 space-y-3 shadow-[0_16px_40px_rgba(3,7,24,0.75)]">
+              <div className="rounded-3xl mm-surface-card border border-[color:var(--mm-emerald-border)] p-5 space-y-3 shadow-[0_16px_40px_rgba(3,7,24,0.75)]">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
+                  <span className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-emerald-text)] flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                     <span>Đáp án &amp; Giải thích chuẩn Singapore CPA</span>
                   </span>
-                  <span className="text-xs font-bold text-cyan-200">
-                    Đáp án đúng: <strong className="text-amber-300">{currentQ.correctAnswer}</strong>
+                  <span className="text-xs font-bold text-[color:var(--mm-cyan-text)]">
+                    Đáp án đúng: <strong className="text-[color:var(--mm-amber-text)]">{currentQ.correctAnswer}</strong>
                   </span>
                 </div>
-                <p className="text-sm text-emerald-50 leading-relaxed bg-[#050B24]/85 p-4 rounded-2xl border border-emerald-300/30">
+                <p className="text-sm text-[color:var(--mm-ink-primary)] leading-relaxed bg-[color:var(--mm-surface-inset)] p-4 rounded-2xl border border-[color:color-mix(in_oklch,var(--mm-emerald-border)_45%,transparent)]">
                   {currentQ.explanation}
                 </p>
                 {currentQ.section === 'reasoning' && currentQ.reasoningSampleAnswer && (
-                  <div className="p-4 rounded-2xl bg-fuchsia-950/50 border border-fuchsia-300/40 space-y-1">
-                    <div className="text-xs font-black uppercase tracking-wider text-fuchsia-200">
+                  <div className="p-4 rounded-2xl bg-[color:color-mix(in_oklch,var(--mm-violet-tint)_42%,transparent)] border border-[color:var(--mm-violet-border)] space-y-1">
+                    <div className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-violet-text)]">
                       Lời giải nghị luận mẫu:
                     </div>
-                    <p className="text-sm text-white leading-relaxed">
+                    <p className="text-sm text-[color:var(--mm-ink-primary)] leading-relaxed">
                       {currentQ.reasoningSampleAnswer}
                     </p>
                   </div>
@@ -619,10 +619,10 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
           </div>
 
           {/* Right Column: Question Prompt + Calculation Input OR Dual Reasoning Assessment */}
-          <div className="lg:col-span-6 relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.22),_transparent_52%),radial-gradient(ellipse_at_bottom_left,_rgba(34,211,238,0.22),_transparent_52%),linear-gradient(165deg,_rgba(14,22,68,0.97),_rgba(18,12,56,0.98)_55%,_rgba(6,10,34,0.99)_100%)] border border-cyan-300/55 p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.18)] space-y-5">
+          <div className="lg:col-span-6 relative overflow-hidden rounded-3xl mm-surface-card border p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.16)] space-y-5">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 shadow-[0_0_20px_rgba(34,211,238,0.85)]"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-amber-brightFill)] to-[color:var(--mm-violet-accent)] shadow-[0_0_20px_rgba(34,211,238,0.8)]"
             />
 
             <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/15">
@@ -630,31 +630,31 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                 <span
                   className={`px-3 py-1 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center gap-1.5 border ${
                     currentQ.section === 'calculation'
-                      ? 'bg-cyan-500/20 border-cyan-300/60 text-cyan-200'
-                      : 'bg-fuchsia-500/25 border-fuchsia-300/65 text-fuchsia-200'
+                      ? 'bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_55%,transparent)] border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-text)]'
+                      : 'bg-[color:color-mix(in_oklch,var(--mm-violet-tint)_55%,transparent)] border-[color:var(--mm-violet-border)] text-[color:var(--mm-violet-text)]'
                   }`}
                 >
                   {currentQ.section === 'calculation' ? (
                     <>
-                      <Calculator className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                      <Calculator className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
                       <span>Phần I · Tính Toán ({currentQ.points} điểm)</span>
                     </>
                   ) : (
                     <>
-                      <MessageSquareQuote className="w-3.5 h-3.5 text-fuchsia-300" aria-hidden="true" />
+                      <MessageSquareQuote className="w-3.5 h-3.5 text-[color:var(--mm-violet-accent)]" aria-hidden="true" />
                       <span>Phần II · Nghị Luận Tư Duy ({currentQ.points} điểm)</span>
                     </>
                   )}
                 </span>
               </div>
-              <span className="text-xs font-black text-amber-200 tabular-nums">
+              <span className="text-xs font-black text-[color:var(--mm-amber-text)] tabular-nums">
                 Câu {currentIdx + 1} / {questions.length}
               </span>
             </div>
 
             {/* Prompt Box */}
-            <div className="rounded-2xl bg-[#060B28]/95 border border-cyan-300/35 p-4 sm:p-5 shadow-inner">
-              <p className="text-base sm:text-lg font-extrabold text-white leading-relaxed">
+            <div className="rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] p-4 sm:p-5 shadow-inner">
+              <p className="text-base sm:text-lg font-extrabold text-[color:var(--mm-ink-primary)] leading-relaxed">
                 {currentQ.prompt}
               </p>
             </div>
@@ -670,13 +670,13 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                       selectedAnswers[currentQ.id] || ''
                     );
                     return (
-                      <div className="p-4 rounded-2xl bg-[#070D30]/95 border border-cyan-300/45 space-y-3">
-                        <div className="text-xs font-black uppercase tracking-wider text-cyan-300">
+                      <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] space-y-3">
+                        <div className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
                           Nhập kết quả phép chia có dư
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-bold text-indigo-200 mb-1">
+                            <label className="block text-xs font-bold text-[color:var(--mm-ink-secondary)] mb-1">
                               Thương
                             </label>
                             <input
@@ -692,11 +692,11 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                                 }));
                               }}
                               placeholder="Nhập thương..."
-                              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-indigo-400/45 focus:border-amber-300 focus:outline-none text-white font-black text-base tabular-nums"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[color:var(--mm-canvas)] border border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-base tabular-nums placeholder:text-[color:var(--mm-ink-muted)]"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-bold text-indigo-200 mb-1">
+                            <label className="block text-xs font-bold text-[color:var(--mm-ink-secondary)] mb-1">
                               Số dư
                             </label>
                             <input
@@ -712,7 +712,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                                 }));
                               }}
                               placeholder="Nhập số dư..."
-                              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-indigo-400/45 focus:border-amber-300 focus:outline-none text-white font-black text-base tabular-nums"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-[color:var(--mm-canvas)] border border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-base tabular-nums placeholder:text-[color:var(--mm-ink-muted)]"
                             />
                           </div>
                         </div>
@@ -720,8 +720,8 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                     );
                   })()
                 ) : (
-                  <div className="p-4 rounded-2xl bg-[#070D30]/95 border border-cyan-300/45 space-y-2">
-                    <label className="block text-xs font-black uppercase tracking-wider text-cyan-300">
+                  <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] space-y-2">
+                    <label className="block text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
                       Nhập kết quả tính toán của em
                     </label>
                     <div className="flex items-center gap-2.5">
@@ -741,10 +741,10 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                             ? 'Nhập số...'
                             : 'Nhập câu trả lời...'
                         }
-                        className="flex-1 px-4 py-3 rounded-xl bg-slate-950 border border-indigo-400/45 focus:border-amber-300 focus:outline-none text-white font-black text-lg tabular-nums"
+                        className="flex-1 px-4 py-3 rounded-xl bg-[color:var(--mm-canvas)] border border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-lg tabular-nums placeholder:text-[color:var(--mm-ink-muted)]"
                       />
                       {currentInputSpec.mode === 'text_number' && currentInputSpec.unitLabel && (
-                        <span className="px-3.5 py-3 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-xs shrink-0">
+                        <span className="px-3.5 py-3 rounded-xl bg-[color:var(--mm-surface-2)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] text-[color:var(--mm-cyan-text)] font-black text-xs shrink-0">
                           {currentInputSpec.unitLabel}
                         </span>
                       )}
@@ -820,11 +820,11 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                 </div>
 
                 {/* Bước 2: Tự viết lời giải ngắn (5 điểm) */}
-                <div className="p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(232,121,249,0.16),_transparent_60%),rgba(6,10,34,0.95)] border border-fuchsia-300/50 space-y-2.5">
+                <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_65%,transparent)] space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <label
                       htmlFor={`reasoning-input-${currentQ.id}`}
-                      className="text-xs font-black uppercase tracking-wider text-amber-200"
+                      className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-amber-text)]"
                     >
                       Bước 2 (5 điểm): Tự viết phép tính &amp; lời giải ngắn của em
                     </label>
@@ -832,10 +832,10 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                       <span
                         className={`text-[11px] font-black px-2.5 py-0.5 rounded-full border ${
                           currentReasoningEval.points === 5
-                            ? 'bg-emerald-500/20 border-emerald-300/60 text-emerald-200'
+                            ? 'bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_60%,transparent)] border-[color:var(--mm-emerald-border)] text-[color:var(--mm-emerald-text)]'
                             : currentReasoningEval.points > 0
-                            ? 'bg-cyan-500/20 border-cyan-300/50 text-cyan-200'
-                            : 'bg-amber-500/20 border-amber-300/50 text-amber-200'
+                            ? 'bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_60%,transparent)] border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-text)]'
+                            : 'bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_60%,transparent)] border-[color:var(--mm-amber-border)] text-[color:var(--mm-amber-text)]'
                         }`}
                       >
                         {currentReasoningEval.points === 5
@@ -848,7 +848,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   </div>
 
                   {currentQ.reasoningPrompt && (
-                    <p className="text-xs text-cyan-100/90 font-semibold">
+                    <p className="text-xs text-[color:var(--mm-ink-secondary)] font-semibold">
                       {currentQ.reasoningPrompt}
                     </p>
                   )}
@@ -868,7 +868,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                       currentQ.reasoningPlaceholder ||
                       'Ví dụ: Ta lấy ... chia cho ... được ... Vậy đáp án là ...'
                     }
-                    className="w-full p-3.5 rounded-xl bg-slate-950/95 border-2 border-fuchsia-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white text-sm font-medium leading-relaxed placeholder:text-indigo-300/50 disabled:opacity-75"
+                    className="w-full p-3.5 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-violet-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] text-sm font-medium leading-relaxed placeholder:text-[color:var(--mm-ink-muted)] disabled:opacity-75"
                   />
                 </div>
               </div>

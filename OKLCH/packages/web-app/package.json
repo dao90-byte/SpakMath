@@ -1,0 +1,30 @@
+{
+  "name": "@harmonizer/web-app",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm vite",
+    "build": "pnpm vite build",
+    "preview": "pnpm vite preview",
+    "typecheck": "pnpm tsc --build"
+  },
+  "dependencies": {
+    "@harmonizer/core": "workspace:^",
+    "@plausible-analytics/tracker": "^0.4.6",
+    "@spred/react": "^0.4.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "browserslist": "^4.29.2",
+    "browserslist-to-esbuild": "^2.1.1",
+    "lightningcss": "^1.33.0",
+    "vite": "^8.3.1",
+    "vite-css-modules": "^1.16.0"
+  }
+}

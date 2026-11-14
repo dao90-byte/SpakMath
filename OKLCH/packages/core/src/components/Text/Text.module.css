@@ -1,0 +1,35 @@
+.font_sans {
+  font-family: var(--font-sans);
+}
+
+.font_mono {
+  font-family: var(--font-mono);
+}
+
+.kind_primary {
+  color: var(--color-primary);
+}
+
+.kind_secondary {
+  color: var(--color-secondary);
+}
+
+.size_xs {
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+}
+
+.size_s {
+  font-size: var(--text-s);
+  line-height: var(--text-s--line-height);
+}
+
+.size_m {
+  font-size: var(--text-m);
+  line-height: var(--text-m--line-height);
+}
+
+.size_l {
+  font-size: var(--text-l);
+  line-height: var(--text-l--line-height);
+}

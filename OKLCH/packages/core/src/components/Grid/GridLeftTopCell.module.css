@@ -1,0 +1,29 @@
+.cell {
+  composes: gridTopLeftCell from "./Grid.module.css";
+  gap: calc(var(--spacing) * 3.75);
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 0.5);
+  align-items: flex-start;
+}
+
+.levelLabel {
+  translate: 0 -1px;
+}
+
+.bottom {
+  translate: 0 -1px;
+}
+
+.contrastModelButton {
+  text-transform: uppercase;
+}
+
+.colorModePicker {
+  flex-direction: row;
+}

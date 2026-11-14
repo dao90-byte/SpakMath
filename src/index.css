@@ -1,16 +1,86 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #2563EB;
-  --color-secondary: #F59E0B;
-  --color-accent: #EC4899;
-  --color-cosmic-bg: #0B1026;
-  --color-cosmic-surface: #141B41;
-  --color-ring: #2563EB;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 10px rgba(15, 23, 42, 0.12);
-  --shadow-lg: 0 12px 24px rgba(15, 23, 42, 0.18);
-  --shadow-xl: 0 20px 32px rgba(15, 23, 42, 0.25);
+  /* Cosmic Observatory Surfaces (60% Canvas / 30% Structural Surfaces) */
+  --mm-canvas: oklch(13.5% 0.036 262);
+  --mm-canvas-mid: oklch(16.5% 0.044 264);
+  --mm-surface-1: oklch(18.5% 0.044 264);
+  --mm-surface-2: oklch(22.5% 0.048 264);
+  --mm-surface-inset: oklch(12.0% 0.032 262);
+
+  /* APCA-Calibrated Inks against --mm-canvas */
+  --mm-ink-primary: oklch(97.50% 0.0080 250);   /* APCA Lc 102 */
+  --mm-ink-secondary: oklch(88.91% 0.0240 256); /* APCA Lc 84 */
+  --mm-ink-muted: oklch(78.40% 0.0320 258);     /* APCA Lc 64 */
+
+  /* Harmonizer maxCommonChroma Semantic Hue Ramps (APCA Lc calibrated) */
+  --mm-neutral-tint: oklch(44.96% 0.0320 262);
+  --mm-neutral-border: oklch(53.63% 0.0320 262);
+  --mm-neutral-fill: oklch(58.30% 0.0320 262);
+  --mm-neutral-accent: oklch(78.48% 0.0320 262);
+  --mm-neutral-brightFill: oklch(79.48% 0.0320 262);
+  --mm-neutral-text: oklch(87.99% 0.0320 262);
+  --mm-neutral-bright: oklch(93.66% 0.0297 262);
+
+  --mm-cyan-tint: oklch(44.13% 0.0700 205);
+  --mm-cyan-border: oklch(52.13% 0.0884 205);
+  --mm-cyan-fill: oklch(56.80% 0.0963 205);
+  --mm-cyan-accent: oklch(76.94% 0.1172 205);
+  --mm-cyan-brightFill: oklch(78.15% 0.1088 205);
+  --mm-cyan-text: oklch(87.32% 0.0606 205);
+  --mm-cyan-bright: oklch(93.66% 0.0297 205);
+
+  --mm-azure-tint: oklch(44.79% 0.0700 245);
+  --mm-azure-border: oklch(53.30% 0.0884 245);
+  --mm-azure-fill: oklch(57.80% 0.0963 245);
+  --mm-azure-accent: oklch(77.98% 0.1172 245);
+  --mm-azure-brightFill: oklch(79.32% 0.1088 245);
+  --mm-azure-text: oklch(87.82% 0.0606 245);
+  --mm-azure-bright: oklch(93.66% 0.0297 245);
+
+  --mm-violet-tint: oklch(45.71% 0.0700 312);
+  --mm-violet-border: oklch(54.47% 0.0884 312);
+  --mm-violet-fill: oklch(59.22% 0.0963 312);
+  --mm-violet-accent: oklch(79.65% 0.1172 312);
+  --mm-violet-brightFill: oklch(80.82% 0.1088 312);
+  --mm-violet-text: oklch(88.49% 0.0606 312);
+  --mm-violet-bright: oklch(94.00% 0.0297 312);
+
+  --mm-amber-tint: oklch(45.29% 0.0700 78);
+  --mm-amber-border: oklch(53.63% 0.0884 78);
+  --mm-amber-fill: oklch(58.64% 0.0963 78);
+  --mm-amber-accent: oklch(78.65% 0.1172 78);
+  --mm-amber-brightFill: oklch(79.78% 0.1088 78);
+  --mm-amber-text: oklch(88.07% 0.0606 78);
+  --mm-amber-bright: oklch(93.83% 0.0297 78);
+
+  --mm-emerald-tint: oklch(44.13% 0.0700 158);
+  --mm-emerald-border: oklch(52.47% 0.0884 158);
+  --mm-emerald-fill: oklch(56.80% 0.0963 158);
+  --mm-emerald-accent: oklch(76.98% 0.1172 158);
+  --mm-emerald-brightFill: oklch(77.98% 0.1088 158);
+  --mm-emerald-text: oklch(87.24% 0.0606 158);
+  --mm-emerald-bright: oklch(93.50% 0.0297 158);
+
+  --mm-rose-tint: oklch(45.69% 0.0700 18);
+  --mm-rose-border: oklch(54.47% 0.0884 18);
+  --mm-rose-fill: oklch(59.30% 0.0963 18);
+  --mm-rose-accent: oklch(79.65% 0.1172 18);
+  --mm-rose-brightFill: oklch(80.65% 0.1088 18);
+  --mm-rose-text: oklch(88.49% 0.0606 18);
+  --mm-rose-bright: oklch(93.95% 0.0297 18);
+
+  /* Global Theme Tokens synced with OKLCH/APCA Palette */
+  --color-primary: var(--mm-cyan-brightFill);
+  --color-secondary: var(--mm-amber-brightFill);
+  --color-accent: var(--mm-violet-brightFill);
+  --color-cosmic-bg: var(--mm-canvas);
+  --color-cosmic-surface: var(--mm-surface-1);
+  --color-ring: var(--mm-cyan-accent);
+  --shadow-sm: 0 1px 2px color-mix(in oklch, var(--mm-canvas) 65%, black);
+  --shadow-md: 0 6px 18px color-mix(in oklch, var(--mm-canvas) 75%, black);
+  --shadow-lg: 0 14px 34px color-mix(in oklch, var(--mm-canvas) 82%, black);
+  --shadow-xl: 0 24px 56px color-mix(in oklch, var(--mm-canvas) 88%, black);
 }
 
 @layer base {
@@ -18,8 +88,8 @@
     font-family: 'Nunito', system-ui, -apple-system, sans-serif;
     font-size: 16px;
     line-height: 1.5;
-    color: #f8fafc;
-    background-color: #040715;
+    color: var(--mm-ink-primary);
+    background-color: var(--mm-canvas);
     user-select: none;
     -webkit-user-select: none;
     overflow-x: hidden;
@@ -32,11 +102,35 @@
 
   button, a, input, select, textarea, [role="button"] {
     &:focus-visible {
-      outline: 2px solid #67E8F9;
+      outline: 2px solid var(--mm-cyan-accent);
       outline-offset: 2px;
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 24px rgba(192, 132, 252, 0.45);
+      box-shadow:
+        0 0 0 4px color-mix(in oklch, var(--mm-cyan-accent) 26%, transparent),
+        0 0 22px color-mix(in oklch, var(--mm-violet-accent) 36%, transparent);
     }
   }
+}
+
+/* Standardized MindMath K12 OKLCH Cosmic Surfaces */
+.mm-cosmic-canvas {
+  background:
+    radial-gradient(ellipse at 16% 14%, color-mix(in oklch, var(--mm-cyan-accent) 16%, transparent), transparent 52%),
+    radial-gradient(ellipse at 84% 20%, color-mix(in oklch, var(--mm-violet-accent) 18%, transparent), transparent 54%),
+    radial-gradient(ellipse at 50% 90%, color-mix(in oklch, var(--mm-amber-accent) 10%, transparent), transparent 56%),
+    linear-gradient(180deg, var(--mm-canvas) 0%, var(--mm-canvas-mid) 52%, var(--mm-surface-1) 100%);
+  color: var(--mm-ink-primary);
+}
+
+.mm-surface-card {
+  background: linear-gradient(155deg, color-mix(in oklch, var(--mm-surface-2) 92%, transparent), color-mix(in oklch, var(--mm-surface-1) 96%, transparent));
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 48%, transparent);
+  color: var(--mm-ink-primary);
+}
+
+.mm-surface-inset {
+  background: color-mix(in oklch, var(--mm-surface-inset) 96%, transparent);
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 42%, transparent);
+  color: var(--mm-ink-primary);
 }
 
 /* Tactile Glass & Cosmic Card Utilities */
@@ -238,7 +332,7 @@ main [role="button"]:hover {
 
 /* ============================================================================
    COSMIC OBSERVATORY EXERCISE STAGE (.cosmic-activity-stage)
-   Harmonizes all Spark Math exercise & puzzle boards with the deep cosmic theme
+   Harmonizes all exercise & puzzle boards with the calibrated OKLCH/APCA palette
    ============================================================================ */
 .cosmic-activity-stage .bg-white,
 .cosmic-activity-stage .bg-slate-50,
@@ -246,21 +340,18 @@ main [role="button"]:hover {
 .cosmic-activity-stage .bg-slate-50\/50,
 .cosmic-activity-stage .bg-slate-50\/40,
 .cosmic-activity-stage .bg-slate-100 {
-  background: radial-gradient(ellipse at top right, rgba(34, 211, 238, 0.12), transparent 55%),
-    radial-gradient(ellipse at bottom left, rgba(217, 70, 239, 0.1), transparent 55%),
-    rgba(9, 15, 48, 0.88);
-  color: #f8fafc;
-  border-color: rgba(103, 232, 249, 0.36);
-  box-shadow:
-    0 18px 44px rgba(3, 7, 24, 0.65),
-    0 0 24px rgba(34, 211, 238, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  background: radial-gradient(ellipse at top right, color-mix(in oklch, var(--mm-cyan-accent) 11%, transparent), transparent 56%),
+    radial-gradient(ellipse at bottom left, color-mix(in oklch, var(--mm-violet-accent) 9%, transparent), transparent 56%),
+    color-mix(in oklch, var(--mm-surface-1) 92%, transparent);
+  color: var(--mm-ink-primary);
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 50%, transparent);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .cosmic-activity-stage .bg-slate-200 {
-  background: rgba(30, 41, 88, 0.88);
-  color: #e2e8f0;
-  border-color: rgba(129, 140, 248, 0.35);
+  background: var(--mm-surface-2);
+  color: var(--mm-ink-secondary);
+  border-color: color-mix(in oklch, var(--mm-azure-border) 48%, transparent);
 }
 
 /* Tinted semantic cards & puzzle region blocks inside .cosmic-activity-stage */
@@ -273,27 +364,27 @@ main [role="button"]:hover {
 .cosmic-activity-stage .bg-amber-100\/90,
 .cosmic-activity-stage .bg-amber-100\/60,
 .cosmic-activity-stage .bg-yellow-100 {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fef3c7;
-  border-color: rgba(252, 211, 77, 0.45);
+  background: color-mix(in oklch, var(--mm-amber-tint) 38%, transparent);
+  color: var(--mm-amber-text);
+  border-color: color-mix(in oklch, var(--mm-amber-border) 72%, transparent);
 }
 
 .cosmic-activity-stage .bg-sky-50,
 .cosmic-activity-stage .bg-sky-100,
 .cosmic-activity-stage .bg-sky-100\/90,
 .cosmic-activity-stage .bg-sky-200 {
-  background: rgba(56, 189, 248, 0.2);
-  color: #e0f2fe;
-  border-color: rgba(103, 232, 249, 0.5);
+  background: color-mix(in oklch, var(--mm-cyan-tint) 42%, transparent);
+  color: var(--mm-cyan-text);
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 72%, transparent);
 }
 
 .cosmic-activity-stage .bg-emerald-50,
 .cosmic-activity-stage .bg-emerald-50\/70,
 .cosmic-activity-stage .bg-emerald-100,
 .cosmic-activity-stage .bg-emerald-100\/60 {
-  background: rgba(16, 185, 129, 0.22);
-  color: #d1fae5;
-  border-color: rgba(52, 211, 153, 0.55);
+  background: color-mix(in oklch, var(--mm-emerald-tint) 42%, transparent);
+  color: var(--mm-emerald-text);
+  border-color: color-mix(in oklch, var(--mm-emerald-border) 75%, transparent);
 }
 
 .cosmic-activity-stage .bg-rose-50,
@@ -302,27 +393,27 @@ main [role="button"]:hover {
 .cosmic-activity-stage .bg-rose-100,
 .cosmic-activity-stage .bg-rose-100\/90,
 .cosmic-activity-stage .bg-rose-200 {
-  background: rgba(244, 63, 94, 0.2);
-  color: #ffe4e6;
-  border-color: rgba(251, 113, 133, 0.5);
+  background: color-mix(in oklch, var(--mm-rose-tint) 42%, transparent);
+  color: var(--mm-rose-text);
+  border-color: color-mix(in oklch, var(--mm-rose-border) 72%, transparent);
 }
 
 .cosmic-activity-stage .bg-purple-100,
 .cosmic-activity-stage .bg-indigo-100,
 .cosmic-activity-stage .bg-teal-100 {
-  background: rgba(168, 85, 247, 0.22);
-  color: #f3e8ff;
-  border-color: rgba(192, 132, 252, 0.48);
+  background: color-mix(in oklch, var(--mm-violet-tint) 42%, transparent);
+  color: var(--mm-violet-text);
+  border-color: color-mix(in oklch, var(--mm-violet-border) 72%, transparent);
 }
 
-/* Preserve solid high-intent fill surfaces */
+/* Preserve solid high-intent fill surfaces (APCA Lc >= 67 dark ink on brightFill) */
 .cosmic-activity-stage .bg-amber-300 {
-  background: linear-gradient(135deg, #fde047, #f59e0b);
-  color: #020617;
+  background: var(--mm-amber-brightFill);
+  color: #05081d;
 }
 .cosmic-activity-stage .bg-amber-400,
 .cosmic-activity-stage .bg-amber-500 {
-  color: #020617;
+  color: #05081d;
 }
 .cosmic-activity-stage .bg-emerald-500,
 .cosmic-activity-stage .bg-emerald-600,
@@ -336,54 +427,54 @@ main [role="button"]:hover {
 .cosmic-activity-stage .border-slate-100,
 .cosmic-activity-stage .border-slate-200,
 .cosmic-activity-stage .border-slate-300 {
-  border-color: rgba(103, 232, 249, 0.28);
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 48%, transparent);
 }
 .cosmic-activity-stage .border-slate-700,
 .cosmic-activity-stage .border-b-slate-700,
 .cosmic-activity-stage .border-r-slate-700 {
-  border-color: rgba(103, 232, 249, 0.55);
+  border-color: color-mix(in oklch, var(--mm-cyan-accent) 60%, transparent);
 }
 .cosmic-activity-stage .bg-slate-800 {
-  background-color: #67e8f9;
-  color: #020617;
+  background-color: var(--mm-cyan-brightFill);
+  color: #05081d;
 }
 
-/* Crisp cosmic contrast for formerly dark-ink utility classes */
+/* APCA-calibrated contrast (Lc >= 64 muted, Lc >= 82 semantic) for utility text */
 .cosmic-activity-stage .text-slate-900,
 .cosmic-activity-stage .text-slate-800,
 .cosmic-activity-stage .text-slate-700 {
-  color: #f8fafc;
+  color: var(--mm-ink-primary);
 }
 .cosmic-activity-stage .text-slate-600,
 .cosmic-activity-stage .text-slate-500,
 .cosmic-activity-stage .text-slate-400 {
-  color: #cbd5e1;
+  color: var(--mm-ink-secondary);
 }
 .cosmic-activity-stage .text-amber-950,
 .cosmic-activity-stage .text-amber-900,
 .cosmic-activity-stage .text-amber-800,
 .cosmic-activity-stage .text-amber-700,
 .cosmic-activity-stage .text-amber-600 {
-  color: #fde68a;
+  color: var(--mm-amber-text);
 }
 .cosmic-activity-stage .text-sky-950,
 .cosmic-activity-stage .text-sky-800,
 .cosmic-activity-stage .text-sky-700 {
-  color: #bae6fd;
+  color: var(--mm-cyan-text);
 }
 .cosmic-activity-stage .text-rose-950,
 .cosmic-activity-stage .text-rose-900,
 .cosmic-activity-stage .text-rose-800,
 .cosmic-activity-stage .text-rose-700,
 .cosmic-activity-stage .text-rose-600 {
-  color: #fda4af;
+  color: var(--mm-rose-text);
 }
 .cosmic-activity-stage .text-emerald-950,
 .cosmic-activity-stage .text-emerald-900,
 .cosmic-activity-stage .text-emerald-800,
 .cosmic-activity-stage .text-emerald-700,
 .cosmic-activity-stage .text-emerald-600 {
-  color: #a7f3d0;
+  color: var(--mm-emerald-text);
 }
 
 /* Keep dark ink when sitting inside solid light-colored pills/buttons */
@@ -394,20 +485,20 @@ main [role="button"]:hover {
 .cosmic-activity-stage .bg-amber-400 .text-amber-950,
 .cosmic-activity-stage .bg-amber-200 .text-amber-950,
 .cosmic-activity-stage .bg-amber-200\/80 {
-  color: #0f172a;
+  color: #05081d;
 }
 
 /* Dark cosmic input wells inside exercises */
 .cosmic-activity-stage input[type="text"],
 .cosmic-activity-stage input[type="number"],
 .cosmic-activity-stage textarea {
-  background: rgba(4, 8, 28, 0.92);
-  color: #ffffff;
-  border-color: rgba(103, 232, 249, 0.42);
+  background: var(--mm-surface-inset);
+  color: var(--mm-ink-primary);
+  border-color: color-mix(in oklch, var(--mm-cyan-border) 68%, transparent);
 }
 .cosmic-activity-stage input::placeholder,
 .cosmic-activity-stage textarea::placeholder {
-  color: rgba(148, 163, 184, 0.72);
+  color: var(--mm-ink-muted);
 }
 
 /* Brighten unboxed helper text sitting directly on the dark cosmic observatory stage */
@@ -418,7 +509,7 @@ main [role="button"]:hover {
 .cosmic-activity-stage > div > div > div.text-slate-500,
 .cosmic-activity-stage > div > div > p.text-slate-500,
 .cosmic-activity-stage > div > div > span.text-slate-500 {
-  color: rgba(226, 232, 240, 0.95);
+  color: var(--mm-ink-secondary);
 }
 
 /* Respect prefers-reduced-motion per UI/UX Pro Max accessibility standard */

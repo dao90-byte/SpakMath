@@ -11,6 +11,7 @@ import {
   getInMonthQuestionInputSpec,
   isInMonthAnswerCorrect,
 } from '../../utils/inMonthAnswerUtils';
+import { MINDMATH_PILLAR_COLORS } from '../../utils/oklchApcaPalette';
 import {
   Trophy,
   Award,
@@ -60,7 +61,7 @@ const PILLAR_META: Record<
 > = {
   bar_model: {
     title: 'Toán Đố Sơ Đồ Thanh (Nhân & Chia)',
-    color: '#2563EB',
+    color: MINDMATH_PILLAR_COLORS.bar_model.fill,
     reviewDays: [1, 3, 5, 7],
     strongComment:
       'Nắm vững kỹ thuật vẽ sơ đồ thanh Singapore (Bar Model), phân biệt xuất sắc bài toán Phần - Tổng và So sánh Hơn - Kém.',
@@ -69,7 +70,7 @@ const PILLAR_META: Record<
   },
   remainder: {
     title: 'Phép Chia Có Dư & Quy Luật Chu Kỳ',
-    color: '#0284C7',
+    color: MINDMATH_PILLAR_COLORS.remainder.fill,
     reviewDays: [8, 10, 11, 13],
     strongComment:
       'Xử lý nhạy bén số dư thực tế (làm tròn lên khi thuê thuyền/xe, lấy phần nguyên khi đóng hộp) và tìm chính xác phần tử thứ N trong chu kỳ.',
@@ -78,7 +79,7 @@ const PILLAR_META: Record<
   },
   interval: {
     title: 'Toán Khoảng Cách & Ứng Dụng (Trồng Cây, Cưa Gỗ, Cầu Thang)',
-    color: '#059669',
+    color: MINDMATH_PILLAR_COLORS.interval.fill,
     reviewDays: [15, 18, 19, 20],
     strongComment:
       'Phân biệt chuẩn xác số khoảng và số điểm mốc trong cả 4 dạng: trồng 2 đầu, 1 đầu, không trồng 2 đầu, đường khép kín, cưa gỗ và cầu thang.',
@@ -87,7 +88,7 @@ const PILLAR_META: Record<
   },
   measurement: {
     title: 'Đo Lường (Độ Dài, Khối Lượng, Thể Tích) & Biểu Đồ',
-    color: '#9333EA',
+    color: MINDMATH_PILLAR_COLORS.measurement.fill,
     reviewDays: [22, 24, 25, 27],
     strongComment:
       'Đổi đơn vị đo (km-m-cm, kg-g, L-mL) thành thạo, đọc cân thăng bằng, tính vật rỗng/ruột và phân tích biểu đồ chính xác tuyệt đối.',
@@ -288,12 +289,12 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   ).length;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.14),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white pb-16 relative overflow-hidden">
+    <div className="min-h-screen mm-cosmic-canvas pb-16 relative overflow-hidden">
       {/* Deep Space Starfield, Orbital Rings & Multi-Spectrum Aurora Blooms */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-28 left-1/5 w-[540px] h-[540px] rounded-full bg-cyan-400/28 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] rounded-full bg-fuchsia-500/26 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute bottom-0 left-1/3 w-[540px] h-[540px] rounded-full bg-amber-400/18 blur-[155px] cosmic-light-bloom" />
+        <div className="absolute -top-28 left-1/5 w-[540px] h-[540px] rounded-full bg-cyan-400/22 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] rounded-full bg-fuchsia-500/20 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[540px] h-[540px] rounded-full bg-amber-400/14 blur-[155px] cosmic-light-bloom" />
         <svg
           viewBox="0 0 1440 900"
           preserveAspectRatio="xMidYMid slice"
@@ -314,7 +315,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
       </div>
 
       {/* Top Cosmic Mission Command Bar */}
-      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.32),_transparent_50%),radial-gradient(ellipse_at_top_right,_rgba(217,70,239,0.34),_transparent_50%),linear-gradient(180deg,_rgba(5,9,30,0.97),_rgba(11,15,48,0.94))] border-b border-cyan-300/55 px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.24)] overflow-hidden">
+      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[color:color-mix(in_oklch,var(--mm-surface-inset)_94%,transparent)] border-b border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.18)] overflow-hidden">
         <span
           aria-hidden="true"
           className="pointer-events-none absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 opacity-95 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
@@ -372,13 +373,13 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
       {!isSubmitted ? (
         <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6">
           {/* Student Name & Part Switcher Banner */}
-          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
+          <div className="relative overflow-hidden rounded-3xl mm-surface-card backdrop-blur-2xl border p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_16px_rgba(34,211,238,0.7)]"
             />
             <div className="flex flex-wrap items-center gap-3">
-              <label htmlFor="exam-student-name" className="text-xs font-extrabold text-cyan-200 uppercase tracking-wider">
+              <label htmlFor="exam-student-name" className="text-xs font-extrabold text-[color:var(--mm-cyan-text)] uppercase tracking-wider">
                 Họ tên thí sinh trên Chứng nhận:
               </label>
               <input
@@ -386,7 +387,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 type="text"
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
-                className="px-4 py-2 rounded-xl bg-[#070B22]/90 text-white font-black text-sm border-2 border-amber-300/65 focus:border-cyan-300 focus:outline-none min-h-[42px] placeholder:text-indigo-400 shadow-inner"
+                className="px-4 py-2 rounded-xl bg-[color:var(--mm-surface-inset)] text-[color:var(--mm-ink-primary)] font-black text-sm border-2 border-[color:var(--mm-amber-border)] focus:border-[color:var(--mm-cyan-accent)] focus:outline-none min-h-[42px] placeholder:text-[color:var(--mm-ink-muted)] shadow-inner"
                 placeholder="Nhập tên của em..."
               />
             </div>
@@ -398,8 +399,8 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 onClick={() => setCurrentIdx(0)}
                 className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
                   currentQ.part === 'A'
-                    ? 'bg-gradient-to-r from-cyan-300 to-sky-400 text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.35)]'
-                    : 'bg-white/10 text-indigo-200 hover:bg-white/20'
+                    ? 'bg-[color:var(--mm-cyan-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(34,211,238,0.35)]'
+                    : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
                 }`}
               >
                 Phần A: Cơ Bản (Câu 1–10 • 50đ)
@@ -410,8 +411,8 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 onClick={() => setCurrentIdx(10)}
                 className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
                   currentQ.part === 'B'
-                    ? 'bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 text-slate-950 shadow-[0_0_20px_rgba(251,191,36,0.35)]'
-                    : 'bg-white/10 text-indigo-200 hover:bg-white/20'
+                    ? 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(251,191,36,0.35)]'
+                    : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
                 }`}
               >
                 Phần B: Tư Duy Olympic (Câu 11–20 • 50đ)
@@ -420,10 +421,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
           </div>
 
           {/* Constellation 20 Question Number Navigator */}
-          <div className="relative overflow-hidden rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
+          <div className="relative overflow-hidden rounded-3xl mm-surface-card backdrop-blur-2xl border p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_16px_rgba(34,211,238,0.7)]"
             />
             <div role="group" aria-label="Danh sách 20 câu thi" className="flex flex-wrap gap-1.5">
               {examQuestions.map((q, idx) => {
@@ -438,10 +439,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                     onClick={() => setCurrentIdx(idx)}
                     className={`w-10 h-10 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer tabular-nums ${
                       isCurr
-                        ? 'bg-gradient-to-br from-amber-300 via-orange-400 to-pink-500 text-slate-950 ring-2 ring-amber-200 shadow-[0_0_22px_rgba(251,191,36,0.55)] scale-105'
+                        ? 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-amber-bright)] shadow-[0_0_22px_rgba(251,191,36,0.55)] scale-105'
                         : hasAns
-                        ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border border-cyan-300/60 shadow-[0_0_12px_rgba(34,211,238,0.3)]'
-                        : 'bg-indigo-900/55 text-indigo-200 border border-indigo-400/25 hover:border-cyan-300/65 hover:bg-cyan-500/20'
+                        ? 'bg-[color:var(--mm-cyan-fill)] text-white border border-[color:var(--mm-cyan-accent)] shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+                        : 'bg-[color:var(--mm-surface-inset)] text-[color:var(--mm-ink-secondary)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_45%,transparent)] hover:border-[color:var(--mm-cyan-accent)]'
                     }`}
                   >
                     {idx + 1}
@@ -451,13 +452,13 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="px-3.5 py-2 rounded-xl bg-[#080E2B]/85 border border-cyan-300/25 text-xs font-bold text-indigo-200 tabular-nums">
-                Đã trả lời: <strong className="text-cyan-300">{answeredCount}/20</strong>
+              <span className="px-3.5 py-2 rounded-xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)] text-xs font-bold text-[color:var(--mm-ink-secondary)] tabular-nums">
+                Đã trả lời: <strong className="text-[color:var(--mm-cyan-text)]">{answeredCount}/20</strong>
               </span>
               <button
                 type="button"
                 onClick={handleSubmitExam}
-                className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-500 hover:brightness-110 text-slate-950 font-black text-xs shadow-[0_8px_24px_rgba(52,211,153,0.35)] cursor-pointer transition-all duration-200 min-h-[42px]"
+                className="px-4 py-2.5 rounded-2xl bg-[color:var(--mm-emerald-brightFill)] hover:brightness-110 text-[#05081D] font-black text-xs shadow-[0_8px_24px_rgba(52,211,153,0.35)] cursor-pointer transition-all duration-200 min-h-[42px]"
               >
                 Nộp Bài &amp; Xem Đánh Giá Năng Lực
               </button>
@@ -470,35 +471,35 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <InMonthVisualModels model={currentQ.visualModel} isAnswered={false} />
             </div>
 
-            <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.24),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(34,211,238,0.22),_transparent_52%),radial-gradient(ellipse_at_15%_20%,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(165deg,_rgba(14,22,68,0.97),_rgba(18,12,56,0.98)_55%,_rgba(6,10,34,0.99)_100%)] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.2)] border border-cyan-300/50">
+            <div className="lg:col-span-5 relative overflow-hidden mm-surface-card backdrop-blur-2xl rounded-3xl p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] border">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
+                className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-amber-brightFill)] to-[color:var(--mm-violet-accent)] shadow-[0_0_22px_rgba(34,211,238,0.8)]"
               />
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/15">
                 <span
                   className={`font-black text-xs uppercase tracking-wider ${
                     currentQ.part === 'A'
-                      ? 'text-cyan-300'
-                      : 'text-amber-300'
+                      ? 'text-[color:var(--mm-cyan-text)]'
+                      : 'text-[color:var(--mm-amber-text)]'
                   }`}
                 >
                   Câu {currentIdx + 1}/20 ·{' '}
                   {currentQ.part === 'A' ? 'Phần A: Cơ Bản' : 'Phần B: Olympic'}
                 </span>
-                <span className="text-xs font-black text-amber-300 tabular-nums">
+                <span className="text-xs font-black text-[color:var(--mm-amber-text)] tabular-nums">
                   +{currentQ.points} điểm
                 </span>
               </div>
 
-              <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.16),_transparent_58%),linear-gradient(160deg,_rgba(5,9,34,0.95),_rgba(12,15,48,0.96))] border border-cyan-300/35 p-4 sm:p-5 mb-6 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5),0_0_24px_rgba(34,211,238,0.12)]">
-                <p className="text-base sm:text-lg font-extrabold text-white leading-relaxed">
+              <div className="rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] p-4 sm:p-5 mb-6 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5)]">
+                <p className="text-base sm:text-lg font-extrabold text-[color:var(--mm-ink-primary)] leading-relaxed">
                   {currentQ.prompt}
                 </p>
               </div>
 
-              <div className="mb-6 p-4 rounded-2xl bg-[#070B22]/90 border border-cyan-300/35 shadow-[inset_0_2px_12px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.1)] space-y-2.5">
-                <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-cyan-300">
+              <div className="mb-6 p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.6)] space-y-2.5">
+                <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
                   Nhập câu trả lời của em
                 </label>
                 <div className="flex items-center gap-2.5">
@@ -514,10 +515,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                       }
                     }}
                     placeholder={currentExamInputSpec.mode === 'text_number' ? 'Nhập đáp án...' : 'Nhập câu trả lời...'}
-                    className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-xl tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm transition-all"
+                    className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-xl tabular-nums placeholder:text-[color:var(--mm-ink-muted)] placeholder:text-sm transition-all"
                   />
                   {currentExamInputSpec.mode === 'text_number' && currentExamInputSpec.unitLabel && (
-                    <span className="px-4 py-3.5 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-sm shrink-0">
+                    <span className="px-4 py-3.5 rounded-xl bg-[color:var(--mm-surface-2)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] text-[color:var(--mm-cyan-text)] font-black text-sm shrink-0">
                       {currentExamInputSpec.unitLabel}
                     </span>
                   )}
@@ -597,17 +598,17 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
           {activeTab === 'report' ? (
             <>
               {/* Score Summary & Official Certificate Card */}
-              <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 rounded-3xl p-6 sm:p-8 border-2 border-amber-400/70 shadow-2xl relative overflow-hidden">
+              <div className="mm-surface-card rounded-3xl p-6 sm:p-8 border-2 border-[color:var(--mm-amber-border)] shadow-2xl relative overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                   <div className="lg:col-span-7 space-y-3">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-400/20 border border-amber-300/40 text-amber-300 text-xs font-black uppercase">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_55%,transparent)] border border-[color:var(--mm-amber-border)] text-[color:var(--mm-amber-text)] text-xs font-black uppercase">
                       <ShieldCheck className="w-4 h-4" aria-hidden="true" />
                       <span>Chứng Nhận Hoàn Thành IN MONTH • {finalExam.monthLabel}</span>
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-white">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold font-display text-[color:var(--mm-ink-primary)]">
                       Chúc mừng {studentName}!
                     </h3>
-                    <p className="text-sm text-indigo-100 leading-relaxed">
+                    <p className="text-sm text-[color:var(--mm-ink-secondary)] leading-relaxed">
                       Đã hoàn thành chương trình Toán Tư Duy Singapore Lớp 3 <strong>IN MONTH — {finalExam.monthLabel}</strong> ({finalExam.title}).
                     </p>
                     <div
@@ -619,25 +620,25 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                   </div>
 
                   <div className="lg:col-span-5 grid grid-cols-3 gap-3 text-center">
-                    <div className="p-4 rounded-2xl cosmic-glass">
-                      <div className="text-xs text-indigo-200 font-bold">Tổng Điểm</div>
-                      <div className="text-3xl font-extrabold font-display text-amber-300 mt-1 tabular-nums">
+                    <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_55%,transparent)]">
+                      <div className="text-xs text-[color:var(--mm-ink-secondary)] font-bold">Tổng Điểm</div>
+                      <div className="text-3xl font-extrabold font-display text-[color:var(--mm-amber-text)] mt-1 tabular-nums">
                         {totalScore}
-                        <span className="text-sm font-sans text-indigo-200">/100</span>
+                        <span className="text-sm font-sans text-[color:var(--mm-ink-muted)]">/100</span>
                       </div>
                     </div>
-                    <div className="p-4 rounded-2xl cosmic-glass">
-                      <div className="text-xs text-cyan-200 font-bold">Phần Cơ Bản</div>
-                      <div className="text-2xl font-extrabold font-display text-white mt-1 tabular-nums">
+                    <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)]">
+                      <div className="text-xs text-[color:var(--mm-cyan-text)] font-bold">Phần Cơ Bản</div>
+                      <div className="text-2xl font-extrabold font-display text-[color:var(--mm-ink-primary)] mt-1 tabular-nums">
                         {basicScore}
-                        <span className="text-xs font-sans text-indigo-200">/50</span>
+                        <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/50</span>
                       </div>
                     </div>
-                    <div className="p-4 rounded-2xl cosmic-glass">
-                      <div className="text-xs text-amber-200 font-bold">Phần Olympic</div>
-                      <div className="text-2xl font-extrabold font-display text-white mt-1 tabular-nums">
+                    <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_55%,transparent)]">
+                      <div className="text-xs text-[color:var(--mm-amber-text)] font-bold">Phần Olympic</div>
+                      <div className="text-2xl font-extrabold font-display text-[color:var(--mm-ink-primary)] mt-1 tabular-nums">
                         {olympiadScore}
-                        <span className="text-xs font-sans text-indigo-200">/50</span>
+                        <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/50</span>
                       </div>
                     </div>
                   </div>
@@ -645,9 +646,9 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               </div>
 
               {/* 4-Pillar Competency Breakdown */}
-              <div className="bg-[#111942]/90 backdrop-blur-xl text-white rounded-3xl p-6 shadow-xl border border-indigo-400/35">
-                <h4 className="text-lg sm:text-xl font-extrabold font-display text-white mb-4 flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-cyan-300" aria-hidden="true" />
+              <div className="mm-surface-card backdrop-blur-xl rounded-3xl p-6 shadow-xl border">
+                <h4 className="text-lg sm:text-xl font-extrabold font-display text-[color:var(--mm-ink-primary)] mb-4 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
                   <span>Đánh Giá Chi Tiết Theo 4 Trụ Cột Năng Lực {finalExam.monthLabel}</span>
                 </h4>
 
@@ -660,25 +661,25 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                     return (
                       <div
                         key={pillarKey}
-                        className="p-5 rounded-2xl border border-indigo-400/25 bg-indigo-950/65 flex flex-col justify-between"
+                        className="p-5 rounded-2xl border border-[color:color-mix(in_oklch,var(--mm-azure-border)_45%,transparent)] bg-[color:var(--mm-surface-inset)] flex flex-col justify-between"
                       >
                         <div>
                           <div className="flex items-center justify-between gap-2 mb-2">
-                            <span className="font-black text-sm text-white">
+                            <span className="font-black text-sm text-[color:var(--mm-ink-primary)]">
                               {meta.title}
                             </span>
                             <span
                               className={`px-2.5 py-0.5 rounded-lg font-black text-xs tabular-nums ${
                                 isStrong
-                                  ? 'bg-emerald-500/25 text-emerald-200 border border-emerald-400/40'
-                                  : 'bg-amber-400/20 text-amber-200 border border-amber-400/40'
+                                  ? 'bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_60%,transparent)] text-[color:var(--mm-emerald-text)] border border-[color:var(--mm-emerald-border)]'
+                                  : 'bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_55%,transparent)] text-[color:var(--mm-amber-text)] border border-[color:var(--mm-amber-border)]'
                               }`}
                             >
                               {stats.correct}/{stats.total} câu ({stats.pct}%)
                             </span>
                           </div>
 
-                          <div className="w-full h-3 bg-indigo-950 rounded-full overflow-hidden mb-3 border border-indigo-400/20">
+                          <div className="w-full h-3 bg-[color:var(--mm-canvas)] rounded-full overflow-hidden mb-3 border border-white/10">
                             <div
                               style={{
                                 width: `${stats.pct}%`,
@@ -688,19 +689,19 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                             />
                           </div>
 
-                          <p className="text-xs text-indigo-100 leading-relaxed mb-4 flex items-start gap-1.5">
+                          <p className="text-xs text-[color:var(--mm-ink-secondary)] leading-relaxed mb-4 flex items-start gap-1.5">
                             {isStrong ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
+                              <CheckCircle2 className="w-4 h-4 text-[color:var(--mm-emerald-accent)] shrink-0 mt-0.5" aria-hidden="true" />
                             ) : (
-                              <Lightbulb className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" aria-hidden="true" />
+                              <Lightbulb className="w-4 h-4 text-[color:var(--mm-amber-accent)] shrink-0 mt-0.5" aria-hidden="true" />
                             )}
                             <span>{isStrong ? meta.strongComment : meta.improveComment}</span>
                           </p>
                         </div>
 
-                        <div className="pt-3 border-t border-indigo-400/20 flex flex-wrap items-center justify-between gap-2">
-                          <span className="text-[11px] font-bold text-indigo-200 flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                        <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-[11px] font-bold text-[color:var(--mm-ink-muted)] flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
                             Ngày ôn tập gợi ý:
                           </span>
                           <div className="flex flex-wrap gap-1.5">
@@ -709,7 +710,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                                 key={d}
                                 type="button"
                                 onClick={() => onJumpToDay(d)}
-                                className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-cyan-400 text-cyan-200 hover:text-slate-950 font-black text-xs border border-indigo-400/30 transition-colors duration-200 cursor-pointer tabular-nums min-h-[34px]"
+                                className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-[color:var(--mm-cyan-brightFill)] text-[color:var(--mm-cyan-text)] hover:text-[#05081D] font-black text-xs border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)] transition-colors duration-200 cursor-pointer tabular-nums min-h-[34px]"
                               >
                                 Ngày {d}
                               </button>
@@ -723,9 +724,9 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               </div>
             </>
           ) : (
-            <div className="bg-[#111942]/90 backdrop-blur-xl text-white rounded-3xl p-6 shadow-xl border border-indigo-400/35 space-y-4">
-              <h4 className="text-lg sm:text-xl font-extrabold font-display text-white flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-cyan-300" aria-hidden="true" />
+            <div className="mm-surface-card backdrop-blur-xl rounded-3xl p-6 shadow-xl border space-y-4">
+              <h4 className="text-lg sm:text-xl font-extrabold font-display text-[color:var(--mm-ink-primary)] flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
                 <span>Chi Tiết Đáp Án &amp; Giải Thích 20 Câu Đề Thi {finalExam.monthLabel}</span>
               </h4>
               <div className="space-y-3">
@@ -737,32 +738,32 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                       key={q.id}
                       className={`p-4 rounded-2xl border ${
                         correct
-                          ? 'bg-emerald-500/10 border-emerald-400/40'
-                          : 'bg-rose-500/10 border-rose-400/40'
+                          ? 'bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_38%,transparent)] border-[color:var(--mm-emerald-border)]'
+                          : 'bg-[color:color-mix(in_oklch,var(--mm-rose-tint)_38%,transparent)] border-[color:var(--mm-rose-border)]'
                       }`}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                        <span className="font-black text-xs uppercase text-cyan-200">
+                        <span className="font-black text-xs uppercase text-[color:var(--mm-cyan-text)]">
                           Câu {idx + 1} ({q.part === 'A' ? 'Phần A - Cơ Bản' : 'Phần B - Olympic'})
                         </span>
                         <div className="flex items-center gap-2 text-xs font-bold tabular-nums">
-                          <span className="text-indigo-200">
-                            Bài làm: <strong className="text-white">{userAns || 'Chưa trả lời'}</strong>
+                          <span className="text-[color:var(--mm-ink-secondary)]">
+                            Bài làm: <strong className="text-[color:var(--mm-ink-primary)]">{userAns || 'Chưa trả lời'}</strong>
                           </span>
-                          <span>•</span>
-                          <span className="text-emerald-300">
+                          <span className="text-[color:var(--mm-ink-muted)]">•</span>
+                          <span className="text-[color:var(--mm-emerald-text)]">
                             Đáp án đúng: <strong>{q.correctAnswer}</strong>
                           </span>
                           {correct ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" aria-hidden="true" />
+                            <CheckCircle2 className="w-4 h-4 text-[color:var(--mm-emerald-accent)]" aria-hidden="true" />
                           ) : (
-                            <XCircle className="w-4 h-4 text-rose-400" aria-hidden="true" />
+                            <XCircle className="w-4 h-4 text-[color:var(--mm-rose-accent)]" aria-hidden="true" />
                           )}
                         </div>
                       </div>
-                      <p className="text-sm font-bold text-white mb-2">{q.prompt}</p>
-                      <p className="text-xs text-indigo-100 bg-indigo-950/75 p-3 rounded-xl border border-indigo-400/25 flex items-start gap-1.5">
-                        <Lightbulb className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" aria-hidden="true" />
+                      <p className="text-sm font-bold text-[color:var(--mm-ink-primary)] mb-2">{q.prompt}</p>
+                      <p className="text-xs text-[color:var(--mm-ink-secondary)] bg-[color:var(--mm-surface-inset)] p-3 rounded-xl border border-white/10 flex items-start gap-1.5">
+                        <Lightbulb className="w-4 h-4 text-[color:var(--mm-amber-accent)] shrink-0 mt-0.5" aria-hidden="true" />
                         <span>
                           <strong>Giải thích:</strong> {q.explanation}
                         </span>

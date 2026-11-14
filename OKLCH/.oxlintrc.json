@@ -1,0 +1,28 @@
+{
+  "plugins": ["typescript", "react", "unicorn"],
+  "rules": {
+    "typescript/consistent-type-definitions": ["error", "type"]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "typescript/method-signature-style": "off",
+        "typescript/consistent-type-definitions": ["error", "interface"]
+      }
+    },
+    {
+      "files": ["**/*.test.*", "**/*.spec.*"],
+      "rules": {
+        "unicorn/consistent-function-scoping": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    },
+    {
+      "files": ["packages/figma-plugin/**"],
+      "rules": {
+        "unicorn/prefer-dom-node-append": "off"
+      }
+    }
+  ]
+}

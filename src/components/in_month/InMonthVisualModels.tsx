@@ -16,6 +16,11 @@ import {
   ArrowLeftRight,
   CheckCircle2,
 } from 'lucide-react';
+import {
+  MINDMATH_OKLCH_PALETTE,
+  harmonizeCpaFillColor,
+  getApcaReadableInk,
+} from '../../utils/oklchApcaPalette';
 
 interface InMonthVisualModelsProps {
   model: InMonthVisualModelConfig;
@@ -136,11 +141,13 @@ const CPAConcretePanel: React.FC<{
   const { concrete, pictorial } = cpaSpec;
 
   return (
-    <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.14),_transparent_55%),linear-gradient(145deg,_rgba(7,12,42,0.95),_rgba(14,13,50,0.95))] border border-cyan-300/40 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_28px_rgba(3,7,24,0.48)]">
+    <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_color-mix(in_oklch,var(--mm-cyan-accent)_12%,transparent),_transparent_55%),linear-gradient(145deg,_var(--mm-surface-1),_var(--mm-surface-inset))] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_65%,transparent)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_10px_28px_rgba(3,7,24,0.48)]">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
         {concrete.groups.map((g: CPAConcreteGroup, idx: number) => {
           const isSelected = selectedGroupIdx === idx;
           const hideNumbers = !isAnswered && !!g.isUnknown;
+          const groupFill = harmonizeCpaFillColor(g.color);
+          const groupInk = getApcaReadableInk(groupFill);
 
           // Determine if group count vs unitValue should be masked before solving
           const isRemainderFullGroupsUnknown =
@@ -169,18 +176,18 @@ const CPAConcretePanel: React.FC<{
               onClick={() => onSelectGroup(isSelected ? null : idx)}
               className={`text-left p-3 rounded-xl border transition-all cursor-pointer ${
                 isSelected
-                  ? 'bg-gradient-to-br from-indigo-900/90 to-fuchsia-950/75 border-amber-300 shadow-[0_0_22px_rgba(251,191,36,0.32)]'
-                  : 'bg-[#09123C]/85 border-cyan-300/20 hover:border-cyan-300/65 hover:shadow-[0_0_16px_rgba(34,211,238,0.22)]'
+                  ? 'bg-[color:var(--mm-surface-2)] border-[color:var(--mm-amber-brightFill)] shadow-[0_0_22px_rgba(251,191,36,0.32)]'
+                  : 'bg-[color:var(--mm-surface-inset)] border-[color:color-mix(in_oklch,var(--mm-cyan-border)_45%,transparent)] hover:border-[color:var(--mm-cyan-accent)] hover:shadow-[0_0_16px_rgba(34,211,238,0.22)]'
               }`}
             >
               <div className="flex items-center justify-between gap-2 mb-1.5">
-                <span className="text-xs font-black text-white truncate">{g.label}</span>
+                <span className="text-xs font-black text-[color:var(--mm-ink-primary)] truncate">{g.label}</span>
                 <span
-                  className="px-2 py-0.5 rounded-md text-[11px] font-black tabular-nums border"
+                  className="px-2 py-0.5 rounded-md text-[11px] font-black tabular-nums border shrink-0"
                   style={{
-                    backgroundColor: `${g.color}25`,
-                    borderColor: `${g.color}80`,
-                    color: '#F8FAFC',
+                    backgroundColor: groupFill,
+                    borderColor: 'rgba(255,255,255,0.28)',
+                    color: groupInk,
                   }}
                 >
                   {hideNumbers ? `? ${concrete.unitLabel}` : `${g.totalValue} ${concrete.unitLabel}`}
@@ -191,27 +198,27 @@ const CPAConcretePanel: React.FC<{
                 {Array.from({ length: visibleIcons }).map((_, i) => (
                   <span
                     key={i}
-                    className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-xs font-bold tabular-nums"
+                    className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-white/10 border border-white/15 text-xs font-bold tabular-nums text-[color:var(--mm-ink-primary)]"
                   >
                     {g.icon} {maskUnitValue ? '?' : g.unitValue > 1 ? g.unitValue : ''}
                   </span>
                 ))}
                 {maskCount ? (
-                  <span className="text-[11px] font-black text-amber-300">+ ? nhóm</span>
+                  <span className="text-[11px] font-black text-[color:var(--mm-amber-text)]">+ ? nhóm</span>
                 ) : (
                   g.count > visibleIcons && (
-                    <span className="text-[11px] font-black text-cyan-300">
+                    <span className="text-[11px] font-black text-[color:var(--mm-cyan-text)]">
                       +{g.count - visibleIcons} nhóm
                     </span>
                   )
                 )}
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-cyan-200/85 font-semibold tabular-nums mt-1 pt-1 border-t border-white/10">
+              <div className="flex items-center justify-between text-[11px] text-[color:var(--mm-ink-secondary)] font-semibold tabular-nums mt-1 pt-1 border-t border-white/10">
                 <span>
                   {maskCount ? '?' : g.count} phần × {maskUnitValue ? '?' : g.unitValue}
                 </span>
-                {g.note && <span className="text-amber-300 font-black">{g.note}</span>}
+                {g.note && <span className="text-[color:var(--mm-amber-text)] font-black">{g.note}</span>}
               </div>
             </button>
           );
@@ -250,15 +257,20 @@ const CPASvgBarModelDiagram: React.FC<{
       ...(pictorial.beforeBars || []),
       ...(pictorial.afterBars || []),
     ];
-    return Math.max(...allCandidateBars.map((b) => Math.max(b.numericValue, 1)), 1);
+    return Math.max(
+      ...allCandidateBars.map((b) =>
+        Math.max(b.numericValue, b.units * b.unitValue + Math.max(0, b.offsetValue || 0), 1)
+      ),
+      1
+    );
   }, [pictorial]);
 
-  // SVG Layout Geometry
-  const svgWidth = 760;
-  const labelColWidth = 148;
-  const barStartX = 158;
+  // SVG Layout Geometry (strictly bounded inside svgWidth = 780)
+  const svgWidth = 780;
+  const labelColWidth = 152;
+  const barStartX = 160;
   const hasRightTotalBrace = !!pictorial.totalBracket;
-  const maxBarWidth = hasRightTotalBrace ? 420 : 545;
+  const maxBarWidth = hasRightTotalBrace ? 340 : 440;
   const rowHeight = 56;
   const topPad = 24;
   const hasDiffBrace = !!pictorial.differenceBracket;
@@ -290,9 +302,10 @@ const CPASvgBarModelDiagram: React.FC<{
 
   // Rightmost edge across all bars for total brace
   const maxRenderedX = useMemo(() => {
-    let m = barStartX + 100;
+    let m = barStartX + 90;
     activeBars.forEach((b) => {
-      const w = Math.max(36, (b.numericValue / maxNumericVal) * maxBarWidth);
+      const spanVal = Math.max(b.numericValue, b.units * b.unitValue + Math.max(0, b.offsetValue || 0));
+      const w = Math.max(42, (spanVal / maxNumericVal) * maxBarWidth);
       if (barStartX + w > m) m = barStartX + w;
     });
     return m;
@@ -302,26 +315,26 @@ const CPASvgBarModelDiagram: React.FC<{
     <div className="space-y-3">
       {pictorial.family === 'before_after' && (
         <div className="flex justify-end">
-          <div className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-[#060B24] border border-amber-300/45">
+          <div className="inline-flex items-center gap-1.5 p-1 rounded-xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_65%,transparent)]">
             <button
               type="button"
               onClick={() => setTimelinePhase('before')}
               className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 timelinePhase === 'before'
-                  ? 'bg-amber-400 text-slate-950 shadow-[0_0_12px_rgba(251,191,36,0.5)]'
-                  : 'text-amber-200 hover:bg-white/10'
+                  ? 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] shadow-[0_0_12px_rgba(251,191,36,0.45)]'
+                  : 'text-[color:var(--mm-amber-text)] hover:bg-white/10'
               }`}
             >
               1. Lúc đầu (Before)
             </button>
-            <ArrowLeftRight className="w-3.5 h-3.5 text-amber-300" />
+            <ArrowLeftRight className="w-3.5 h-3.5 text-[color:var(--mm-amber-accent)]" />
             <button
               type="button"
               onClick={() => setTimelinePhase('after')}
               className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 timelinePhase === 'after'
-                  ? 'bg-emerald-400 text-slate-950 shadow-[0_0_12px_rgba(52,211,153,0.5)]'
-                  : 'text-emerald-200 hover:bg-white/10'
+                  ? 'bg-[color:var(--mm-emerald-brightFill)] text-[#05081D] shadow-[0_0_12px_rgba(52,211,153,0.45)]'
+                  : 'text-[color:var(--mm-emerald-text)] hover:bg-white/10'
               }`}
             >
               2. Lúc sau (After)
@@ -331,7 +344,7 @@ const CPASvgBarModelDiagram: React.FC<{
       )}
 
       {/* Vector SVG Singapore Bar Model Canvas */}
-      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_rgba(34,211,238,0.12),_transparent_70%),#04081E]/96 border border-cyan-300/45 p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           className="w-full h-auto min-w-[540px] select-none"
@@ -346,7 +359,7 @@ const CPASvgBarModelDiagram: React.FC<{
               patternTransform="rotate(45 0 0)"
               patternUnits="userSpaceOnUse"
             >
-              <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,0.32)" strokeWidth="2" />
+              <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(5,8,29,0.22)" strokeWidth="2" />
             </pattern>
           </defs>
 
@@ -360,7 +373,7 @@ const CPASvgBarModelDiagram: React.FC<{
                 y1={12}
                 x2={gx}
                 y2={svgHeight - 12}
-                stroke="rgba(148,163,184,0.08)"
+                stroke="rgba(148,163,184,0.1)"
                 strokeDasharray="3 5"
               />
             );
@@ -373,16 +386,30 @@ const CPASvgBarModelDiagram: React.FC<{
             const totalBarW = Math.max(42, (bar.numericValue / maxNumericVal) * maxBarWidth);
             const isSelected = selectedBarIdx === bIdx;
 
-            // Calculate proportional widths for equal unit blocks vs offset segment
+            const barFill = harmonizeCpaFillColor(bar.color);
+            const barInk = getApcaReadableInk(barFill);
+
+            // Calculate proportional widths for equal unit blocks vs positive/negative offset segment
             const baseUnitsTotal = Math.max(0, bar.units * bar.unitValue);
-            const posOffset = Math.max(0, bar.offsetValue || 0);
-            const totalPositive = Math.max(1, baseUnitsTotal + posOffset);
-            const unitsAreaW =
-              posOffset > 0
-                ? totalBarW * (baseUnitsTotal / totalPositive)
-                : totalBarW;
-            const offsetAreaW = posOffset > 0 ? totalBarW - unitsAreaW : 0;
+            const rawOffset = bar.offsetValue || 0;
+            const posOffset = Math.max(0, rawOffset);
+            const negOffset = Math.max(0, -rawOffset);
+
+            let unitsAreaW = totalBarW;
+            let offsetAreaW = 0;
+            let removedTailW = 0;
+
+            if (posOffset > 0) {
+              const totalPositive = Math.max(1, baseUnitsTotal + posOffset);
+              unitsAreaW = totalBarW * (baseUnitsTotal / totalPositive);
+              offsetAreaW = totalBarW - unitsAreaW;
+            } else if (negOffset > 0) {
+              unitsAreaW = Math.max(42, (baseUnitsTotal / maxNumericVal) * maxBarWidth);
+              removedTailW = Math.max(24, (negOffset / maxNumericVal) * maxBarWidth);
+            }
+
             const singleUnitW = bar.units > 0 ? unitsAreaW / bar.units : unitsAreaW;
+            const labelRightX = barStartX + Math.max(totalBarW, unitsAreaW + (negOffset > 0 ? 4 : 0)) + 8;
 
             const shownLabel =
               bar.isUnknown && !isAnswered
@@ -399,18 +426,22 @@ const CPASvgBarModelDiagram: React.FC<{
                 <rect
                   x={8}
                   y={rowY + 2}
-                  width={labelColWidth - 12}
+                  width={labelColWidth - 10}
                   height={barHeight - 4}
                   rx={8}
-                  fill={isSelected ? 'rgba(251,191,36,0.22)' : 'rgba(15,23,42,0.85)'}
-                  stroke={isSelected ? '#FBBF24' : 'rgba(148,163,184,0.35)'}
+                  fill={isSelected ? 'rgba(251,191,36,0.22)' : '#0b1130'}
+                  stroke={
+                    isSelected
+                      ? MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex
+                      : MINDMATH_OKLCH_PALETTE.scales.neutral.border.hex
+                  }
                   strokeWidth={isSelected ? 1.8 : 1}
                 />
                 <text
-                  x={18}
+                  x={16}
                   y={rowY + barHeight / 2 + 4}
-                  fill="#F8FAFC"
-                  fontSize="12.5"
+                  fill={MINDMATH_OKLCH_PALETTE.inks.primary.hex}
+                  fontSize={bar.label.length > 16 ? '10.5' : bar.label.length > 13 ? '11.5' : '12.5'}
                   fontWeight="800"
                 >
                   {bar.label}
@@ -427,17 +458,21 @@ const CPASvgBarModelDiagram: React.FC<{
                         width={Math.max(4, singleUnitW - 1.5)}
                         height={barHeight}
                         rx={uIdx === 0 ? 7 : 3}
-                        fill={bar.color}
-                        fillOpacity={isSelected ? 0.95 : 0.82}
-                        stroke={isSelected ? '#FDE047' : '#E2E8F0'}
-                        strokeWidth={isSelected ? 2 : 1.2}
+                        fill={barFill}
+                        fillOpacity={isSelected ? 1 : 0.94}
+                        stroke={
+                          isSelected
+                            ? MINDMATH_OKLCH_PALETTE.scales.amber.bright.hex
+                            : MINDMATH_OKLCH_PALETTE.scales.neutral.text.hex
+                        }
+                        strokeWidth={isSelected ? 2 : 1.15}
                       />
                       {singleUnitW >= 42 && (
                         <text
                           x={ux + singleUnitW / 2}
                           y={rowY + barHeight / 2 + 4}
                           textAnchor="middle"
-                          fill="#FFFFFF"
+                          fill={barInk}
                           fontSize="11.5"
                           fontWeight="800"
                         >
@@ -448,6 +483,34 @@ const CPASvgBarModelDiagram: React.FC<{
                   );
                 })}
 
+                {/* Negative Offset (Removed/Deducted Tail Overlay on right side of base units) */}
+                {removedTailW > 0 && (
+                  <g>
+                    <rect
+                      x={Math.max(barStartX + 12, barStartX + unitsAreaW - removedTailW)}
+                      y={rowY + 2}
+                      width={Math.min(removedTailW, unitsAreaW - 8)}
+                      height={barHeight - 4}
+                      rx={5}
+                      fill={MINDMATH_OKLCH_PALETTE.scales.rose.fill.hex}
+                      fillOpacity={0.9}
+                      stroke={MINDMATH_OKLCH_PALETTE.scales.rose.bright.hex}
+                      strokeWidth={1.6}
+                      strokeDasharray="4 3"
+                    />
+                    <text
+                      x={Math.max(barStartX + 12, barStartX + unitsAreaW - removedTailW) + Math.min(removedTailW, unitsAreaW - 8) / 2}
+                      y={rowY + barHeight / 2 + 4}
+                      textAnchor="middle"
+                      fill={getApcaReadableInk(MINDMATH_OKLCH_PALETTE.scales.rose.fill.hex)}
+                      fontSize="10.5"
+                      fontWeight="900"
+                    >
+                      -{negOffset}
+                    </text>
+                  </g>
+                )}
+
                 {/* Positive Offset / Transferred Segment */}
                 {offsetAreaW > 2 && (
                   <g>
@@ -457,9 +520,9 @@ const CPASvgBarModelDiagram: React.FC<{
                       width={Math.max(18, offsetAreaW)}
                       height={barHeight}
                       rx={6}
-                      fill="#F59E0B"
-                      fillOpacity={0.88}
-                      stroke="#FDE68A"
+                      fill={MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex}
+                      fillOpacity={0.96}
+                      stroke={MINDMATH_OKLCH_PALETTE.scales.amber.bright.hex}
                       strokeWidth={1.5}
                       strokeDasharray={bar.deltaType === 'transferred_out' ? '4 3' : undefined}
                     />
@@ -475,7 +538,7 @@ const CPASvgBarModelDiagram: React.FC<{
                       x={barStartX + unitsAreaW + Math.max(18, offsetAreaW) / 2}
                       y={rowY + barHeight / 2 + 4}
                       textAnchor="middle"
-                      fill="#0F172A"
+                      fill="#05081D"
                       fontSize="11"
                       fontWeight="900"
                     >
@@ -486,10 +549,14 @@ const CPASvgBarModelDiagram: React.FC<{
 
                 {/* Value Callout Pill on Right of Bar */}
                 <text
-                  x={barStartX + totalBarW + 8}
+                  x={labelRightX}
                   y={rowY + barHeight / 2 + 4}
-                  fill={bar.isUnknown && !isAnswered ? '#FDE047' : '#67E8F9'}
-                  fontSize="12"
+                  fill={
+                    bar.isUnknown && !isAnswered
+                      ? MINDMATH_OKLCH_PALETTE.scales.amber.text.hex
+                      : MINDMATH_OKLCH_PALETTE.scales.cyan.text.hex
+                  }
+                  fontSize="11.5"
                   fontWeight="800"
                 >
                   {shownLabel}
@@ -506,7 +573,7 @@ const CPASvgBarModelDiagram: React.FC<{
                 y1={topPad}
                 x2={diffInfo.xShortEnd}
                 y2={topPad + activeBars.length * rowHeight + 6}
-                stroke="#FBBF24"
+                stroke={MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex}
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
               />
@@ -515,7 +582,7 @@ const CPASvgBarModelDiagram: React.FC<{
                 y1={topPad}
                 x2={diffInfo.xLongEnd}
                 y2={topPad + activeBars.length * rowHeight + 6}
-                stroke="#FBBF24"
+                stroke={MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex}
                 strokeWidth="1.5"
                 strokeDasharray="4 4"
               />
@@ -528,14 +595,14 @@ const CPASvgBarModelDiagram: React.FC<{
                   'down'
                 )}
                 fill="none"
-                stroke="#FBBF24"
+                stroke={MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex}
                 strokeWidth="2.2"
               />
               <text
                 x={(diffInfo.xShortEnd + diffInfo.xLongEnd) / 2}
                 y={topPad + activeBars.length * rowHeight + 22}
                 textAnchor="middle"
-                fill="#FDE68A"
+                fill={MINDMATH_OKLCH_PALETTE.scales.amber.text.hex}
                 fontSize="12"
                 fontWeight="800"
               >
@@ -547,42 +614,49 @@ const CPASvgBarModelDiagram: React.FC<{
           )}
 
           {/* Right-side Total Curly Brace for Part-Whole / Constant Total */}
-          {pictorial.totalBracket && (
-            <g>
-              <path
-                d={buildVerticalCurlyBracePath(
-                  maxRenderedX + 95,
-                  topPad,
-                  topPad + activeBars.length * rowHeight - 18,
-                  14
-                )}
-                fill="none"
-                stroke="#38BDF8"
-                strokeWidth="2.2"
-              />
-              <rect
-                x={maxRenderedX + 114}
-                y={topPad + (activeBars.length * rowHeight - 18) / 2 - 15}
-                width={Math.max(108, svgWidth - (maxRenderedX + 120))}
-                height={30}
-                rx={8}
-                fill="rgba(14,116,144,0.35)"
-                stroke="#38BDF8"
-                strokeWidth="1.4"
-              />
-              <text
-                x={maxRenderedX + 122}
-                y={topPad + (activeBars.length * rowHeight - 18) / 2 + 4}
-                fill="#E0F2FE"
-                fontSize="11.5"
-                fontWeight="800"
-              >
-                {pictorial.totalBracket.isUnknown && !isAnswered
-                  ? pictorial.totalBracket.displayLabel
-                  : `Tổng = ${pictorial.totalBracket.numericValue}`}
-              </text>
-            </g>
-          )}
+          {pictorial.totalBracket && (() => {
+            const braceX = Math.min(maxRenderedX + 104, svgWidth - 156);
+            const boxX = braceX + 18;
+            const boxW = Math.max(122, svgWidth - boxX - 8);
+            const braceText =
+              pictorial.totalBracket.isUnknown && !isAnswered
+                ? pictorial.totalBracket.displayLabel
+                : `Tổng = ${pictorial.totalBracket.numericValue}`;
+            return (
+              <g>
+                <path
+                  d={buildVerticalCurlyBracePath(
+                    braceX,
+                    topPad,
+                    topPad + activeBars.length * rowHeight - 18,
+                    14
+                  )}
+                  fill="none"
+                  stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.accent.hex}
+                  strokeWidth="2.2"
+                />
+                <rect
+                  x={boxX}
+                  y={topPad + (activeBars.length * rowHeight - 18) / 2 - 15}
+                  width={boxW}
+                  height={30}
+                  rx={8}
+                  fill={MINDMATH_OKLCH_PALETTE.scales.cyan.tint.hex}
+                  stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.accent.hex}
+                  strokeWidth="1.4"
+                />
+                <text
+                  x={boxX + 8}
+                  y={topPad + (activeBars.length * rowHeight - 18) / 2 + 4}
+                  fill={MINDMATH_OKLCH_PALETTE.scales.cyan.bright.hex}
+                  fontSize={braceText.length > 16 ? '10.5' : '11.5'}
+                  fontWeight="800"
+                >
+                  {braceText}
+                </text>
+              </g>
+            );
+          })()}
         </svg>
       </div>
 
@@ -597,7 +671,9 @@ const CPASvgBarModelDiagram: React.FC<{
               ? '?'
               : activeBars[selectedBarIdx].unitValue}
             {activeBars[selectedBarIdx].offsetValue
-              ? ` + (${activeBars[selectedBarIdx].offsetValue})`
+              ? activeBars[selectedBarIdx].offsetValue < 0
+                ? ` - ${Math.abs(activeBars[selectedBarIdx].offsetValue)}`
+                : ` + ${activeBars[selectedBarIdx].offsetValue}`
               : ''}{' '}
             ={' '}
             {activeBars[selectedBarIdx].isUnknown && !isAnswered
@@ -660,16 +736,20 @@ const CPASvgRemainderDiagram: React.FC<{
     ? `Tổng số bị chia = ? (${quotient} ${groupLabel.toLowerCase()} × ${divisor} + dư ?)`
     : `Tổng số bị chia = ${dividend} (? ${groupLabel.toLowerCase()} × ${divisor} + dư ?)`;
 
+  const qFill = MINDMATH_OKLCH_PALETTE.scales.azure.fill.hex;
+  const qSelectedFill = MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex;
+  const qInk = getApcaReadableInk(qFill);
+
   return (
     <div className="space-y-3">
-      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_rgba(34,211,238,0.12),_transparent_70%),#04081E]/96 border border-cyan-300/45 p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
         <svg
           viewBox={`0 0 ${svgWidth} 118`}
           className="w-full h-auto min-w-[500px] select-none"
           role="img"
           aria-label="Sơ đồ phép chia có dư"
         >
-          <text x={startX} y={20} fill="#67E8F9" fontSize="12" fontWeight="800">
+          <text x={startX} y={20} fill={MINDMATH_OKLCH_PALETTE.scales.cyan.text.hex} fontSize="12" fontWeight="800">
             {headerText}
           </text>
 
@@ -687,15 +767,15 @@ const CPASvgRemainderDiagram: React.FC<{
                       width={cellW - 2}
                       height={34}
                       rx={4}
-                      fill="#0284C7"
-                      stroke="#E0F2FE"
+                      fill={qFill}
+                      stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.bright.hex}
                       strokeWidth="1.2"
                     />
                     <text
                       x={cx + cellW / 2}
                       y={51}
                       textAnchor="middle"
-                      fill="#FFFFFF"
+                      fill={qInk}
                       fontSize="11"
                       fontWeight="800"
                     >
@@ -710,8 +790,8 @@ const CPASvgRemainderDiagram: React.FC<{
                 width={228}
                 height={34}
                 rx={4}
-                fill="rgba(2,132,199,0.28)"
-                stroke="#7DD3FC"
+                fill={MINDMATH_OKLCH_PALETTE.scales.azure.tint.hex}
+                stroke={MINDMATH_OKLCH_PALETTE.scales.azure.text.hex}
                 strokeWidth="1.2"
                 strokeDasharray="5 4"
               />
@@ -719,7 +799,7 @@ const CPASvgRemainderDiagram: React.FC<{
                 x={startX + 210 + 114}
                 y={51}
                 textAnchor="middle"
-                fill="#E0F2FE"
+                fill={MINDMATH_OKLCH_PALETTE.scales.cyan.bright.hex}
                 fontSize="11"
                 fontWeight="800"
               >
@@ -731,6 +811,7 @@ const CPASvgRemainderDiagram: React.FC<{
               const cellW = mainW / Math.min(quotient, 16);
               const cx = startX + idx * cellW;
               const isSel = selectedGroup === idx;
+              const cellFill = isSel ? qSelectedFill : qFill;
               return (
                 <g
                   key={idx}
@@ -743,8 +824,8 @@ const CPASvgRemainderDiagram: React.FC<{
                     width={Math.max(4, cellW - 2)}
                     height={34}
                     rx={4}
-                    fill={isSel ? '#F59E0B' : '#0284C7'}
-                    stroke="#E0F2FE"
+                    fill={cellFill}
+                    stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.bright.hex}
                     strokeWidth="1.2"
                   />
                   {cellW >= 28 && (
@@ -752,7 +833,7 @@ const CPASvgRemainderDiagram: React.FC<{
                       x={cx + cellW / 2}
                       y={51}
                       textAnchor="middle"
-                      fill="#FFFFFF"
+                      fill={getApcaReadableInk(cellFill)}
                       fontSize="11"
                       fontWeight="800"
                     >
@@ -773,8 +854,8 @@ const CPASvgRemainderDiagram: React.FC<{
                 width={Math.max(52, remW)}
                 height={34}
                 rx={5}
-                fill="#F59E0B"
-                stroke="#FDE68A"
+                fill={MINDMATH_OKLCH_PALETTE.scales.amber.brightFill.hex}
+                stroke={MINDMATH_OKLCH_PALETTE.scales.amber.bright.hex}
                 strokeWidth="1.5"
                 strokeDasharray="4 2"
               />
@@ -782,7 +863,7 @@ const CPASvgRemainderDiagram: React.FC<{
                 x={startX + mainW + 2 + Math.max(52, remW) / 2}
                 y={51}
                 textAnchor="middle"
-                fill="#0F172A"
+                fill="#05081D"
                 fontSize="11"
                 fontWeight="900"
               >
@@ -801,14 +882,14 @@ const CPASvgRemainderDiagram: React.FC<{
               'down'
             )}
             fill="none"
-            stroke="#38BDF8"
+            stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.accent.hex}
             strokeWidth="2"
           />
           <text
             x={startX + (mainW + (remainder > 0 || !isAnswered ? Math.max(52, remW) : 0)) / 2}
             y={100}
             textAnchor="middle"
-            fill="#E0F2FE"
+            fill={MINDMATH_OKLCH_PALETTE.scales.cyan.bright.hex}
             fontSize="12"
             fontWeight="800"
           >
@@ -828,11 +909,11 @@ const CPASvgRemainderDiagram: React.FC<{
               onClick={() => setSelectedGroup(isSel ? null : idx)}
               className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                 isSel
-                  ? 'bg-amber-400/20 border-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.3)]'
-                  : 'bg-[#091238]/80 border-cyan-400/25 hover:border-cyan-300/60'
+                  ? 'bg-[color:var(--mm-surface-2)] border-[color:var(--mm-amber-brightFill)] shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+                  : 'bg-[color:var(--mm-surface-1)] border-[color:color-mix(in_oklch,var(--mm-cyan-border)_52%,transparent)] hover:border-[color:var(--mm-cyan-accent)]'
               }`}
             >
-              <div className="text-[11px] font-black text-cyan-200 mb-1">
+              <div className="text-[11px] font-black text-[color:var(--mm-cyan-text)] mb-1">
                 {groupLabel} {idx + 1} ({divisor})
               </div>
               <div className="flex flex-wrap gap-1">
@@ -846,13 +927,13 @@ const CPASvgRemainderDiagram: React.FC<{
           );
         })}
         {isQuotientOrRemUnknown && (
-          <div className="p-2.5 rounded-xl border border-dashed border-cyan-300/40 bg-[#091238]/50 flex items-center justify-center text-[11px] font-black text-cyan-200">
+          <div className="p-2.5 rounded-xl border border-dashed border-[color:var(--mm-cyan-border)] bg-[color:var(--mm-surface-inset)] flex items-center justify-center text-[11px] font-black text-[color:var(--mm-cyan-text)]">
             ... (? {groupLabel.toLowerCase()})
           </div>
         )}
         {(remainder > 0 || !isAnswered) && (
-          <div className="p-2.5 rounded-xl border border-dashed border-amber-300/70 bg-amber-500/15">
-            <div className="text-[11px] font-black text-amber-200 mb-1">
+          <div className="p-2.5 rounded-xl border border-dashed border-[color:var(--mm-amber-border)] bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_45%,transparent)]">
+            <div className="text-[11px] font-black text-[color:var(--mm-amber-text)] mb-1">
               {isAnswered
                 ? `Phần dư: ${remainder} (nhỏ hơn ${divisor})`
                 : `Phần dư: ? (nhỏ hơn ${divisor})`}
@@ -865,14 +946,14 @@ const CPASvgRemainderDiagram: React.FC<{
                   </span>
                 ))
               ) : (
-                <span className="text-xs font-black text-amber-300">? {itemIcon}</span>
+                <span className="text-xs font-black text-[color:var(--mm-amber-bright)]">? {itemIcon}</span>
               )}
             </div>
           </div>
         )}
       </div>
       {unitW > 0 && isAnswered && (
-        <div className="text-xs font-bold text-emerald-300">
+        <div className="text-xs font-bold text-[color:var(--mm-emerald-text)]">
           ✓ Kiểm chứng: {quotient} × {divisor} + {remainder} = {dividend}
         </div>
       )}
@@ -902,16 +983,19 @@ const CPASvgIntervalDiagram: React.FC<{
   const hasEndObject = subtype === 'both_ends' || subtype === 'stairs';
 
   const hideTotal = !isAnswered && unknownTarget === 'total_length';
+  const hideStep = !isAnswered && unknownTarget === 'step_length';
 
   const summaryText = isAnswered
     ? `Tổng độ dài = ${intervalsCount} khoảng × ${stepLength} ${unitLabel} = ${totalLength} ${unitLabel}`
     : hideTotal
     ? `Tổng độ dài = ? ${unitLabel} (? khoảng)`
+    : hideStep
+    ? `Tổng độ dài = ${totalLength} ${unitLabel} (${intervalsCount} khoảng · mỗi khoảng ? ${unitLabel})`
     : `Tổng độ dài = ${totalLength} ${unitLabel} (mỗi khoảng ${stepLength} ${unitLabel})`;
 
   return (
     <div className="space-y-3">
-      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_rgba(34,211,238,0.12),_transparent_70%),#04081E]/96 border border-cyan-300/45 p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
         <svg
           viewBox={`0 0 ${svgW} 135`}
           className="w-full h-auto min-w-[520px] select-none"
@@ -924,7 +1008,7 @@ const CPASvgIntervalDiagram: React.FC<{
             y1={58}
             x2={lineEndX}
             y2={58}
-            stroke="#38BDF8"
+            stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.accent.hex}
             strokeWidth="4"
             strokeLinecap="round"
           />
@@ -939,7 +1023,7 @@ const CPASvgIntervalDiagram: React.FC<{
                 <path
                   d={buildHorizontalCurlyBracePath(x1 + 3, x2 - 3, 66, 11, 'down')}
                   fill="none"
-                  stroke="#34D399"
+                  stroke={MINDMATH_OKLCH_PALETTE.scales.emerald.accent.hex}
                   strokeWidth="1.8"
                   strokeDasharray={isEllipsis ? '4 3' : undefined}
                 />
@@ -947,7 +1031,7 @@ const CPASvgIntervalDiagram: React.FC<{
                   x={(x1 + x2) / 2}
                   y={92}
                   textAnchor="middle"
-                  fill="#A7F3D0"
+                  fill={MINDMATH_OKLCH_PALETTE.scales.emerald.text.hex}
                   fontSize="11"
                   fontWeight="800"
                 >
@@ -955,6 +1039,8 @@ const CPASvgIntervalDiagram: React.FC<{
                     ? '...'
                     : hideTotal
                     ? '1 khoảng'
+                    : hideStep
+                    ? `? ${unitLabel}`
                     : `${stepLength} ${unitLabel}`}
                 </text>
               </g>
@@ -973,15 +1059,15 @@ const CPASvgIntervalDiagram: React.FC<{
 
             return (
               <g key={nodeIdx}>
-                <line x1={nx} y1={46} x2={nx} y2={70} stroke="#E2E8F0" strokeWidth="2.5" />
+                <line x1={nx} y1={46} x2={nx} y2={70} stroke={MINDMATH_OKLCH_PALETTE.inks.secondary.hex} strokeWidth="2.5" />
                 {showObj ? (
                   <g>
                     <circle
                       cx={nx}
                       cy={30}
                       r={14}
-                      fill="rgba(14,165,233,0.25)"
-                      stroke="#38BDF8"
+                      fill={MINDMATH_OKLCH_PALETTE.scales.cyan.tint.hex}
+                      stroke={MINDMATH_OKLCH_PALETTE.scales.cyan.accent.hex}
                       strokeWidth="1.5"
                     />
                     <text x={nx} y={35} textAnchor="middle" fontSize="14">
@@ -989,7 +1075,7 @@ const CPASvgIntervalDiagram: React.FC<{
                     </text>
                   </g>
                 ) : (
-                  <circle cx={nx} cy={30} r={6} fill="#EF4444" opacity={0.65} />
+                  <circle cx={nx} cy={30} r={6} fill={MINDMATH_OKLCH_PALETTE.scales.rose.accent.hex} opacity={0.8} />
                 )}
               </g>
             );
@@ -1000,7 +1086,7 @@ const CPASvgIntervalDiagram: React.FC<{
             x={svgW / 2}
             y={120}
             textAnchor="middle"
-            fill="#FDE68A"
+            fill={MINDMATH_OKLCH_PALETTE.scales.amber.text.hex}
             fontSize="12"
             fontWeight="800"
           >
@@ -1044,22 +1130,24 @@ const CPASvgMeasurementDiagram: React.FC<{
   return (
     <div className="space-y-3">
       {chartItems && chartItems.length > 0 ? (
-        <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_rgba(34,211,238,0.12),_transparent_70%),#04081E]/96 border border-cyan-300/45 p-4 space-y-2.5 shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
+        <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] p-4 space-y-2.5 shadow-[inset_0_2px_18px_rgba(0,0,0,0.6),0_0_24px_rgba(34,211,238,0.14)]">
           {chartItems.map((item, idx) => {
             const maxVal = Math.max(...chartItems.map((c) => c.value), 1);
-            const pct = Math.max(12, Math.round((item.value / maxVal) * 100));
+            const isMasked = !!item.masked && !isAnswered;
+            const pct = isMasked ? 28 : Math.max(12, Math.round((item.value / maxVal) * 100));
+            const barFill = harmonizeCpaFillColor(item.color);
             return (
               <div key={idx} className="space-y-1">
                 <div className="flex justify-between text-xs font-black">
-                  <span className="text-white">{item.label}</span>
-                  <span className="text-cyan-300 tabular-nums">
-                    {item.value} {item.unit}
+                  <span className="text-[color:var(--mm-ink-primary)]">{item.label}</span>
+                  <span className={isMasked ? 'text-[color:var(--mm-amber-text)] tabular-nums' : 'text-[color:var(--mm-cyan-text)] tabular-nums'}>
+                    {isMasked ? `? ${item.unit}` : `${item.value} ${item.unit}`}
                   </span>
                 </div>
-                <div className="h-5 rounded-lg bg-slate-900 border border-white/10 overflow-hidden">
+                <div className="h-5 rounded-lg bg-[color:var(--mm-surface-1)] border border-white/10 overflow-hidden">
                   <div
-                    className="h-full rounded-lg transition-all duration-300"
-                    style={{ width: `${pct}%`, backgroundColor: item.color }}
+                    className={`h-full rounded-lg transition-all duration-300 ${isMasked ? 'opacity-55 border-r-2 border-dashed border-[color:var(--mm-amber-brightFill)]' : ''}`}
+                    style={{ width: `${pct}%`, backgroundColor: barFill }}
                   />
                 </div>
               </div>
@@ -1069,19 +1157,19 @@ const CPASvgMeasurementDiagram: React.FC<{
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {primaryReading && (
-            <div className="p-3.5 rounded-2xl bg-[#071033] border border-cyan-400/40">
-              <div className="text-[10px] font-black uppercase tracking-wider text-cyan-300 mb-1">
+            <div className="p-3.5 rounded-2xl bg-[color:var(--mm-surface-1)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)]">
+              <div className="text-[10px] font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)] mb-1">
                 Số đo ban đầu
               </div>
-              <div className="text-base font-black text-white tabular-nums">{primaryReading}</div>
+              <div className="text-base font-black text-[color:var(--mm-ink-primary)] tabular-nums">{primaryReading}</div>
             </div>
           )}
           {secondaryReading && (
-            <div className="p-3.5 rounded-2xl bg-[#071033] border border-amber-400/40">
-              <div className="text-[10px] font-black uppercase tracking-wider text-amber-300 mb-1">
+            <div className="p-3.5 rounded-2xl bg-[color:var(--mm-surface-1)] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_68%,transparent)]">
+              <div className="text-[10px] font-black uppercase tracking-wider text-[color:var(--mm-amber-text)] mb-1">
                 Đại lượng quy đổi / So sánh
               </div>
-              <div className="text-base font-black text-amber-200 tabular-nums">
+              <div className="text-base font-black text-[color:var(--mm-amber-bright)] tabular-nums">
                 {getDisplaySecondaryReading(secondaryReading, isAnswered)}
               </div>
             </div>
@@ -1104,14 +1192,14 @@ const CPAAbstractLatexPanel: React.FC<{
     : cpaSpec.abstract.guidedLatexSteps;
 
   return (
-    <div className="rounded-2xl bg-[radial-gradient(ellipse_at_bottom_right,_rgba(217,70,239,0.16),_transparent_55%),linear-gradient(145deg,_rgba(7,12,42,0.95),_rgba(18,12,52,0.95))] border border-fuchsia-300/40 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_28px_rgba(3,7,24,0.48)]">
+    <div className="rounded-2xl bg-[radial-gradient(ellipse_at_bottom_right,_color-mix(in_oklch,var(--mm-violet-accent)_14%,transparent),_transparent_55%),linear-gradient(145deg,_var(--mm-surface-1),_var(--mm-surface-inset))] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_68%,transparent)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_10px_28px_rgba(3,7,24,0.48)]">
       <div className="space-y-2">
         {steps.map((latexStep, idx) => (
           <div
             key={idx}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[#0A133C]/92 border border-cyan-300/20 text-sm text-white overflow-x-auto"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_42%,transparent)] text-sm text-[color:var(--mm-ink-primary)] overflow-x-auto"
           >
-            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-300/40 text-[11px] font-black text-cyan-200 shrink-0">
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_70%,transparent)] border border-[color:var(--mm-cyan-border)] text-[11px] font-black text-[color:var(--mm-cyan-bright)] shrink-0">
               {idx + 1}
             </span>
             <KatexFormula latex={latexStep} className="font-semibold tracking-wide" />
@@ -1120,14 +1208,14 @@ const CPAAbstractLatexPanel: React.FC<{
       </div>
 
       {isAnswered && (
-        <div className="mt-3 flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-500/15 border border-emerald-400/50 text-emerald-200">
+        <div className="mt-3 flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_60%,transparent)] border border-[color:var(--mm-emerald-border)] text-[color:var(--mm-emerald-bright)]">
           <div className="flex items-center gap-2 text-xs font-black">
-            <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[color:var(--mm-emerald-accent)] shrink-0" />
             <span>Kết quả kiểm chứng toán học:</span>
           </div>
           <KatexFormula
             latex={cpaSpec.abstract.finalAnswerLatex}
-            className="text-sm font-black text-amber-200"
+            className="text-sm font-black text-[color:var(--mm-amber-bright)]"
           />
         </div>
       )}
@@ -1158,11 +1246,11 @@ export const InMonthVisualModels: React.FC<InMonthVisualModelsProps> = ({
   }, [model]);
 
   return (
-    <div className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.24),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(217,70,239,0.22),_transparent_55%),radial-gradient(ellipse_at_50%_100%,_rgba(251,191,36,0.14),_transparent_55%),linear-gradient(160deg,_rgba(12,20,64,0.97),_rgba(16,12,54,0.98)_55%,_rgba(7,11,36,0.99)_100%)] backdrop-blur-2xl rounded-3xl border border-cyan-300/50 p-5 sm:p-6 shadow-[0_28px_72px_rgba(3,7,24,0.86),0_0_40px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(255,255,255,0.18)] text-white">
+    <div className="relative overflow-hidden mm-surface-card backdrop-blur-2xl rounded-3xl border p-5 sm:p-6 shadow-[0_28px_72px_rgba(3,7,24,0.86),0_0_40px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
       <CosmicHoloCorner />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_20px_rgba(34,211,238,0.8)]"
+        className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_20px_rgba(34,211,238,0.75)]"
       />
 
       {/* CPA Interactive Body */}
@@ -1176,7 +1264,7 @@ export const InMonthVisualModels: React.FC<InMonthVisualModelsProps> = ({
         />
 
         {/* STEP 2: PICTORIAL (VECTOR SVG ENGINE) */}
-        <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.12),_transparent_55%),linear-gradient(145deg,_rgba(7,12,42,0.95),_rgba(14,13,50,0.95))] border border-amber-300/40 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_28px_rgba(3,7,24,0.48)]">
+        <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklch,var(--mm-amber-accent)_10%,transparent),_transparent_55%),linear-gradient(145deg,_var(--mm-surface-1),_var(--mm-surface-inset))] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_65%,transparent)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_10px_28px_rgba(3,7,24,0.48)]">
           {cpaSpec.pictorial.kind === 'bar_model' && (
             <CPASvgBarModelDiagram
               pictorial={cpaSpec.pictorial}

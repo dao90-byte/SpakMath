@@ -1,0 +1,152 @@
+@import "tailwindcss";
+@import "./media.css";
+
+@source "./**/*.module.css";
+@source "./**/*.tsx";
+
+@font-face {
+  font-family: MGrotesk;
+  font-weight: 300 500;
+
+  font-display: swap;
+  font-stretch: 75% 200%; /* Cn: 75%,  Nr: 87.5%,  Std: 100%,  sWd: 112.5%,  Wd: 125%,  xWd: 150%,  uWd: 200% */
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianGrotesk.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: MMono;
+  font-weight: 100 800; /* Th: 100, xLt: 200, Lt: 300, Rg: 400, Md: 500, (no 600), Bd: 700, xBd: 800 */
+
+  font-display: swap;
+  font-stretch: 100% 112.5%;
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianMono.woff2") format("woff2");
+}
+
+@theme {
+  --font-sans:
+    MGrotesk, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  --font-mono:
+    MMono, ui-monospace, sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New",
+    monospace;
+  --color-primary-light: oklch(0% 0 0deg);
+  --color-primary-dark: oklch(100% 0 0deg);
+  --color-secondary-light: oklch(0% 0 0deg / 58.82%);
+  --color-secondary-dark: oklch(100% 0 0deg / 58.82%);
+  --color-button-light: oklch(0% 0 0deg / 25.1%);
+  --color-button-dark: oklch(100% 0 0deg / 25.1%);
+  --color-button-disabled-light: oklch(0% 0 0deg / 12.55%);
+  --color-button-disabled-dark: oklch(100% 0 0deg / 12.55%);
+  --color-button-hover-light: oklch(0% 0 0deg / 30%);
+  --color-button-hover-dark: oklch(100% 0 0deg / 30%);
+  --color-border-light: oklch(0% 0 0deg / 25.1%);
+  --color-border-dark: oklch(100% 0 0deg / 25.1%);
+  --color-border-solid-light: oklch(92.8% 0.006 264.531deg);
+  --color-border-solid-dark: oklch(92.8% 0.006 264.531deg);
+  --color-universal-elevation: oklch(32% 0 0deg);
+  --color-universal-elevation-hover: oklch(40% 0 0deg);
+  --color-universal-focus: oklch(70% 0.1661 242.68deg / 90%);
+  --color-universal-error: oklch(79.41% 0.0931 20.98deg / 50%);
+  --color-universal-error-background: oklch(79.41% 0.0931 20.98deg / 20%);
+  --color-highlight: oklch(72.27% 0.192 149.58deg);
+  --text-xs: 7.5px;
+  --text-xs--line-height: 10px;
+  --text-s: 10px;
+  --text-s--line-height: 16px;
+  --text-ui-s: 10px;
+  --text-ui-s--line-height: 12px;
+  --text-m: 12.5px;
+  --text-m--line-height: 16px;
+  --text-ui-m: 12.5px;
+  --text-ui-m--line-height: 16px;
+  --text-l: 25px;
+  --text-l--line-height: 32px;
+  --text-ui-l: 25px;
+  --text-ui-l--line-height: 24px;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  a:focus {
+    outline: none;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--color-universal-focus);
+    outline-offset: 2px;
+  }
+}
+
+:root {
+  --color-universal-error-text: var(--color-red-500);
+
+  :where([data-bg-mode="light"]) {
+    --color-primary: var(--color-primary-light);
+    --color-secondary: var(--color-secondary-light);
+    --color-button: var(--color-button-light);
+    --color-button-disabled: var(--color-button-disabled-light);
+    --color-button-hover: var(--color-button-hover-light);
+    --color-border: var(--color-border-light);
+    --color-border-solid: var(--color-border-solid-light);
+  }
+
+  :where([data-bg-mode="dark"]) {
+    --color-primary: var(--color-primary-dark);
+    --color-secondary: var(--color-secondary-dark);
+    --color-button: var(--color-button-dark);
+    --color-button-disabled: var(--color-button-disabled-dark);
+    --color-button-hover: var(--color-button-hover-dark);
+    --color-border: var(--color-border-dark);
+    --color-border-solid: var(--color-border-solid-dark);
+  }
+
+  @media (--theme-dark) {
+    color-scheme: dark;
+  }
+}
+
+body,
+html,
+#root {
+  overscroll-behavior: none;
+
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  padding: 0;
+
+  text-size-adjust: none;
+}
+
+#root {
+  isolation: isolate;
+
+  display: flex;
+  gap: calc(var(--spacing) * 8);
+  align-items: center;
+  justify-content: center;
+
+  font-family: var(--font-sans);
+
+  @media (--theme-dark) {
+    background-color: var(--color-primary-light);
+  }
+
+  @media (--theme-light) {
+    background-color: var(--color-primary-dark);
+  }
+}
+
+input,
+select,
+textarea {
+  --min-font-size: 0px;
+
+  @media (--mobiles-only) {
+    --min-font-size: 16px; /* Prevent zoom on iOS */
+  }
+}

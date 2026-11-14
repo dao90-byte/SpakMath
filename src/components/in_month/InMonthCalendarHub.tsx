@@ -134,12 +134,12 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
       : monthProgram.days.filter((d) => d.weekNumber === selectedWeek);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_16%_14%,_rgba(34,211,238,0.2),_transparent_50%),radial-gradient(ellipse_at_84%_20%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_90%,_rgba(251,191,36,0.12),_transparent_54%),linear-gradient(180deg,_#030617_0%,_#0A1038_46%,_#1A0E46_100%)] text-white pb-20 relative overflow-hidden">
+    <div className="min-h-screen mm-cosmic-canvas pb-20 relative overflow-hidden">
       {/* Deep Space Ambient Nebula & Starfield Canvas */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-32 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-400/26 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute top-1/3 -right-24 w-[480px] h-[480px] rounded-full bg-fuchsia-500/26 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute bottom-0 left-1/3 w-[520px] h-[520px] rounded-full bg-amber-400/16 blur-[155px] cosmic-light-bloom" />
+        <div className="absolute -top-32 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-400/20 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/3 -right-24 w-[480px] h-[480px] rounded-full bg-fuchsia-500/18 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[520px] h-[520px] rounded-full bg-amber-400/12 blur-[155px] cosmic-light-bloom" />
         <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" className="w-full h-full opacity-75">
           <circle cx="120" cy="140" r="1.8" fill="#67E8F9" />
           <circle cx="310" cy="80" r="1.5" fill="#FDE68A" />
@@ -159,37 +159,37 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
       </div>
 
       {/* Top Observatory Telemetry & Breadcrumb Bar */}
-      <div className="relative z-10 border-b border-cyan-300/25 bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.14),_transparent_50%),linear-gradient(180deg,_rgba(7,11,34,0.97),_rgba(11,17,48,0.93))] backdrop-blur-2xl shadow-[0_10px_32px_rgba(3,7,24,0.6)]">
+      <div className="relative z-10 border-b border-[color:color-mix(in_oklch,var(--mm-cyan-border)_52%,transparent)] bg-[color:color-mix(in_oklch,var(--mm-surface-inset)_92%,transparent)] backdrop-blur-2xl shadow-[0_10px_32px_rgba(3,7,24,0.6)]">
         <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
           <nav aria-label="Điều hướng chương trình theo tháng" className="flex items-center gap-2 text-xs sm:text-sm font-bold flex-wrap">
             <button
               type="button"
               onClick={onBackToGrade}
-              className="px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 text-white font-bold text-xs flex items-center gap-1.5 border border-cyan-300/30 hover:border-cyan-300/65 shadow-[0_0_16px_rgba(34,211,238,0.14)] transition-all duration-200 cursor-pointer min-h-[38px] whitespace-nowrap shrink-0"
+              className="px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 text-[color:var(--mm-ink-primary)] font-bold text-xs flex items-center gap-1.5 border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)] hover:border-[color:var(--mm-cyan-accent)] shadow-[0_0_16px_rgba(34,211,238,0.14)] transition-all duration-200 cursor-pointer min-h-[38px] whitespace-nowrap shrink-0"
             >
-              <ArrowLeft className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
               <span>Lớp 3 · Các Tháng</span>
             </button>
-            <ChevronRight className="w-4 h-4 text-cyan-300/60 shrink-0" aria-hidden="true" />
-            <span className="px-3 py-1 rounded-xl bg-gradient-to-r from-amber-400/20 to-orange-400/15 border border-amber-300/45 text-amber-200 font-black text-xs inline-flex items-center gap-1.5 shadow-[0_0_16px_rgba(251,191,36,0.18)] whitespace-nowrap">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.9)]" aria-hidden="true" />
+            <ChevronRight className="w-4 h-4 text-[color:var(--mm-ink-muted)] shrink-0" aria-hidden="true" />
+            <span className="px-3 py-1 rounded-xl bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_55%,transparent)] border border-[color:var(--mm-amber-border)] text-[color:var(--mm-amber-text)] font-black text-xs inline-flex items-center gap-1.5 shadow-[0_0_16px_rgba(251,191,36,0.16)] whitespace-nowrap">
+              <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--mm-amber-brightFill)] shadow-[0_0_8px_rgba(251,191,36,0.9)]" aria-hidden="true" />
               <span>{monthProgram.label}</span>
             </span>
-            <span aria-hidden="true" className="text-indigo-400/70 hidden sm:inline">·</span>
-            <span className="text-cyan-100/90 font-semibold hidden sm:inline truncate max-w-md text-xs sm:text-sm">
+            <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)] hidden sm:inline">·</span>
+            <span className="text-[color:var(--mm-ink-secondary)] font-semibold hidden sm:inline truncate max-w-md text-xs sm:text-sm">
               {monthProgram.title}
             </span>
           </nav>
 
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-[11px] font-bold text-cyan-200/90 tabular-nums">
-            <Orbit className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/15 text-[11px] font-bold text-[color:var(--mm-cyan-text)] tabular-nums">
+            <Orbit className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
             <span>30 chặng · {completedCount}/30 hoàn thành</span>
           </div>
         </div>
       </div>
 
       {/* Month Overview Hero (Ethereal Luminous Cosmic Observatory) */}
-      <div className="relative z-10 overflow-hidden border-b border-cyan-300/50 bg-[radial-gradient(ellipse_at_14%_18%,_rgba(34,211,238,0.36),_transparent_48%),radial-gradient(ellipse_at_84%_20%,_rgba(217,70,239,0.36),_transparent_48%),radial-gradient(ellipse_at_54%_96%,_rgba(251,191,36,0.24),_transparent_52%),linear-gradient(118deg,_#030618_0%,_#090E36_46%,_#1B0C4A_100%)] backdrop-blur-2xl px-4 sm:px-6 py-8 sm:py-12 lg:py-14 shadow-[0_32px_86px_rgba(3,7,24,0.88),0_0_52px_rgba(34,211,238,0.22)]">
+      <div className="relative z-10 overflow-hidden border-b border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] bg-[radial-gradient(ellipse_at_14%_18%,_color-mix(in_oklch,var(--mm-cyan-accent)_22%,transparent),_transparent_50%),radial-gradient(ellipse_at_84%_20%,_color-mix(in_oklch,var(--mm-violet-accent)_22%,transparent),_transparent_50%),radial-gradient(ellipse_at_54%_96%,_color-mix(in_oklch,var(--mm-amber-accent)_16%,transparent),_transparent_52%),linear-gradient(118deg,_var(--mm-canvas)_0%,_var(--mm-canvas-mid)_48%,_var(--mm-surface-1)_100%)] backdrop-blur-2xl px-4 sm:px-6 py-8 sm:py-12 lg:py-14 shadow-[0_32px_86px_rgba(3,7,24,0.88),0_0_52px_rgba(34,211,238,0.18)]">
         {/* Ethereal Multi-Spectrum Aurora Orbs */}
         <div className="pointer-events-none absolute -top-24 left-12 w-80 sm:w-[440px] h-80 sm:h-[440px] rounded-full bg-cyan-400/28 blur-[115px] cosmic-light-bloom" aria-hidden="true" />
         <div className="pointer-events-none absolute -top-16 right-1/4 w-80 sm:w-[440px] h-80 sm:h-[440px] rounded-full bg-fuchsia-500/26 blur-[120px] cosmic-light-bloom" aria-hidden="true" />
@@ -340,21 +340,21 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
           </div>
 
           {/* Right Unified Celestial Telemetry Instrument Deck */}
-          <div className="relative overflow-hidden rounded-3xl bg-[#070D28]/88 backdrop-blur-2xl border border-cyan-300/45 shadow-[0_24px_60px_rgba(2,6,23,0.8),0_0_42px_rgba(34,211,238,0.22),0_0_68px_rgba(217,70,239,0.16),inset_0_1px_0_rgba(255,255,255,0.2)] grid grid-cols-2 divide-x divide-cyan-300/20 w-full lg:w-auto lg:min-w-[430px] xl:min-w-[460px] shrink-0">
+          <div className="relative overflow-hidden rounded-3xl bg-[color:color-mix(in_oklch,var(--mm-surface-inset)_92%,transparent)] backdrop-blur-2xl border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_65%,transparent)] shadow-[0_24px_60px_rgba(2,6,23,0.8),0_0_42px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.16)] grid grid-cols-2 divide-x divide-[color:color-mix(in_oklch,var(--mm-cyan-border)_42%,transparent)] w-full lg:w-auto lg:min-w-[430px] xl:min-w-[460px] shrink-0">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_18px_rgba(34,211,238,0.8)]"
+              className="pointer-events-none absolute top-0 inset-x-6 h-[2px] bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_18px_rgba(34,211,238,0.75)]"
             />
 
             {/* Telemetry Cell 1: Progress */}
             <div className="p-4 sm:p-6 flex flex-col justify-between gap-3">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-cyan-300/90">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[color:var(--mm-cyan-text)]">
                 Tiến độ chặng
               </span>
               <div className="flex items-center justify-between gap-3">
-                <div className="text-2xl sm:text-3xl font-black font-display text-white tabular-nums leading-none">
+                <div className="text-2xl sm:text-3xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums leading-none">
                   {completedCount}
-                  <span className="text-xs font-mono font-bold text-slate-400 ml-1.5">/ 30</span>
+                  <span className="text-xs font-mono font-bold text-[color:var(--mm-ink-muted)] ml-1.5">/ 30</span>
                 </div>
                 <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-[0_0_10px_rgba(56,189,248,0.4)]" aria-hidden="true">
                   <defs>
@@ -363,7 +363,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                       <stop offset="100%" stopColor="#A855F7" />
                     </linearGradient>
                   </defs>
-                  <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3.5" />
+                  <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3.5" />
                   <circle
                     cx="24"
                     cy="24"
@@ -380,25 +380,25 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   </text>
                 </svg>
               </div>
-              <span className="text-xs text-slate-400 font-medium tabular-nums">
+              <span className="text-xs text-[color:var(--mm-ink-muted)] font-medium tabular-nums">
                 Đã hoàn thành {completedCount} ngày
               </span>
             </div>
 
             {/* Telemetry Cell 2: Final Exam */}
             <div className="p-4 sm:p-6 flex flex-col justify-between gap-3">
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-amber-300/90">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[color:var(--mm-amber-text)]">
                 Kiểm tra tháng
               </span>
               <div className="flex items-center justify-between gap-3">
-                <div className="text-2xl sm:text-3xl font-black font-display text-white tabular-nums leading-none">
+                <div className="text-2xl sm:text-3xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums leading-none">
                   {examResult ? (
                     <>
                       {examResult.totalScore}
-                      <span className="text-xs font-mono font-bold text-slate-400 ml-1.5">/ 100</span>
+                      <span className="text-xs font-mono font-bold text-[color:var(--mm-ink-muted)] ml-1.5">/ 100</span>
                     </>
                   ) : (
-                    <span className="text-base sm:text-lg font-extrabold text-slate-200">Chưa thi</span>
+                    <span className="text-base sm:text-lg font-extrabold text-[color:var(--mm-ink-secondary)]">Chưa thi</span>
                   )}
                 </div>
                 <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-[0_0_10px_rgba(52,211,153,0.4)]" aria-hidden="true">
@@ -408,7 +408,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                       <stop offset="100%" stopColor="#34D399" />
                     </linearGradient>
                   </defs>
-                  <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3.5" />
+                  <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="3.5" />
                   <circle
                     cx="24"
                     cy="24"
@@ -425,7 +425,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   </text>
                 </svg>
               </div>
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-xs text-[color:var(--mm-ink-muted)] font-medium">
                 {examResult ? 'Đã lưu bảng điểm' : 'Sẵn sàng cuối tháng'}
               </span>
             </div>
@@ -439,7 +439,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
           <div
             role="group"
             aria-label="Lọc theo tuần"
-            className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.26),_transparent_50%),radial-gradient(ellipse_at_right,_rgba(192,132,252,0.28),_transparent_50%),linear-gradient(135deg,_rgba(8,12,44,0.97),_rgba(24,17,68,0.95))] border border-cyan-300/55 shadow-[0_16px_44px_rgba(3,7,24,0.78),0_0_32px_rgba(56,189,248,0.22),inset_0_1px_0_rgba(255,255,255,0.22)] backdrop-blur-2xl"
+            className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-2xl mm-surface-card border shadow-[0_16px_44px_rgba(3,7,24,0.78),0_0_28px_rgba(56,189,248,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] backdrop-blur-2xl"
           >
             <button
               type="button"
@@ -551,11 +551,11 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   className={`group relative overflow-hidden rounded-3xl p-6 border text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl ${
                     unlocked
                       ? isCurrentTarget
-                        ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_55%),linear-gradient(145deg,_rgba(20,30,96,0.96),_rgba(40,18,96,0.96))] border-cyan-300/95 animate-cosmic-beacon hover:-translate-y-1.5 hover:border-cyan-200 hover:shadow-[0_0_48px_rgba(34,211,238,0.52),0_18px_50px_rgba(192,132,252,0.36)] cursor-pointer'
+                        ? 'bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklch,var(--mm-cyan-accent)_22%,transparent),_transparent_55%),linear-gradient(145deg,_var(--mm-surface-2),_var(--mm-surface-1))] border-[color:var(--mm-cyan-accent)] animate-cosmic-beacon hover:-translate-y-1.5 hover:border-[color:var(--mm-cyan-bright)] hover:shadow-[0_0_48px_rgba(34,211,238,0.48),0_18px_50px_rgba(192,132,252,0.3)] cursor-pointer'
                         : isDone
-                        ? 'bg-gradient-to-br from-[#12265B]/95 to-[#0D1A44]/95 border-emerald-400/65 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_20px_rgba(52,211,153,0.16)] hover:shadow-[0_0_42px_rgba(52,211,153,0.42),0_16px_44px_rgba(34,211,238,0.28)] cursor-pointer'
-                        : 'bg-gradient-to-br from-[#101A50]/95 via-[#13194D]/95 to-[#1B1248]/95 border-cyan-300/30 hover:-translate-y-1.5 hover:border-cyan-200 shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_18px_rgba(34,211,238,0.1)] hover:shadow-[0_0_44px_rgba(34,211,238,0.44),0_18px_48px_rgba(168,85,247,0.32)] cursor-pointer'
-                      : 'bg-[#070B22]/85 border-indigo-400/20 text-indigo-200/75 shadow-sm cursor-not-allowed'
+                        ? 'bg-[linear-gradient(145deg,_var(--mm-surface-2),_var(--mm-surface-1))] border-[color:var(--mm-emerald-border)] hover:-translate-y-1.5 hover:border-[color:var(--mm-emerald-accent)] shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_20px_rgba(52,211,153,0.14)] hover:shadow-[0_0_42px_rgba(52,211,153,0.36),0_16px_44px_rgba(34,211,238,0.24)] cursor-pointer'
+                        : 'mm-surface-card border-[color:color-mix(in_oklch,var(--mm-cyan-border)_52%,transparent)] hover:-translate-y-1.5 hover:border-[color:var(--mm-cyan-accent)] shadow-[0_14px_34px_rgba(3,7,24,0.55)] hover:shadow-[0_0_44px_rgba(34,211,238,0.38),0_18px_48px_rgba(168,85,247,0.26)] cursor-pointer'
+                      : 'bg-[color:var(--mm-surface-inset)] border-[color:color-mix(in_oklch,var(--mm-neutral-border)_42%,transparent)] text-[color:var(--mm-ink-muted)] shadow-sm cursor-not-allowed'
                   }`}
                 >
                   {unlocked && (
@@ -578,40 +578,40 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   )}
                   <div className="relative z-10 w-full space-y-3">
                     <div className="flex items-center justify-between gap-2 text-xs font-bold">
-                      <div className="flex items-center gap-1.5 text-cyan-300 min-w-0">
+                      <div className="flex items-center gap-1.5 text-[color:var(--mm-cyan-text)] min-w-0">
                         {isCurrentTarget && unlocked && (
-                          <span className="w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.95)] animate-ping shrink-0" aria-hidden="true" />
+                          <span className="w-2 h-2 rounded-full bg-[color:var(--mm-cyan-brightFill)] shadow-[0_0_10px_rgba(34,211,238,0.95)] animate-ping shrink-0" aria-hidden="true" />
                         )}
-                        <span className="text-sm font-extrabold text-white tabular-nums whitespace-nowrap shrink-0">
+                        <span className="text-sm font-extrabold text-[color:var(--mm-ink-primary)] tabular-nums whitespace-nowrap shrink-0">
                           Ngày {dayPlan.dayNumber}
                         </span>
-                        <span aria-hidden="true" className="text-indigo-400 shrink-0">·</span>
-                        <span className="truncate text-cyan-200/90 font-semibold">
+                        <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)] shrink-0">·</span>
+                        <span className="truncate text-[color:var(--mm-cyan-text)] font-semibold">
                           {dayPlan.topicTag}
                         </span>
                       </div>
 
                       {isDone ? (
-                        <span className="text-emerald-300 font-black inline-flex items-center gap-1 tabular-nums whitespace-nowrap shrink-0">
+                        <span className="text-[color:var(--mm-emerald-text)] font-black inline-flex items-center gap-1 tabular-nums whitespace-nowrap shrink-0">
                           <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                           {progress.score}/{progress.totalQuestions}
                         </span>
                       ) : savedCount > 0 && unlocked ? (
-                        <span className="text-cyan-300 font-black tabular-nums whitespace-nowrap shrink-0">
+                        <span className="text-[color:var(--mm-cyan-text)] font-black tabular-nums whitespace-nowrap shrink-0">
                           {savedCount}/{dayPlan.questions.length} câu
                         </span>
                       ) : unlocked ? (
-                        <span className="text-cyan-200 group-hover:text-fuchsia-200 font-black inline-flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+                        <span className="text-[color:var(--mm-cyan-text)] group-hover:text-[color:var(--mm-violet-text)] font-black inline-flex items-center gap-1 whitespace-nowrap shrink-0 transition-colors">
+                          <Sparkles className="w-3.5 h-3.5 text-[color:var(--mm-amber-accent)]" aria-hidden="true" />
                           Sẵn sàng
                         </span>
                       ) : blockingWeeklyTest && completedDays[dayPlan.dayNumber - 1] ? (
-                        <span className="text-amber-300/90 font-bold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
+                        <span className="text-[color:var(--mm-amber-text)] font-bold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
                           <Lock className="w-3.5 h-3.5" aria-hidden="true" />
                           Chờ KT Tuần {blockingWeeklyTest.weekNumber}
                         </span>
                       ) : (
-                        <span className="text-indigo-300/70 font-semibold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
+                        <span className="text-[color:var(--mm-ink-muted)] font-semibold inline-flex items-center gap-1 whitespace-nowrap shrink-0">
                           <Lock className="w-3.5 h-3.5" aria-hidden="true" />
                           Chưa mở
                         </span>
@@ -621,15 +621,15 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                     <h3
                       className={`text-lg font-extrabold font-display leading-snug tracking-tight ${
                         unlocked
-                          ? 'text-white group-hover:text-cyan-200 transition-colors'
-                          : 'text-indigo-200/75'
+                          ? 'text-[color:var(--mm-ink-primary)] group-hover:text-[color:var(--mm-cyan-text)] transition-colors'
+                          : 'text-[color:var(--mm-ink-muted)]'
                       }`}
                     >
                       {cleanTitle}
                     </h3>
 
                     {weeklyTestAfterThisDay && (
-                      <div className="pt-1 flex items-center gap-1.5 text-[11px] font-bold text-amber-300/95">
+                      <div className="pt-1 flex items-center gap-1.5 text-[11px] font-bold text-[color:var(--mm-amber-text)]">
                         <Clock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                         <span>Cuối bài có Kiểm tra 15 phút Tuần {dayPlan.weekNumber}</span>
                       </div>
@@ -653,9 +653,9 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                         className={`group relative overflow-hidden rounded-3xl p-6 border-2 text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl sm:col-span-2 lg:col-span-3 ${
                           wtUnlocked
                             ? isPassed
-                              ? 'bg-[radial-gradient(ellipse_at_top_right,_rgba(52,211,153,0.26),_transparent_55%),linear-gradient(135deg,_rgba(10,32,62,0.96),_rgba(18,22,64,0.96))] border-emerald-300/80 hover:-translate-y-1 shadow-[0_18px_46px_rgba(3,7,24,0.72),0_0_32px_rgba(52,211,153,0.26)] cursor-pointer'
-                              : 'bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.3),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(232,121,249,0.28),_transparent_55%),linear-gradient(135deg,_rgba(24,16,68,0.97),_rgba(42,14,72,0.97))] border-amber-300/90 hover:-translate-y-1 shadow-[0_20px_52px_rgba(3,7,24,0.82),0_0_38px_rgba(251,191,36,0.34)] cursor-pointer'
-                            : 'bg-[#080C26]/90 border-fuchsia-400/25 text-indigo-200/75 cursor-not-allowed'
+                              ? 'bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklch,var(--mm-emerald-accent)_20%,transparent),_transparent_55%),linear-gradient(135deg,_var(--mm-surface-2),_var(--mm-surface-1))] border-[color:var(--mm-emerald-border)] hover:-translate-y-1 shadow-[0_18px_46px_rgba(3,7,24,0.72),0_0_32px_rgba(52,211,153,0.22)] cursor-pointer'
+                              : 'bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklch,var(--mm-amber-accent)_24%,transparent),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_color-mix(in_oklch,var(--mm-violet-accent)_22%,transparent),_transparent_55%),linear-gradient(135deg,_var(--mm-surface-2),_var(--mm-surface-1))] border-[color:var(--mm-amber-border)] hover:-translate-y-1 shadow-[0_20px_52px_rgba(3,7,24,0.82),0_0_36px_rgba(251,191,36,0.28)] cursor-pointer'
+                            : 'bg-[color:var(--mm-surface-inset)] border-[color:color-mix(in_oklch,var(--mm-violet-border)_42%,transparent)] text-[color:var(--mm-ink-muted)] cursor-not-allowed'
                         }`}
                       >
                         <span
@@ -663,8 +663,8 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                           className={`pointer-events-none absolute top-0 inset-x-8 h-[3px] rounded-full ${
                             wtUnlocked
                               ? isPassed
-                                ? 'bg-gradient-to-r from-emerald-300 via-cyan-300 to-amber-300 shadow-[0_0_18px_rgba(52,211,153,0.8)]'
-                                : 'bg-gradient-to-r from-amber-300 via-fuchsia-400 to-cyan-300 shadow-[0_0_20px_rgba(251,191,36,0.9)]'
+                                ? 'bg-gradient-to-r from-[color:var(--mm-emerald-brightFill)] via-[color:var(--mm-cyan-brightFill)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_18px_rgba(52,211,153,0.75)]'
+                                : 'bg-gradient-to-r from-[color:var(--mm-amber-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-cyan-brightFill)] shadow-[0_0_20px_rgba(251,191,36,0.8)]'
                               : 'bg-gradient-to-r from-indigo-400/30 to-fuchsia-400/30'
                           }`}
                         />
@@ -675,32 +675,32 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                               <span
                                 className={`px-3 py-1 rounded-xl inline-flex items-center gap-1.5 border ${
                                   isPassed
-                                    ? 'bg-emerald-500/25 border-emerald-300/70 text-emerald-200'
+                                    ? 'bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_60%,transparent)] border-[color:var(--mm-emerald-border)] text-[color:var(--mm-emerald-text)]'
                                     : wtUnlocked
-                                    ? 'bg-amber-400/25 border-amber-300/75 text-amber-200'
-                                    : 'bg-white/5 border-white/15 text-indigo-300'
+                                    ? 'bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_55%,transparent)] border-[color:var(--mm-amber-border)] text-[color:var(--mm-amber-text)]'
+                                    : 'bg-white/5 border-white/15 text-[color:var(--mm-ink-muted)]'
                                 }`}
                               >
                                 <Clock className="w-3.5 h-3.5" aria-hidden="true" />
                                 <span>Bài Kiểm Tra 15 Phút · Cuối Tuần {weeklyTestAfterThisDay.weekNumber}</span>
                               </span>
 
-                              <span className="inline-flex items-center gap-1 text-cyan-200">
-                                <Calculator className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                              <span className="inline-flex items-center gap-1 text-[color:var(--mm-cyan-text)]">
+                                <Calculator className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
                                 <span>6 câu Tính toán (60đ)</span>
                               </span>
-                              <span aria-hidden="true" className="text-indigo-400">·</span>
-                              <span className="inline-flex items-center gap-1 text-fuchsia-200">
-                                <MessageSquareQuote className="w-3.5 h-3.5 text-fuchsia-300" aria-hidden="true" />
+                              <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)]">·</span>
+                              <span className="inline-flex items-center gap-1 text-[color:var(--mm-violet-text)]">
+                                <MessageSquareQuote className="w-3.5 h-3.5 text-[color:var(--mm-violet-accent)]" aria-hidden="true" />
                                 <span>4 câu Nghị luận (40đ)</span>
                               </span>
                             </div>
 
-                            <h3 className="text-xl sm:text-2xl font-black font-display text-white">
+                            <h3 className="text-xl sm:text-2xl font-black font-display text-[color:var(--mm-ink-primary)]">
                               {weeklyTestAfterThisDay.title}
                             </h3>
 
-                            <p className="text-xs sm:text-sm text-indigo-100/90">
+                            <p className="text-xs sm:text-sm text-[color:var(--mm-ink-secondary)]">
                               {isPassed
                                 ? `Đã vượt qua xuất sắc với ${wtResult.totalScore}/100 điểm (Tính toán: ${wtResult.calculationScore}/60đ · Nghị luận: ${wtResult.reasoningScore}/40đ). ${
                                     weeklyTestAfterThisDay.unlocksDayNumber
@@ -715,12 +715,12 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
 
                           <div className="shrink-0">
                             {isPassed ? (
-                              <span className="px-5 py-3 rounded-2xl bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-[0_0_26px_rgba(52,211,153,0.45)]">
+                              <span className="px-5 py-3 rounded-2xl bg-[color:var(--mm-emerald-brightFill)] text-[#05081D] font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-[0_0_26px_rgba(52,211,153,0.45)]">
                                 <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                                 <span>Đã Đạt {wtResult.totalScore}/100đ · Xem / Làm Lại</span>
                               </span>
                             ) : wtUnlocked ? (
-                              <span className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 text-slate-950 font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-[0_0_32px_rgba(251,191,36,0.5)]">
+                              <span className="px-6 py-3.5 rounded-2xl bg-[color:var(--mm-amber-brightFill)] text-[#05081D] font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-[0_0_32px_rgba(251,191,36,0.45)]">
                                 <Sparkles className="w-4 h-4" aria-hidden="true" />
                                 <span>
                                   {wtResult
@@ -730,7 +730,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                                 <ChevronRight className="w-4 h-4" aria-hidden="true" />
                               </span>
                             ) : (
-                              <span className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-indigo-300 font-bold text-xs inline-flex items-center gap-1.5">
+                              <span className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-[color:var(--mm-ink-muted)] font-bold text-xs inline-flex items-center gap-1.5">
                                 <Lock className="w-3.5 h-3.5" aria-hidden="true" />
                                 <span>Mở sau Ngày {weeklyTestAfterThisDay.triggerAfterDayNumber}</span>
                               </span>
@@ -747,17 +747,17 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
         </div>
 
         {/* Final Assessment Callout Card (harmonized with deep Cosmic Observatory theme) */}
-        <div className="relative overflow-hidden mt-8 rounded-3xl bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.28),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(192,132,252,0.28),_transparent_52%),linear-gradient(135deg,_#0A1138_0%,_#181A5C_52%,_#2B1460_100%)] border border-cyan-300/60 p-6 sm:p-8 text-white shadow-[0_24px_64px_rgba(3,7,24,0.82),0_0_42px_rgba(56,189,248,0.26)] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="relative overflow-hidden mt-8 rounded-3xl mm-surface-card border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] p-6 sm:p-8 shadow-[0_24px_64px_rgba(3,7,24,0.82),0_0_42px_rgba(56,189,248,0.2)] flex flex-col md:flex-row items-center justify-between gap-6">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-400 shadow-[0_0_18px_rgba(34,211,238,0.8)]"
+            className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-azure-accent)] to-[color:var(--mm-violet-accent)] shadow-[0_0_18px_rgba(34,211,238,0.8)]"
           />
           <div className="relative z-10 space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-200">
-              <Trophy className="w-4 h-4 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.75)]" aria-hidden="true" />
+            <div className="flex items-center gap-2 text-xs font-bold text-[color:var(--mm-cyan-text)]">
+              <Trophy className="w-4 h-4 text-[color:var(--mm-amber-accent)] drop-shadow-[0_0_8px_rgba(251,191,36,0.75)]" aria-hidden="true" />
               <span>Chặng Cuối {monthProgram.label}</span>
-              <span aria-hidden="true" className="text-indigo-400">·</span>
-              <span className="text-fuchsia-200">20 câu Cơ bản &amp; Tư duy Olympic</span>
+              <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)]">·</span>
+              <span className="text-[color:var(--mm-violet-text)]">20 câu Cơ bản &amp; Tư duy Olympic</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold font-display bg-gradient-to-r from-white via-cyan-100 to-fuchsia-200 bg-clip-text text-transparent cosmic-glow-title-cyan">
               Bài Kiểm Tra Tổng Kết &amp; Đánh Giá Năng Lực {monthProgram.label}

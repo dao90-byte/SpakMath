@@ -302,12 +302,12 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_15%_12%,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_85%_18%,_rgba(217,70,239,0.24),_transparent_52%),radial-gradient(ellipse_at_50%_92%,_rgba(251,191,36,0.14),_transparent_54%),linear-gradient(180deg,_#030618_0%,_#090E34_46%,_#180D44_100%)] text-white pb-16 relative overflow-hidden">
+    <div className="min-h-screen mm-cosmic-canvas pb-16 relative overflow-hidden">
       {/* Deep Space Starfield, Orbital Rings & Multi-Spectrum Aurora Blooms */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0" aria-hidden="true">
-        <div className="absolute -top-28 left-1/5 w-[540px] h-[540px] rounded-full bg-cyan-400/28 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] rounded-full bg-fuchsia-500/26 blur-[145px] cosmic-light-bloom" />
-        <div className="absolute bottom-0 left-1/3 w-[540px] h-[540px] rounded-full bg-amber-400/18 blur-[155px] cosmic-light-bloom" />
+        <div className="absolute -top-28 left-1/5 w-[540px] h-[540px] rounded-full bg-cyan-400/20 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute top-1/4 -right-24 w-[500px] h-[500px] rounded-full bg-fuchsia-500/18 blur-[145px] cosmic-light-bloom" />
+        <div className="absolute bottom-0 left-1/3 w-[540px] h-[540px] rounded-full bg-amber-400/12 blur-[155px] cosmic-light-bloom" />
         <svg
           viewBox="0 0 1440 900"
           preserveAspectRatio="xMidYMid slice"
@@ -332,7 +332,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
       </div>
 
       {/* Top Cosmic Mission Command Bar */}
-      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[radial-gradient(ellipse_at_15%_0%,_rgba(34,211,238,0.34),_transparent_52%),radial-gradient(ellipse_at_85%_0%,_rgba(217,70,239,0.34),_transparent_52%),linear-gradient(180deg,_rgba(5,9,30,0.97),_rgba(11,15,48,0.94))] border-b border-cyan-300/55 px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.24)] overflow-hidden">
+      <div className="sticky top-0 z-30 backdrop-blur-2xl bg-[color:color-mix(in_oklch,var(--mm-surface-inset)_94%,transparent)] border-b border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] px-4 py-3.5 shadow-[0_24px_64px_rgba(3,7,24,0.88),0_0_40px_rgba(34,211,238,0.18)] overflow-hidden">
         <span
           aria-hidden="true"
           className="pointer-events-none absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 opacity-95 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
@@ -372,13 +372,13 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
           {/* 30-Minute Session Chronometer */}
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[#0A1136]/95 border border-cyan-300/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_0_32px_rgba(34,211,238,0.32)] min-h-[44px]">
-              <Clock className="w-4 h-4 text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
+            <div className="flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-[color:var(--mm-surface-1)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_68%,transparent)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_28px_rgba(34,211,238,0.22)] min-h-[44px]">
+              <Clock className="w-4 h-4 text-[color:var(--mm-cyan-accent)] drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]" aria-hidden="true" />
               <div className="text-xs">
-                <span className="font-black text-cyan-200 tabular-nums drop-shadow-[0_0_12px_rgba(34,211,238,0.75)]">
+                <span className="font-black text-[color:var(--mm-cyan-text)] tabular-nums drop-shadow-[0_0_12px_rgba(34,211,238,0.6)]">
                   {formatTime(elapsedSeconds)}
                 </span>
-                <span className="text-indigo-200/80 tabular-nums"> / 30:00</span>
+                <span className="text-[color:var(--mm-ink-muted)] tabular-nums"> / 30:00</span>
               </div>
               <button
                 type="button"
@@ -388,9 +388,9 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 title={isPaused ? 'Tiếp tục' : 'Tạm dừng'}
               >
                 {isPaused ? (
-                  <Play className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+                  <Play className="w-3.5 h-3.5 text-[color:var(--mm-amber-accent)]" aria-hidden="true" />
                 ) : (
-                  <Pause className="w-3.5 h-3.5 text-cyan-200" aria-hidden="true" />
+                  <Pause className="w-3.5 h-3.5 text-[color:var(--mm-cyan-text)]" aria-hidden="true" />
                 )}
               </button>
             </div>
@@ -412,24 +412,24 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 onClick={() => jumpToStage(stage.id)}
                 className={`relative overflow-hidden px-3.5 py-2.5 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between min-h-[50px] ${
                   isActive
-                    ? 'bg-gradient-to-r from-cyan-500/28 via-indigo-600/40 to-fuchsia-500/25 border-cyan-300/80 shadow-[0_0_26px_rgba(34,211,238,0.35)] cursor-pointer'
+                    ? 'bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklch,var(--mm-cyan-accent)_22%,transparent),_transparent_58%),var(--mm-surface-2)] border-[color:var(--mm-cyan-accent)] shadow-[0_0_24px_rgba(34,211,238,0.28)] cursor-pointer'
                     : done
-                    ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/12 border-emerald-400/55 hover:border-emerald-300 hover:shadow-[0_0_20px_rgba(52,211,153,0.32)] text-emerald-100 cursor-pointer'
+                    ? 'bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_45%,transparent)] border-[color:var(--mm-emerald-border)] hover:border-[color:var(--mm-emerald-accent)] text-[color:var(--mm-emerald-text)] cursor-pointer'
                     : unlocked
-                    ? 'bg-white/[0.06] border-white/15 text-indigo-100 hover:bg-cyan-400/12 hover:border-cyan-300/70 hover:shadow-[0_0_20px_rgba(34,211,238,0.28)] cursor-pointer'
-                    : 'bg-white/[0.03] border-white/10 text-indigo-300/45 opacity-55 cursor-not-allowed'
+                    ? 'bg-[color:var(--mm-surface-1)] border-[color:color-mix(in_oklch,var(--mm-cyan-border)_42%,transparent)] text-[color:var(--mm-ink-secondary)] hover:border-[color:var(--mm-cyan-accent)] cursor-pointer'
+                    : 'bg-[color:var(--mm-surface-inset)] border-white/10 text-[color:var(--mm-ink-muted)] opacity-75 cursor-not-allowed'
                 }`}
               >
                 {isActive && (
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute top-0 inset-x-3 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-pink-400 shadow-[0_0_10px_rgba(34,211,238,0.7)]"
+                    className="pointer-events-none absolute top-0 inset-x-3 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-amber-brightFill)] to-[color:var(--mm-violet-accent)] shadow-[0_0_10px_rgba(34,211,238,0.7)]"
                   />
                 )}
                 <div className="min-w-0">
-                  <div className="text-xs font-black text-white truncate">{stage.shortTitle}</div>
+                  <div className="text-xs font-black text-[color:var(--mm-ink-primary)] truncate">{stage.shortTitle}</div>
                 </div>
-                {done && <CheckCircle2 className="w-4 h-4 text-emerald-300 shrink-0" aria-hidden="true" />}
+                {done && <CheckCircle2 className="w-4 h-4 text-[color:var(--mm-emerald-accent)] shrink-0" aria-hidden="true" />}
               </button>
             );
           })}
@@ -496,10 +496,10 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
       {/* Constellation Question Progress Matrix Strip */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 mt-5">
-        <div className="relative overflow-hidden flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.22),_transparent_48%),radial-gradient(ellipse_at_right,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(22,13,62,0.95))] backdrop-blur-2xl border border-cyan-300/45 p-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_32px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(255,255,255,0.14)]">
+        <div className="relative overflow-hidden flex flex-wrap items-center justify-between gap-3 rounded-3xl mm-surface-card backdrop-blur-2xl border p-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_32px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_16px_rgba(34,211,238,0.7)]"
           />
           <div role="group" aria-label="Danh sách câu hỏi" className="flex flex-wrap items-center gap-2">
             {questions.map((q, idx) => {
@@ -518,12 +518,12 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                   }}
                   className={`w-11 h-11 rounded-xl font-black text-xs transition-all duration-200 flex items-center justify-center tabular-nums ${
                     isCurr
-                      ? 'bg-gradient-to-br from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 ring-2 ring-cyan-200 shadow-[0_0_26px_rgba(56,189,248,0.6),0_0_32px_rgba(232,121,249,0.32)] scale-105 cursor-pointer'
+                      ? 'bg-[color:var(--mm-cyan-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-cyan-bright)] shadow-[0_0_24px_rgba(56,189,248,0.55)] scale-105 cursor-pointer'
                       : qSolved
-                      ? 'bg-gradient-to-br from-emerald-400/90 to-teal-600/90 text-white border border-emerald-200/70 hover:shadow-[0_0_18px_rgba(52,211,153,0.45)] shadow-[0_0_14px_rgba(52,211,153,0.3)] cursor-pointer'
+                      ? 'bg-[color:var(--mm-emerald-fill)] text-white border border-[color:var(--mm-emerald-accent)] hover:shadow-[0_0_18px_rgba(52,211,153,0.45)] cursor-pointer'
                       : canJump
-                      ? 'bg-indigo-900/60 text-cyan-100 border border-cyan-300/35 hover:border-cyan-300 hover:bg-cyan-500/20 hover:shadow-[0_0_20px_rgba(34,211,238,0.42)] cursor-pointer'
-                      : 'bg-white/[0.03] text-indigo-300/40 border border-white/10 cursor-not-allowed'
+                      ? 'bg-[color:var(--mm-surface-inset)] text-[color:var(--mm-cyan-text)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)] hover:border-[color:var(--mm-cyan-accent)] cursor-pointer'
+                      : 'bg-[color:var(--mm-surface-inset)] text-[color:var(--mm-ink-muted)] border border-white/10 opacity-65 cursor-not-allowed'
                   }`}
                 >
                   {idx + 1}
@@ -533,14 +533,14 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
           </div>
 
           <div className="flex items-center gap-3 text-xs font-bold">
-            <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-[#080E2B]/85 border border-emerald-400/35 shadow-inner">
-              <span className="text-emerald-300 font-black tabular-nums">
+            <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-emerald-border)_55%,transparent)] shadow-inner">
+              <span className="text-[color:var(--mm-emerald-text)] font-black tabular-nums">
                 {solvedCount}/{questions.length} hoàn thành
               </span>
-              <div className="w-20 h-2 rounded-full bg-slate-950 border border-white/10 overflow-hidden hidden sm:block">
+              <div className="w-20 h-2 rounded-full bg-[color:var(--mm-canvas)] border border-white/10 overflow-hidden hidden sm:block">
                 <div
                   style={{ width: `${Math.round((solvedCount / questions.length) * 100)}%` }}
-                  className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-amber-300 transition-all duration-300 shadow-[0_0_10px_rgba(52,211,153,0.6)]"
+                  className="h-full rounded-full bg-gradient-to-r from-[color:var(--mm-emerald-brightFill)] via-[color:var(--mm-cyan-brightFill)] to-[color:var(--mm-amber-brightFill)] transition-all duration-300"
                 />
               </div>
             </div>
@@ -548,7 +548,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
               <button
                 type="button"
                 onClick={triggerDayVictory}
-                className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 text-slate-950 font-black flex items-center gap-1.5 ring-1 ring-amber-200/80 shadow-[0_8px_24px_rgba(251,191,36,0.42)] cursor-pointer whitespace-nowrap"
+                className="px-4 py-2.5 rounded-2xl bg-[color:var(--mm-amber-brightFill)] text-[#05081D] font-black flex items-center gap-1.5 ring-1 ring-[color:var(--mm-amber-bright)] shadow-[0_8px_24px_rgba(251,191,36,0.42)] cursor-pointer whitespace-nowrap"
               >
                 <PartyPopper className="w-4 h-4" aria-hidden="true" />
                 <span>
@@ -570,18 +570,18 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
           {/* Hint appears ONLY after 4 wrong attempts */}
           {shouldShowHint && (
-            <div className="relative overflow-hidden bg-[radial-gradient(ellipse_at_top_left,_rgba(251,191,36,0.24),_transparent_55%),linear-gradient(135deg,_rgba(26,18,52,0.94),_rgba(14,16,46,0.96))] backdrop-blur-2xl border border-amber-300/65 rounded-3xl p-5 shadow-[0_18px_42px_rgba(251,191,36,0.22),0_0_24px_rgba(245,158,11,0.18)] animate-fade-in">
+            <div className="relative overflow-hidden mm-surface-card border border-[color:var(--mm-amber-border)] rounded-3xl p-5 shadow-[0_18px_42px_rgba(251,191,36,0.2)] animate-fade-in">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute top-0 inset-x-5 h-[2.5px] rounded-full bg-gradient-to-r from-amber-300 via-orange-400 to-fuchsia-400 shadow-[0_0_14px_rgba(251,191,36,0.7)]"
+                className="pointer-events-none absolute top-0 inset-x-5 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-amber-brightFill)] to-[color:var(--mm-violet-accent)] shadow-[0_0_14px_rgba(251,191,36,0.7)]"
               />
               <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="w-5 h-5 text-amber-300 drop-shadow-[0_0_10px_rgba(251,191,36,0.85)]" aria-hidden="true" />
-                <span className="text-sm font-extrabold font-display text-amber-200 uppercase tracking-wider">
+                <Lightbulb className="w-5 h-5 text-[color:var(--mm-amber-accent)] drop-shadow-[0_0_10px_rgba(251,191,36,0.85)]" aria-hidden="true" />
+                <span className="text-sm font-extrabold font-display text-[color:var(--mm-amber-text)] uppercase tracking-wider">
                   Gợi ý
                 </span>
               </div>
-              <p className="text-sm text-amber-50 leading-relaxed bg-[#050922]/85 p-4 rounded-2xl border border-amber-300/35">
+              <p className="text-sm text-[color:var(--mm-ink-primary)] leading-relaxed bg-[color:var(--mm-surface-inset)] p-4 rounded-2xl border border-[color:color-mix(in_oklch,var(--mm-amber-border)_55%,transparent)]">
                 {currentQ.hint}
               </p>
             </div>
@@ -589,7 +589,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
         </div>
 
         {/* Right Zone: Flagship Cosmic Mission Question Console */}
-        <div className="lg:col-span-5 relative overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_rgba(251,191,36,0.24),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(34,211,238,0.22),_transparent_52%),radial-gradient(ellipse_at_15%_20%,_rgba(217,70,239,0.18),_transparent_48%),linear-gradient(165deg,_rgba(14,22,68,0.97),_rgba(18,12,56,0.98)_55%,_rgba(6,10,34,0.99)_100%)] backdrop-blur-2xl text-white rounded-3xl p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.2)] border border-cyan-300/50">
+        <div className="lg:col-span-5 relative overflow-hidden mm-surface-card backdrop-blur-2xl rounded-3xl p-6 sm:p-7 shadow-[0_32px_84px_rgba(3,7,24,0.9),0_0_46px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(255,255,255,0.16)] border">
           <svg
             aria-hidden="true"
             viewBox="0 0 180 120"
@@ -605,26 +605,26 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
           </svg>
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-amber-300 to-fuchsia-400 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
+            className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-amber-brightFill)] to-[color:var(--mm-violet-accent)] shadow-[0_0_22px_rgba(34,211,238,0.8)]"
           />
 
           <div className="relative z-10 flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/15">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-gradient-to-r from-amber-400/22 to-fuchsia-500/15 border border-amber-300/55 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(251,191,36,0.25)]">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" aria-hidden="true" />
-              <span className="text-amber-100 tabular-nums">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_55%,transparent)] border border-[color:var(--mm-amber-border)] text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(251,191,36,0.2)]">
+              <Sparkles className="w-3.5 h-3.5 text-[color:var(--mm-amber-accent)] shrink-0" aria-hidden="true" />
+              <span className="text-[color:var(--mm-amber-text)] tabular-nums">
                 Câu {currentIdx + 1} / {questions.length}
               </span>
             </div>
             {isSolved && (
-              <span className="px-2.5 py-1 rounded-xl bg-emerald-500/25 border border-emerald-400/55 text-emerald-100 font-black text-xs flex items-center gap-1 whitespace-nowrap shadow-[0_0_16px_rgba(52,211,153,0.25)]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
+              <span className="px-2.5 py-1 rounded-xl bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_60%,transparent)] border border-[color:var(--mm-emerald-border)] text-[color:var(--mm-emerald-text)] font-black text-xs flex items-center gap-1 whitespace-nowrap">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[color:var(--mm-emerald-accent)]" aria-hidden="true" />
                 <span>Đã hoàn thành</span>
               </span>
             )}
           </div>
 
-          <div className="relative z-10 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.16),_transparent_58%),linear-gradient(160deg,_rgba(5,9,34,0.95),_rgba(12,15,48,0.96))] border border-cyan-300/35 p-4 sm:p-5 mb-6 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5),0_0_24px_rgba(34,211,238,0.12)]">
-            <p className="text-base sm:text-lg font-extrabold text-white leading-relaxed">
+          <div className="relative z-10 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] p-4 sm:p-5 mb-6 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5)]">
+            <p className="text-base sm:text-lg font-extrabold text-[color:var(--mm-ink-primary)] leading-relaxed">
               {currentQ.prompt}
             </p>
           </div>
@@ -634,13 +634,13 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
             (() => {
               const { quotient, remainder } = parseDivisionRemainderAnswer(currentAnswer);
               return (
-                <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.12),_transparent_60%),rgba(6,10,34,0.94)] border border-cyan-300/45 shadow-[inset_0_2px_14px_rgba(0,0,0,0.6),0_0_26px_rgba(34,211,238,0.16)] space-y-3">
-                  <div className="text-xs font-black uppercase tracking-wider text-cyan-300">
+                <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] shadow-[inset_0_2px_14px_rgba(0,0,0,0.6)] space-y-3">
+                  <div className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
                     Nhập kết quả phép chia
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label htmlFor={`q-quot-${currentQ.id}`} className="block text-xs font-bold text-indigo-200 mb-1.5">
+                      <label htmlFor={`q-quot-${currentQ.id}`} className="block text-xs font-bold text-[color:var(--mm-ink-secondary)] mb-1.5">
                         Thương
                       </label>
                       <input
@@ -658,11 +658,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                           if (e.key === 'Enter') handleCheckAnswer();
                         }}
                         placeholder="Nhập thương..."
-                        className="w-full px-4 py-3 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-lg tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm disabled:opacity-70 transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-lg tabular-nums placeholder:text-[color:var(--mm-ink-muted)] placeholder:text-sm disabled:opacity-70 transition-all"
                       />
                     </div>
                     <div>
-                      <label htmlFor={`q-rem-${currentQ.id}`} className="block text-xs font-bold text-indigo-200 mb-1.5">
+                      <label htmlFor={`q-rem-${currentQ.id}`} className="block text-xs font-bold text-[color:var(--mm-ink-secondary)] mb-1.5">
                         Số dư
                       </label>
                       <input
@@ -679,7 +679,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                           if (e.key === 'Enter') handleCheckAnswer();
                         }}
                         placeholder="Nhập số dư..."
-                        className="w-full px-4 py-3 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-lg tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm disabled:opacity-70 transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-lg tabular-nums placeholder:text-[color:var(--mm-ink-muted)] placeholder:text-sm disabled:opacity-70 transition-all"
                       />
                     </div>
                   </div>
@@ -687,8 +687,8 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
               );
             })()
           ) : (
-            <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.12),_transparent_60%),rgba(6,10,34,0.94)] border border-cyan-300/45 shadow-[inset_0_2px_14px_rgba(0,0,0,0.6),0_0_26px_rgba(34,211,238,0.16)] space-y-2.5">
-              <label htmlFor={`q-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-cyan-300">
+            <div className="relative z-10 mb-6 p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] shadow-[inset_0_2px_14px_rgba(0,0,0,0.6)] space-y-2.5">
+              <label htmlFor={`q-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
                 Nhập câu trả lời của em
               </label>
               <div className="flex items-center gap-2.5">
@@ -704,10 +704,10 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                     if (e.key === 'Enter') handleCheckAnswer();
                   }}
                   placeholder={inputSpec.mode === 'text_number' ? 'Nhập đáp án...' : 'Nhập câu trả lời...'}
-                  className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-slate-950/95 border-2 border-indigo-400/40 focus:border-amber-300 focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-white font-black text-xl tabular-nums placeholder:text-indigo-400/60 placeholder:text-sm disabled:opacity-70 transition-all"
+                  className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-xl tabular-nums placeholder:text-[color:var(--mm-ink-muted)] placeholder:text-sm disabled:opacity-70 transition-all"
                 />
                 {inputSpec.mode === 'text_number' && inputSpec.unitLabel && (
-                  <span className="px-4 py-3.5 rounded-xl bg-indigo-900/75 border border-cyan-300/35 text-cyan-200 font-black text-sm shrink-0">
+                  <span className="px-4 py-3.5 rounded-xl bg-[color:var(--mm-surface-2)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] text-[color:var(--mm-cyan-text)] font-black text-sm shrink-0">
                     {inputSpec.unitLabel}
                   </span>
                 )}
@@ -721,14 +721,14 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
               type="button"
               disabled={!isAnswerReady}
               onClick={handleCheckAnswer}
-              className="relative z-10 w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 disabled:opacity-35 text-slate-950 font-black text-sm sm:text-base ring-2 ring-cyan-200/80 shadow-[0_14px_34px_rgba(56,189,248,0.42),0_0_36px_rgba(232,121,249,0.26)] hover:shadow-[0_18px_42px_rgba(56,189,248,0.6),0_0_44px_rgba(232,121,249,0.38)] transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer mb-4 min-h-[52px]"
+              className="relative z-10 w-full py-4 rounded-2xl bg-[color:var(--mm-cyan-brightFill)] hover:brightness-110 disabled:opacity-40 text-[#05081D] font-black text-sm sm:text-base ring-2 ring-[color:var(--mm-cyan-bright)] shadow-[0_14px_34px_rgba(56,189,248,0.38)] transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer mb-4 min-h-[52px]"
             >
               Kiểm Tra Đáp Án
             </button>
           ) : (
-            <div className="relative z-10 p-4 rounded-2xl border border-emerald-400/70 bg-gradient-to-r from-emerald-500/22 to-teal-500/15 text-emerald-100 mb-4 animate-fade-in shadow-[0_8px_24px_rgba(16,185,129,0.25)]">
+            <div className="relative z-10 p-4 rounded-2xl border border-[color:var(--mm-emerald-border)] bg-[color:color-mix(in_oklch,var(--mm-emerald-tint)_45%,transparent)] text-[color:var(--mm-emerald-text)] mb-4 animate-fade-in">
               <div className="flex items-center gap-2.5 font-black text-sm">
-                <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" aria-hidden="true" />
+                <CheckCircle2 className="w-5 h-5 text-[color:var(--mm-emerald-accent)] shrink-0" aria-hidden="true" />
                 <span>Chính xác tuyệt vời! Đáp án là: {currentQ.correctAnswer}</span>
               </div>
             </div>
@@ -782,9 +782,9 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
           role="dialog"
           aria-modal="true"
           aria-labelledby="celebration-title"
-          className="fixed inset-0 z-50 bg-[#050817]/85 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[color:color-mix(in_oklch,var(--mm-canvas)_88%,transparent)] backdrop-blur-md flex items-center justify-center p-4"
         >
-          <div className="relative bg-gradient-to-b from-[#172158] via-[#1C1A5E] to-[#12163D] text-white rounded-3xl max-w-lg w-full p-7 shadow-[0_0_60px_rgba(251,191,36,0.35)] border-2 border-amber-300 text-center animate-fade-in overflow-hidden">
+          <div className="relative mm-surface-card rounded-3xl max-w-lg w-full p-7 shadow-[0_0_60px_rgba(251,191,36,0.32)] border-2 border-[color:var(--mm-amber-border)] text-center animate-fade-in overflow-hidden">
             {/* Festive Glow Ring */}
             <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-amber-400/20 blur-3xl" aria-hidden="true" />
 

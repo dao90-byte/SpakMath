@@ -1,0 +1,122 @@
+.container {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing);
+
+  inline-size: 100%;
+  max-inline-size: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+
+  color: var(--input-color, var(--color-primary));
+
+  background: var(--input-bg-color, transparent);
+
+  transition:
+    color 0.3s,
+    background 0.3s,
+    border-color 0.3s;
+
+  &:has(:where(:focus, :invalid)) {
+    outline-style: solid;
+    outline-width: 1px;
+  }
+
+  &:where(:hover:not(:has(:disabled))) {
+    border-color: var(--input-border-color, var(--color-border));
+  }
+
+  &:has(:invalid) {
+    border-color: var(--color-universal-error);
+    outline-color: var(--color-universal-error);
+  }
+
+  &:has(:focus) {
+    border-color: var(--color-universal-focus);
+    outline-color: var(--color-universal-focus);
+  }
+}
+
+.kind_bordered {
+  border-color: var(--input-border-color, var(--color-border));
+}
+
+.size_m {
+  padding: var(--spacing) calc(var(--spacing) * 1.5);
+
+  &:has(.slotStart) {
+    padding-left: var(--spacing);
+  }
+
+  &:has(.slotEnd) {
+    padding-right: var(--spacing);
+  }
+}
+
+.size_xl {
+  padding: calc(var(--spacing) * 2) var(--spacing);
+}
+
+.label {
+  cursor: text;
+
+  font-family: var(--font-sans);
+  font-size: var(--text-ui-s);
+  font-weight: var(--input-label-fw, 500);
+  line-height: var(--text-ui-s--line-height);
+  color: var(--input-label-color, var(--input-color));
+  text-align: center;
+
+  .kind_ghost & {
+    visibility: hidden;
+  }
+
+  .kind_ghost:focus-within &[data-visible],
+  .kind_ghost:hover &[data-visible],
+  .kind_ghost &[data-visible="always"] {
+    visibility: visible;
+  }
+}
+
+.inputContainer {
+  display: flex;
+  gap: var(--spacing);
+  align-items: center;
+}
+
+.slot {
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.input {
+  inline-size: 100%;
+  max-inline-size: var(--input-max-inline-size, 100%);
+
+  font-size: max(var(--min-font-size), var(--text-m));
+  font-weight: 500;
+  line-height: max(var(--min-font-size), 1.25rem);
+
+  :where(.size_xl) & {
+    inline-size: 100%;
+    font-size: var(--text-ui-l);
+    line-height: var(--text-ui-l--line-height);
+  }
+
+  &.fullWidth {
+    inline-size: 100%;
+    text-align: center;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:invalid {
+    color: var(--color-universal-error-text);
+  }
+
+  &:invalid::placeholder {
+    color: var(--color-universal-error);
+  }
+}

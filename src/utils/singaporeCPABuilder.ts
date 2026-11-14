@@ -228,7 +228,7 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           actionPrompt: `Chia đều ${bigVal} viên đá vào ${mult} phần bằng nhau để tìm 1 phần`,
           interactiveRule: `${mult} phần = ${bigVal} viên đá.`,
           groups: [
-            { id: 'g_large', label: `Khoang lớn (${mult} phần)`, icon: '🪨', count: mult, unitValue: baseA, totalValue: bigVal, color: '#38BDF8' },
+            { id: 'g_large', label: `Khoang lớn (${mult} phần)`, icon: '🪨', count: mult, unitValue: baseA, totalValue: bigVal, color: '#38BDF8', note: `Tổng = ${bigVal} viên`, isUnknown: true },
             { id: 'g_small', label: 'Khoang nhỏ (1 phần)', icon: '💎', count: 1, unitValue: baseA, totalValue: baseA, color: '#34D399', isUnknown: true },
           ],
         },
@@ -933,7 +933,7 @@ export function buildCPASpecForQuestion(params: {
   stepByStepExplanation: string[];
   visualModel: InMonthVisualModelConfig;
 }): SingaporeCPASpec {
-  const { id, dayNumber, qIndex1Based, correctAnswer, stepByStepExplanation, visualModel } = params;
+  const { id, dayNumber, qIndex1Based, prompt, correctAnswer, stepByStepExplanation, visualModel } = params;
   const primaryNum = extractPrimaryNumber(correctAnswer);
 
   // If this is a Week 1 (Day 1..7) question, use the dedicated canonical Week 1 Bar Model builder
@@ -1556,6 +1556,437 @@ export function buildCPASpecForQuestion(params: {
       };
     }
 
+    // Canonical CPA specs for November Weekly Tests Bar Model questions (no leaks, exact proportions)
+    if (id === 'nov-w1-q1') {
+      const bA = makeBarSpec({ id: 'bar_1', label: 'Đội Xanh', units: 1, unitValue: 24, displayValue: '24 viên', color: '#0284C7' });
+      const bB = makeBarSpec({ id: 'bar_2', label: 'Đội Đỏ', units: 3, unitValue: 24, displayValue: '? viên (3 phần)', isUnknown: true, color: '#10B981' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'viên đá năng lượng',
+          unitLabel: 'viên đá',
+          actionPrompt: 'Đặt 3 phần bằng nhau cho Đội Đỏ (mỗi phần bằng Đội Xanh = 24 viên)',
+          interactiveRule: 'Đội Đỏ gấp 3 lần Đội Xanh.',
+          groups: [
+            { id: 'cg_1', label: 'Đội Xanh (1 phần)', icon: '🔷', count: 1, unitValue: 24, totalValue: 24, color: '#0284C7' },
+            { id: 'cg_2', label: 'Đội Đỏ (3 phần)', icon: '💎', count: 3, unitValue: 24, totalValue: 72, color: '#10B981', isUnknown: true },
+          ],
+        },
+        pictorial: { kind: 'bar_model', family: 'comparison', unitReferenceValue: 24, unitName: 'viên đá', bars: [bA, bB] },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [`\\text{Đội Đỏ (3 phần)} = 24 \\;?\\; 3 = ?`],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 72,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q2') {
+      const bL = makeBarSpec({ id: 'bar_1', label: 'Kho lớn', units: 4, unitValue: 21, displayValue: '84 bình', isUnknown: true, color: '#7C3AED' });
+      const bS = makeBarSpec({ id: 'bar_2', label: 'Kho nhỏ', units: 1, unitValue: 21, displayValue: '? bình (1 phần)', isUnknown: true, color: '#F59E0B' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'bình dưỡng khí',
+          unitLabel: 'bình',
+          actionPrompt: 'Chia đều 84 bình ở kho lớn cho 4 phần rồi gộp cả 2 kho',
+          interactiveRule: 'Kho lớn = 4 phần (84 bình), Kho nhỏ = 1 phần.',
+          groups: [
+            { id: 'cg_1', label: 'Kho lớn (4 phần)', icon: '🧪', count: 4, unitValue: 21, totalValue: 84, color: '#7C3AED', note: 'Tổng = 84 bình', isUnknown: true },
+            { id: 'cg_2', label: 'Kho nhỏ (1 phần)', icon: '🧴', count: 1, unitValue: 21, totalValue: 21, color: '#F59E0B', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'part_whole',
+          unitReferenceValue: 21,
+          unitName: 'bình',
+          bars: [bL, bS],
+          totalBracket: { targetBarIds: ['bar_1', 'bar_2'], numericValue: 105, displayLabel: 'Tổng = ? bình', isUnknown: true },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Kho nhỏ (1 phần)} = 84 \\;?\\; 4 = ?`,
+            `\\text{Tổng cả 2 kho} = 84 \\;?\\; (\\text{Kho nhỏ}) = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 105,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q3') {
+      const b1 = makeBarSpec({ id: 'bar_1', label: 'Kệ 1', units: 3, unitValue: 24, displayValue: '? cuốn (3 phần)', isUnknown: true, color: '#0284C7' });
+      const b2 = makeBarSpec({ id: 'bar_2', label: 'Kệ 2', units: 1, unitValue: 24, displayValue: '? cuốn (1 phần)', isUnknown: true, color: '#EC4899' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'cuốn sách',
+          unitLabel: 'cuốn',
+          actionPrompt: 'Gộp 3 phần (Kệ 1) và 1 phần (Kệ 2) để chia đều 96 cuốn sách',
+          interactiveRule: 'Tổng 96 cuốn sách ứng với 3 + 1 phần.',
+          groups: [
+            { id: 'cg_1', label: 'Kệ 1 (3 phần)', icon: '📚', count: 3, unitValue: 24, totalValue: 72, color: '#0284C7', isUnknown: true },
+            { id: 'cg_2', label: 'Kệ 2 (1 phần)', icon: '📖', count: 1, unitValue: 24, totalValue: 24, color: '#EC4899', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'part_whole',
+          unitReferenceValue: 24,
+          unitName: 'cuốn sách',
+          bars: [b1, b2],
+          totalBracket: { targetBarIds: ['bar_1', 'bar_2'], numericValue: 96, displayLabel: 'Tổng = 96 cuốn' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Tổng số phần} = 3 \\;?\\; 1 = ?`,
+            `\\text{Kệ thứ hai (1 phần)} = 96 \\;?\\; (\\text{Tổng số phần}) = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 24,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q4') {
+      const bCam = makeBarSpec({ id: 'bar_1', label: 'Cây cam', units: 1, unitValue: 18, displayValue: '? cây (1 phần)', isUnknown: true, color: '#F59E0B' });
+      const bTao = makeBarSpec({ id: 'bar_2', label: 'Cây táo', units: 4, unitValue: 18, displayValue: '? cây (4 phần)', isUnknown: true, color: '#10B981' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'cây ăn quả',
+          unitLabel: 'cây',
+          actionPrompt: 'Tìm hiệu số phần tương ứng với 54 cây rồi tính số cây táo (4 phần)',
+          interactiveRule: 'Cây táo hơn cây cam 54 cây và gấp 4 lần cây cam.',
+          groups: [
+            { id: 'cg_1', label: 'Cây cam (1 phần)', icon: '🍊', count: 1, unitValue: 18, totalValue: 18, color: '#F59E0B', isUnknown: true },
+            { id: 'cg_2', label: 'Cây táo (4 phần)', icon: '🍎', count: 4, unitValue: 18, totalValue: 72, color: '#10B981', note: 'Hơn 54 cây', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'comparison',
+          unitReferenceValue: 18,
+          unitName: 'cây',
+          bars: [bCam, bTao],
+          differenceBracket: { longerBarId: 'bar_2', shorterBarId: 'bar_1', diffUnits: 3, numericValue: 54, displayLabel: 'Hiệu = 54 cây (3 phần)' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Hiệu số phần} = 4 \\;?\\; 1 = ?`,
+            `\\text{Cây cam (1 phần)} = 54 \\;?\\; (\\text{Hiệu số phần}) = ?`,
+            `\\text{Cây táo (4 phần)} = (\\text{Cây cam}) \\;?\\; 4 = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 72,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q5') {
+      const bA = makeBarSpec({ id: 'bar_1', label: 'Thùng A', units: 1, unitValue: 18, displayValue: '18 L', color: '#0284C7' });
+      const bB = makeBarSpec({ id: 'bar_2', label: 'Thùng B', units: 2, unitValue: 18, offsetValue: 9, displayValue: '? L (2 phần + 9 L)', isUnknown: true, color: '#8B5CF6', highlightNote: '+9 L' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'lít dầu',
+          unitLabel: 'L',
+          actionPrompt: 'Nhân đôi Thùng A (18 L) rồi cộng thêm phần hơn 9 L',
+          interactiveRule: 'Thùng B nhiều hơn 2 lần Thùng A là 9 L.',
+          groups: [
+            { id: 'cg_1', label: 'Thùng A (1 phần)', icon: '🛢️', count: 1, unitValue: 18, totalValue: 18, color: '#0284C7' },
+            { id: 'cg_2', label: 'Thùng B (2 phần + 9 L)', icon: '⛽', count: 2, unitValue: 18, totalValue: 36, color: '#8B5CF6', note: '+9 L', isUnknown: true },
+          ],
+        },
+        pictorial: { kind: 'bar_model', family: 'comparison', unitReferenceValue: 18, unitName: 'lít', bars: [bA, bB] },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{2 lần Thùng A} = 18 \\;?\\; 2 = ?`,
+            `\\text{Thùng B} = (\\text{2 lần Thùng A}) \\;?\\; 9 = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 45,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q6') {
+      const bAnBefore = makeBarSpec({ id: 'bar_1', label: 'An (Lúc đầu)', units: 1, unitValue: 30, offsetValue: 8, displayValue: '? nhãn vở', isUnknown: true, color: '#10B981', highlightNote: 'Cho Bình 8', deltaType: 'transferred_out' });
+      const bBinhBefore = makeBarSpec({ id: 'bar_2', label: 'Bình (Lúc đầu)', units: 1, unitValue: 22, displayValue: '? nhãn vở', isUnknown: true, color: '#0284C7' });
+      const bAnAfter = makeBarSpec({ id: 'bar_1', label: 'An (Lúc sau)', units: 1, unitValue: 30, displayValue: '? nhãn (Bằng Bình)', isUnknown: true, color: '#10B981' });
+      const bBinhAfter = makeBarSpec({ id: 'bar_2', label: 'Bình (Lúc sau)', units: 1, unitValue: 22, offsetValue: 8, displayValue: '? nhãn (Nhận +8)', isUnknown: true, color: '#0284C7', deltaType: 'transferred_in' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'nhãn vở',
+          unitLabel: 'nhãn vở',
+          actionPrompt: 'Chuyển trạng thái TRƯỚC ⇄ SAU để thấy tổng luôn là 60 nhãn vở',
+          interactiveRule: 'Tổng = 60 nhãn vở. An cho Bình 8 nhãn vở thì hai bạn bằng nhau.',
+          groups: [
+            { id: 'cg_1', label: 'An lúc đầu', icon: '🏷️', count: 1, unitValue: 38, totalValue: 38, color: '#10B981', isUnknown: true },
+            { id: 'cg_2', label: 'Bình lúc đầu', icon: '📘', count: 1, unitValue: 22, totalValue: 22, color: '#0284C7', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'before_after',
+          unitReferenceValue: 30,
+          unitName: 'nhãn vở',
+          bars: [bAnBefore, bBinhBefore],
+          beforeBars: [bAnBefore, bBinhBefore],
+          afterBars: [bAnAfter, bBinhAfter],
+          transferSpec: { conservationRule: 'constant_total', fromBarId: 'bar_1', toBarId: 'bar_2', deltaValue: 8, description: 'An cho Bình 8 nhãn vở thì hai bạn bằng nhau (Tổng luôn = 60).' },
+          totalBracket: { targetBarIds: ['bar_1', 'bar_2'], numericValue: 60, displayLabel: 'Tổng = 60 nhãn vở' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Khi bằng nhau mỗi bạn} = 60 \\;?\\; 2 = ?`,
+            `\\text{Số nhãn vở của An lúc đầu} = (\\text{Lúc bằng nhau}) \\;?\\; 8 = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 38,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q7') {
+      const bNho = makeBarSpec({ id: 'bar_1', label: 'Bao nhỏ', units: 1, unitValue: 20, displayValue: '1 phần = ? kg', isUnknown: true, color: '#0284C7' });
+      const bLon = makeBarSpec({ id: 'bar_2', label: 'Bao lớn', units: 4, unitValue: 20, displayValue: '4 phần = ? kg', isUnknown: true, color: '#10B981' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'ki-lô-gam gạo',
+          unitLabel: 'kg',
+          actionPrompt: 'Đếm tổng số phần bằng nhau của cả Bao nhỏ và Bao lớn',
+          interactiveRule: 'Bao lớn 4 phần, Bao nhỏ 1 phần, Tổng = 100 kg.',
+          groups: [
+            { id: 'cg_1', label: 'Bao nhỏ (1 phần)', icon: '🌾', count: 1, unitValue: 20, totalValue: 20, color: '#0284C7', isUnknown: true },
+            { id: 'cg_2', label: 'Bao lớn (4 phần)', icon: '🍚', count: 4, unitValue: 20, totalValue: 80, color: '#10B981', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'part_whole',
+          unitReferenceValue: 20,
+          unitName: 'kg',
+          bars: [bNho, bLon],
+          totalBracket: { targetBarIds: ['bar_1', 'bar_2'], numericValue: 100, displayLabel: 'Tổng = 100 kg' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Tổng số phần bằng nhau} = 4 \\;?\\; 1 = ?`,
+            `\\text{Cân nặng bao gạo nhỏ} = 100 \\;?\\; (\\text{Tổng số phần}) = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: '20\\text{ kg}',
+          finalNumericValue: 20,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q8') {
+      const bNgan = makeBarSpec({ id: 'bar_1', label: 'Dây ngắn', units: 1, unitValue: 9, displayValue: '1 phần = ? m', isUnknown: true, color: '#F59E0B' });
+      const bDai = makeBarSpec({ id: 'bar_2', label: 'Dây dài', units: 5, unitValue: 9, displayValue: '5 phần = ? m', isUnknown: true, color: '#7C3AED' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'mét dây',
+          unitLabel: 'm',
+          actionPrompt: 'So sánh số phần của Dây dài (5 phần) và Dây ngắn (1 phần)',
+          interactiveRule: 'Phần dài hơn 36 m ứng với hiệu số phần của hai dây.',
+          groups: [
+            { id: 'cg_1', label: 'Dây ngắn (1 phần)', icon: '〰️', count: 1, unitValue: 9, totalValue: 9, color: '#F59E0B', isUnknown: true },
+            { id: 'cg_2', label: 'Dây dài (5 phần)', icon: '➰', count: 5, unitValue: 9, totalValue: 45, color: '#7C3AED', note: 'Hơn 36 m', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'comparison',
+          unitReferenceValue: 9,
+          unitName: 'm',
+          bars: [bNgan, bDai],
+          differenceBracket: { longerBarId: 'bar_2', shorterBarId: 'bar_1', diffUnits: 4, numericValue: 36, displayLabel: 'Hiệu = 36 m' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Hiệu số phần bằng nhau} = 5 \\;?\\; 1 = ?`,
+            `\\text{Độ dài sợi dây ngắn} = 36 \\;?\\; (\\text{Hiệu số phần}) = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: '9\\text{ m}',
+          finalNumericValue: 9,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q9') {
+      const bMai = makeBarSpec({ id: 'bar_1', label: 'Mai', units: 1, unitValue: 15, displayValue: '15 bông', color: '#0284C7' });
+      const bLan = makeBarSpec({ id: 'bar_2', label: 'Lan', units: 3, unitValue: 15, offsetValue: -7, displayValue: '? bông (3 phần bớt 7)', isUnknown: true, color: '#EC4899', highlightNote: '-7 bông' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'bông hoa',
+          unitLabel: 'bông',
+          actionPrompt: 'Lấy 3 lần số hoa của Mai rồi bớt đi 7 bông để tìm số hoa của Lan',
+          interactiveRule: 'Mai = 15 bông. Lan kém 3 lần số hoa của Mai là 7 bông.',
+          groups: [
+            { id: 'cg_1', label: 'Mai (1 phần)', icon: '🌸', count: 1, unitValue: 15, totalValue: 15, color: '#0284C7' },
+            { id: 'cg_2', label: 'Lan (3 phần bớt 7)', icon: '🌺', count: 3, unitValue: 15, totalValue: 45, color: '#EC4899', note: '-7 bông', isUnknown: true },
+          ],
+        },
+        pictorial: { kind: 'bar_model', family: 'comparison', unitReferenceValue: 15, unitName: 'bông', bars: [bMai, bLan] },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{3 lần số hoa của Mai} = 15 \\;?\\; 3 = ?`,
+            `\\text{Số hoa của Lan} = (\\text{3 lần Mai}) \\;?\\; 7 = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: '38\\text{ bông}',
+          finalNumericValue: 38,
+        },
+      };
+    }
+
+    if (id === 'nov-w1-q10') {
+      const bKhoABefore = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc đầu)', units: 1, unitValue: 20, offsetValue: 24, displayValue: '? tấn (Hơn Kho B)', isUnknown: true, color: '#10B981', highlightNote: 'Chuyển 12 tấn', deltaType: 'transferred_out' });
+      const bKhoBBefore = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc đầu)', units: 1, unitValue: 20, displayValue: '? tấn (1 phần)', isUnknown: true, color: '#0284C7' });
+      const bKhoAAfter = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc sau)', units: 1, unitValue: 32, displayValue: 'Bằng Kho B', isUnknown: true, color: '#10B981' });
+      const bKhoBAfter = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc sau)', units: 1, unitValue: 20, offsetValue: 12, displayValue: 'Nhận +12 tấn', isUnknown: true, color: '#0284C7', deltaType: 'transferred_in' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'tấn thóc',
+          unitLabel: 'tấn',
+          actionPrompt: 'Chuyển trạng thái TRƯỚC ⇄ SAU để quan sát phần chênh lệch gấp đôi lượng chuyển',
+          interactiveRule: 'Kho A giảm 12 tấn, Kho B tăng 12 tấn thì hai kho bằng nhau.',
+          groups: [
+            { id: 'cg_1', label: 'Kho A bớt đi 12 tấn', icon: '🌾', count: 1, unitValue: 12, totalValue: 12, color: '#10B981' },
+            { id: 'cg_2', label: 'Kho B thêm 12 tấn', icon: '🏚️', count: 1, unitValue: 12, totalValue: 12, color: '#0284C7' },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'before_after',
+          unitReferenceValue: 20,
+          unitName: 'tấn',
+          bars: [bKhoBBefore, bKhoABefore],
+          beforeBars: [bKhoBBefore, bKhoABefore],
+          afterBars: [bKhoBAfter, bKhoAAfter],
+          transferSpec: { conservationRule: 'constant_total', fromBarId: 'bar_1', toBarId: 'bar_2', deltaValue: 12, description: 'Kho A chuyển 12 tấn sang Kho B thì hai kho bằng nhau.' },
+          differenceBracket: { longerBarId: 'bar_1', shorterBarId: 'bar_2', numericValue: 24, displayLabel: 'Hiệu ban đầu = ? tấn', isUnknown: true },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [`\\text{Hiệu ban đầu} = 12 \\;?\\; 2 = ?`],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: '24\\text{ tấn}',
+          finalNumericValue: 24,
+        },
+      };
+    }
+
+    if (id === 'nov-w5-q1') {
+      const bHoa = makeBarSpec({ id: 'bar_1', label: 'Sao Hỏa', units: 1, unitValue: 24, displayValue: '? mẫu (1 phần)', isUnknown: true, color: '#0284C7' });
+      const bKim = makeBarSpec({ id: 'bar_2', label: 'Sao Kim', units: 4, unitValue: 24, displayValue: '? mẫu (4 phần)', isUnknown: true, color: '#10B981' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'mẫu khoáng thạch',
+          unitLabel: 'mẫu',
+          actionPrompt: 'Tính tổng số phần rồi tìm giá trị 1 phần và 4 phần (Đội Sao Kim)',
+          interactiveRule: 'Tổng = 120 mẫu. Đội Sao Kim gấp 4 lần Đội Sao Hỏa.',
+          groups: [
+            { id: 'cg_1', label: 'Sao Hỏa (1 phần)', icon: '🪨', count: 1, unitValue: 24, totalValue: 24, color: '#0284C7', isUnknown: true },
+            { id: 'cg_2', label: 'Sao Kim (4 phần)', icon: '💎', count: 4, unitValue: 24, totalValue: 96, color: '#10B981', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'part_whole',
+          unitReferenceValue: 24,
+          unitName: 'mẫu',
+          bars: [bHoa, bKim],
+          totalBracket: { targetBarIds: ['bar_1', 'bar_2'], numericValue: 120, displayLabel: 'Tổng = 120 mẫu' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Tổng số phần bằng nhau} = 4 \\;?\\; 1 = ?`,
+            `\\text{Đội Sao Hỏa (1 phần)} = 120 \\;?\\; (\\text{Tổng số phần}) = ?`,
+            `\\text{Đội Sao Kim (4 phần)} = (\\text{Sao Hỏa}) \\;?\\; 4 = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: formatToLatex(correctAnswer),
+          finalNumericValue: 96,
+        },
+      };
+    }
+
+    if (id === 'nov-w5-q7') {
+      const bCon = makeBarSpec({ id: 'bar_1', label: 'Tuổi con', units: 1, unitValue: 10, displayValue: '1 phần = ? tuổi', isUnknown: true, color: '#0284C7' });
+      const bBo = makeBarSpec({ id: 'bar_2', label: 'Tuổi bố', units: 4, unitValue: 10, displayValue: '4 phần = ? tuổi', isUnknown: true, color: '#10B981' });
+      return {
+        version: '1.0',
+        domain: 'bar_model',
+        concrete: {
+          itemName: 'tuổi',
+          unitLabel: 'tuổi',
+          actionPrompt: 'Giữ nguyên hiệu số tuổi 30 tuổi, chia đều cho hiệu số phần (4 - 1)',
+          interactiveRule: 'Hiệu số tuổi không đổi = 36 - 6 = 30 tuổi.',
+          groups: [
+            { id: 'cg_1', label: 'Tuổi con (1 phần)', icon: '🧒', count: 1, unitValue: 10, totalValue: 10, color: '#0284C7', isUnknown: true },
+            { id: 'cg_2', label: 'Tuổi bố (4 phần)', icon: '👨', count: 4, unitValue: 10, totalValue: 40, color: '#10B981', note: 'Hơn 30 tuổi', isUnknown: true },
+          ],
+        },
+        pictorial: {
+          kind: 'bar_model',
+          family: 'comparison',
+          unitReferenceValue: 10,
+          unitName: 'tuổi',
+          bars: [bCon, bBo],
+          differenceBracket: { longerBarId: 'bar_2', shorterBarId: 'bar_1', diffUnits: 3, numericValue: 30, displayLabel: 'Hiệu luôn = 30 tuổi' },
+        },
+        abstract: {
+          unknownSymbol: '?',
+          guidedLatexSteps: [
+            `\\text{Hiệu số tuổi (không đổi)} = 36 \\;?\\; 6 = 30\\text{ (tuổi)}`,
+            `\\text{Hiệu số phần bằng nhau} = 4 \\;?\\; 1 = ?`,
+            `\\text{Tuổi con khi đó} = 30 \\;?\\; (\\text{Hiệu số phần}) = ?`,
+          ],
+          fullLatexSteps: stepByStepExplanation.map(formatToLatex),
+          finalAnswerLatex: '10\\text{ tuổi}',
+          finalNumericValue: 10,
+        },
+      };
+    }
+
     // Generic fallback Bar Model
     const barSpecs: BarModelBarSpec[] = rawBars.map((b, idx) => {
       const offsetMatch = b.highlightNote?.match(/([+-])\s*(\d+)/);
@@ -1593,7 +2024,9 @@ export function buildCPASpecForQuestion(params: {
             targetBarIds: barSpecs.map((b) => b.id),
             numericValue: sumAllBars,
             displayLabel: visualModel.totalBracketLabel!,
-            isUnknown: primaryNum > 0 && visualModel.totalBracketLabel!.includes(String(primaryNum)),
+            isUnknown:
+              visualModel.totalBracketLabel!.includes('?') ||
+              (primaryNum > 0 && visualModel.totalBracketLabel!.includes(String(primaryNum))),
           }
         : undefined,
       differenceBracket:
@@ -1606,7 +2039,8 @@ export function buildCPASpecForQuestion(params: {
               ),
               displayLabel: visualModel.differenceBracketLabel!,
               isUnknown:
-                primaryNum > 0 && visualModel.differenceBracketLabel!.includes(String(primaryNum)),
+                visualModel.differenceBracketLabel!.includes('?') ||
+                (primaryNum > 0 && visualModel.differenceBracketLabel!.includes(String(primaryNum))),
             }
           : undefined,
     };
@@ -1638,7 +2072,7 @@ export function buildCPASpecForQuestion(params: {
         unknownSymbol: '?',
         guidedLatexSteps:
           stepByStepExplanation.length > 0
-            ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum))
+            ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum, prompt))
             : [`\\text{Kết quả cần tìm} = ?`],
         fullLatexSteps:
           stepByStepExplanation.length > 0
@@ -1749,9 +2183,12 @@ export function buildCPASpecForQuestion(params: {
         `\\text{Số sao Đỏ và Cam} = (\\text{Số chu kỳ} \\;?\\; 2) \\;?\\; (\\text{Sao Đỏ, Cam dư}) = ?`,
       ];
     } else {
+      if (prompt && (prompt.includes('số bị chia') || prompt.includes('chính số đó'))) {
+        unknownTarget = 'dividend';
+      }
       guidedLatexSteps =
         stepByStepExplanation.length > 0
-          ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum))
+          ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum, prompt))
           : [`${dividend} \\;?\\; ${divisor} = ?`];
     }
 
@@ -1963,9 +2400,14 @@ export function buildCPASpecForQuestion(params: {
         `\\text{Số cột cờ} = (\\text{Chu vi}) \\;?\\; 4 = ?`,
       ];
     } else {
+      if (primaryNum > 0 && primaryNum === totalLength && objectsCount !== primaryNum) {
+        unknownTarget = 'total_length';
+      } else if (primaryNum > 0 && primaryNum === stepLength && objectsCount !== primaryNum && totalLength !== primaryNum) {
+        unknownTarget = 'step_length';
+      }
       guidedLatexSteps =
         stepByStepExplanation.length > 0
-          ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum))
+          ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum, prompt))
           : [`\\text{Tổng độ dài} = (\\text{Số khoảng}) \\;?\\; ${stepLength} = ?`];
     }
 
@@ -2166,7 +2608,7 @@ export function buildCPASpecForQuestion(params: {
   } else {
     measGuidedSteps =
       stepByStepExplanation.length > 0
-        ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum))
+        ? stepByStepExplanation.map((s) => maskExplanationToGuided(s, primaryNum, prompt))
         : [`\\text{Quy đổi đơn vị} = ?`];
   }
 
@@ -2187,6 +2629,7 @@ export function buildCPASpecForQuestion(params: {
             unitValue: ci.value,
             totalValue: ci.value,
             color: ci.color,
+            isUnknown: !!ci.masked,
           }))
         : [
             {
@@ -2229,16 +2672,21 @@ export function buildCPASpecForQuestion(params: {
 /**
  * Helper to mask arithmetic operators and results in raw Vietnamese prose explanations for generic fallback specs.
  */
-function maskExplanationToGuided(raw: string, primaryNum: number): string {
+function maskExplanationToGuided(raw: string, primaryNum: number, prompt?: string): string {
   let masked = raw
     .replace(/(\d)\s*:\s*(\d)/g, '$1 ? $2')
     .replace(/(\d)\s*×\s*(\d)/g, '$1 ? $2')
     .replace(/(\d)\s*\+\s*(\d)/g, '$1 ? $2')
-    .replace(/(\d)\s*-\s*(\d)/g, '$1 ? $2');
+    .replace(/(\d)\s*-\s*(\d)/g, '$1 ? $2')
+    .replace(/=\s*\d+(?:\s*\([^)]*\))?/g, '= ?')
+    .replace(/(dư)\s+\d+/gi, '$1 ?');
   if (primaryNum > 0) {
-    masked = masked.replace(new RegExp(`=\\s*${primaryNum}\\b`, 'g'), '= ?');
+    const numStr = String(primaryNum);
+    const inPrompt = prompt ? new RegExp(`(?<!\\d)${numStr}(?!\\d)`).test(prompt) : false;
+    if (!inPrompt) {
+      masked = masked.replace(new RegExp(`(?<!\\d)${numStr}(?!\\d)`, 'g'), '?');
+    }
   }
-  masked = masked.replace(/=\s*\d+(\s*\([^)]+\))?\.?$/g, '= ?');
   return formatToLatex(masked);
 }
 

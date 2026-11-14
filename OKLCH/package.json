@@ -1,0 +1,91 @@
+{
+  "name": "harmonizer",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "core": "pnpm --filter @harmonizer/core",
+    "web": "pnpm --filter @harmonizer/web-app",
+    "figma": "pnpm --filter @harmonizer/figma-plugin",
+    "figma:preview": "node scripts/plugin-preview.mjs",
+    "test": "pnpm --recursive test",
+    "test:watch": "pnpm --recursive test:watch",
+    "lint": "cross-env FORCE_COLOR=1 pnpm --parallel -w /^lint:*/",
+    "lint:oxlint": "oxlint .",
+    "lint:oxfmt": "oxfmt . --check --ignore-path=.oxfmtignore",
+    "lint:styles": "pnpm stylelint \"**/*.{css,html}\"",
+    "format": "cross-env FORCE_COLOR=1 pnpm --parallel -w /^format:*/",
+    "format:oxlint": "oxlint . --fix",
+    "format:oxfmt": "oxfmt . --ignore-path=.oxfmtignore",
+    "format:styles": "pnpm lint:styles --fix && oxfmt '**/*.{css,html}' --ignore-path=.oxfmtignore",
+    "typecheck": "pnpm --recursive --parallel typecheck",
+    "smoke:plugin-ui": "node scripts/smoke-plugin-ui.mjs",
+    "security:audit": "pnpm dlx audit-ci@^7",
+    "postinstall": "pnpm exec simple-git-hooks"
+  },
+  "dependencies": {
+    "@zag-js/menu": "^1.44.0",
+    "@zag-js/react": "^1.44.0",
+    "@zag-js/select": "^1.44.0",
+    "@zag-js/tooltip": "^1.44.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "nano-staged": "^1.0.2",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "playwright-core": "^1.63.0",
+    "postcss-html": "^2.0.0",
+    "simple-git-hooks": "^2.14.0",
+    "stylelint": "^17.15.0",
+    "stylelint-config-clean-order": "^10.0.0",
+    "stylelint-config-css-modules": "^4.6.0",
+    "stylelint-config-html": "^2.0.0",
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-order": "^8.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "./node_modules/.bin/nano-staged",
+    "pre-push": "pnpm typecheck"
+  },
+  "nano-staged": {
+    "*.{js,cjs,mjs,jsx,ts,mts,tsx}": [
+      "oxlint --fix",
+      "oxfmt"
+    ],
+    "*.{css,html}": [
+      "stylelint --fix",
+      "oxfmt"
+    ]
+  },
+  "engines": {
+    "node": ">=24.x"
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@^1": "^1.1.21",
+      "brace-expansion@^2": "^2.1.7",
+      "minimatch@^3": "^3.1.5",
+      "minimatch@^5": "^5.1.9",
+      "ajv@^8": "^8.18.0",
+      "picomatch@^2": "^2.3.2"
+    },
+    "supportedArchitectures": {
+      "os": [
+        "darwin",
+        "linux",
+        "win32"
+      ],
+      "cpu": [
+        "arm64",
+        "x64"
+      ],
+      "libc": [
+        "glibc"
+      ]
+    }
+  }
+}
