@@ -170,7 +170,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Hiệu số phần bằng nhau là: 4 - 1 = 3 (phần). Số cây cam (1 phần) là: 54 : 3 = 18 (cây). Số cây táo là: 18 × 4 = 72 (cây táo).',
         visualModel: {
           type: 'bar_model',
-          title: 'Hiệu 54 cây ứng với 4 - 1 = 3 phần bằng nhau',
+          title: 'Hiệu 54 cây ứng với phần hơn trên sơ đồ thanh',
           bars: [
             { label: 'Cây cam', valueLabel: '? cây (1 phần)', units: 1, color: '#F59E0B' },
             { label: 'Cây táo', valueLabel: '? cây (4 phần)', units: 4, color: '#10B981', highlightNote: 'Hơn 54 cây (3 phần)' },
@@ -383,7 +383,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Vì 7 × 8 = 56 và 59 - 56 = 3 (3 < 7) nên 59 : 7 được thương là 8, dư 3.',
         visualModel: {
           type: 'remainder_groups',
-          title: '59 chia thành các nhóm 7: được 8 nhóm và lẻ 3',
+          title: 'Chia 59 ngôi sao vào các nhóm đều 7 ngôi sao',
           dividend: 59,
           divisor: 7,
           quotient: 8,
@@ -404,7 +404,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Số chia là 8 nên số dư lớn nhất có thể là: 8 - 1 = 7. Số bị chia là: 11 × 8 + 7 = 88 + 7 = 95.',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Chia cho 8 ➔ Dư lớn nhất = 7 · Số bị chia = 11 × 8 + 7',
+          title: 'Tìm số bị chia khi chia cho 8, thương 11 và số dư lớn nhất',
           dividend: 95,
           divisor: 8,
           quotient: 11,
@@ -425,7 +425,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Ta có 46 : 6 = 7 (dư 4 người). 4 người còn lại vẫn cần thêm 1 chiếc thuyền nữa. Vậy cần ít nhất: 7 + 1 = 8 (chiếc thuyền).',
         visualModel: {
           type: 'remainder_groups',
-          title: '46 : 6 = 7 thuyền (dư 4 người) ➔ Cần 7 + 1 = 8 thuyền',
+          title: 'Xếp 46 nhà khoa học lên các thuyền 6 chỗ (chở hết cả đoàn)',
           dividend: 46,
           divisor: 6,
           quotient: 7,
@@ -446,7 +446,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Ta có 62 : 4 = 15 (dư 2 bánh xe). Vì 2 bánh xe dư không đủ lắp thêm 1 ô tô nên lắp được nhiều nhất 15 chiếc ô tô.',
         visualModel: {
           type: 'remainder_groups',
-          title: '62 : 4 = 15 xe (dư 2 bánh không đủ lắp xe thứ 16)',
+          title: 'Lắp 62 bánh xe vào các ô tô (mỗi ô tô đủ 4 bánh)',
           dividend: 62,
           divisor: 4,
           quotient: 15,
@@ -467,7 +467,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Mỗi nhóm chu kỳ có 4 màu. Ta có 35 : 4 = 8 (nhóm) dư 3. Dư 3 ứng với màu thứ 3 trong nhóm là Màu Lục.',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Chu kỳ 4 màu (Đỏ-Vàng-Lục-Lam) · 35 : 4 = 8 dư 3 ➔ Màu Lục',
+          title: 'Chu kỳ 4 màu (Đỏ–Vàng–Lục–Lam) · Tìm màu đèn thứ 35',
           dividend: 35,
           divisor: 4,
           quotient: 8,
@@ -488,7 +488,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Số tự nhiên đó là: 9 × 6 + 4 = 58. Khi lấy 58 chia cho 7, ta có: 58 : 7 = 8 (dư 2). Vậy số dư là 2.',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Số bị chia = 9 × 6 + 4 = 58 · Lấy 58 : 7 = 8 dư 2',
+          title: 'Khôi phục số tự nhiên (chia 6 được 9 dư 4) rồi chia cho 7',
           dividend: 58,
           divisor: 7,
           quotient: 8,
@@ -524,7 +524,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Quy tắc bất khả xâm phạm của phép chia có dư là: Số dư < Số chia. Nếu còn dư 11 khi chia cho 6 thì 11 vẫn tách thêm được 1 nhóm 6 và còn dư 5.',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Quy tắc vàng: Số dư (5) luôn nhỏ hơn Số chia (6)',
+          title: 'Kiểm chứng phép chia 53 : 6 theo quy tắc Số dư < Số chia',
           dividend: 53,
           divisor: 6,
           quotient: 8,
@@ -558,7 +558,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Đây là sự khác biệt cốt lõi giữa bài toán "Cần ít nhất" (làm tròn lên: Thương + 1) và bài toán "Lắp/may được nhiều nhất" (lấy phần nguyên: Thương).',
         visualModel: {
           type: 'remainder_groups',
-          title: '38 : 5 = 7 dư 3 · Thuê đò = 8 chuyến vs May áo = 7 áo',
+          title: 'So sánh cách xử lý phần dư của phép chia 38 : 5',
           dividend: 38,
           divisor: 5,
           quotient: 7,
@@ -592,7 +592,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Trong bài toán chu kỳ độ dài K: dư 1 ứng với vị trí 1, dư 2 ứng với vị trí 2,..., còn dư 0 (chia hết) luôn ứng với vị trí cuối cùng (vị trí K) của nhóm.',
         visualModel: {
           type: 'remainder_groups',
-          title: '40 : 5 = 8 (dư 0) ➔ Vị trí cuối cùng của nhóm 5 (Màu Trắng)',
+          title: 'Chu kỳ 5 lá cờ (Xanh–Đỏ–Tím–Vàng–Trắng) · 40 : 5 = 8 (dư 0)',
           dividend: 40,
           divisor: 5,
           quotient: 8,
@@ -626,7 +626,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Một giỏ quà hoàn chỉnh cần đủ cả 3 thành phần, nên số giỏ quà tối đa bị giới hạn bởi thành phần hết trước (thương nhỏ nhất trong các phép chia = 6 giỏ).',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Bánh: 6 giỏ · Kẹo: 6 giỏ · Nước: 7 giỏ ➔ Tối đa 6 giỏ đủ bộ',
+          title: 'Xếp giỏ quà đủ 3 món (20 bánh · 25 kẹo · 15 nước)',
           dividend: 20,
           divisor: 3,
           quotient: 6,
@@ -668,7 +668,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Số khoảng cách 5 m là: 45 : 5 = 9 (khoảng). Vì trồng cây ở cả hai đầu đường nên số cây là: 9 + 1 = 10 (cây).',
         visualModel: {
           type: 'interval_model',
-          title: 'Trồng cả 2 đầu: Số cây = (45 : 5) + 1 = 10 cây',
+          title: 'Trồng cây cả 2 đầu đường dài 45 m (cách đều 5 m)',
           intervalSubtype: 'both_ends',
           totalLength: 45,
           stepLength: 5,
@@ -690,7 +690,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Số khoảng cách là: 36 : 4 = 9 (khoảng). Vì hai đầu không đặt trụ đèn nên số trụ đèn là: 9 - 1 = 8 (trụ đèn).',
         visualModel: {
           type: 'interval_model',
-          title: 'Không đặt ở 2 đầu: Số trụ = (36 : 4) - 1 = 8 trụ',
+          title: 'Đặt trụ đèn (bỏ trống 2 đầu) trên đoạn 36 m (cách 4 m)',
           intervalSubtype: 'neither_end',
           totalLength: 36,
           stepLength: 4,
@@ -712,7 +712,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Trên đường khép kín (hình tròn), số cây đúng bằng số khoảng cách: 80 : 5 = 16 (cây liễu).',
         visualModel: {
           type: 'interval_model',
-          title: 'Đường khép kín (hồ tròn): Số cây = Số khoảng = 80 : 5 = 16',
+          title: 'Trồng cây liễu quanh hồ tròn chu vi 80 m (cách đều 5 m)',
           intervalSubtype: 'closed_loop',
           totalLength: 80,
           stepLength: 5,
@@ -734,7 +734,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Số đoạn gỗ cưa được là: 28 : 4 = 7 (đoạn). Số lần cưa là: 7 - 1 = 6 (lần cưa). Thời gian cưa là: 6 × 3 = 18 (phút).',
         visualModel: {
           type: 'interval_model',
-          title: '7 đoạn gỗ ➔ Chỉ cần 7 - 1 = 6 mạch cưa × 3 phút = 18 phút',
+          title: 'Cưa khúc gỗ 28 dm thành các đoạn 4 dm (3 phút/lần cưa)',
           intervalSubtype: 'wood_cuts',
           totalLength: 28,
           stepLength: 4,
@@ -756,7 +756,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Từ tầng 1 lên tầng 5 có số khoảng tầng là: 5 - 1 = 4 (khoảng tầng). Tổng số bậc thang phải leo là: 18 × 4 = 72 (bậc thang).',
         visualModel: {
           type: 'interval_model',
-          title: 'Tầng 1 ➔ Tầng 5 có (5 - 1) = 4 khoảng tầng × 18 bậc',
+          title: 'Leo cầu thang từ Tầng 1 lên Tầng 5 (18 bậc mỗi tầng)',
           intervalSubtype: 'stairs',
           totalLength: 72,
           stepLength: 18,
@@ -778,7 +778,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Từ lá cờ thứ nhất đến lá cờ thứ 9 có số khoảng cách là: 9 - 1 = 8 (khoảng). Độ dài mỗi khoảng là: 48 : 8 = 6 (m).',
         visualModel: {
           type: 'interval_model',
-          title: '9 lá cờ tạo ra (9 - 1) = 8 khoảng cách · 48 : 8 = 6 m',
+          title: 'Hàng 9 lá cờ dài 48 m ➔ Tìm khoảng cách giữa 2 lá cờ',
           intervalSubtype: 'both_ends',
           totalLength: 48,
           stepLength: 6,
@@ -815,7 +815,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Cốt lõi của toán trồng cây thẳng hàng nằm ở 2 điểm mút đầu - cuối: Có đủ 2 đầu thì (+1), chỉ có 1 đầu thì giữ nguyên (= Số khoảng), bỏ cả 2 đầu thì (-1).',
         visualModel: {
           type: 'interval_model',
-          title: '6 khoảng cách: Trồng 2 đầu = 7 cây · Bỏ 2 đầu = 5 cây',
+          title: 'So sánh 2 điểm mút đầu–cuối trên đoạn 30 m (6 khoảng)',
           intervalSubtype: 'both_ends',
           totalLength: 30,
           stepLength: 5,
@@ -850,7 +850,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Mạch cưa nằm ở vị trí điểm chia bên trong thanh gỗ (tương tự bài toán không trồng cây ở 2 đầu), nên Số lần cưa = Số đoạn - 1.',
         visualModel: {
           type: 'interval_model',
-          title: 'Cưa thành 6 đoạn ➔ Chỉ cần 6 - 1 = 5 mạch cưa',
+          title: 'Quan sát mối liên hệ giữa 6 đoạn gỗ và 5 mạch cưa',
           intervalSubtype: 'wood_cuts',
           totalLength: 30,
           stepLength: 5,
@@ -885,7 +885,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Tiếng chuông thứ nhất vang lên ở giây 0. Thời gian 9 giây là tổng của (4 - 1 = 3) khoảng chờ giữa các tiếng chuông.',
         visualModel: {
           type: 'interval_model',
-          title: '4 tiếng = 3 khoảng (9 giây ➔ 3s/khoảng) · 6 tiếng = 5 khoảng (15 giây)',
+          title: 'Khoảng nghỉ giữa các tiếng chuông (4 tiếng: 9 giây · Hỏi 6 tiếng)',
           intervalSubtype: 'both_ends',
           totalLength: 15,
           stepLength: 3,
@@ -920,7 +920,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Trên đường thẳng trồng 2 đầu có (K + 1) điểm mốc vì điểm đầu và điểm cuối tách rời; khi nối 2 đầu lại thành vòng khép kín, 2 điểm mốc đầu-cuối chập thành 1 nên còn đúng K điểm mốc.',
         visualModel: {
           type: 'interval_model',
-          title: 'Đường khép kín: Điểm đầu trùng điểm cuối ➔ Số cây = Số khoảng',
+          title: 'Mô hình đường khép kín quanh hồ tròn',
           intervalSubtype: 'closed_loop',
           totalLength: 60,
           stepLength: 5,
@@ -964,10 +964,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'length_scale',
-          title: '2350 m + 1650 m = 4000 m (4 km)',
-          primaryReading: 'AB = 2 km 350 m (2350 m)',
-          secondaryReading: 'BC = 1 km 650 m (1650 m)',
-          conversionRule: '1 km = 1000 m',
+          title: 'Cộng hai chặng đường (km và m) rồi đổi sang m',
+          primaryReading: 'AB = 2 km 350 m',
+          secondaryReading: 'BC = 1 km 650 m',
+          conversionRule: '1 km = 1 000 m · Đổi từng chặng sang m trước khi cộng',
         },
       },
       {
@@ -983,10 +983,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'weight_balance',
-          title: 'Trái (Bột + 300 g) = Phải (2000 g) ➔ Bột = 1700 g',
-          primaryReading: 'Đĩa phải: 2 kg = 2000 g',
+          title: 'Cân thăng bằng: Trái (Bột + 300 g) = Phải (2 kg)',
+          primaryReading: 'Đĩa phải: 2 quả 1 kg',
           secondaryReading: 'Đĩa trái: Bột + 300 g',
-          conversionRule: '1 kg = 1000 g',
+          conversionRule: '1 kg = 1 000 g · Đổi sang gam rồi tìm phần chưa biết',
         },
       },
       {
@@ -1002,10 +1002,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'weight_balance',
-          title: 'Nửa mật ong = 1500 - 900 = 600 g ➔ Vỏ bình = 900 - 600 = 300 g',
+          title: 'Tách khối lượng Vỏ bình thủy tinh và Mật ong',
           primaryReading: 'Đầy bình: 1500 g',
           secondaryReading: 'Nửa bình: 900 g',
-          conversionRule: 'Vỏ bình = Cân nửa bình (900 g) - Nửa mật ong (600 g)',
+          conversionRule: 'Vỏ bình không đổi · Đầy bình - Nửa bình = Nửa mật ong',
         },
       },
       {
@@ -1021,10 +1021,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'volume_beaker',
-          title: '3000 mL - (450 mL × 4) = 1200 mL',
-          primaryReading: 'Ban đầu: 3 L = 3000 mL',
-          secondaryReading: 'Đã rót 4 cốc: 1800 mL',
-          conversionRule: '1 L = 1000 mL',
+          title: 'Bình 3 L nước cam rót ra 4 cốc (450 mL/cốc)',
+          primaryReading: 'Ban đầu: 3 L',
+          secondaryReading: 'Rót 4 cốc × 450 mL',
+          conversionRule: '1 L = 1 000 mL · Đổi sang mL rồi trừ tổng 4 cốc',
         },
       },
       {
@@ -1040,10 +1040,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'length_scale',
-          title: 'Hai thanh 50 cm chồng lên nhau 6 cm: 100 - 6 = 94 cm',
-          primaryReading: '2 thanh rời: 50 × 2 = 100 cm',
+          title: 'Hàn nối 2 thanh nẹp 50 cm (chồng khít 6 cm)',
+          primaryReading: '2 thanh rời (50 cm/thanh)',
           secondaryReading: 'Mối nối chồng: 6 cm',
-          conversionRule: 'Độ dài ghép = Tổng độ dài - Phần chồng lấn',
+          conversionRule: 'Độ dài ghép = Tổng độ dài 2 thanh - Phần chồng lấn',
         },
       },
       {
@@ -1095,10 +1095,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'volume_beaker',
-          title: 'Đổi cùng đơn vị: 2 L = 2000 mL ➔ 2000 - 600 = 1400 mL',
-          primaryReading: '2 L = 2000 mL',
-          secondaryReading: 'Trừ 600 mL = 1400 mL',
-          conversionRule: 'Quy tắc vàng: Đổi về cùng đơn vị trước khi cộng trừ',
+          title: 'So sánh và trừ hai số đo khác đơn vị (2 L và 600 mL)',
+          primaryReading: 'Bình nước: 2 L',
+          secondaryReading: 'Rót bớt: 600 mL',
+          conversionRule: 'Quy tắc vàng: Đổi về cùng đơn vị (1 L = 1 000 mL) trước khi tính',
         },
       },
       {
@@ -1127,10 +1127,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'weight_balance',
-          title: 'Đầy hộp (800 g) - Nửa hộp (450 g) = Nửa bánh (350 g) ➔ Vỏ = 100 g',
-          primaryReading: 'Vỏ + 2 phần bánh = 800 g',
-          secondaryReading: 'Vỏ + 1 phần bánh = 450 g',
-          conversionRule: '1 phần bánh = 350 g · Vỏ hộp = 100 g',
+          title: 'Phân tách Vỏ hộp không đổi và Phần bánh bên trong',
+          primaryReading: 'Vỏ + Đầy bánh = 800 g',
+          secondaryReading: 'Vỏ + Nửa bánh = 450 g',
+          conversionRule: 'Vỏ hộp giữ nguyên ở cả hai lần cân',
         },
       },
       {
@@ -1159,10 +1159,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'length_scale',
-          title: '4 băng giấy (120 cm) có 3 mối dán (6 cm) ➔ Dài 114 cm',
-          primaryReading: 'Tổng 4 băng: 120 cm',
-          secondaryReading: '3 mối dán: 3 × 2 = 6 cm',
-          conversionRule: 'Ghép N đoạn thẳng hàng có (N - 1) mối nối',
+          title: 'Dán nối tiếp 4 băng giấy 30 cm (chồng 2 cm mỗi mối)',
+          primaryReading: '4 băng giấy (30 cm/băng)',
+          secondaryReading: 'Mỗi chỗ dán chồng: 2 cm',
+          conversionRule: 'Ghép N đoạn thẳng hàng luôn tạo ra (N - 1) mối nối',
         },
       },
       {
@@ -1191,10 +1191,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'weight_balance',
-          title: '1 Dưa hấu = 3 Bưởi = 12 Táo = 2400 g',
-          primaryReading: '1 Bưởi = 4 × 200 g = 800 g',
-          secondaryReading: '1 Dưa = 3 × 800 g = 2400 g',
-          conversionRule: 'Suy luận bắc cầu qua đại lượng trung gian',
+          title: 'Cân thăng bằng bắc cầu: Dưa hấu ➔ Bưởi ➔ Táo (200 g)',
+          primaryReading: '1 Dưa hấu = 3 Bưởi',
+          secondaryReading: '1 Bưởi = 4 Táo (200 g/táo)',
+          conversionRule: 'Thay thế bắc cầu qua đại lượng trung gian (quả bưởi)',
         },
       },
     ],
@@ -1248,7 +1248,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Ta có 75 : 8 = 9 (dư 3 người). 3 người còn lại cần thêm 1 cabin nữa. Vậy cần ít nhất: 9 + 1 = 10 (cabin).',
         visualModel: {
           type: 'remainder_groups',
-          title: '75 : 8 = 9 cabin (dư 3 người) ➔ Cần 9 + 1 = 10 cabin',
+          title: 'Xếp 75 hành khách vào các cabin 8 chỗ (chở hết cả đoàn)',
           dividend: 75,
           divisor: 8,
           quotient: 9,
@@ -1269,7 +1269,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Mỗi bên cầu có số đèn là: (40 : 5) + 1 = 8 + 1 = 9 (ngọn đèn). Cả hai bên cầu có: 9 × 2 = 18 (ngọn đèn).',
         visualModel: {
           type: 'interval_model',
-          title: 'Mỗi bên: (40 : 5) + 1 = 9 đèn · Hai bên: 9 × 2 = 18 đèn',
+          title: 'Gắn đèn pha cả 2 bên cầu dài 40 m (cả 2 đầu, cách 5 m)',
           intervalSubtype: 'both_ends',
           totalLength: 40,
           stepLength: 5,
@@ -1292,10 +1292,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'weight_balance',
-          title: 'Nửa nước mắm = 11 - 6 = 5 kg ➔ Vỏ can = 6 - 5 = 1 kg',
+          title: 'Tách khối lượng Vỏ can nhựa và Nước mắm',
           primaryReading: 'Đầy can: 11 kg',
           secondaryReading: 'Nửa can: 6 kg',
-          conversionRule: 'Vỏ can = 6 kg - 5 kg = 1 kg',
+          conversionRule: 'Vỏ can không đổi · Hiệu 2 lần cân = Nửa lượng nước mắm',
         },
       },
       {
@@ -1310,7 +1310,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Mỗi tuần có 7 ngày lặp lại. Ta có 30 : 7 = 4 (tuần) dư 2 (ngày). Đếm tiếp 2 ngày từ Thứ Năm là: Thứ Sáu (dư 1), Thứ Bảy (dư 2).',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Chu kỳ 7 ngày trong tuần · 30 : 7 = 4 tuần dư 2 ngày ➔ Thứ Bảy',
+          title: 'Chu kỳ 7 ngày trong tuần · Đếm tiến 30 ngày từ Thứ Năm',
           dividend: 30,
           divisor: 7,
           quotient: 4,
@@ -1331,7 +1331,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Đổi 3 m 6 dm = 36 dm. Số đoạn gỗ là: 36 : 6 = 6 (đoạn). Số lần cưa là: 6 - 1 = 5 (lần). Thời gian cưa là: 5 × 4 = 20 (phút).',
         visualModel: {
           type: 'interval_model',
-          title: '36 dm : 6 dm = 6 đoạn ➔ 5 lần cưa × 4 phút = 20 phút',
+          title: 'Cưa khúc gỗ 3 m 6 dm thành các đoạn 6 dm (4 phút/lần cưa)',
           intervalSubtype: 'wood_cuts',
           totalLength: 36,
           stepLength: 6,
@@ -1401,7 +1401,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Đang dư R trong phép chia cho B: muốn bớt ít nhất thì bớt R; muốn thêm ít nhất để chia hết thì thêm (B - R) để đủ 1 nhóm mới.',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Chia 9 dư 5: Bớt 5 hoặc Thêm (9 - 5 = 4) để đủ nhóm 9',
+          title: 'Phép chia cho 9 còn dư 5: Bớt đi hay thêm vào để chia hết?',
           dividend: 50,
           divisor: 9,
           quotient: 5,
@@ -1435,7 +1435,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Trong bài toán cầu thang, quãng đường tỉ lệ với số khoảng tầng (Tầng đến - Tầng đi), tuyệt đối không lấy trực tiếp số thứ tự tầng chia cho nhau.',
         visualModel: {
           type: 'interval_model',
-          title: 'Tầng 1➔4 (3 khoảng) vs Tầng 1➔7 (6 khoảng) · Gấp 6 : 3 = 2 lần',
+          title: 'So sánh số nhịp cầu thang: Tầng 1➔4 và Tầng 1➔7',
           intervalSubtype: 'stairs',
           totalLength: 60,
           stepLength: 10,
@@ -1471,10 +1471,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         visualModel: {
           type: 'measurement_lab',
           measurementSubtype: 'volume_beaker',
-          title: 'Bình A (1800 mL) rót sang Bình B (1000 mL) để hai bình bằng nhau',
-          primaryReading: 'Bình A: 1 L 800 mL (1800 mL)',
+          title: 'San bằng thể tích giữa Bình A và Bình B',
+          primaryReading: 'Bình A: 1 L 800 mL',
           secondaryReading: 'Bình B: 1000 mL',
-          conversionRule: 'Đổi cùng đơn vị rồi san đều phần chênh lệch',
+          conversionRule: '1 L = 1 000 mL · Đổi cùng đơn vị rồi san đều phần hơn',
         },
       },
     ],

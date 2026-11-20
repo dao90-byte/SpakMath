@@ -4,6 +4,9 @@ import {
   BarModelUnitBlock,
   BarModelPictorialSpec,
   CPAConcreteGroup,
+  RemainderContextMode,
+  MeasurementOperation,
+  MeasurementVisualParams,
 } from '../types/singaporeCPA';
 import type {
   InMonthVisualModelConfig,
@@ -78,6 +81,7 @@ export function makeBarSpec(params: {
   offsetValue?: number;
   displayValue: string;
   isUnknown?: boolean;
+  hideOffsetBeforeSolve?: boolean;
   color: string;
   highlightNote?: string;
   deltaType?: 'added' | 'removed' | 'transferred_in' | 'transferred_out';
@@ -93,8 +97,10 @@ export function makeBarSpec(params: {
     numericValue,
     displayValue: params.displayValue,
     isUnknown: params.isUnknown,
+    hideOffsetBeforeSolve: params.hideOffsetBeforeSolve,
     color: params.color,
     highlightNote: params.highlightNote,
+    deltaType: params.deltaType,
     blocks: createBarBlocks(params.units, params.unitValue, {
       offsetValue: offset,
       isUnknownBar: params.isUnknown,
@@ -550,7 +556,7 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           actionPrompt: 'Bước 1: Rút về đơn vị (1 hộp). Bước 2: Nhân lên số hộp cần tìm',
           interactiveRule: `${q7Boxes} hộp chứa ${q7Total} quyển.`,
           groups: [
-            { id: 'g_known', label: `${q7Boxes} hộp đã biết`, icon: '📚', count: q7Boxes, unitValue: q7Unit, totalValue: q7Total, color: '#38BDF8' },
+            { id: 'g_known', label: `${q7Boxes} hộp = ${q7Total} quyển`, icon: '📚', count: q7Boxes, unitValue: q7Unit, totalValue: q7Total, color: '#38BDF8', isUnknown: true },
             { id: 'g_target', label: `${q7TargetBoxes} hộp cần tìm`, icon: '📘', count: q7TargetBoxes, unitValue: q7Unit, totalValue: targetVal, color: '#34D399', isUnknown: true },
           ],
         },
@@ -1462,7 +1468,7 @@ export function buildCPASpecForQuestion(params: {
           actionPrompt: 'Rút về 1 hộp rồi tính cho 5 hộp',
           interactiveRule: '7 hộp có 56 viên pin.',
           groups: [
-            { id: 'cg_bar_1', label: '7 hộp đã biết', icon: '🔋', count: 7, unitValue: 8, totalValue: 56, color: '#38BDF8' },
+            { id: 'cg_bar_1', label: '7 hộp = 56 viên pin', icon: '🔋', count: 7, unitValue: 8, totalValue: 56, color: '#38BDF8', isUnknown: true },
             { id: 'cg_bar_2', label: '5 hộp cần tìm', icon: '⚡', count: 5, unitValue: 8, totalValue: 40, color: '#34D399', isUnknown: true },
           ],
         },
@@ -1836,8 +1842,8 @@ export function buildCPASpecForQuestion(params: {
             `\\text{Độ dài sợi dây ngắn} = 36 \\;?\\; (\\text{Hiệu số phần}) = ?`,
           ],
           fullLatexSteps: stepByStepExplanation.map(formatToLatex),
-          finalAnswerLatex: '9\\text{ m}',
-          finalNumericValue: 9,
+          finalAnswerLatex: '5 - 1 = 4\\text{ (phần)}',
+          finalNumericValue: 4,
         },
       };
     }
@@ -1873,7 +1879,7 @@ export function buildCPASpecForQuestion(params: {
     }
 
     if (id === 'nov-w1-q10') {
-      const bKhoABefore = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc đầu)', units: 1, unitValue: 20, offsetValue: 24, displayValue: '? tấn (Hơn Kho B)', isUnknown: true, color: '#10B981', highlightNote: 'Chuyển 12 tấn', deltaType: 'transferred_out' });
+      const bKhoABefore = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc đầu)', units: 1, unitValue: 20, offsetValue: 24, displayValue: '? tấn (Hơn Kho B)', isUnknown: true, hideOffsetBeforeSolve: true, color: '#10B981', highlightNote: 'Chuyển 12 tấn', deltaType: 'transferred_out' });
       const bKhoBBefore = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc đầu)', units: 1, unitValue: 20, displayValue: '? tấn (1 phần)', isUnknown: true, color: '#0284C7' });
       const bKhoAAfter = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc sau)', units: 1, unitValue: 32, displayValue: 'Bằng Kho B', isUnknown: true, color: '#10B981' });
       const bKhoBAfter = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc sau)', units: 1, unitValue: 20, offsetValue: 12, displayValue: 'Nhận +12 tấn', isUnknown: true, color: '#0284C7', deltaType: 'transferred_in' });
@@ -1886,8 +1892,8 @@ export function buildCPASpecForQuestion(params: {
           actionPrompt: 'Chuyển trạng thái TRƯỚC ⇄ SAU để quan sát phần chênh lệch gấp đôi lượng chuyển',
           interactiveRule: 'Kho A giảm 12 tấn, Kho B tăng 12 tấn thì hai kho bằng nhau.',
           groups: [
-            { id: 'cg_1', label: 'Kho A bớt đi 12 tấn', icon: '🌾', count: 1, unitValue: 12, totalValue: 12, color: '#10B981' },
-            { id: 'cg_2', label: 'Kho B thêm 12 tấn', icon: '🏚️', count: 1, unitValue: 12, totalValue: 12, color: '#0284C7' },
+            { id: 'cg_1', label: 'Kho A bớt đi 12 tấn', icon: '🌾', count: 1, unitValue: 12, totalValue: 12, color: '#10B981', displayMode: 'measurement' },
+            { id: 'cg_2', label: 'Kho B thêm 12 tấn', icon: '🏚️', count: 1, unitValue: 12, totalValue: 12, color: '#0284C7', displayMode: 'measurement' },
           ],
         },
         pictorial: {
@@ -1976,9 +1982,9 @@ export function buildCPASpecForQuestion(params: {
         abstract: {
           unknownSymbol: '?',
           guidedLatexSteps: [
-            `\\text{Hiệu số tuổi (không đổi)} = 36 \\;?\\; 6 = 30\\text{ (tuổi)}`,
+            `\\text{Hiệu số tuổi (không đổi)} = 36 \\;?\\; 6 = ?\\text{ (tuổi)}`,
             `\\text{Hiệu số phần bằng nhau} = 4 \\;?\\; 1 = ?`,
-            `\\text{Tuổi con khi đó} = 30 \\;?\\; (\\text{Hiệu số phần}) = ?`,
+            `\\text{Tuổi con khi đó} = (\\text{Hiệu tuổi}) \\;?\\; (\\text{Hiệu số phần}) = ?`,
           ],
           fullLatexSteps: stepByStepExplanation.map(formatToLatex),
           finalAnswerLatex: '10\\text{ tuổi}',
@@ -2093,27 +2099,40 @@ export function buildCPASpecForQuestion(params: {
     const icon = visualModel.itemIcon || '⭐';
     const groupLabel = visualModel.groupLabel || 'Nhóm';
 
-    // Determine what is unknown & exact guided LaTeX steps
+    // Determine exact unknown target, Singapore Math contextMode, contextActionHint, guided steps, and numeric answer
     let unknownTarget: 'quotient_and_remainder' | 'dividend' | 'quotient' | 'remainder' =
       'quotient_and_remainder';
+    let contextMode: RemainderContextMode = 'standard_division';
+    let contextActionHint = 'Chia đều vào từng nhóm — luôn kiểm tra: Số dư < Số chia';
     let guidedLatexSteps: string[] = [];
+    let finalNumericValue = primaryNum;
+    let finalAnswerLatex = formatToLatex(correctAnswer);
+    let hideRemainderInConcrete = false;
 
     if (dayNumber && dayNumber >= 8 && dayNumber <= 14 && qIndex1Based) {
       switch (qIndex1Based) {
         case 1:
           unknownTarget = 'quotient_and_remainder';
+          contextMode = 'standard_division';
+          contextActionHint = 'Chia đều vào từng nhóm và kiểm tra luôn thỏa mãn: Số dư < Số chia.';
           guidedLatexSteps = [`${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`];
           break;
         case 2:
           unknownTarget = 'remainder';
+          contextMode = 'max_remainder';
+          contextActionHint = 'Quy tắc bất biến: Số dư lớn nhất luôn bé hơn Số chia đúng 1 đơn vị.';
           guidedLatexSteps = [`\\text{Số dư lớn nhất} = ${divisor} \\;?\\; 1 = ?`];
           break;
         case 3:
           unknownTarget = 'dividend';
+          contextMode = 'find_dividend';
+          contextActionHint = 'Khôi phục số bị chia: lấy (Thương × Số chia) rồi cộng thêm Phần dư.';
           guidedLatexSteps = [`X = (${quotient} \\;?\\; ${divisor}) \\;?\\; ${remainder} = ?`];
           break;
         case 4:
           unknownTarget = 'quotient_and_remainder';
+          contextMode = 'round_up_containers';
+          contextActionHint = 'Cần chở/chứa HẾT cả phần dư lẻ ➔ làm tròn lên: lấy (Thương + 1).';
           guidedLatexSteps = [
             `\\text{Chia số nhóm} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`,
             `\\text{Số khoang tàu ít nhất} = (\\text{Thương}) \\;?\\; 1 = ?`,
@@ -2121,26 +2140,39 @@ export function buildCPASpecForQuestion(params: {
           break;
         case 5:
           unknownTarget = 'quotient_and_remainder';
+          contextMode = 'round_down_full';
+          contextActionHint = 'Chỉ tính số hộp ĐẦY đủ quy cách ➔ phần dư lẻ không đủ 1 hộp nên giữ nguyên Thương.';
           guidedLatexSteps = [`\\text{Số hộp đầy} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`];
           break;
         case 6:
           unknownTarget = 'remainder';
+          contextMode = 'complement_to_full';
+          contextActionHint = 'Phần dư đang thiếu bao nhiêu nữa để ghép đủ 1 nhóm đầy bằng Số chia?';
           guidedLatexSteps = [`\\text{Số viên cần thêm} = ${divisor} \\;?\\; ${remainder} = ?`];
           break;
         case 7:
           unknownTarget = 'quotient_and_remainder';
+          contextMode = 'cyclic_pattern';
+          contextActionHint = 'Chia cho độ dài chu kỳ — phần dư chỉ ra vị trí trong nhóm (dư 0 là vị trí cuối).';
           guidedLatexSteps = [`\\text{Vị trí trong chu kỳ} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`];
           break;
         case 8:
           unknownTarget = 'quotient_and_remainder';
+          contextMode = 'cyclic_pattern';
+          contextActionHint = 'Mỗi tuần lặp lại đúng 7 ngày — đếm tiến thêm đúng bằng số ngày dư.';
           guidedLatexSteps = [`\\text{Số tuần và ngày lẻ} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`];
           break;
         case 9:
           unknownTarget = 'remainder';
+          contextMode = 'standard_division';
+          contextActionHint = 'Chia đều vào các giỏ để tìm phần dư lẻ còn thừa lại.';
           guidedLatexSteps = [`\\text{Chia đều vào giỏ} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`];
           break;
         case 10:
           unknownTarget = 'dividend';
+          contextMode = 'find_dividend';
+          hideRemainderInConcrete = true;
+          contextActionHint = 'Bước 1 tìm số dư lớn nhất (< số chia), Bước 2 khôi phục Số bị chia lớn nhất.';
           guidedLatexSteps = [
             `\\text{Số dư lớn nhất} = ${divisor} \\;?\\; 1 = ?`,
             `\\text{Số bị chia} = (${quotient} \\;?\\; ${divisor}) \\;?\\; (\\text{Số dư lớn nhất}) = ?`,
@@ -2148,6 +2180,8 @@ export function buildCPASpecForQuestion(params: {
           break;
         default:
           unknownTarget = 'quotient_and_remainder';
+          contextMode = 'cyclic_pattern';
+          contextActionHint = 'Đếm số chu kỳ nguyên vẹn rồi kiểm tra phần dư có thêm hạt màu Đỏ hay không.';
           guidedLatexSteps = [
             `\\text{Số chu kỳ 4 hạt} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`,
             `\\text{Tổng hạt màu Đỏ} = (\\text{Số chu kỳ}) \\;?\\; (\\text{Hạt Đỏ dư}) = ?`,
@@ -2156,21 +2190,31 @@ export function buildCPASpecForQuestion(params: {
       }
     } else if (id === 'nov-d29-q3' || id === 'nov-d30-q3' || id === 'nov-exam-a4') {
       unknownTarget = 'quotient_and_remainder';
+      contextMode = 'round_up_containers';
+      contextActionHint = 'Phần dư lẻ vẫn cần thêm 1 thuyền/xe để chở hết cả đoàn ➔ lấy (Thương + 1).';
       guidedLatexSteps = [
         `\\text{Chia số nhóm đầy} = ${dividend} \\;?\\; ${divisor} = ?\\text{ (dư } ?\\text{)}`,
         `\\text{Cần ít nhất} = (\\text{Thương}) \\;?\\; 1 = ?`,
       ];
     } else if (id === 'nov-d29-q7' || id === 'nov-d30-q7') {
       unknownTarget = 'dividend';
+      contextMode = 'find_dividend';
+      hideRemainderInConcrete = true;
+      contextActionHint = 'Bước 1 tìm số dư lớn nhất (< số chia), Bước 2 tính Số bị chia lớn nhất.';
       guidedLatexSteps = [
         `\\text{Số dư lớn nhất} = ${divisor} \\;?\\; 1 = ?`,
         `\\text{Số bị chia lớn nhất} = (${quotient} \\;?\\; ${divisor}) \\;?\\; (\\text{Số dư lớn nhất}) = ?`,
       ];
     } else if (id === 'nov-exam-a3') {
       unknownTarget = 'dividend';
+      contextMode = 'find_dividend';
+      contextActionHint = 'Khôi phục Số bị chia từ Thương, Số chia và Số dư đã biết.';
       guidedLatexSteps = [`\\text{Số bị chia} = (${quotient} \\;?\\; ${divisor}) \\;?\\; ${remainder} = ?`];
     } else if (id === 'nov-exam-b3') {
       unknownTarget = 'dividend';
+      contextMode = 'find_dividend';
+      hideRemainderInConcrete = true;
+      contextActionHint = 'Bước 1 tìm số lớn nhất khi chia cho 9, Bước 2 đem số đó chia cho 5 tìm số dư.';
       guidedLatexSteps = [
         `\\text{Số dư lớn nhất} = 9 \\;?\\; 1 = ?`,
         `\\text{Số bị chia} = (12 \\;?\\; 9) \\;?\\; (\\text{Số dư lớn nhất}) = ?`,
@@ -2178,10 +2222,137 @@ export function buildCPASpecForQuestion(params: {
       ];
     } else if (id === 'nov-exam-b4') {
       unknownTarget = 'quotient_and_remainder';
+      contextMode = 'cyclic_pattern';
+      contextActionHint = 'Mỗi chu kỳ 5 ngôi sao gồm 2 sao Đỏ & Cam — cộng thêm phần sao Đỏ, Cam trong nhóm dư.';
       guidedLatexSteps = [
         `\\text{Số chu kỳ 5 màu} = 47 \\;?\\; 5 = ?\\text{ (dư } ?\\text{)}`,
         `\\text{Số sao Đỏ và Cam} = (\\text{Số chu kỳ} \\;?\\; 2) \\;?\\; (\\text{Sao Đỏ, Cam dư}) = ?`,
       ];
+    } else if (id === 'nov-w2-q1') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'standard_division';
+      contextActionHint = 'Chia 59 thành các nhóm đều 7 và đảm bảo phần dư nhỏ hơn 7.';
+      guidedLatexSteps = [`59 \\;?\\; 7 = ?\\text{ (dư } ?\\text{)}`];
+      finalNumericValue = 8;
+      finalAnswerLatex = '\\text{Thương } 8,\\text{ dư } 3';
+    } else if (id === 'nov-w2-q2') {
+      unknownTarget = 'dividend';
+      contextMode = 'find_dividend';
+      hideRemainderInConcrete = true;
+      contextActionHint = 'Số chia là 8 ➔ tìm số dư lớn nhất trước, rồi tính Số bị chia.';
+      guidedLatexSteps = [
+        `\\text{Số dư lớn nhất} = 8 \\;?\\; 1 = ?`,
+        `\\text{Số bị chia} = (11 \\;?\\; 8) \\;?\\; (\\text{Số dư lớn nhất}) = ?`,
+      ];
+      finalNumericValue = 95;
+      finalAnswerLatex = '95';
+    } else if (id === 'nov-w2-q3') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'round_up_containers';
+      contextActionHint = 'Cần chở HẾT cả đoàn nên những người dư ra vẫn cần thêm 1 chiếc thuyền nữa.';
+      guidedLatexSteps = [
+        `\\text{Số thuyền chở đầy} = 46 \\;?\\; 6 = ?\\text{ (dư } ?\\text{ người)}`,
+        `\\text{Số thuyền ít nhất} = (\\text{Thương}) \\;?\\; 1 = ?`,
+      ];
+      finalNumericValue = 8;
+      finalAnswerLatex = '8\\text{ chiếc thuyền}';
+    } else if (id === 'nov-w2-q4') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'round_down_full';
+      contextActionHint = 'Bánh xe dư ra không đủ lắp thêm 1 ô tô hoàn chỉnh ➔ chỉ lấy phần Thương nguyên.';
+      guidedLatexSteps = [`\\text{Số ô tô hoàn chỉnh} = 62 \\;?\\; 4 = ?\\text{ (dư } ?\\text{ bánh xe)}`];
+      finalNumericValue = 15;
+      finalAnswerLatex = '15\\text{ chiếc ô tô}';
+    } else if (id === 'nov-w2-q5') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'cyclic_pattern';
+      contextActionHint = 'Chu kỳ 4 màu (Đỏ–Vàng–Lục–Lam): phần dư cho biết vị trí màu của bóng đèn thứ 35.';
+      guidedLatexSteps = [`\\text{Số chu kỳ và vị trí dư} = 35 \\;?\\; 4 = ?\\text{ (dư } ?\\text{)}`];
+      finalNumericValue = 3;
+      finalAnswerLatex = '\\text{Màu Lục (vị trí dư 3)}';
+    } else if (id === 'nov-w2-q6') {
+      unknownTarget = 'remainder';
+      contextMode = 'standard_division';
+      hideRemainderInConcrete = true;
+      contextActionHint = 'Bước 1 khôi phục số tự nhiên từ phép chia cho 6; Bước 2 đem số đó chia cho 7 tìm số dư.';
+      guidedLatexSteps = [
+        `\\text{Số tự nhiên ban đầu} = (9 \\;?\\; 6) \\;?\\; 4 = ?`,
+        `\\text{Đem chia cho 7} = (\\text{Số đó}) \\;?\\; 7 = ?\\text{ (dư } ?\\text{)}`,
+      ];
+      finalNumericValue = 2;
+      finalAnswerLatex = '\\text{Dư } 2';
+    } else if (id === 'nov-w2-q7') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'max_remainder';
+      contextActionHint = 'Quy tắc cốt lõi: Số dư phải luôn nhỏ hơn Số chia — kiểm tra lại phép chia 53 : 6.';
+      guidedLatexSteps = [
+        `\\text{Kiểm tra điều kiện số dư: } 11 \\;?\\; 6`,
+        `\\text{Phép chia đúng} = 53 \\;?\\; 6 = ?\\text{ (dư } ?\\text{)}`,
+      ];
+      finalNumericValue = 8;
+      finalAnswerLatex = '53 \\div 6 = 8\\text{ (dư } 5\\text{)}';
+    } else if (id === 'nov-w2-q8') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'round_up_containers';
+      contextActionHint = 'So sánh 2 ngữ cảnh của cùng phép chia 38 : 5: Đi đò cần chở hết (làm tròn lên) vs May áo cần đủ vải (lấy phần nguyên).';
+      guidedLatexSteps = [
+        `\\text{Đi đò (3 em dư vẫn cần thêm 1 đò)} = 7 \\;?\\; 1 = ?\\text{ (chuyến)}`,
+        `\\text{May áo (3 m vải dư không đủ 1 áo)} = ?\\text{ (chiếc)}`,
+      ];
+      finalNumericValue = 8;
+      finalAnswerLatex = '\\text{Đi đò: } 8\\text{ chuyến} \\;\\cdot\\; \\text{May áo: } 7\\text{ chiếc}';
+    } else if (id === 'nov-w2-q9') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'cyclic_pattern';
+      contextActionHint = 'Khi phép chia hết (dư 0), phần tử vừa khép lại nhóm chu kỳ ➔ đứng ở vị trí cuối cùng (thứ 5).';
+      guidedLatexSteps = [
+        `\\text{Chia theo chu kỳ 5 cờ} = 40 \\;?\\; 5 = ?\\text{ (dư } ?\\text{)}`,
+        `\\text{Khi dư 0 ➔ vị trí trong chu kỳ} = ?`,
+      ];
+      finalNumericValue = 5;
+      finalAnswerLatex = '\\text{Vị trí thứ 5 (Màu Trắng)}';
+    } else if (id === 'nov-w2-q10') {
+      unknownTarget = 'quotient';
+      contextMode = 'round_down_full';
+      contextActionHint = 'Giỏ quà đủ cả 3 món bị giới hạn bởi món hết trước ➔ chia riêng từng loại rồi chọn thương nhỏ nhất.';
+      guidedLatexSteps = [
+        `\\text{Giỏ đủ bánh} = 20 \\;?\\; 3 = ?\\text{ (dư } ?\\text{)}`,
+        `\\text{Giỏ đủ kẹo} = 25 \\;?\\; 4 = ?\\text{ (dư } ?\\text{)}`,
+        `\\text{Giỏ đủ nước} = 15 \\;?\\; 2 = ?\\text{ (dư } ?\\text{)}`,
+        `\\text{Số giỏ quà tối đa (chọn thương nhỏ nhất)} = ?`,
+      ];
+      finalNumericValue = 6;
+      finalAnswerLatex = '6\\text{ giỏ quà}';
+    } else if (id === 'nov-w5-q2') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'round_up_containers';
+      contextActionHint = 'Hành khách dư ra vẫn cần thêm 1 cabin nữa để lên đỉnh núi ➔ lấy (Thương + 1).';
+      guidedLatexSteps = [
+        `\\text{Số cabin chở đầy} = 75 \\;?\\; 8 = ?\\text{ (dư } ?\\text{ người)}`,
+        `\\text{Số cabin ít nhất} = (\\text{Thương}) \\;?\\; 1 = ?`,
+      ];
+      finalNumericValue = 10;
+      finalAnswerLatex = '10\\text{ cabin}';
+    } else if (id === 'nov-w5-q5') {
+      unknownTarget = 'quotient_and_remainder';
+      contextMode = 'cyclic_pattern';
+      contextActionHint = 'Chu kỳ 7 ngày trong tuần — chia 30 cho 7 rồi đếm tiến từ Thứ Năm thêm đúng số ngày dư.';
+      guidedLatexSteps = [
+        `\\text{Số tuần và ngày lẻ} = 30 \\;?\\; 7 = ?\\text{ (dư } ?\\text{ ngày)}`,
+        `\\text{Đếm tiến từ Thứ Năm thêm ngày dư} = ?`,
+      ];
+      finalNumericValue = 2;
+      finalAnswerLatex = '\\text{Thứ Bảy (dư 2 ngày)}';
+    } else if (id === 'nov-w5-q8') {
+      unknownTarget = 'remainder';
+      contextMode = 'complement_to_full';
+      contextActionHint = 'Đang dư 5 khi chia cho 9: bớt đúng số dư (5) hoặc bù phần còn thiếu để đủ 1 nhóm 9.';
+      guidedLatexSteps = [
+        `\\text{Bớt ít nhất (bằng số dư)} = ?\\text{ (đơn vị)}`,
+        `\\text{Thêm ít nhất để đủ nhóm 9} = 9 \\;?\\; 5 = ?\\text{ (đơn vị)}`,
+      ];
+      finalNumericValue = 4;
+      finalAnswerLatex = '\\text{Bớt } 5\\text{ hoặc thêm } 4';
     } else {
       if (prompt && (prompt.includes('số bị chia') || prompt.includes('chính số đó'))) {
         unknownTarget = 'dividend';
@@ -2205,18 +2376,23 @@ export function buildCPASpecForQuestion(params: {
         totalValue: quotient * divisor,
         color: '#38BDF8',
         isUnknown: true,
+        displayMode: 'groups',
       },
     ];
     if (remainder > 0) {
       groups.push({
         id: 'cg_remainder',
-        label: isQuotientOrRemUnknown && !isDividendUnknown ? 'Phần dư (?)' : 'Phần dư lẻ',
+        label:
+          (isQuotientOrRemUnknown && !isDividendUnknown) || hideRemainderInConcrete
+            ? 'Phần dư (?)'
+            : 'Phần dư lẻ',
         icon,
         count: 1,
         unitValue: remainder,
         totalValue: remainder,
         color: '#F59E0B',
-        isUnknown: !isDividendUnknown,
+        isUnknown: !isDividendUnknown || hideRemainderInConcrete,
+        displayMode: 'groups',
       });
     }
 
@@ -2226,8 +2402,8 @@ export function buildCPASpecForQuestion(params: {
       concrete: {
         itemName: 'vật phẩm',
         unitLabel: groupLabel,
-        actionPrompt: `Xếp vật phẩm vào từng ${groupLabel} (${divisor} vật phẩm/nhóm) để quan sát phần dư`,
-        interactiveRule: `${divisor} vật phẩm mỗi ${groupLabel.toLowerCase()}.`,
+        actionPrompt: `Xếp đều vật phẩm vào từng ${groupLabel.toLowerCase()} (${divisor} vật phẩm/nhóm) để quan sát thương và phần dư`,
+        interactiveRule: `Mỗi ${groupLabel.toLowerCase()} có ${divisor} vật phẩm · Số dư luôn nhỏ hơn ${divisor}.`,
         groups,
       },
       pictorial: {
@@ -2238,9 +2414,10 @@ export function buildCPASpecForQuestion(params: {
         remainder,
         itemIcon: icon,
         groupLabel,
-        contextMode: 'standard_division',
+        contextMode,
+        contextActionHint,
         unknownTarget,
-        targetValue: primaryNum,
+        targetValue: finalNumericValue,
       },
       abstract: {
         unknownSymbol: '?',
@@ -2249,8 +2426,8 @@ export function buildCPASpecForQuestion(params: {
           `${dividend} = ${divisor} \\times ${quotient} + ${remainder}\\quad (0 \\le ${remainder} < ${divisor})`,
           ...stepByStepExplanation.map(formatToLatex),
         ],
-        finalAnswerLatex: formatToLatex(correctAnswer),
-        finalNumericValue: primaryNum,
+        finalAnswerLatex,
+        finalNumericValue,
       },
     };
   }
@@ -2284,6 +2461,13 @@ export function buildCPASpecForQuestion(params: {
 
     let unknownTarget: 'intervals' | 'objects' | 'total_length' | 'step_length' = 'objects';
     let guidedLatexSteps: string[] = [];
+    let finalNumericValue = primaryNum;
+    let finalAnswerLatex = formatToLatex(correctAnswer);
+    let sidesMultiplier: 1 | 2 | undefined = undefined;
+    let timePerCut: number | undefined = undefined;
+    let timeUnit: string | undefined = undefined;
+    let itemInGapIcon: string | undefined = undefined;
+    const startFloor = subtype === 'stairs' ? 1 : undefined;
 
     if (dayNumber && dayNumber >= 15 && dayNumber <= 21 && qIndex1Based) {
       switch (qIndex1Based) {
@@ -2318,9 +2502,13 @@ export function buildCPASpecForQuestion(params: {
           break;
         case 6:
           unknownTarget = 'objects';
+          if (objectsCount > 0 && primaryNum > objectsCount && primaryNum % objectsCount === 0) {
+            timePerCut = primaryNum / objectsCount;
+            timeUnit = 'phút';
+          }
           guidedLatexSteps = [
             `\\text{Số lần cưa} = ${intervalsCount} \\;?\\; 1 = ?`,
-            `\\text{Tổng thời gian} = (\\text{Số lần cưa}) \\;?\\; (\\text{Số phút/lần}) = ?`,
+            `\\text{Tổng thời gian} = (\\text{Số lần cưa}) \\;?\\; ${timePerCut ?? '(\\text{Số phút/lần})'} = ?`,
           ];
           break;
         case 7:
@@ -2339,6 +2527,7 @@ export function buildCPASpecForQuestion(params: {
           break;
         case 9:
           unknownTarget = 'objects';
+          sidesMultiplier = 2;
           guidedLatexSteps = [
             `\\text{Số khoảng 1 bên} = ${totalLength} \\;?\\; ${stepLength} = ?`,
             `\\text{Số cây 1 bên} = (\\text{Số khoảng}) \\;?\\; 1 = ?`,
@@ -2355,6 +2544,7 @@ export function buildCPASpecForQuestion(params: {
           break;
         default:
           unknownTarget = 'total_length';
+          itemInGapIcon = '🌺';
           guidedLatexSteps = [
             `\\text{Số khoảng trống} = ${objectsCount} \\;?\\; 1 = ?`,
             `\\text{Tổng số khóm hoa} = (\\text{Số khoảng}) \\;?\\; ${stepLength} = ?`,
@@ -2369,12 +2559,17 @@ export function buildCPASpecForQuestion(params: {
       ];
     } else if (id === 'nov-d29-q8' || id === 'nov-d30-q8' || id === 'nov-exam-a6') {
       unknownTarget = 'objects';
+      if (objectsCount > 0 && primaryNum > objectsCount && primaryNum % objectsCount === 0) {
+        timePerCut = primaryNum / objectsCount;
+        timeUnit = 'phút';
+      }
       guidedLatexSteps = [
         `\\text{Số lần cắt} = ${intervalsCount} \\;?\\; 1 = ?`,
-        `\\text{Tổng thời gian} = (\\text{Số lần cắt}) \\;?\\; (\\text{Thời gian/lần}) = ?`,
+        `\\text{Tổng thời gian} = (\\text{Số lần cắt}) \\;?\\; ${timePerCut ?? '(\\text{Thời gian/lần})'} = ?`,
       ];
     } else if (id === 'nov-d29-q10' || id === 'nov-d30-q10') {
       unknownTarget = 'objects';
+      sidesMultiplier = 2;
       guidedLatexSteps = [
         `\\text{Số khoảng 1 bên cầu} = ${totalLength} \\;?\\; ${stepLength} = ?`,
         `\\text{Số đèn 1 bên cầu} = (\\text{Số khoảng}) \\;?\\; 1 = ?`,
@@ -2389,6 +2584,8 @@ export function buildCPASpecForQuestion(params: {
       ];
     } else if (id === 'nov-exam-b6') {
       unknownTarget = 'objects';
+      sidesMultiplier = 2;
+      itemInGapIcon = '🪑';
       guidedLatexSteps = [
         `\\text{Số khoảng 1 bên đường} = 60 \\;?\\; 5 = ?`,
         `\\text{Số ghế đá cả 2 bên} = (\\text{1 bên}) \\;?\\; 2 = ?`,
@@ -2398,6 +2595,104 @@ export function buildCPASpecForQuestion(params: {
       guidedLatexSteps = [
         `\\text{Chu vi sân (khép kín)} = (50 \\;?\\; 30) \\;?\\; 2 = ?`,
         `\\text{Số cột cờ} = (\\text{Chu vi}) \\;?\\; 4 = ?`,
+      ];
+    } else if (id === 'nov-w3-q1') {
+      unknownTarget = 'objects';
+      finalNumericValue = 10;
+      guidedLatexSteps = [
+        `\\text{Số khoảng cách} = 45 \\;?\\; 5 = ?`,
+        `\\text{Số cây (trồng cả 2 đầu)} = (\\text{Số khoảng}) \\;?\\; 1 = ?`,
+      ];
+    } else if (id === 'nov-w3-q2') {
+      unknownTarget = 'objects';
+      finalNumericValue = 8;
+      guidedLatexSteps = [
+        `\\text{Số khoảng cách} = 36 \\;?\\; 4 = ?`,
+        `\\text{Số trụ đèn (bỏ trống 2 đầu)} = (\\text{Số khoảng}) \\;?\\; 1 = ?`,
+      ];
+    } else if (id === 'nov-w3-q3') {
+      unknownTarget = 'objects';
+      finalNumericValue = 16;
+      guidedLatexSteps = [`\\text{Số cây quanh hồ khép kín} = 80 \\;?\\; 5 = ?`];
+    } else if (id === 'nov-w3-q4') {
+      unknownTarget = 'objects';
+      timePerCut = 3;
+      timeUnit = 'phút';
+      finalNumericValue = 18;
+      guidedLatexSteps = [
+        `\\text{Số đoạn gỗ} = 28 \\;?\\; 4 = ?`,
+        `\\text{Số lần cưa} = (\\text{Số đoạn}) \\;?\\; 1 = ?`,
+        `\\text{Tổng thời gian} = (\\text{Số lần cưa}) \\;?\\; 3 = ?`,
+      ];
+    } else if (id === 'nov-w3-q5') {
+      unknownTarget = 'total_length';
+      finalNumericValue = 72;
+      guidedLatexSteps = [
+        `\\text{Số khoảng tầng} = 5 \\;?\\; 1 = ?`,
+        `\\text{Tổng số bậc thang} = (\\text{Số khoảng tầng}) \\;?\\; 18 = ?`,
+      ];
+    } else if (id === 'nov-w3-q6') {
+      unknownTarget = 'step_length';
+      finalNumericValue = 6;
+      guidedLatexSteps = [
+        `\\text{Số khoảng giữa 9 lá cờ} = 9 \\;?\\; 1 = ?`,
+        `\\text{Khoảng cách giữa 2 lá cờ} = 48 \\;?\\; (\\text{Số khoảng}) = ?`,
+      ];
+    } else if (id === 'nov-w3-q7') {
+      unknownTarget = 'objects';
+      finalNumericValue = 7;
+      finalAnswerLatex = '\\text{Trồng 2 đầu: } 7\\text{ cây} \\;\\cdot\\; \\text{Bỏ 2 đầu: } 5\\text{ cây}';
+      guidedLatexSteps = [
+        `\\text{Trồng cả 2 đầu đường} = 6 \\;?\\; 1 = ?\\text{ (cây)}`,
+        `\\text{Bỏ trống cả 2 đầu đường} = 6 \\;?\\; 1 = ?\\text{ (cây)}`,
+      ];
+    } else if (id === 'nov-w3-q8') {
+      unknownTarget = 'objects';
+      finalNumericValue = 5;
+      finalAnswerLatex = '6 - 1 = 5\\text{ (lần cưa)}';
+      guidedLatexSteps = [`\\text{Số lần cưa tách thành 6 đoạn} = 6 \\;?\\; 1 = ?\\text{ (lần)}`];
+    } else if (id === 'nov-w3-q9') {
+      unknownTarget = 'total_length';
+      finalNumericValue = 15;
+      finalAnswerLatex = '15\\text{ giây}';
+      guidedLatexSteps = [
+        `\\text{Số khoảng nghỉ giữa 4 tiếng} = 4 \\;?\\; 1 = ?`,
+        `\\text{Thời gian 1 khoảng nghỉ} = 9 \\;?\\; (\\text{Số khoảng}) = ?`,
+        `\\text{Thời gian đánh 6 tiếng} = (6 \\;?\\; 1) \\;?\\; (\\text{1 khoảng}) = ?`,
+      ];
+    } else if (id === 'nov-w3-q10') {
+      unknownTarget = 'objects';
+      finalNumericValue = 1;
+      finalAnswerLatex = '\\text{Số cây} = \\text{Số khoảng}';
+      guidedLatexSteps = [`\\text{Trên đường khép kín: Số cây} \\;?\\; \\text{Số khoảng} = ?`];
+    } else if (id === 'nov-w5-q3') {
+      unknownTarget = 'objects';
+      sidesMultiplier = 2;
+      finalNumericValue = 18;
+      guidedLatexSteps = [
+        `\\text{Số khoảng 1 bên cầu} = 40 \\;?\\; 5 = ?`,
+        `\\text{Số đèn 1 bên cầu} = (\\text{Số khoảng}) \\;?\\; 1 = ?`,
+        `\\text{Tổng đèn cả 2 bên cầu} = (\\text{1 bên}) \\;?\\; 2 = ?`,
+      ];
+    } else if (id === 'nov-w5-q6') {
+      unknownTarget = 'objects';
+      timePerCut = 4;
+      timeUnit = 'phút';
+      finalNumericValue = 20;
+      guidedLatexSteps = [
+        `\\text{Đổi } 3\\text{ m } 6\\text{ dm} = (3 \\;?\\; 10) \\;?\\; 6 = ?\\text{ (dm)}`,
+        `\\text{Số đoạn gỗ} = (\\text{Tổng dm}) \\;?\\; 6 = ?`,
+        `\\text{Số lần cưa} = (\\text{Số đoạn}) \\;?\\; 1 = ?`,
+        `\\text{Tổng thời gian} = (\\text{Số lần cưa}) \\;?\\; 4 = ?`,
+      ];
+    } else if (id === 'nov-w5-q9') {
+      unknownTarget = 'intervals';
+      finalNumericValue = 6;
+      finalAnswerLatex = '(7 - 1) \\div (4 - 1) = 6 \\div 3 = 2\\text{ (lần)}';
+      guidedLatexSteps = [
+        `\\text{Số khoảng tầng (Tầng 1} \\to \\text{4)} = 4 \\;?\\; 1 = ?`,
+        `\\text{Số khoảng tầng (Tầng 1} \\to \\text{7)} = 7 \\;?\\; 1 = ?`,
+        `\\text{Tỉ số quãng đường} = (\\text{Tầng 1} \\to \\text{7}) \\;?\\; (\\text{Tầng 1} \\to \\text{4}) = ?`,
       ];
     } else {
       if (primaryNum > 0 && primaryNum === totalLength && objectsCount !== primaryNum) {
@@ -2411,34 +2706,87 @@ export function buildCPASpecForQuestion(params: {
           : [`\\text{Tổng độ dài} = (\\text{Số khoảng}) \\;?\\; ${stepLength} = ?`];
     }
 
+    const intervalFullSteps =
+      subtype === 'wood_cuts' && stepLength === 1
+        ? [ruleFormula, ...stepByStepExplanation.map(formatToLatex)]
+        : subtype === 'stairs'
+        ? [
+            ruleFormula,
+            `\\text{Tổng độ dài} = ${intervalsCount} \\times ${stepLength} = ${totalLength}\\text{ (${unitLabel})}`,
+            ...stepByStepExplanation.map(formatToLatex),
+          ]
+        : [
+            `\\text{Số khoảng} = ${totalLength} \\div ${stepLength} = ${intervalsCount}\\text{ (khoảng)}`,
+            ruleFormula,
+            ...stepByStepExplanation.map(formatToLatex),
+          ];
+
+    const intervalActionPrompt =
+      subtype === 'closed_loop'
+        ? 'Quan sát vòng khép kín: điểm đầu và điểm cuối chập trùng thành một nên Số mốc = Số khoảng'
+        : subtype === 'wood_cuts'
+        ? 'Đếm số mạch cưa nằm giữa các đoạn gỗ để thấy: Số lần cưa = Số đoạn − 1'
+        : subtype === 'stairs'
+        ? 'Đếm số nhịp cầu thang nối giữa các tầng liên tiếp: Số khoảng tầng = Tầng đến − Tầng đi'
+        : sidesMultiplier === 2
+        ? 'Tính chính xác số mốc trên 1 bên đường trước, sau đó nhân đôi cho cả 2 bên'
+        : 'Quan sát 2 điểm mút đầu–cuối để xác định đúng quy tắc liên hệ giữa Số mốc và Số khoảng';
+
+    const intervalInteractiveRule =
+      subtype === 'wood_cuts'
+        ? timePerCut
+          ? `Mỗi lần cưa hết ${timePerCut} ${timeUnit || 'phút'} · Mạch cưa nằm bên trong thanh gỗ.`
+          : 'Mạch cưa nằm ở giữa thanh gỗ — nhát cưa cuối tách rời cả 2 đoạn cuối.'
+        : subtype === 'stairs'
+        ? `Mỗi khoảng tầng có ${stepLength} ${unitLabel}.`
+        : unknownTarget === 'step_length'
+        ? `Tổng chiều dài ${totalLength} ${unitLabel} · Tìm độ dài 1 khoảng cách.`
+        : `Mỗi khoảng dài ${stepLength} ${unitLabel}${sidesMultiplier === 2 ? ' · Áp dụng cho cả 2 bên đường' : ''}.`;
+
     return {
       version: '1.0',
       domain: 'interval_model',
       concrete: {
-        itemName: 'mốc khoảng cách',
+        itemName: subtype === 'wood_cuts' ? 'mạch cưa' : subtype === 'stairs' ? 'tầng' : 'mốc khoảng cách',
         unitLabel,
-        actionPrompt: 'Chạm vào các điểm mốc và khoảng cách giữa hai mốc liên tiếp để so sánh số mốc và số khoảng',
-        interactiveRule: `Mỗi khoảng dài ${stepLength} ${unitLabel}.`,
+        actionPrompt: intervalActionPrompt,
+        interactiveRule: intervalInteractiveRule,
         groups: [
           {
             id: 'cg_intervals',
-            label: unknownTarget === 'intervals' ? '? khoảng cách' : 'Khoảng cách',
-            icon: '📏',
+            label:
+              subtype === 'wood_cuts'
+                ? 'Số đoạn gỗ'
+                : subtype === 'stairs'
+                ? 'Số khoảng tầng'
+                : unknownTarget === 'intervals'
+                ? '? khoảng cách'
+                : 'Khoảng cách',
+            icon: subtype === 'wood_cuts' ? '🪵' : subtype === 'stairs' ? '🪜' : '📏',
             count: intervalsCount,
             unitValue: stepLength,
             totalValue: totalLength,
             color: '#34D399',
             isUnknown: true,
+            displayMode: 'interval',
           },
           {
             id: 'cg_objects',
-            label: unknownTarget === 'objects' ? '? điểm mốc' : 'Điểm mốc',
+            label:
+              subtype === 'wood_cuts'
+                ? 'Số lần cưa'
+                : subtype === 'stairs'
+                ? `Từ Tầng 1 đến Tầng ${objectsCount}`
+                : unknownTarget === 'objects'
+                ? '? điểm mốc'
+                : 'Điểm mốc',
             icon: objectIcon,
             count: objectsCount,
             unitValue: 1,
             totalValue: objectsCount,
             color: '#38BDF8',
             isUnknown: true,
+            displayMode: 'interval',
           },
         ],
       },
@@ -2450,20 +2798,21 @@ export function buildCPASpecForQuestion(params: {
         intervalsCount,
         objectsCount,
         unknownTarget,
-        targetResultValue: primaryNum,
+        targetResultValue: finalNumericValue,
         objectIcon,
         unitLabel,
+        sidesMultiplier,
+        timePerCut,
+        timeUnit,
+        itemInGapIcon,
+        startFloor,
       },
       abstract: {
         unknownSymbol: '?',
         guidedLatexSteps,
-        fullLatexSteps: [
-          `\\text{Số khoảng} = ${totalLength} \\div ${stepLength} = ${intervalsCount}\\text{ (khoảng)}`,
-          ruleFormula,
-          ...stepByStepExplanation.map(formatToLatex),
-        ],
-        finalAnswerLatex: formatToLatex(correctAnswer),
-        finalNumericValue: primaryNum,
+        fullLatexSteps: intervalFullSteps,
+        finalAnswerLatex,
+        finalNumericValue,
       },
     };
   }
@@ -2473,7 +2822,12 @@ export function buildCPASpecForQuestion(params: {
   const chartItems = visualModel.chartItems;
   const isChart = subtype === 'length_chart' && chartItems && chartItems.length >= 2;
 
+  let measOperation: MeasurementOperation = isChart ? 'chart_extremes_diff' : 'unit_convert';
+  let visualParams: MeasurementVisualParams | undefined = undefined;
   let measGuidedSteps: string[] = [];
+  let measFinalNumeric = primaryNum;
+  let measFinalLatex = formatToLatex(correctAnswer);
+
   if (dayNumber && dayNumber >= 22 && dayNumber <= 28 && qIndex1Based) {
     const idx = dayNumber - 22;
     const kmVal = 2 + idx;
@@ -2503,60 +2857,81 @@ export function buildCPASpecForQuestion(params: {
 
     switch (qIndex1Based) {
       case 1:
+        measOperation = 'unit_convert';
+        visualParams = { mode: 'convert', givenA: kmVal, givenB: mExtra, unitA: 'km', unitB: 'm', labelA: `${kmVal} km`, labelB: `${mExtra} m` };
         measGuidedSteps = [
           `\\text{Đổi } ${kmVal}\\text{ km} = ${kmVal} \\;?\\; 1000 = ?\\text{ (m)}`,
           `\\text{Tổng độ dài} = (\\text{Số m}) \\;?\\; ${mExtra} = ?\\text{ (m)}`,
         ];
         break;
       case 2:
+        measOperation = 'unit_convert';
+        visualParams = { mode: 'convert', givenA: mVal, givenB: cmExtra, unitA: 'm', unitB: 'cm', labelA: `${mVal} m`, labelB: `${cmExtra} cm` };
         measGuidedSteps = [
           `\\text{Đổi } ${mVal}\\text{ m} = ${mVal} \\;?\\; 100 = ?\\text{ (cm)}`,
           `\\text{Tổng độ dài} = (\\text{Số cm}) \\;?\\; ${cmExtra} = ?\\text{ (cm)}`,
         ];
         break;
       case 3:
+        measOperation = 'unit_convert';
+        visualParams = { mode: 'convert', givenA: kgVal, givenB: gExtra, unitA: 'kg', unitB: 'g', labelA: `${kgVal} kg`, labelB: `${gExtra} g` };
         measGuidedSteps = [
           `\\text{Đổi } ${kgVal}\\text{ kg} = ${kgVal} \\;?\\; 1000 = ?\\text{ (g)}`,
           `\\text{Tổng khối lượng} = (\\text{Số g}) \\;?\\; ${gExtra} = ?\\text{ (g)}`,
         ];
         break;
       case 4:
+        measOperation = 'unit_divide';
+        visualParams = { mode: 'divide_equal', givenA: totalScaleGrams, givenCount: 3, unitA: 'g', labelA: '3 hộp sữa', labelB: `${totalScaleGrams} g` };
         measGuidedSteps = [`\\text{Mỗi hộp sữa} = ${totalScaleGrams} \\;?\\; 3 = ?\\text{ (g)}`];
         break;
       case 5:
+        measOperation = 'unit_subtract';
+        visualParams = { mode: 'subtract', givenA: startLiters * 1000, givenB: pourOutMl, unitA: 'mL', labelA: `Bình ${startLiters} L`, labelB: `Rót ${pourOutMl} mL` };
         measGuidedSteps = [
           `\\text{Đổi } ${startLiters}\\text{ L} = ${startLiters} \\;?\\; 1000 = ?\\text{ (mL)}`,
           `\\text{Nước còn lại} = (\\text{Ban đầu}) \\;?\\; ${pourOutMl} = ?\\text{ (mL)}`,
         ];
         break;
       case 6:
+        measOperation = 'chart_extremes_diff';
         measGuidedSteps = [`\\text{Hiệu dài nhất và ngắn nhất} = ${lenB} \\;?\\; ${lenC} = ?\\text{ (cm)}`];
         break;
       case 7:
+        measOperation = 'unit_subtract';
+        visualParams = { mode: 'subtract', givenA: ropeMeters * 100, givenB: usedCm, unitA: 'cm', labelA: `Dây ${ropeMeters} m`, labelB: `Cắt ${usedCm} cm` };
         measGuidedSteps = [
           `\\text{Đổi } ${ropeMeters}\\text{ m} = ${ropeMeters} \\;?\\; 100 = ?\\text{ (cm)}`,
           `\\text{Còn lại} = (\\text{Ban đầu}) \\;?\\; ${usedCm} = ?\\text{ (cm)}`,
         ];
         break;
       case 8:
+        measOperation = 'unit_add';
+        visualParams = { mode: 'sum', givenA: d1, givenB: d2, unitA: 'm', unitB: 'km', labelA: `${d1} m`, labelB: `${d2} m` };
         measGuidedSteps = [
           `\\text{Tổng quãng đường (m)} = ${d1} \\;?\\; ${d2} = ?\\text{ (m)}`,
           `\\text{Đổi sang km} = (\\text{Tổng m}) \\;?\\; 1000 = ?\\text{ (km)}`,
         ];
         break;
       case 9:
+        measOperation = 'equalize_transfer';
+        visualParams = { mode: 'equalize_pour', givenA: beakerA, givenB: beakerB, unitA: 'mL', labelA: `Bình A (${beakerA} mL)`, labelB: `Bình B (${beakerB} mL)` };
         measGuidedSteps = [
           `\\text{Chênh lệch hai bình} = ${beakerA} \\;?\\; ${beakerB} = ?\\text{ (mL)}`,
           `\\text{Cần rót sang} = (\\text{Chênh lệch}) \\;?\\; 2 = ?\\text{ (mL)}`,
         ];
         break;
       case 10:
+        measOperation = 'tare_weight';
+        visualParams = { mode: 'tare_half', givenA: fullTotalG, givenB: halfTotalG, unitA: 'g', labelA: `Đầy hũ (${fullTotalG} g)`, labelB: `Nửa hũ (${halfTotalG} g)` };
         measGuidedSteps = [
           `\\text{Nửa lượng mật ong} = ${fullTotalG} \\;?\\; ${halfTotalG} = ?\\text{ (g)}`,
           `\\text{Vỏ hũ rỗng} = ${halfTotalG} \\;?\\; (\\text{Nửa mật ong}) = ?\\text{ (g)}`,
         ];
         break;
       default:
+        measOperation = 'overlap_join';
+        visualParams = { mode: 'overlap_join', givenA: boardLenCm, givenB: overlapCm, givenCount: 2, unitA: 'cm', labelA: `2 thanh (${boardLenCm} cm)`, labelB: `Chồng ${overlapCm} cm` };
         measGuidedSteps = [
           `\\text{Tổng 2 thanh rời} = ${boardLenCm} \\;?\\; 2 = ?\\text{ (cm)}`,
           `\\text{Thanh ghép mới} = (\\text{Tổng 2 thanh}) \\;?\\; ${overlapCm} = ?\\text{ (cm)}`,
@@ -2565,45 +2940,165 @@ export function buildCPASpecForQuestion(params: {
     }
   } else if (id === 'nov-d29-q2' || id === 'nov-d30-q2') {
     const k = id === 'nov-d30-q2' ? 2 : 1;
+    measOperation = 'unit_convert';
+    visualParams = { mode: 'convert', givenA: 3 + k, givenB: 250 * k, unitA: 'km', unitB: 'm', labelA: `${3 + k} km`, labelB: `${250 * k} m` };
     measGuidedSteps = [
       `\\text{Đổi } ${3 + k}\\text{ km} = ${3 + k} \\;?\\; 1000 = ?\\text{ (m)}`,
       `\\text{Tổng độ dài} = (\\text{Số m}) \\;?\\; ${250 * k} = ?\\text{ (m)}`,
     ];
   } else if (id === 'nov-d29-q5' || id === 'nov-d30-q5') {
     const k = id === 'nov-d30-q5' ? 2 : 1;
+    measOperation = 'unit_divide';
+    visualParams = { mode: 'divide_equal', givenA: 1200 * k, givenCount: 4, unitA: 'g', labelA: '4 quả cầu', labelB: `${1200 * k} g` };
     measGuidedSteps = [`\\text{Mỗi quả cầu} = ${1200 * k} \\;?\\; 4 = ?\\text{ (g)}`];
   } else if (id === 'nov-d29-q9' || id === 'nov-d30-q9') {
     const k = id === 'nov-d30-q9' ? 2 : 1;
+    measOperation = 'unit_subtract';
+    visualParams = { mode: 'subtract', givenA: 2 * k * 1000, givenB: 1200, givenCount: 3, unitA: 'mL', labelA: `Bình ${2 * k} L`, labelB: '3 cốc × 400 mL' };
     measGuidedSteps = [
       `\\text{Đổi } ${2 * k}\\text{ L} = ${2 * k} \\;?\\; 1000 = ?\\text{ (mL)}`,
       `\\text{Nước trong 3 cốc} = 400 \\;?\\; 3 = ?\\text{ (mL)}`,
       `\\text{Còn lại trong bình} = (\\text{Ban đầu}) \\;?\\; (\\text{3 cốc}) = ?\\text{ (mL)}`,
     ];
   } else if (id === 'nov-exam-a7') {
+    measOperation = 'unit_convert';
+    visualParams = { mode: 'convert', givenA: 4, givenB: 35, unitA: 'km', unitB: 'm', labelA: '4 km', labelB: '35 m' };
     measGuidedSteps = [
       `\\text{Đổi } 4\\text{ km} = 4 \\;?\\; 1000 = ?\\text{ (m)}`,
       `\\text{Tổng độ dài} = (\\text{Số m}) \\;?\\; 35 = ?\\text{ (m)}`,
     ];
   } else if (id === 'nov-exam-a8') {
+    measOperation = 'unit_subtract';
+    visualParams = { mode: 'subtract', givenA: 3450, givenB: 1250, unitA: 'g', labelA: '3 kg 450 g', labelB: 'Lấy ra 1250 g' };
     measGuidedSteps = [
       `\\text{Đổi } 3\\text{ kg } 450\\text{ g} = (3 \\;?\\; 1000) \\;?\\; 450 = ?\\text{ (g)}`,
       `\\text{Gạo còn lại} = (\\text{Ban đầu}) \\;?\\; 1250 = ?\\text{ (g)}`,
     ];
   } else if (id === 'nov-exam-a9') {
+    measOperation = 'unit_divide';
+    visualParams = { mode: 'divide_equal', givenA: 2500, givenCount: 5, unitA: 'mL', labelA: '2 L 500 mL', labelB: 'Chia đều 5 chai' };
     measGuidedSteps = [
       `\\text{Đổi } 2\\text{ L } 500\\text{ mL} = (2 \\;?\\; 1000) \\;?\\; 500 = ?\\text{ (mL)}`,
       `\\text{Mỗi chai nhỏ} = (\\text{Tổng mL}) \\;?\\; 5 = ?\\text{ (mL)}`,
     ];
   } else if (id === 'nov-exam-b8') {
+    measOperation = 'tare_weight';
+    visualParams = { mode: 'tare_half', givenA: 22, givenB: 12, unitA: 'kg', labelA: 'Đầy thùng (22 kg)', labelB: 'Nửa thùng (12 kg)' };
     measGuidedSteps = [
       `\\text{Nửa lượng dầu} = 22 \\;?\\; 12 = ?\\text{ (kg)}`,
       `\\text{Vỏ thùng rỗng} = 12 \\;?\\; (\\text{Nửa lượng dầu}) = ?\\text{ (kg)}`,
     ];
   } else if (id === 'nov-exam-b9') {
+    measOperation = 'overlap_join';
+    visualParams = { mode: 'overlap_join', givenA: 60, givenB: 8, givenCount: 3, unitA: 'cm', labelA: '3 thanh gỗ (60 cm)', labelB: 'Chồng 8 cm/mối' };
     measGuidedSteps = [
       `\\text{Tổng 3 thanh gỗ} = 60 \\;?\\; 3 = ?\\text{ (cm)}`,
       `\\text{2 mối nối chồng} = 8 \\;?\\; (3 \\;?\\; 1) = ?\\text{ (cm)}`,
       `\\text{Thanh ghép mới} = (\\text{3 thanh}) \\;?\\; (\\text{2 mối nối}) = ?\\text{ (cm)}`,
+    ];
+  } else if (id === 'nov-w4-q1') {
+    measOperation = 'unit_add';
+    visualParams = { mode: 'sum', givenA: 2350, givenB: 1650, unitA: 'm', labelA: 'AB: 2 km 350 m', labelB: 'BC: 1 km 650 m' };
+    measFinalNumeric = 4000;
+    measGuidedSteps = [
+      `\\text{Đổi } 2\\text{ km } 350\\text{ m} = (2 \\;?\\; 1000) \\;?\\; 350 = ?\\text{ (m)}`,
+      `\\text{Đổi } 1\\text{ km } 650\\text{ m} = (1 \\;?\\; 1000) \\;?\\; 650 = ?\\text{ (m)}`,
+      `\\text{Tổng quãng đường} = (\\text{AB}) \\;?\\; (\\text{BC}) = ?\\text{ (m)}`,
+    ];
+  } else if (id === 'nov-w4-q2') {
+    measOperation = 'balance_eq';
+    visualParams = { mode: 'balance_eq', givenA: 2000, givenB: 300, unitA: 'g', labelA: 'Bột + 300 g', labelB: '2 quả 1 kg' };
+    measFinalNumeric = 1700;
+    measGuidedSteps = [
+      `\\text{Đổi đĩa phải: } 2\\text{ kg} = 2 \\;?\\; 1000 = ?\\text{ (g)}`,
+      `\\text{Bao bột mì} = (\\text{Đĩa phải}) \\;?\\; 300 = ?\\text{ (g)}`,
+    ];
+  } else if (id === 'nov-w4-q3') {
+    measOperation = 'tare_weight';
+    visualParams = { mode: 'tare_half', givenA: 1500, givenB: 900, unitA: 'g', labelA: 'Đầy bình (1500 g)', labelB: 'Nửa bình (900 g)' };
+    measFinalNumeric = 300;
+    measGuidedSteps = [
+      `\\text{Nửa lượng mật ong} = 1500 \\;?\\; 900 = ?\\text{ (g)}`,
+      `\\text{Vỏ bình thủy tinh rỗng} = 900 \\;?\\; (\\text{Nửa mật ong}) = ?\\text{ (g)}`,
+    ];
+  } else if (id === 'nov-w4-q4') {
+    measOperation = 'unit_subtract';
+    visualParams = { mode: 'subtract', givenA: 3000, givenB: 1800, givenCount: 4, unitA: 'mL', labelA: 'Bình 3 L', labelB: '4 cốc × 450 mL' };
+    measFinalNumeric = 1200;
+    measGuidedSteps = [
+      `\\text{Đổi } 3\\text{ L} = 3 \\;?\\; 1000 = ?\\text{ (mL)}`,
+      `\\text{Lượng nước rót vào 4 cốc} = 450 \\;?\\; 4 = ?\\text{ (mL)}`,
+      `\\text{Còn lại trong bình} = (\\text{Ban đầu}) \\;?\\; (\\text{4 cốc}) = ?\\text{ (mL)}`,
+    ];
+  } else if (id === 'nov-w4-q5') {
+    measOperation = 'overlap_join';
+    visualParams = { mode: 'overlap_join', givenA: 50, givenB: 6, givenCount: 2, unitA: 'cm', labelA: '2 thanh nẹp (50 cm)', labelB: 'Chồng 6 cm' };
+    measFinalNumeric = 94;
+    measGuidedSteps = [
+      `\\text{Tổng 2 thanh nẹp rời} = 50 \\;?\\; 2 = ?\\text{ (cm)}`,
+      `\\text{Thanh sắt sau khi hàn} = (\\text{2 thanh}) \\;?\\; 6 = ?\\text{ (cm)}`,
+    ];
+  } else if (id === 'nov-w4-q6') {
+    measOperation = 'chart_target_value';
+    measFinalNumeric = 65;
+    measGuidedSteps = [
+      `\\text{Lượng mưa Thứ Ba} = 45 \\;?\\; 2 = ?\\text{ (mm)}`,
+      `\\text{Lượng mưa Thứ Tư} = (\\text{Thứ Ba}) \\;?\\; 25 = ?\\text{ (mm)}`,
+    ];
+  } else if (id === 'nov-w4-q7') {
+    measOperation = 'unit_subtract';
+    visualParams = { mode: 'subtract', givenA: 2000, givenB: 600, unitA: 'mL', labelA: 'Bình 2 L', labelB: 'Rót 600 mL' };
+    measFinalNumeric = 1400;
+    measFinalLatex = '2000 - 600 = 1400\\text{ mL}';
+    measGuidedSteps = [
+      `\\text{Đổi cùng đơn vị: } 2\\text{ L} = 2 \\;?\\; 1000 = ?\\text{ (mL)}`,
+      `\\text{Hiệu hai lượng nước} = (\\text{Đổi mL}) \\;?\\; 600 = ?\\text{ (mL)}`,
+    ];
+  } else if (id === 'nov-w4-q8') {
+    measOperation = 'tare_weight';
+    visualParams = { mode: 'tare_half', givenA: 800, givenB: 450, unitA: 'g', labelA: 'Vỏ + Đầy bánh (800 g)', labelB: 'Vỏ + Nửa bánh (450 g)' };
+    measFinalNumeric = 350;
+    measFinalLatex = '800 - 450 = 350\\text{ g (nửa số bánh)}';
+    measGuidedSteps = [
+      `\\text{Một nửa số bánh (vỏ giữ nguyên)} = 800 \\;?\\; 450 = ?\\text{ (g)}`,
+      `\\text{Riêng vỏ hộp rỗng} = 450 \\;?\\; (\\text{Nửa số bánh}) = ?\\text{ (g)}`,
+    ];
+  } else if (id === 'nov-w4-q9') {
+    measOperation = 'overlap_join';
+    visualParams = { mode: 'overlap_join', givenA: 30, givenB: 2, givenCount: 4, unitA: 'cm', labelA: '4 băng giấy (30 cm)', labelB: 'Chồng 2 cm/mối' };
+    measFinalNumeric = 3;
+    measFinalLatex = '4 - 1 = 3\\text{ mối dán (dài } 114\\text{ cm)}';
+    measGuidedSteps = [
+      `\\text{Số mối dán giữa 4 băng giấy} = 4 \\;?\\; 1 = ?\\text{ (mối)}`,
+      `\\text{Tổng phần chồng} = (\\text{Số mối}) \\;?\\; 2 = ?\\text{ (cm)}`,
+      `\\text{Độ dài băng giấy ghép} = (30 \\;?\\; 4) \\;?\\; (\\text{Phần chồng}) = ?\\text{ (cm)}`,
+    ];
+  } else if (id === 'nov-w4-q10') {
+    measOperation = 'balance_eq';
+    visualParams = { mode: 'bridge_chain', givenA: 3, givenB: 4, givenCount: 200, unitA: 'g', labelA: '1 Dưa = 3 Bưởi', labelB: '1 Bưởi = 4 Táo (200 g)' };
+    measFinalNumeric = 2400;
+    measFinalLatex = '2400\\text{ g}';
+    measGuidedSteps = [
+      `\\text{Số quả táo bằng 1 dưa hấu} = 3 \\;?\\; 4 = ?\\text{ (quả táo)}`,
+      `\\text{Khối lượng 1 quả dưa hấu} = 200 \\;?\\; (\\text{Số quả táo}) = ?\\text{ (g)}`,
+    ];
+  } else if (id === 'nov-w5-q4') {
+    measOperation = 'tare_weight';
+    visualParams = { mode: 'tare_half', givenA: 11, givenB: 6, unitA: 'kg', labelA: 'Đầy can (11 kg)', labelB: 'Nửa can (6 kg)' };
+    measFinalNumeric = 1;
+    measGuidedSteps = [
+      `\\text{Nửa lượng nước mắm} = 11 \\;?\\; 6 = ?\\text{ (kg)}`,
+      `\\text{Vỏ can nhựa rỗng} = 6 \\;?\\; (\\text{Nửa nước mắm}) = ?\\text{ (kg)}`,
+    ];
+  } else if (id === 'nov-w5-q10') {
+    measOperation = 'equalize_transfer';
+    visualParams = { mode: 'equalize_pour', givenA: 1800, givenB: 1000, unitA: 'mL', labelA: 'Bình A (1 L 800 mL)', labelB: 'Bình B (1000 mL)' };
+    measFinalNumeric = 400;
+    measFinalLatex = '400\\text{ mL}';
+    measGuidedSteps = [
+      `\\text{Đổi } 1\\text{ L } 800\\text{ mL} = (1 \\;?\\; 1000) \\;?\\; 800 = ?\\text{ (mL)}`,
+      `\\text{Bình A hơn Bình B} = (\\text{Bình A}) \\;?\\; 1000 = ?\\text{ (mL)}`,
+      `\\text{Cần rót sang Bình B} = (\\text{Phần hơn}) \\;?\\; 2 = ?\\text{ (mL)}`,
     ];
   } else {
     measGuidedSteps =
@@ -2618,42 +3113,45 @@ export function buildCPASpecForQuestion(params: {
     concrete: {
       itemName: 'đại lượng đo',
       unitLabel: 'đơn vị',
-      actionPrompt: 'Đưa các đại lượng về cùng đơn vị đo chuẩn trước khi so sánh hoặc tính toán',
+      actionPrompt: 'Nguyên tắc Singapore Math: Đổi các đại lượng về CÙNG ĐƠN VỊ CHUẨN trước khi vẽ mô hình hoặc tính toán',
       interactiveRule: visualModel.conversionRule || '1 km = 1000 m · 1 kg = 1000 g · 1 L = 1000 mL',
       groups: isChart
         ? chartItems.map((ci, idx) => ({
             id: `cg_chart_${idx}`,
             label: ci.label,
-            icon: '📏',
+            icon: '📊',
             count: 1,
             unitValue: ci.value,
             totalValue: ci.value,
             color: ci.color,
             isUnknown: !!ci.masked,
+            displayMode: 'measurement',
           }))
         : [
             {
               id: 'cg_meas_1',
-              label: visualModel.primaryReading || 'Đại lượng chuẩn',
+              label: visualModel.primaryReading || 'Đại lượng đo ban đầu',
               icon: subtype === 'weight_balance' ? '⚖️' : subtype === 'volume_beaker' ? '🧪' : '📏',
               count: 1,
-              unitValue: Math.max(1, primaryNum),
-              totalValue: Math.max(1, primaryNum),
-              color: '#A855F7',
+              unitValue: Math.max(1, measFinalNumeric),
+              totalValue: Math.max(1, measFinalNumeric),
+              color: '#38BDF8',
               isUnknown: true,
+              displayMode: 'measurement',
             },
           ],
     },
     pictorial: {
       kind: 'measurement_lab',
       subtype,
-      operation: isChart ? 'chart_extremes_diff' : 'unit_convert',
-      operands: [primaryNum],
-      expectedNumericResult: Math.max(1, primaryNum),
+      operation: measOperation,
+      operands: [measFinalNumeric],
+      expectedNumericResult: Math.max(1, measFinalNumeric),
       resultUnit: correctAnswer.replace(/[0-9\s]/g, '') || 'đơn vị',
       primaryReading: visualModel.primaryReading,
       secondaryReading: visualModel.secondaryReading,
       conversionRule: visualModel.conversionRule,
+      visualParams,
       chartItems: visualModel.chartItems,
     },
     abstract: {
@@ -2663,8 +3161,8 @@ export function buildCPASpecForQuestion(params: {
         stepByStepExplanation.length > 0
           ? stepByStepExplanation.map(formatToLatex)
           : [formatToLatex(`Kết quả = ${correctAnswer}`)],
-      finalAnswerLatex: formatToLatex(correctAnswer),
-      finalNumericValue: primaryNum,
+      finalAnswerLatex: measFinalLatex,
+      finalNumericValue: measFinalNumeric,
     },
   };
 }

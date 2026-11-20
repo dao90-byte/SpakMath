@@ -249,6 +249,13 @@ export function verifyMeasurementPictorial(spec: MeasurementPictorialSpec): Math
         errors.push(
           `chart_extremes_diff expected ${maxV} - ${minV} = ${maxV - minV}, got ${spec.expectedNumericResult}`
         );
+      } else if (
+        spec.operation === 'chart_target_value' &&
+        !vals.includes(spec.expectedNumericResult)
+      ) {
+        errors.push(
+          `chart_target_value expected one of [${vals.join(', ')}], got ${spec.expectedNumericResult}`
+        );
       }
     }
   }

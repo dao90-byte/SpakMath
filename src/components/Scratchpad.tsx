@@ -8,187 +8,586 @@ interface ScratchpadProps {
 }
 
 const SCRATCHPAD_STORAGE_KEY = 'spark_math_scratchpad_data';
+const MAX_STROKE_HISTORY = 120;
+const PERSIST_DEBOUNCE_MS = 1200;
+const CANVAS_BG = '#050A1F';
+const GRID_STEP = 28;
+
+interface StrokeRecord {
+  tool: 'pencil' | 'eraser';
+  color: string;
+  width: number;
+  /** Flat interleaved [x0, y0, x1, y1, ...] in CSS px relative to canvas */
+  points: number[];
+}
+
+interface DelegatedInkTrailPresenterLike {
+  updateInkTrailStartPoint: (
+    event: PointerEvent,
+    style: { color: string; diameter: number }
+  ) => void;
+}
+
+interface NavigatorWithInk extends Navigator {
+  ink?: {
+    requestPresenter?: (params?: {
+      presentationArea?: Element | null;
+    }) => Promise<DelegatedInkTrailPresenterLike>;
+  };
+}
+
+/**
+ * Creates a 28×28 repeating cosmic star-chart tile for opaque `alpha: false` canvas fill & seamless erasing.
+ */
+function createCosmicGridPattern(
+  ctx: CanvasRenderingContext2D
+): CanvasPattern | null {
+  const tile = document.createElement('canvas');
+  tile.width = GRID_STEP;
+  tile.height = GRID_STEP;
+  const tCtx = tile.getContext('2d', { alpha: false });
+  if (!tCtx) return null;
+
+  tCtx.fillStyle = CANVAS_BG;
+  tCtx.fillRect(0, 0, GRID_STEP, GRID_STEP);
+  tCtx.strokeStyle = 'rgba(56, 189, 248, 0.09)';
+  tCtx.lineWidth = 1;
+  tCtx.beginPath();
+  tCtx.moveTo(0.5, 0);
+  tCtx.lineTo(0.5, GRID_STEP);
+  tCtx.moveTo(0, 0.5);
+  tCtx.lineTo(GRID_STEP, 0.5);
+  tCtx.stroke();
+
+  return ctx.createPattern(tile, 'repeat');
+}
+
+/**
+ * Replays a single vector stroke onto a 2D context in one batched GPU draw call.
+ */
+function renderVectorStroke(
+  ctx: CanvasRenderingContext2D,
+  stroke: StrokeRecord,
+  gridPattern: CanvasPattern | null
+) {
+  const pts = stroke.points;
+  const count = pts.length;
+  if (count < 2) return;
+
+  const isEraser = stroke.tool === 'eraser';
+  const fillOrStroke: string | CanvasPattern = isEraser
+    ? gridPattern || CANVAS_BG
+    : stroke.color;
+
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = stroke.width;
+  ctx.strokeStyle = fillOrStroke;
+  ctx.fillStyle = fillOrStroke;
+
+  if (count === 2) {
+    ctx.beginPath();
+    ctx.arc(pts[0], pts[1], stroke.width * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    return;
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(pts[0], pts[1]);
+
+  if (count === 4) {
+    ctx.lineTo(pts[2], pts[3]);
+    ctx.stroke();
+    return;
+  }
+
+  let prevX = pts[0];
+  let prevY = pts[1];
+  for (let i = 2; i < count - 2; i += 2) {
+    const x = pts[i];
+    const y = pts[i + 1];
+    const midX = (prevX + x) * 0.5;
+    const midY = (prevY + y) * 0.5;
+    ctx.quadraticCurveTo(prevX, prevY, midX, midY);
+    prevX = x;
+    prevY = y;
+  }
+  ctx.quadraticCurveTo(prevX, prevY, pts[count - 2], pts[count - 1]);
+  ctx.stroke();
+}
 
 export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const savedDrawingRef = useRef<string | null>(null);
-  const undoStackRef = useRef<string[]>([]);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const gridPatternRef = useRef<CanvasPattern | null>(null);
+  const inkPresenterRef = useRef<DelegatedInkTrailPresenterLike | null>(null);
+  const rectRef = useRef<{ left: number; top: number; width: number; height: number }>({
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  });
+  const dprRef = useRef<number>(1);
 
-  const [isDrawing, setIsDrawing] = useState(false);
+  // Zero-GPU-readback vector stroke history + optional previous-session raster base
+  const strokesRef = useRef<StrokeRecord[]>([]);
+  const baseImageRef = useRef<HTMLImageElement | null>(null);
+  const savedDataUrlRef = useRef<string | null>(null);
+  const isDirtyRef = useRef<boolean>(false);
+
+  // Active stroke mutable refs (ZERO React re-renders during drawing)
+  const isDrawingRef = useRef<boolean>(false);
+  const activePointerIdRef = useRef<number | null>(null);
+  const activeStrokeRef = useRef<StrokeRecord | null>(null);
+  const lastXRef = useRef<number>(0);
+  const lastYRef = useRef<number>(0);
+  const lastMidXRef = useRef<number>(0);
+  const lastMidYRef = useRef<number>(0);
+  const rawUpdateSeenRef = useRef<boolean>(false);
+
+  const persistTimerRef = useRef<number | null>(null);
+  const idleCallbackIdRef = useRef<number | null>(null);
+
   const [color, setColor] = useState('#38BDF8');
   const [lineWidth, setLineWidth] = useState(4);
   const [tool, setTool] = useState<'pencil' | 'eraser'>('pencil');
   const [canUndo, setCanUndo] = useState(false);
 
-  // Initialize from localStorage once on mount
+  const toolRef = useRef(tool);
+  const colorRef = useRef(color);
+  const lineWidthRef = useRef(lineWidth);
+
+  useEffect(() => {
+    toolRef.current = tool;
+  }, [tool]);
+
+  useEffect(() => {
+    colorRef.current = color;
+  }, [color]);
+
+  useEffect(() => {
+    lineWidthRef.current = lineWidth;
+  }, [lineWidth]);
+
+  // Load saved drawing once on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem(SCRATCHPAD_STORAGE_KEY);
       if (saved) {
-        savedDrawingRef.current = saved;
+        savedDataUrlRef.current = saved;
       }
     } catch {
       // Ignore storage access errors
     }
   }, []);
 
-  const saveCanvasProgress = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || canvas.width === 0 || canvas.height === 0) return;
-    try {
-      const dataUrl = canvas.toDataURL('image/png');
-      savedDrawingRef.current = dataUrl;
-      localStorage.setItem(SCRATCHPAD_STORAGE_KEY, dataUrl);
-    } catch {
-      // Ignore storage quota errors, in-memory ref still keeps progress
+  const cancelScheduledPersist = useCallback(() => {
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
+    if (idleCallbackIdRef.current !== null && 'cancelIdleCallback' in window) {
+      (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(
+        idleCallbackIdRef.current
+      );
+      idleCallbackIdRef.current = null;
     }
   }, []);
 
-  const restoreDataUrlToCanvas = useCallback((dataUrl: string) => {
+  const persistNow = useCallback(() => {
+    cancelScheduledPersist();
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!canvas || canvas.width === 0 || canvas.height === 0 || !isDirtyRef.current) return;
+    try {
+      // WebP encoding is 3–5× faster than PNG; falls back to PNG transparently if unsupported
+      let dataUrl = canvas.toDataURL('image/webp', 0.88);
+      if (!dataUrl.startsWith('data:image/webp')) {
+        dataUrl = canvas.toDataURL('image/png');
+      }
+      savedDataUrlRef.current = dataUrl;
+      isDirtyRef.current = false;
+      localStorage.setItem(SCRATCHPAD_STORAGE_KEY, dataUrl);
+    } catch {
+      // Ignore storage quota errors; in-memory strokes still keep progress
+    }
+  }, [cancelScheduledPersist]);
 
-    const img = new Image();
-    img.onload = () => {
-      const currentCanvas = canvasRef.current;
-      if (!currentCanvas) return;
-      const currentCtx = currentCanvas.getContext('2d');
-      if (!currentCtx) return;
+  const scheduleBackgroundPersist = useCallback(() => {
+    cancelScheduledPersist();
+    persistTimerRef.current = window.setTimeout(() => {
+      persistTimerRef.current = null;
+      const runSave = () => {
+        idleCallbackIdRef.current = null;
+        if (!isDrawingRef.current) {
+          persistNow();
+        }
+      };
+      if ('requestIdleCallback' in window) {
+        idleCallbackIdRef.current = (
+          window as unknown as {
+            requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+          }
+        ).requestIdleCallback(runSave, { timeout: 1500 });
+      } else {
+        runSave();
+      }
+    }, PERSIST_DEBOUNCE_MS);
+  }, [cancelScheduledPersist, persistNow]);
 
-      currentCtx.save();
-      currentCtx.setTransform(1, 0, 0, 1, 0, 0);
-      currentCtx.clearRect(0, 0, currentCanvas.width, currentCanvas.height);
-      currentCtx.globalCompositeOperation = 'source-over';
-      currentCtx.drawImage(img, 0, 0, currentCanvas.width, currentCanvas.height);
-      currentCtx.restore();
-    };
-    img.src = dataUrl;
+  const repaintFullCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = ctxRef.current;
+    if (!canvas || !ctx) return;
+
+    const dpr = dprRef.current;
+    const cssW = canvas.width / dpr;
+    const cssH = canvas.height / dpr;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = gridPatternRef.current || CANVAS_BG;
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    if (baseImageRef.current && baseImageRef.current.complete) {
+      ctx.drawImage(baseImageRef.current, 0, 0, cssW, cssH);
+    }
+
+    const strokes = strokesRef.current;
+    for (let i = 0; i < strokes.length; i++) {
+      renderVectorStroke(ctx, strokes[i], gridPatternRef.current);
+    }
   }, []);
 
+  // Initialize opaque desynchronized 2D context, W3C Delegated Ink API, ResizeObserver & pointerrawupdate
   useEffect(() => {
     if (!isOpen) return;
 
-    const setupAndRestore = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-      }
-
-      if (savedDrawingRef.current) {
-        restoreDataUrlToCanvas(savedDrawingRef.current);
-      }
-    };
-
-    const rafId = requestAnimationFrame(setupAndRestore);
-    return () => cancelAnimationFrame(rafId);
-  }, [isOpen, restoreDataUrlToCanvas]);
-
-  const getCoordinates = (
-    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
-    canvas: HTMLCanvasElement
-  ) => {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  };
-
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
 
-    // Push snapshot for undo before modifying
-    try {
-      const snapshot = canvas.toDataURL('image/png');
-      undoStackRef.current = [...undoStackRef.current.slice(-19), snapshot];
-      setCanUndo(true);
-    } catch {
-      // Ignore
+    let cancelled = false;
+
+    const syncRect = () => {
+      const r = canvas.getBoundingClientRect();
+      rectRef.current = { left: r.left, top: r.top, width: r.width, height: r.height };
+      return r;
+    };
+
+    const initCanvasBackingStore = () => {
+      if (cancelled) return;
+      const r = syncRect();
+      if (r.width === 0 || r.height === 0) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dprRef.current = dpr;
+      const targetW = Math.max(1, Math.floor(r.width * dpr));
+      const targetH = Math.max(1, Math.floor(r.height * dpr));
+
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      if (!ctxRef.current) {
+        // Opaque + desynchronized unlocks direct hardware scanout low-latency ink in Chromium
+        const ctx =
+          (canvas.getContext('2d', {
+            alpha: false,
+            desynchronized: true,
+          }) as CanvasRenderingContext2D | null) || canvas.getContext('2d');
+        if (!ctx) return;
+        ctxRef.current = ctx;
+        gridPatternRef.current = createCosmicGridPattern(ctx);
+      }
+
+      repaintFullCanvas();
+
+      // Load saved session raster base once if present and not yet loaded
+      if (savedDataUrlRef.current && !baseImageRef.current && strokesRef.current.length === 0) {
+        const img = new Image();
+        img.onload = () => {
+          if (cancelled) return;
+          baseImageRef.current = img;
+          repaintFullCanvas();
+        };
+        img.src = savedDataUrlRef.current;
+      }
+    };
+
+    const rafId = requestAnimationFrame(initCanvasBackingStore);
+
+    // Request W3C OS-Compositor Delegated Ink Presenter when supported (Chrome/Edge)
+    const navWithInk = navigator as NavigatorWithInk;
+    if (navWithInk.ink?.requestPresenter) {
+      navWithInk.ink
+        .requestPresenter({ presentationArea: canvas })
+        .then((presenter) => {
+          if (!cancelled) {
+            inkPresenterRef.current = presenter;
+          }
+        })
+        .catch(() => {
+          inkPresenterRef.current = null;
+        });
     }
 
-    setIsDrawing(true);
-    sound.playClick();
+    // Keep cached bounding rect synchronized automatically (zero layout reflow during drawing)
+    const resizeObserver =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            initCanvasBackingStore();
+          })
+        : null;
+    resizeObserver?.observe(canvas);
 
-    const { x, y } = getCoordinates(e, canvas);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  };
+    const handleWindowShift = () => {
+      syncRect();
+    };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const { x, y } = getCoordinates(e, canvas);
-
-    ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
-    ctx.lineWidth = tool === 'eraser' ? 24 : lineWidth;
-    ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : color;
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  };
-
-  const stopDrawing = () => {
-    if (!isDrawing) return;
-    setIsDrawing(false);
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (ctx) {
+    const applyActiveStrokeStyle = (ctx: CanvasRenderingContext2D, isEraser: boolean, width: number, strokeColor: string) => {
+      const style: string | CanvasPattern = isEraser
+        ? gridPatternRef.current || CANVAS_BG
+        : strokeColor;
       ctx.globalCompositeOperation = 'source-over';
-    }
-    saveCanvasProgress();
-  };
+      ctx.lineWidth = width;
+      ctx.strokeStyle = style;
+      ctx.fillStyle = style;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    };
+
+    const processPointerSamples = (e: PointerEvent) => {
+      const ctx = ctxRef.current;
+      const stroke = activeStrokeRef.current;
+      if (!ctx || !stroke) return;
+
+      const { left, top } = rectRef.current;
+      const coalesced =
+        typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : null;
+      const samples = coalesced && coalesced.length > 0 ? coalesced : [e];
+
+      let prevX = lastXRef.current;
+      let prevY = lastYRef.current;
+      let prevMidX = lastMidXRef.current;
+      let prevMidY = lastMidYRef.current;
+      let drewAny = false;
+
+      // Single batched GPU path for ALL coalesced points in this hardware tick
+      ctx.beginPath();
+      ctx.moveTo(prevMidX, prevMidY);
+
+      for (let i = 0; i < samples.length; i++) {
+        const s = samples[i];
+        const x = s.clientX - left;
+        const y = s.clientY - top;
+        const dx = x - prevX;
+        const dy = y - prevY;
+        if (dx * dx + dy * dy < 0.25) continue;
+
+        const midX = (prevX + x) * 0.5;
+        const midY = (prevY + y) * 0.5;
+
+        ctx.quadraticCurveTo(prevX, prevY, midX, midY);
+        stroke.points.push(x, y);
+
+        prevX = x;
+        prevY = y;
+        prevMidX = midX;
+        prevMidY = midY;
+        drewAny = true;
+      }
+
+      if (drewAny) {
+        ctx.stroke();
+        lastXRef.current = prevX;
+        lastYRef.current = prevY;
+        lastMidXRef.current = prevMidX;
+        lastMidYRef.current = prevMidY;
+      }
+
+      // Feed OS-level Delegated Ink Trail for sub-frame visual response on pencil tool
+      if (inkPresenterRef.current && stroke.tool === 'pencil') {
+        try {
+          inkPresenterRef.current.updateInkTrailStartPoint(e, {
+            color: stroke.color,
+            diameter: stroke.width,
+          });
+        } catch {
+          // Ignore unsupported pointer types
+        }
+      }
+    };
+
+    const handlePointerDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      const ctx = ctxRef.current;
+      if (!ctx) return;
+
+      e.preventDefault();
+      cancelScheduledPersist();
+
+      // Ensure rect is initialized (only measure if somehow zero)
+      if (rectRef.current.width === 0) {
+        syncRect();
+      }
+
+      try {
+        canvas.setPointerCapture(e.pointerId);
+      } catch {
+        // Ignore if unsupported
+      }
+
+      const isEraser = toolRef.current === 'eraser';
+      const width = isEraser ? Math.max(24, lineWidthRef.current * 4) : lineWidthRef.current;
+      const strokeColor = colorRef.current;
+
+      applyActiveStrokeStyle(ctx, isEraser, width, strokeColor);
+
+      const x = e.clientX - rectRef.current.left;
+      const y = e.clientY - rectRef.current.top;
+
+      isDrawingRef.current = true;
+      activePointerIdRef.current = e.pointerId;
+      rawUpdateSeenRef.current = false;
+      lastXRef.current = x;
+      lastYRef.current = y;
+      lastMidXRef.current = x;
+      lastMidYRef.current = y;
+
+      activeStrokeRef.current = {
+        tool: toolRef.current,
+        color: strokeColor,
+        width,
+        points: [x, y],
+      };
+
+      // Instant zero-delay dot on pen contact
+      ctx.beginPath();
+      ctx.arc(x, y, width * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (inkPresenterRef.current && !isEraser) {
+        try {
+          inkPresenterRef.current.updateInkTrailStartPoint(e, {
+            color: strokeColor,
+            diameter: width,
+          });
+        } catch {
+          // Ignore
+        }
+      }
+    };
+
+    const handlePointerRawUpdate = (e: PointerEvent) => {
+      if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
+      rawUpdateSeenRef.current = true;
+      processPointerSamples(e);
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
+      // If browser already delivered raw sub-frame hardware updates for this stroke, skip redundant vsync move
+      if (rawUpdateSeenRef.current) return;
+      processPointerSamples(e);
+    };
+
+    const finishStroke = (e: PointerEvent) => {
+      if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
+      const ctx = ctxRef.current;
+      const stroke = activeStrokeRef.current;
+
+      if (ctx && stroke) {
+        const endX = e.clientX - rectRef.current.left;
+        const endY = e.clientY - rectRef.current.top;
+        const dx = endX - lastXRef.current;
+        const dy = endY - lastYRef.current;
+
+        if (dx * dx + dy * dy >= 0.25) {
+          ctx.beginPath();
+          ctx.moveTo(lastMidXRef.current, lastMidYRef.current);
+          ctx.quadraticCurveTo(lastXRef.current, lastYRef.current, endX, endY);
+          ctx.stroke();
+          stroke.points.push(endX, endY);
+        }
+
+        // O(1) in-memory vector commit — ZERO GPU readback (getImageData) stall!
+        strokesRef.current.push(stroke);
+        if (strokesRef.current.length > MAX_STROKE_HISTORY) {
+          strokesRef.current.shift();
+        }
+        setCanUndo((prev) => (prev ? prev : true));
+      }
+
+      isDrawingRef.current = false;
+      activePointerIdRef.current = null;
+      activeStrokeRef.current = null;
+      rawUpdateSeenRef.current = false;
+
+      try {
+        if (canvas.hasPointerCapture(e.pointerId)) {
+          canvas.releasePointerCapture(e.pointerId);
+        }
+      } catch {
+        // Ignore
+      }
+
+      isDirtyRef.current = true;
+      scheduleBackgroundPersist();
+    };
+
+    canvas.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    canvas.addEventListener(
+      'pointerrawupdate' as keyof HTMLElementEventMap,
+      handlePointerRawUpdate as EventListener,
+      { passive: true }
+    );
+    canvas.addEventListener('pointermove', handlePointerMove, { passive: true });
+    canvas.addEventListener('pointerup', finishStroke, { passive: true });
+    canvas.addEventListener('pointercancel', finishStroke, { passive: true });
+    window.addEventListener('resize', handleWindowShift, { passive: true });
+    window.addEventListener('scroll', handleWindowShift, { passive: true });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      resizeObserver?.disconnect();
+      canvas.removeEventListener('pointerdown', handlePointerDown);
+      canvas.removeEventListener(
+        'pointerrawupdate' as keyof HTMLElementEventMap,
+        handlePointerRawUpdate as EventListener
+      );
+      canvas.removeEventListener('pointermove', handlePointerMove);
+      canvas.removeEventListener('pointerup', finishStroke);
+      canvas.removeEventListener('pointercancel', finishStroke);
+      window.removeEventListener('resize', handleWindowShift);
+      window.removeEventListener('scroll', handleWindowShift);
+      inkPresenterRef.current = null;
+      persistNow();
+      ctxRef.current = null;
+      gridPatternRef.current = null;
+    };
+  }, [isOpen, cancelScheduledPersist, persistNow, repaintFullCanvas, scheduleBackgroundPersist]);
 
   const handleUndo = () => {
-    if (undoStackRef.current.length === 0) return;
+    if (strokesRef.current.length === 0) return;
     sound.playClick();
-    const prevSnapshot = undoStackRef.current[undoStackRef.current.length - 1];
-    undoStackRef.current = undoStackRef.current.slice(0, -1);
-    setCanUndo(undoStackRef.current.length > 0);
-    savedDrawingRef.current = prevSnapshot;
-    try {
-      localStorage.setItem(SCRATCHPAD_STORAGE_KEY, prevSnapshot);
-    } catch {
-      // Ignore
-    }
-    restoreDataUrlToCanvas(prevSnapshot);
+    strokesRef.current.pop();
+    setCanUndo(strokesRef.current.length > 0);
+    repaintFullCanvas();
+    isDirtyRef.current = true;
+    scheduleBackgroundPersist();
   };
 
   const clearAllCanvas = () => {
     sound.playWrong();
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.save();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.restore();
-      }
-    }
-    savedDrawingRef.current = null;
-    undoStackRef.current = [];
+    cancelScheduledPersist();
+    strokesRef.current = [];
+    baseImageRef.current = null;
+    savedDataUrlRef.current = null;
+    isDirtyRef.current = false;
     setCanUndo(false);
+    repaintFullCanvas();
     try {
       localStorage.removeItem(SCRATCHPAD_STORAGE_KEY);
     } catch {
@@ -197,47 +596,47 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
   };
 
   const handleClose = () => {
-    saveCanvasProgress();
+    persistNow();
     onClose();
   };
 
   if (!isOpen) return null;
 
-  const colorPalette = ['#38BDF8', '#FDE047', '#34D399', '#F472B6', '#C084FC', '#FFFFFF'];
+  const colorPalette = ['#38BDF8', '#FDE047', '#34D399', '#FB7185', '#F97316', '#FFFFFF'];
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#030617]/80 backdrop-blur-md p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#030617]/92 p-3 sm:p-4"
       onClick={handleClose}
     >
       <div
-        className="relative bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.2),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.18),_transparent_55%),linear-gradient(160deg,_rgba(15,24,68,0.98),_rgba(7,12,38,0.99))] rounded-3xl shadow-[0_28px_70px_rgba(3,7,24,0.88),0_0_42px_rgba(34,211,238,0.18)] border border-cyan-300/45 w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden text-white animate-in fade-in zoom-in-95 duration-200"
+        className="relative bg-[linear-gradient(160deg,_rgba(11,20,54,0.99),_rgba(5,10,32,1))] rounded-3xl shadow-[0_24px_64px_rgba(3,7,24,0.92),0_0_32px_rgba(34,211,238,0.16)] border border-sky-300/40 w-full max-w-4xl h-[86vh] flex flex-col overflow-hidden text-white"
         onClick={(e) => e.stopPropagation()}
       >
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-fuchsia-400 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+          className="pointer-events-none absolute top-0 inset-x-8 h-[2px] rounded-full bg-gradient-to-r from-sky-300 via-cyan-300 to-amber-300"
         />
 
         {/* Header */}
-        <div className="relative bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.24),_transparent_58%),radial-gradient(ellipse_at_top_right,_rgba(217,70,239,0.2),_transparent_58%),linear-gradient(180deg,_rgba(12,22,66,0.96),_rgba(6,11,36,0.92))] border-b border-cyan-300/45 shadow-[0_8px_32px_rgba(34,211,238,0.2),inset_0_1px_0_rgba(165,243,252,0.28)] px-6 py-4 flex items-center justify-between text-white">
+        <div className="relative bg-[linear-gradient(180deg,_rgba(11,22,60,0.98),_rgba(6,11,34,0.96))] border-b border-sky-300/35 px-5 py-3.5 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
-            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-300 via-sky-400 to-fuchsia-400 text-slate-950 flex items-center justify-center shadow-[0_0_26px_rgba(34,211,238,0.68),0_0_46px_rgba(217,70,239,0.38)] ring-2 ring-cyan-200/45 shrink-0">
-              <Pencil className="w-5 h-5" />
+            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-300 via-cyan-400 to-sky-500 text-slate-950 flex items-center justify-center shadow-[0_0_18px_rgba(56,189,248,0.45)] shrink-0">
+              <Pencil className="w-4 h-4" />
             </span>
             <div>
-              <h2 className="text-xl font-black font-display bg-gradient-to-r from-white via-cyan-200 to-fuchsia-200 bg-clip-text text-transparent drop-shadow-[0_0_16px_rgba(56,189,248,0.68)]">
+              <h2 className="text-lg sm:text-xl font-black font-display text-sky-100">
                 Bảng Vẽ &amp; Tính Nháp Vũ Trụ
               </h2>
-              <p className="text-xs font-medium text-cyan-100/95 drop-shadow-[0_0_10px_rgba(34,211,238,0.48)]">
-                Tự do vẽ sơ đồ, đặt tính nháp — bài vẽ tự động lưu lại khi đóng mở!
+              <p className="text-xs font-medium text-sky-200/80">
+                Chế độ vẽ tức thì độ trễ siêu thấp — tự động lưu khi đóng.
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={handleClose}
-            className="w-10 h-10 rounded-xl bg-white/[0.1] hover:bg-cyan-400/25 border border-cyan-300/30 hover:border-cyan-300/75 shadow-[0_0_14px_rgba(34,211,238,0.18)] hover:shadow-[0_0_22px_rgba(34,211,238,0.5)] flex items-center justify-center transition-all text-white cursor-pointer"
+            className="w-9 h-9 rounded-xl bg-white/[0.08] hover:bg-sky-400/20 border border-sky-300/30 hover:border-sky-300/70 flex items-center justify-center transition-colors text-white cursor-pointer"
             title="Đóng bảng nháp (vẫn giữ nguyên bài vẽ)"
           >
             <X className="w-5 h-5" />
@@ -245,15 +644,18 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Toolbar */}
-        <div className="relative bg-[radial-gradient(ellipse_at_center,_rgba(56,189,248,0.16),_transparent_72%),linear-gradient(180deg,_rgba(12,23,70,0.95),_rgba(7,13,42,0.96))] border-b border-cyan-300/40 shadow-[0_8px_28px_rgba(34,211,238,0.16),inset_0_1px_0_rgba(103,232,249,0.22)] px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="relative bg-[linear-gradient(180deg,_rgba(11,21,58,0.96),_rgba(7,13,38,0.98))] border-b border-sky-300/30 px-5 py-2.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => { setTool('pencil'); sound.playClick(); }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-all cursor-pointer ${
+              onClick={() => {
+                setTool('pencil');
+                sound.playClick();
+              }}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-colors cursor-pointer whitespace-nowrap ${
                 tool === 'pencil'
-                  ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.6),0_0_40px_rgba(217,70,239,0.28)]'
-                  : 'bg-white/[0.07] text-cyan-100 border border-cyan-300/30 hover:bg-cyan-400/20 hover:border-cyan-300/70 hover:shadow-[0_0_18px_rgba(34,211,238,0.38)]'
+                  ? 'bg-gradient-to-r from-sky-300 to-cyan-300 text-slate-950 shadow-[0_0_14px_rgba(56,189,248,0.45)]'
+                  : 'bg-white/[0.07] text-sky-100 border border-sky-300/30 hover:bg-sky-400/18'
               }`}
             >
               <Pencil className="w-4 h-4" />
@@ -261,11 +663,14 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
             </button>
             <button
               type="button"
-              onClick={() => { setTool('eraser'); sound.playClick(); }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-all cursor-pointer ${
+              onClick={() => {
+                setTool('eraser');
+                sound.playClick();
+              }}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-colors cursor-pointer whitespace-nowrap ${
                 tool === 'eraser'
-                  ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.6),0_0_40px_rgba(217,70,239,0.28)]'
-                  : 'bg-white/[0.07] text-cyan-100 border border-cyan-300/30 hover:bg-cyan-400/20 hover:border-cyan-300/70 hover:shadow-[0_0_18px_rgba(34,211,238,0.38)]'
+                  ? 'bg-gradient-to-r from-sky-300 to-cyan-300 text-slate-950 shadow-[0_0_14px_rgba(56,189,248,0.45)]'
+                  : 'bg-white/[0.07] text-sky-100 border border-sky-300/30 hover:bg-sky-400/18'
               }`}
             >
               <Eraser className="w-4 h-4" />
@@ -276,18 +681,22 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
           {/* Color palette */}
           {tool === 'pencil' && (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-cyan-200/95 drop-shadow-[0_0_8px_rgba(34,211,238,0.35)]">Màu nét:</span>
+              <span className="text-xs font-bold text-sky-200/95">Màu nét:</span>
               <div className="flex items-center gap-1.5">
                 {colorPalette.map((c) => (
                   <button
                     key={c}
                     type="button"
-                    onClick={() => { setColor(c); sound.playClick(); }}
+                    onClick={() => {
+                      setColor(c);
+                      sound.playClick();
+                    }}
                     style={{ backgroundColor: c }}
-                    className={`w-7 h-7 rounded-full transition-all border-2 cursor-pointer ${
+                    aria-label={`Chọn màu ${c}`}
+                    className={`w-7 h-7 rounded-full transition-transform border-2 cursor-pointer ${
                       color === c
-                        ? 'scale-120 border-white shadow-[0_0_18px_rgba(56,189,248,0.85)] ring-2 ring-cyan-300'
-                        : 'border-white/50 hover:scale-110 hover:shadow-[0_0_12px_rgba(255,255,255,0.45)]'
+                        ? 'scale-115 border-white ring-2 ring-sky-300'
+                        : 'border-white/45 hover:scale-110'
                     }`}
                   />
                 ))}
@@ -297,14 +706,16 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
 
           {/* Line width */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-cyan-200/95 drop-shadow-[0_0_8px_rgba(34,211,238,0.35)]">Nét bút:</span>
+            <span className="text-xs font-bold text-sky-200/95 tabular-nums">
+              Nét bút: {lineWidth}px
+            </span>
             <input
               type="range"
               min="2"
               max="16"
               value={lineWidth}
               onChange={(e) => setLineWidth(Number(e.target.value))}
-              className="w-20 accent-cyan-400 cursor-pointer"
+              className="w-20 accent-sky-400 cursor-pointer"
             />
           </div>
 
@@ -314,9 +725,9 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
               type="button"
               onClick={handleUndo}
               disabled={!canUndo}
-              className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold border transition-all ${
+              className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold border transition-colors whitespace-nowrap ${
                 canUndo
-                  ? 'bg-white/[0.08] text-cyan-100 hover:bg-cyan-400/20 border-cyan-300/35 hover:border-cyan-300/70 hover:shadow-[0_0_18px_rgba(34,211,238,0.38)] cursor-pointer'
+                  ? 'bg-white/[0.08] text-sky-100 hover:bg-sky-400/20 border-sky-300/35 cursor-pointer'
                   : 'bg-white/[0.03] text-slate-500 border-white/10 cursor-not-allowed'
               }`}
             >
@@ -327,7 +738,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={clearAllCanvas}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/20 text-rose-100 hover:bg-rose-500/30 text-xs font-bold border border-rose-400/50 shadow-[0_0_14px_rgba(244,63,94,0.2)] hover:shadow-[0_0_20px_rgba(244,63,94,0.45)] transition-all active:scale-95 cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/20 text-rose-100 hover:bg-rose-500/30 text-xs font-bold border border-rose-400/50 transition-colors cursor-pointer whitespace-nowrap"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Xóa tất cả
@@ -335,29 +746,25 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Canvas Area (Cosmic Blueprint Star-Chart Grid) */}
+        {/* Unobstructed Opaque Direct-Scanout Canvas Area (zero overlapping DOM elements) */}
         <div
-          className="flex-1 bg-[#050A1F] relative cursor-crosshair overflow-hidden"
-          style={{
-            backgroundImage:
-              'linear-gradient(to right, rgba(56,189,248,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56,189,248,0.08) 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
+          className="flex-1 bg-[#050A1F] relative cursor-crosshair overflow-hidden select-none"
+          style={{ contain: 'strict' }}
         >
           <canvas
             ref={canvasRef}
-            onMouseDown={startDrawing}
-            onMouseMove={draw}
-            onMouseUp={stopDrawing}
-            onMouseLeave={stopDrawing}
-            onTouchStart={startDrawing}
-            onTouchMove={draw}
-            onTouchEnd={stopDrawing}
-            className="w-full h-full block touch-none relative z-10"
+            className="w-full h-full block touch-none"
           />
-          <div className="absolute bottom-3 left-4 text-xs text-cyan-200/70 pointer-events-none z-20">
-            Gợi ý: Dùng chuột hoặc ngón tay để viết số, vẽ sơ đồ đoạn thẳng — nét vẽ được lưu tự động khi đóng!
-          </div>
+        </div>
+
+        {/* Bottom Hint Strip (kept outside canvas to preserve hardware overlay scanout) */}
+        <div className="px-5 py-2 bg-[#060C24] border-t border-sky-300/20 text-xs text-sky-200/75 flex items-center justify-between gap-2">
+          <span>
+            Gợi ý: Dùng chuột, bút cảm ứng hoặc ngón tay để đặt tính và vẽ sơ đồ đoạn thẳng.
+          </span>
+          <span className="hidden sm:inline text-sky-300/70 font-semibold">
+            Tự động lưu khi đóng
+          </span>
         </div>
       </div>
     </div>

@@ -332,12 +332,12 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'bar_model',
         title: 'Sơ đồ Phần - Tổng (Part-Whole Bar Model)',
-        subtitle: `Bình X (1 phần) + Bình Y (${mult} phần) = ${mult + 1} phần`,
+        subtitle: `Gộp số phần của Bình X (1 phần) và Bình Y (${mult} phần)`,
         bars: [
           { label: 'Bình X', valueLabel: `${baseA} L`, units: 1, color: '#0284C7' },
           { label: 'Bình Y', valueLabel: `${bigVal} L`, units: mult, color: '#F59E0B' }
         ],
-        totalBracketLabel: `Tổng cả 2 bình = ? Lít (${mult + 1} phần)`
+        totalBracketLabel: `Tổng cả 2 bình = ? Lít`
       }
     },
     {
@@ -356,12 +356,12 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'bar_model',
         title: 'Sơ đồ So sánh Hơn - Kém (Comparison Bar Model)',
-        subtitle: `Chênh lệch = ${mult} - 1 = ${mult - 1} phần`,
+        subtitle: `So sánh phần hơn giữa Đội 2 (${mult} phần) và Đội 1 (1 phần)`,
         bars: [
           { label: 'Đội 1', valueLabel: `${baseA} thùng`, units: 1, color: '#10B981' },
           { label: 'Đội 2', valueLabel: `${bigVal} thùng`, units: mult, color: '#7C3AED' }
         ],
-        differenceBracketLabel: `Nhiều hơn ? thùng (${mult - 1} phần)`
+        differenceBracketLabel: `Nhiều hơn ? thùng`
       }
     },
     {
@@ -378,8 +378,8 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'bar_model',
-        title: `Sơ đồ Gấp ${mult} lần và Thêm ${bonus} đơn vị`,
-        subtitle: `Khu B = (${baseA} × ${mult}) + ${bonus}`,
+        title: `Sơ đồ Gấp ${mult} lần và Thêm ${bonus} cây`,
+        subtitle: `Khu B gồm ${mult} phần bằng Khu A và thêm đoạn lẻ ${bonus} cây`,
         bars: [
           { label: 'Khu A', valueLabel: `${baseA} cây`, units: 1, color: '#0284C7' },
           { label: 'Khu B', valueLabel: `${mult} phần + ${bonus} cây`, units: mult, color: '#F59E0B', highlightNote: `+ ${bonus} cây` }
@@ -423,7 +423,7 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'bar_model',
         title: 'Mô hình Rút về đơn vị (Unitary Method)',
-        subtitle: `${q7Boxes} hộp = ${q7Total} quyển ➔ 1 hộp = ${q7Unit} quyển`,
+        subtitle: `${q7Boxes} hộp = ${q7Total} quyển ➔ Tìm 1 hộp rồi tính ${q7TargetBoxes} hộp`,
         bars: [
           { label: `${q7Boxes} hộp đầu`, valueLabel: `${q7Total} quyển`, units: q7Boxes, color: '#0284C7' },
           { label: `${q7TargetBoxes} hộp cần tìm`, valueLabel: `? quyển`, units: q7TargetBoxes, color: '#10B981' }
@@ -450,7 +450,7 @@ function buildWeek1Day(day: number): InMonthDayPlan {
           { label: 'Tàu Alpha', valueLabel: `${q8Small} khách`, units: 1, color: '#0284C7' },
           { label: 'Tàu Beta', valueLabel: `${q8Small * mult} khách`, units: mult, color: '#7C3AED' }
         ],
-        totalBracketLabel: `Tổng = ${mult + 1} phần`
+        totalBracketLabel: `Tổng cả 2 tàu = ?`
       }
     },
     {
@@ -468,12 +468,12 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'bar_model',
         title: `Bài toán Tổng - Tỉ cơ bản (Tổng = ${q9Total} m)`,
-        subtitle: 'Đoạn ngắn (1 phần) + Đoạn dài (2 phần) = 3 phần',
+        subtitle: 'Đoạn ngắn (1 phần) và Đoạn dài (gấp đôi = 2 phần)',
         bars: [
           { label: 'Đoạn ngắn', valueLabel: '? m (1 phần)', units: 1, color: '#10B981' },
           { label: 'Đoạn dài', valueLabel: '2 phần', units: 2, color: '#0284C7' }
         ],
-        totalBracketLabel: `Tổng cộng = ${q9Total} m (3 phần)`
+        totalBracketLabel: `Tổng cộng = ${q9Total} m`
       }
     },
     // CHALLENGE (2 questions)
@@ -753,7 +753,7 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'remainder_groups',
-        title: `Bù thêm ${q6NeedMore} viên vào phần dư (${remainder} viên)`,
+        title: `Bù thêm ? viên để phần dư (${remainder} viên) đủ 1 hộp ${actualDivisor} viên`,
         dividend,
         divisor: actualDivisor,
         quotient,
@@ -847,7 +847,7 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'remainder_groups',
-        title: `Số chia = ${q10Div} ➔ Số dư lớn nhất = ${q10MaxRem}`,
+        title: `Tìm số bị chia khi số chia = ${q10Div}, thương = ${q10Quot}, số dư lớn nhất`,
         dividend: q10Total,
         divisor: q10Div,
         quotient: q10Quot,
@@ -872,7 +872,7 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'remainder_groups',
-        title: `Đếm số phần tử trong ${6 + idx} chu kỳ + 2 hạt dư`,
+        title: `Chuỗi ${q11TotalBeads} hạt xếp theo chu kỳ 4 màu (Đỏ–Vàng–Xanh–Tím)`,
         dividend: q11TotalBeads,
         divisor: 4,
         quotient: 6 + idx,
@@ -1007,7 +1007,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Trồng cây cả 2 đầu: Số cây = Số khoảng (${intervals}) + 1`,
+        title: `Trồng cây cả 2 đầu đường dài ${totalDist} m (cách đều ${stepDist} m)`,
         intervalSubtype: 'both_ends',
         totalLength: totalDist,
         stepLength: stepDist,
@@ -1031,7 +1031,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Chỉ đặt ở 1 đầu đường: Số cột = Số khoảng (${intervals})`,
+        title: `Chỉ lắp cột đèn ở 1 đầu lối đi ${totalDist} m (cách đều ${stepDist} m)`,
         intervalSubtype: 'one_end',
         totalLength: totalDist,
         stepLength: stepDist,
@@ -1055,7 +1055,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Hai đầu không đặt: Số vật = Số khoảng (${intervals}) - 1`,
+        title: `Bỏ trống 2 đầu trên đoạn ${totalDist} m (cách đều ${stepDist} m)`,
         intervalSubtype: 'neither_end',
         totalLength: totalDist,
         stepLength: stepDist,
@@ -1079,7 +1079,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Đường khép kín quanh hồ: Số cây = Số khoảng (${q5LoopTrees})`,
+        title: `Đường khép kín quanh hồ chu vi ${q5LoopDist} m (cách đều ${stepDist} m)`,
         intervalSubtype: 'closed_loop',
         totalLength: q5LoopDist,
         stepLength: stepDist,
@@ -1107,7 +1107,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Cưa gỗ: ${q6Pieces} đoạn gỗ ➔ Chỉ cần ${q6Cuts} mạch cưa`,
+        title: `Cưa khúc gỗ thành ${q6Pieces} đoạn (${q6MinutesPerCut} phút/lần cưa)`,
         intervalSubtype: 'wood_cuts',
         totalLength: q6Pieces,
         stepLength: 1,
@@ -1135,7 +1135,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Leo cầu thang: Tầng 1 ➔ Tầng ${q7TopFloor} có ${q7TopFloor - 1} nhịp cầu thang`,
+        title: `Leo cầu thang từ Tầng 1 lên Tầng ${q7TopFloor} (${q7StepsPerFlight} bậc/khoảng tầng)`,
         intervalSubtype: 'stairs',
         totalLength: q7TotalSteps,
         stepLength: q7StepsPerFlight,
@@ -1159,7 +1159,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Biết ${q8Trees} cây ➔ Có ${q8Trees - 1} khoảng cách`,
+        title: `Hàng ${q8Trees} cây (cách đều ${q8Gap} m) ➔ Tìm tổng độ dài`,
         intervalSubtype: 'both_ends',
         totalLength: q8Len,
         stepLength: q8Gap,
@@ -1184,7 +1184,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Trồng cây 2 bên đường: (${intervals} + 1) × 2 bên`,
+        title: `Trồng cây cả 2 bên đại lộ ${totalDist} m (cả 2 đầu, cách ${stepDist} m)`,
         intervalSubtype: 'both_ends',
         totalLength: totalDist,
         stepLength: stepDist,
@@ -1214,7 +1214,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Tiếng chuông đồng hồ: ${q10ChimesB} tiếng chuông = ${q10ChimesB - 1} khoảng nghỉ`,
+        title: `Đồng hồ gõ ${q10ChimesB} tiếng chuông (biết 4 tiếng mất 6 giây)`,
         intervalSubtype: 'both_ends',
         totalLength: q10TimeB,
         stepLength: 2,
@@ -1242,13 +1242,13 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `${q11Trees} cây ➔ ${q11Trees - 1} khoảng × ${q11FlowersPerGap} khóm hoa`,
+        title: `Trồng xen kẽ ${q11FlowersPerGap} khóm hoa vào mỗi khoảng giữa ${q11Trees} cây`,
         intervalSubtype: 'both_ends',
         totalLength: q11TotalFlowers,
         stepLength: q11FlowersPerGap,
         intervalsCount: q11Trees - 1,
         objectsCount: q11Trees,
-        objectIcon: '🌺',
+        objectIcon: '🌳',
         unitLabel: 'hoa'
       }
     }
@@ -1360,10 +1360,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'length_scale',
-        title: `Quy đổi Ki-lô-mét sang Mét (1 km = 1000 m)`,
+        title: `Quy đổi Ki-lô-mét sang Mét`,
         primaryReading: `${kmVal} km ${mExtra} m`,
-        secondaryReading: `${kmVal * 1000} m + ${mExtra} m`,
-        conversionRule: '1 km = 1 000 m · 1 m = 100 cm'
+        secondaryReading: `= ? m`,
+        conversionRule: '1 km = 1 000 m · Đổi phần km trước rồi cộng phần m'
       }
     },
     {
@@ -1381,10 +1381,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'length_scale',
-        title: `Quy đổi Mét sang Xăng-ti-mét (1 m = 100 cm)`,
+        title: `Quy đổi Mét sang Xăng-ti-mét`,
         primaryReading: `${mVal} m ${cmExtra} cm`,
-        secondaryReading: `${mVal * 100} cm + ${cmExtra} cm`,
-        conversionRule: '1 m = 10 dm = 100 cm'
+        secondaryReading: `= ? cm`,
+        conversionRule: '1 m = 100 cm · Đổi phần m trước rồi cộng phần cm'
       }
     },
     {
@@ -1423,10 +1423,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'weight_balance',
-        title: `Cân 3 hộp đồng nhất: Tổng = ${totalScaleGrams} g`,
+        title: `Cân 3 hộp sữa giống nhau (Tổng = ${totalScaleGrams} g)`,
         primaryReading: `3 hộp = ${totalScaleGrams} g`,
-        secondaryReading: `1 hộp = ${totalScaleGrams} : 3`,
-        conversionRule: 'Chia đều tổng chỉ số cân cho số vật đồng nhất'
+        secondaryReading: `1 hộp = ? g`,
+        conversionRule: 'Chia đều tổng khối lượng trên cân cho 3 hộp giống nhau'
       }
     },
     {
@@ -1444,10 +1444,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'volume_beaker',
-        title: `Đo Thể Tích Chất Lỏng (1 L = 1000 mL)`,
-        primaryReading: `Ban đầu: ${startLiters} L (${startLiters * 1000} mL)`,
+        title: `Đo Thể Tích Chất Lỏng (Lít & Mi-li-lít)`,
+        primaryReading: `Ban đầu: ${startLiters} L`,
         secondaryReading: `Rót ra: ${pourOutMl} mL`,
-        conversionRule: '1 Lít (L) = 1 000 Mi-li-lít (mL)'
+        conversionRule: '1 L = 1 000 mL · Đổi về cùng đơn vị mL trước khi trừ'
       }
     },
     {
@@ -1488,10 +1488,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'length_scale',
-        title: `Trừ độ dài khác đơn vị: Đổi ${ropeMeters} m = ${ropeMeters * 100} cm`,
-        primaryReading: `Tổng: ${ropeMeters} m (${ropeMeters * 100} cm)`,
+        title: `Trừ độ dài khác đơn vị (m và cm)`,
+        primaryReading: `Ban đầu: ${ropeMeters} m`,
         secondaryReading: `Cắt đi: ${usedCm} cm`,
-        conversionRule: 'Luôn đưa về cùng đơn vị đo trước khi cộng trừ'
+        conversionRule: '1 m = 100 cm · Luôn đổi về cùng đơn vị trước khi tính'
       }
     },
     {
@@ -1509,10 +1509,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'length_scale',
-        title: `Cộng quãng đường và đổi sang km`,
-        primaryReading: `${d1} m + ${d2} m = 3000 m`,
-        secondaryReading: `3000 m = ? km`,
-        conversionRule: '1000 m = 1 km'
+        title: `Cộng hai chặng đường rồi đổi sang km`,
+        primaryReading: `Chặng 1: ${d1} m`,
+        secondaryReading: `Chặng 2: ${d2} m`,
+        conversionRule: '1 000 m = 1 km · Cộng tổng mét rồi quy đổi sang km'
       }
     },
     {
@@ -1530,10 +1530,10 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'volume_beaker',
-        title: `San sẻ thể tích: Chênh lệch = ${beakerA - beakerB} mL`,
+        title: `San bằng lượng nước giữa hai bình A và B`,
         primaryReading: `Bình A: ${beakerA} mL`,
         secondaryReading: `Bình B: ${beakerB} mL`,
-        conversionRule: 'Lượng rót san bằng = Hiệu thể tích : 2'
+        conversionRule: 'Tìm phần chênh lệch rồi chia đôi để san đều 2 bình'
       }
     },
     {
@@ -1554,7 +1554,7 @@ function buildWeek4Day(day: number): InMonthDayPlan {
         title: `Tách khối lượng Vỏ hũ & Ruột mật ong`,
         primaryReading: `Đầy hũ: ${fullTotalG} g`,
         secondaryReading: `Nửa hũ: ${halfTotalG} g`,
-        conversionRule: 'Nửa lượng mật ong = Cân đầy hũ - Cân nửa hũ'
+        conversionRule: 'Vỏ hũ không đổi · Đầy hũ - Nửa hũ = Nửa ruột mật ong'
       }
     },
     {
@@ -1573,9 +1573,9 @@ function buildWeek4Day(day: number): InMonthDayPlan {
         type: 'measurement_lab',
         measurementSubtype: 'length_scale',
         title: `Ghép 2 thanh ${boardLenCm} cm có đoạn chồng ${overlapCm} cm`,
-        primaryReading: `2 thanh = ${boardLenCm * 2} cm`,
-        secondaryReading: `Phần chồng = ${overlapCm} cm`,
-        conversionRule: 'Độ dài ghép = Tổng độ dài - Phần chồng lấn'
+        primaryReading: `Mỗi thanh: ${boardLenCm} cm (2 thanh)`,
+        secondaryReading: `Phần chồng: ${overlapCm} cm`,
+        conversionRule: 'Độ dài thanh ghép = Tổng 2 thanh - Phần chồng lấn'
       }
     }
   ];
@@ -1650,8 +1650,8 @@ function buildReviewDay(day: number): InMonthDayPlan {
         measurementSubtype: 'length_scale',
         title: 'Quy đổi đơn vị độ dài km ➔ m',
         primaryReading: `${3 + k} km ${250 * k} m`,
-        secondaryReading: `= ${(3 + k) * 1000 + 250 * k} m`,
-        conversionRule: '1 km = 1 000 m'
+        secondaryReading: `= ? m`,
+        conversionRule: '1 km = 1 000 m · Đổi phần km sang m rồi cộng thêm phần lẻ'
       }
     },
     {
@@ -1717,8 +1717,8 @@ function buildReviewDay(day: number): InMonthDayPlan {
         measurementSubtype: 'weight_balance',
         title: `Cân 4 quả cầu đồng nhất (${1200 * k} g)`,
         primaryReading: `4 quả = ${1200 * k} g`,
-        secondaryReading: `1 quả = ${300 * k} g`,
-        conversionRule: 'Khối lượng 1 vật = Tổng khối lượng : Số vật'
+        secondaryReading: `1 quả = ? g`,
+        conversionRule: 'Khối lượng 1 vật = Tổng khối lượng : Số vật giống nhau'
       }
     },
     {
@@ -1780,7 +1780,7 @@ function buildReviewDay(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Cắt thành ${6 + k} đoạn ➔ ${5 + k} lần cắt`,
+        title: `Cắt thanh thép thành ${6 + k} đoạn (4 giây/lần cắt)`,
         intervalSubtype: 'wood_cuts',
         totalLength: 6 + k,
         stepLength: 1,
@@ -1806,10 +1806,10 @@ function buildReviewDay(day: number): InMonthDayPlan {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'volume_beaker',
-        title: `Đổi ${2 * k} L = ${2000 * k} mL rồi trừ 1200 mL`,
-        primaryReading: `Ban đầu: ${2000 * k} mL`,
-        secondaryReading: `Rót 3 cốc: 1200 mL`,
-        conversionRule: '1 L = 1 000 mL'
+        title: `Đo thể tích: Bình ${2 * k} L rót ra 3 cốc (400 mL/cốc)`,
+        primaryReading: `Ban đầu: ${2 * k} L`,
+        secondaryReading: `Rót 3 cốc × 400 mL`,
+        conversionRule: '1 L = 1 000 mL · Đổi sang mL rồi trừ tổng 3 cốc'
       }
     },
     {
@@ -1827,7 +1827,7 @@ function buildReviewDay(day: number): InMonthDayPlan {
       ],
       visualModel: {
         type: 'interval_model',
-        title: `Đèn 2 bên cầu: (${5 * k} khoảng + 1) × 2 bên`,
+        title: `Gắn đèn cả 2 bên cầu dài ${30 * k} m (cả 2 đầu, cách 6 m)`,
         intervalSubtype: 'both_ends',
         totalLength: 30 * k,
         stepLength: 6,
@@ -2058,8 +2058,8 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
         measurementSubtype: 'length_scale',
         title: 'Quy đổi 4 km 35 m sang mét',
         primaryReading: '4 km 35 m',
-        secondaryReading: '4000 m + 35 m = 4035 m',
-        conversionRule: '1 km = 1 000 m'
+        secondaryReading: '= ? m',
+        conversionRule: '1 km = 1 000 m · Đổi phần km rồi cộng thêm 35 m'
       }
     },
     {
@@ -2075,10 +2075,10 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'weight_balance',
-        title: 'Trừ khối lượng: 3450 g - 1250 g',
-        primaryReading: 'Ban đầu: 3 kg 450 g (3450 g)',
+        title: 'Trừ khối lượng khác đơn vị (kg và g)',
+        primaryReading: 'Ban đầu: 3 kg 450 g',
         secondaryReading: 'Lấy ra: 1250 g',
-        conversionRule: '1 kg = 1 000 g'
+        conversionRule: '1 kg = 1 000 g · Đổi sang gam rồi trừ phần lấy ra'
       }
     },
     {
@@ -2094,10 +2094,10 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'volume_beaker',
-        title: 'Chia đều 2500 mL vào 5 chai',
-        primaryReading: 'Tổng: 2 L 500 mL = 2500 mL',
-        secondaryReading: 'Mỗi chai: 2500 : 5 = 500 mL',
-        conversionRule: '1 L = 1 000 mL'
+        title: 'Rót đều bình nước vào 5 chai nhỏ',
+        primaryReading: 'Tổng: 2 L 500 mL',
+        secondaryReading: 'Rót đều vào 5 chai = ? mL/chai',
+        conversionRule: '1 L = 1 000 mL · Đổi sang mL rồi chia đều cho 5 chai'
       }
     },
     {
@@ -2153,12 +2153,12 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Vì Minh cho Nam 12 viên thì bằng nhau nên lúc đầu Minh hơn Nam: 12 × 2 = 24 (viên). Hiệu số phần là 4 - 1 = 3 phần. Vậy số bi của Nam (1 phần) là: 24 : 3 = 8 (viên).',
       visualModel: {
         type: 'bar_model',
-        title: 'Minh cho Nam 12 viên thì bằng nhau ➔ Hiệu = 24 viên',
+        title: 'Minh cho Nam 12 viên thì hai bạn bằng nhau',
         bars: [
           { label: 'Bạn Nam', valueLabel: '1 phần', units: 1, color: '#10B981' },
-          { label: 'Bạn Minh', valueLabel: '4 phần (Hơn 3 phần = 24)', units: 4, color: '#F59E0B' }
+          { label: 'Bạn Minh', valueLabel: '4 phần', units: 4, color: '#F59E0B' }
         ],
-        differenceBracketLabel: 'Hiệu = 12 × 2 = 24 viên (3 phần)'
+        differenceBracketLabel: 'Hiệu ban đầu = ?'
       }
     },
     {
@@ -2173,7 +2173,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Số dư lớn nhất khi chia cho 9 là 8. Số bị chia là: 12 × 9 + 8 = 116. Lấy 116 : 5 = 23 (dư 1).',
       visualModel: {
         type: 'remainder_groups',
-        title: 'Tìm số bị chia (12 × 9 + 8 = 116) rồi chia cho 5',
+        title: 'Tìm số bị chia (chia 9, thương 12, dư lớn nhất) rồi chia 5',
         dividend: 116,
         divisor: 9,
         quotient: 12,
@@ -2194,7 +2194,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Ta có 47 : 5 = 9 nhóm (dư 2 ngôi sao). Mỗi nhóm có 2 ngôi sao (Đỏ, Cam), và 2 ngôi sao dư cuối cùng cũng chính là Đỏ và Cam! Tổng cộng: 9 × 2 + 2 = 20 ngôi sao.',
       visualModel: {
         type: 'remainder_groups',
-        title: '47 ngôi sao : 5 = 9 chu kỳ (dư 2: Đỏ, Cam)',
+        title: '47 ngôi sao xếp theo chu kỳ 5 màu (Đỏ–Cam–Vàng–Lục–Lam)',
         dividend: 47,
         divisor: 5,
         quotient: 9,
@@ -2215,7 +2215,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Từ Tầng 1 lên Tầng 3 có 3 - 1 = 2 khoảng tầng, nên 1 khoảng tầng có 36 : 2 = 18 bậc. Từ Tầng 1 lên Tầng 7 có 7 - 1 = 6 khoảng tầng, vậy có 18 × 6 = 108 bậc thang!',
       visualModel: {
         type: 'interval_model',
-        title: 'Tầng 1 ➔ Tầng 3 (2 khoảng = 36 bậc) · Tầng 1 ➔ Tầng 7 (6 khoảng)',
+        title: 'So sánh nhịp cầu thang: Tầng 1 ➔ Tầng 3 (36 bậc) & Tầng 1 ➔ Tầng 7',
         intervalSubtype: 'stairs',
         totalLength: 108,
         stepLength: 18,
@@ -2237,7 +2237,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Số khoảng cách giữa các cây ở MỘT bên đường là: 60 : 5 = 12 (khoảng), ứng với 12 ghế đá. Vậy cả HAI bên đường có: 12 × 2 = 24 (ghế đá).',
       visualModel: {
         type: 'interval_model',
-        title: 'Mỗi bên có 60 : 5 = 12 khoảng (12 ghế đá) × 2 bên đường',
+        title: 'Đặt 1 ghế đá vào mỗi khoảng cây trên cả 2 bên đường 60 m',
         intervalSubtype: 'both_ends',
         totalLength: 60,
         stepLength: 5,
@@ -2259,7 +2259,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Chu vi sân hình chữ nhật (đường khép kín) là: (50 + 30) × 2 = 160 (m). Trên đường khép kín, số cột cờ = số khoảng = 160 : 4 = 40 (cột cờ).',
       visualModel: {
         type: 'interval_model',
-        title: 'Chu vi khép kín = 160 m ➔ Số cột cờ = 160 : 4 = 40',
+        title: 'Đường khép kín quanh sân 50 m × 30 m (cột cờ cách nhau 4 m)',
         intervalSubtype: 'closed_loop',
         totalLength: 160,
         stepLength: 4,
@@ -2282,10 +2282,10 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'weight_balance',
-        title: 'Nửa lượng dầu = 22 kg - 12 kg = 10 kg',
+        title: 'Tách khối lượng Vỏ thùng sắt và Lượng dầu hỏa',
         primaryReading: 'Đầy thùng: 22 kg',
         secondaryReading: 'Nửa thùng: 12 kg',
-        conversionRule: 'Vỏ thùng = Cân nửa thùng (12 kg) - Nửa lượng dầu (10 kg)'
+        conversionRule: 'Vỏ thùng không đổi · Hiệu hai lần cân = Nửa lượng dầu'
       }
     },
     {
@@ -2301,9 +2301,9 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       visualModel: {
         type: 'measurement_lab',
         measurementSubtype: 'length_scale',
-        title: 'Ghép 3 thanh gỗ (60 cm) có 2 mối nối chồng 8 cm',
-        primaryReading: 'Tổng 3 thanh: 180 cm',
-        secondaryReading: '2 mối nối: 2 × 8 = 16 cm',
+        title: 'Ghép 3 thanh gỗ 60 cm nối tiếp (chồng 8 cm mỗi mối nối)',
+        primaryReading: '3 thanh gỗ (60 cm/thanh)',
+        secondaryReading: 'Mỗi mối nối chồng: 8 cm',
         conversionRule: 'Ghép N thanh nối tiếp có (N - 1) mối nối chồng lấn'
       }
     },
@@ -2319,7 +2319,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       explanation: 'Đổi 2 L 400 mL = 2400 mL. Tổng (A + B) là 1 phần, C là 2 phần (tổng 3 phần) ➔ A + B = 2400 : 3 = 800 mL. Vì A hơn B 200 mL nên bình A có: (800 + 200) : 2 = 500 (mL).',
       visualModel: {
         type: 'bar_model',
-        title: 'Tổng = 2400 mL · (A+B) = 800 mL · Hiệu (A-B) = 200 mL',
+        title: 'Sơ đồ 3 bình A, B, C (Tổng = 2 L 400 mL)',
         bars: [
           { label: 'Bình B', valueLabel: '300 mL', units: 1, color: '#0284C7' },
           { label: 'Bình A', valueLabel: '300 + 200 = 500 mL', units: 2, color: '#10B981', highlightNote: '+200 mL' },
