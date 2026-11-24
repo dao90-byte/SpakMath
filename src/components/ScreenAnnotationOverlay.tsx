@@ -60,15 +60,23 @@ const INK_COLORS: InkColorOption[] = [
 ];
 
 const PEN_WIDTH = 3.5;
-const ERASER_WIDTH = 24;
-const MAX_STROKE_HISTORY = 120;
+const ERASER_RADIUS = 16;
+const MAX_STROKE_HISTORY = 150;
+const MAX_UNDO_SNAPSHOTS = 40;
 
-interface OverlayStrokeRecord {
-  tool: 'pen' | 'eraser';
+interface CommittedStroke {
+  id: number;
   color: string;
   width: number;
-  /** Viewport-fixed interleaved [x0, y0, x1, y1, ...] so strokes stay motionless when scrolling */
+  /** Document-anchored interleaved [x0, y0, x1, y1, ...] relative to the SVG layer */
   points: number[];
+  /** Precomputed SVG path string (empty for single-dot taps) */
+  pathD: string;
+  /** Axis-aligned bounding box for O(1) eraser hit rejection */
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
 }
 
 interface DelegatedInkTrailPresenterLike {
@@ -86,36 +94,13 @@ interface NavigatorWithInk extends Navigator {
   };
 }
 
-function replayOverlayStroke(
-  ctx: CanvasRenderingContext2D,
-  stroke: OverlayStrokeRecord
-) {
-  const pts = stroke.points;
+function buildSmoothSvgPath(pts: number[]): string {
   const count = pts.length;
-  if (count < 2) return;
+  if (count < 4) return '';
 
-  const isEraser = stroke.tool === 'eraser';
-  ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = stroke.width;
-  ctx.strokeStyle = isEraser ? '#000000' : stroke.color;
-  ctx.fillStyle = isEraser ? '#000000' : stroke.color;
-
-  if (count === 2) {
-    ctx.beginPath();
-    ctx.arc(pts[0], pts[1], stroke.width * 0.5, 0, Math.PI * 2);
-    ctx.fill();
-    return;
-  }
-
-  ctx.beginPath();
-  ctx.moveTo(pts[0], pts[1]);
-
+  let d = `M ${pts[0].toFixed(1)} ${pts[1].toFixed(1)}`;
   if (count === 4) {
-    ctx.lineTo(pts[2], pts[3]);
-    ctx.stroke();
-    return;
+    return `${d} L ${pts[2].toFixed(1)} ${pts[3].toFixed(1)}`;
   }
 
   let prevX = pts[0];
@@ -125,12 +110,103 @@ function replayOverlayStroke(
     const y = pts[i + 1];
     const midX = (prevX + x) * 0.5;
     const midY = (prevY + y) * 0.5;
-    ctx.quadraticCurveTo(prevX, prevY, midX, midY);
+    d += ` Q ${prevX.toFixed(1)} ${prevY.toFixed(1)} ${midX.toFixed(1)} ${midY.toFixed(1)}`;
     prevX = x;
     prevY = y;
   }
-  ctx.quadraticCurveTo(prevX, prevY, pts[count - 2], pts[count - 1]);
-  ctx.stroke();
+  d += ` Q ${prevX.toFixed(1)} ${prevY.toFixed(1)} ${pts[count - 2].toFixed(1)} ${pts[count - 1].toFixed(1)}`;
+  return d;
+}
+
+function createCommittedStroke(
+  id: number,
+  color: string,
+  width: number,
+  points: number[]
+): CommittedStroke {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (let i = 0; i < points.length; i += 2) {
+    const x = points[i];
+    const y = points[i + 1];
+    if (x < minX) minX = x;
+    if (y < minY) minY = y;
+    if (x > maxX) maxX = x;
+    if (y > maxY) maxY = y;
+  }
+  return {
+    id,
+    color,
+    width,
+    points,
+    pathD: buildSmoothSvgPath(points),
+    minX,
+    minY,
+    maxX,
+    maxY,
+  };
+}
+
+/** Squared distance from point (px, py) to line segment (ax, ay)-(bx, by) */
+function pointToSegmentDistSq(
+  px: number,
+  py: number,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number
+): number {
+  const dx = bx - ax;
+  const dy = by - ay;
+  const lenSq = dx * dx + dy * dy;
+  if (lenSq === 0) {
+    const ox = px - ax;
+    const oy = py - ay;
+    return ox * ox + oy * oy;
+  }
+  let t = ((px - ax) * dx + (py - ay) * dy) / lenSq;
+  if (t < 0) t = 0;
+  else if (t > 1) t = 1;
+  const projX = ax + t * dx;
+  const projY = ay + t * dy;
+  const ox = px - projX;
+  const oy = py - projY;
+  return ox * ox + oy * oy;
+}
+
+function strokeHitsPoint(
+  stroke: CommittedStroke,
+  px: number,
+  py: number,
+  radius: number
+): boolean {
+  const pad = radius + stroke.width * 0.5;
+  if (
+    px < stroke.minX - pad ||
+    px > stroke.maxX + pad ||
+    py < stroke.minY - pad ||
+    py > stroke.maxY + pad
+  ) {
+    return false;
+  }
+  const thresholdSq = pad * pad;
+  const pts = stroke.points;
+  if (pts.length === 2) {
+    const dx = px - pts[0];
+    const dy = py - pts[1];
+    return dx * dx + dy * dy <= thresholdSq;
+  }
+  for (let i = 0; i < pts.length - 2; i += 2) {
+    if (
+      pointToSegmentDistSq(px, py, pts[i], pts[i + 1], pts[i + 2], pts[i + 3]) <=
+      thresholdSq
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = ({
@@ -139,24 +215,32 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
   elevated = false,
   contextKey,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const liveCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const liveCtxRef = useRef<CanvasRenderingContext2D | null>(null);
   const inkPresenterRef = useRef<DelegatedInkTrailPresenterLike | null>(null);
   const dprRef = useRef<number>(1);
+  const nextStrokeIdRef = useRef<number>(1);
 
-  const strokesRef = useRef<OverlayStrokeRecord[]>([]);
+  const [committedStrokes, setCommittedStrokes] = useState<CommittedStroke[]>([]);
+  const committedStrokesRef = useRef<CommittedStroke[]>([]);
+  const undoStackRef = useRef<CommittedStroke[][]>([]);
+  const [canUndo, setCanUndo] = useState<boolean>(false);
+
+  // Active stroke mutable refs (ZERO React re-renders during live drawing)
   const isDrawingRef = useRef<boolean>(false);
   const activePointerIdRef = useRef<number | null>(null);
-  const activeStrokeRef = useRef<OverlayStrokeRecord | null>(null);
-  const lastXRef = useRef<number>(0);
-  const lastYRef = useRef<number>(0);
-  const lastMidXRef = useRef<number>(0);
-  const lastMidYRef = useRef<number>(0);
+  const activeDocPointsRef = useRef<number[]>([]);
+  const anchorOriginRef = useRef<{ left: number; top: number }>({ left: 0, top: 0 });
+  const lastViewXRef = useRef<number>(0);
+  const lastViewYRef = useRef<number>(0);
+  const lastViewMidXRef = useRef<number>(0);
+  const lastViewMidYRef = useRef<number>(0);
   const rawUpdateSeenRef = useRef<boolean>(false);
+  const eraserPushedSnapshotRef = useRef<boolean>(false);
 
   const [mode, setMode] = useState<AnnotationMode>('interact');
   const [selectedColor, setSelectedColor] = useState<string>(INK_COLORS[0].hex);
-  const [strokeCount, setStrokeCount] = useState<number>(0);
   const [dockSide, setDockSide] = useState<'left' | 'right'>('left');
 
   const modeRef = useRef<AnnotationMode>(mode);
@@ -170,54 +254,49 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     colorRef.current = selectedColor;
   }, [selectedColor]);
 
-  const repaintCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    const ctx = ctxRef.current;
+  useEffect(() => {
+    committedStrokesRef.current = committedStrokes;
+  }, [committedStrokes]);
+
+  const clearLiveCanvas = useCallback(() => {
+    const canvas = liveCanvasRef.current;
+    const ctx = liveCtxRef.current;
     if (!canvas || !ctx) return;
-
-    const dpr = dprRef.current;
-    // Clear full viewport in device pixel coordinates
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const strokes = strokesRef.current;
-    if (strokes.length === 0) return;
-
-    // Fixed viewport space: strokes never move when scrolling the screen
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    for (let i = 0; i < strokes.length; i++) {
-      replayOverlayStroke(ctx, strokes[i]);
-    }
-    ctx.globalCompositeOperation = 'source-over';
   }, []);
 
-  const clearStrokes = useCallback(() => {
-    strokesRef.current = [];
-    setStrokeCount(0);
-    repaintCanvas();
-  }, [repaintCanvas]);
+  const pushUndoSnapshot = useCallback((snapshot: CommittedStroke[]) => {
+    undoStackRef.current.push(snapshot);
+    if (undoStackRef.current.length > MAX_UNDO_SNAPSHOTS) {
+      undoStackRef.current.shift();
+    }
+    setCanUndo(true);
+  }, []);
+
+  const resetAllInk = useCallback(() => {
+    undoStackRef.current = [];
+    committedStrokesRef.current = [];
+    setCommittedStrokes([]);
+    setCanUndo(false);
+    clearLiveCanvas();
+  }, [clearLiveCanvas]);
 
   // Reset strokes & return to interact mode when leaving exercise or switching exercise context
   useEffect(() => {
-    strokesRef.current = [];
-    setStrokeCount(0);
+    resetAllInk();
     setMode('interact');
-    repaintCanvas();
-  }, [isActive, contextKey, repaintCanvas]);
+  }, [isActive, contextKey, resetAllInk]);
 
   // Clear ink automatically when navigating between questions inside an exercise
   useEffect(() => {
     if (!isActive) return;
     const handleClearEvent = () => {
-      strokesRef.current = [];
-      setStrokeCount(0);
-      repaintCanvas();
+      resetAllInk();
     };
     window.addEventListener(SCREEN_INK_CLEAR_EVENT, handleClearEvent);
     return () => window.removeEventListener(SCREEN_INK_CLEAR_EVENT, handleClearEvent);
-  }, [isActive, repaintCanvas]);
+  }, [isActive, resetAllInk]);
 
   // Press Escape to swiftly switch back from drawing mode to normal interactive mode
   useEffect(() => {
@@ -231,15 +310,15 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isActive, mode, isSuspended]);
 
-  // Initialize transparent viewport-sized low-latency canvas & listeners
+  // Initialize transparent low-latency live drawing canvas & listeners
   useEffect(() => {
     if (!isActive) return;
-    const canvas = canvasRef.current;
+    const canvas = liveCanvasRef.current;
     if (!canvas) return;
 
     let cancelled = false;
 
-    const syncCanvasSize = () => {
+    const syncLiveCanvasSize = () => {
       if (cancelled) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       dprRef.current = dpr;
@@ -249,19 +328,18 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
         canvas.width = targetW;
         canvas.height = targetH;
       }
-      if (!ctxRef.current) {
+      if (!liveCtxRef.current) {
         const ctx =
           (canvas.getContext('2d', {
             alpha: true,
             desynchronized: true,
           }) as CanvasRenderingContext2D | null) || canvas.getContext('2d');
         if (!ctx) return;
-        ctxRef.current = ctx;
+        liveCtxRef.current = ctx;
       }
-      repaintCanvas();
     };
 
-    syncCanvasSize();
+    syncLiveCanvasSize();
 
     const navWithInk = navigator as NavigatorWithInk;
     if (navWithInk.ink?.requestPresenter) {
@@ -277,35 +355,69 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
         });
     }
 
-    const applyStrokeStyle = (
-      ctx: CanvasRenderingContext2D,
-      isEraser: boolean,
-      width: number,
-      strokeColor: string
-    ) => {
-      const dpr = dprRef.current;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
-      ctx.lineWidth = width;
-      ctx.strokeStyle = isEraser ? '#000000' : strokeColor;
-      ctx.fillStyle = isEraser ? '#000000' : strokeColor;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+    const measureAnchorOrigin = () => {
+      const svg = svgRef.current;
+      if (!svg) return { left: 0, top: 0 };
+      const r = svg.getBoundingClientRect();
+      return { left: r.left, top: r.top };
     };
 
-    const processSamples = (e: PointerEvent) => {
-      const ctx = ctxRef.current;
-      const stroke = activeStrokeRef.current;
-      if (!ctx || !stroke) return;
+    const drawEraserCursor = (vx: number, vy: number) => {
+      const ctx = liveCtxRef.current;
+      if (!ctx) return;
+      clearLiveCanvas();
+      const dpr = dprRef.current;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.beginPath();
+      ctx.arc(vx, vy, ERASER_RADIUS, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(251, 191, 36, 0.16)';
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(253, 224, 71, 0.85)';
+      ctx.stroke();
+    };
+
+    const eraseAtViewportPoint = (vx: number, vy: number) => {
+      const origin = anchorOriginRef.current;
+      const docX = vx - origin.left;
+      const docY = vy - origin.top;
+      const current = committedStrokesRef.current;
+      if (current.length === 0) return;
+
+      let hitAny = false;
+      const remaining: CommittedStroke[] = [];
+      for (let i = 0; i < current.length; i++) {
+        if (strokeHitsPoint(current[i], docX, docY, ERASER_RADIUS)) {
+          hitAny = true;
+        } else {
+          remaining.push(current[i]);
+        }
+      }
+
+      if (hitAny) {
+        if (!eraserPushedSnapshotRef.current) {
+          pushUndoSnapshot(current);
+          eraserPushedSnapshotRef.current = true;
+        }
+        committedStrokesRef.current = remaining;
+        setCommittedStrokes(remaining);
+      }
+    };
+
+    const processPenSamples = (e: PointerEvent) => {
+      const ctx = liveCtxRef.current;
+      if (!ctx) return;
 
       const coalesced =
         typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : null;
       const samples = coalesced && coalesced.length > 0 ? coalesced : [e];
+      const origin = anchorOriginRef.current;
+      const docPts = activeDocPointsRef.current;
 
-      let prevX = lastXRef.current;
-      let prevY = lastYRef.current;
-      let prevMidX = lastMidXRef.current;
-      let prevMidY = lastMidYRef.current;
+      let prevX = lastViewXRef.current;
+      let prevY = lastViewYRef.current;
+      let prevMidX = lastViewMidXRef.current;
+      let prevMidY = lastViewMidYRef.current;
       let drewAny = false;
 
       ctx.beginPath();
@@ -313,20 +425,20 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
 
       for (let i = 0; i < samples.length; i++) {
         const s = samples[i];
-        const x = s.clientX;
-        const y = s.clientY;
-        const dx = x - prevX;
-        const dy = y - prevY;
+        const vx = s.clientX;
+        const vy = s.clientY;
+        const dx = vx - prevX;
+        const dy = vy - prevY;
         if (dx * dx + dy * dy < 0.25) continue;
 
-        const midX = (prevX + x) * 0.5;
-        const midY = (prevY + y) * 0.5;
+        const midX = (prevX + vx) * 0.5;
+        const midY = (prevY + vy) * 0.5;
 
         ctx.quadraticCurveTo(prevX, prevY, midX, midY);
-        stroke.points.push(x, y);
+        docPts.push(vx - origin.left, vy - origin.top);
 
-        prevX = x;
-        prevY = y;
+        prevX = vx;
+        prevY = vy;
         prevMidX = midX;
         prevMidY = midY;
         drewAny = true;
@@ -334,17 +446,17 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
 
       if (drewAny) {
         ctx.stroke();
-        lastXRef.current = prevX;
-        lastYRef.current = prevY;
-        lastMidXRef.current = prevMidX;
-        lastMidYRef.current = prevMidY;
+        lastViewXRef.current = prevX;
+        lastViewYRef.current = prevY;
+        lastViewMidXRef.current = prevMidX;
+        lastViewMidYRef.current = prevMidY;
       }
 
-      if (inkPresenterRef.current && stroke.tool === 'pen') {
+      if (inkPresenterRef.current) {
         try {
           inkPresenterRef.current.updateInkTrailStartPoint(e, {
-            color: stroke.color,
-            diameter: stroke.width,
+            color: colorRef.current,
+            diameter: PEN_WIDTH,
           });
         } catch {
           // Ignore unsupported pointer types
@@ -357,7 +469,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       if (currentMode === 'interact') return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
 
-      const ctx = ctxRef.current;
+      const ctx = liveCtxRef.current;
       if (!ctx) return;
 
       e.preventDefault();
@@ -368,40 +480,50 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
         // Ignore if unsupported
       }
 
-      const isEraser = currentMode === 'eraser';
-      const width = isEraser ? ERASER_WIDTH : PEN_WIDTH;
-      const strokeColor = colorRef.current;
-
-      applyStrokeStyle(ctx, isEraser, width, strokeColor);
-
-      const x = e.clientX;
-      const y = e.clientY;
-
+      // Snapshot the document-anchored SVG origin once at pointerdown
+      const origin = measureAnchorOrigin();
+      anchorOriginRef.current = origin;
       isDrawingRef.current = true;
       activePointerIdRef.current = e.pointerId;
       rawUpdateSeenRef.current = false;
-      lastXRef.current = x;
-      lastYRef.current = y;
-      lastMidXRef.current = x;
-      lastMidYRef.current = y;
 
-      activeStrokeRef.current = {
-        tool: isEraser ? 'eraser' : 'pen',
-        color: strokeColor,
-        width,
-        points: [x, y],
-      };
+      const vx = e.clientX;
+      const vy = e.clientY;
+
+      if (currentMode === 'eraser') {
+        eraserPushedSnapshotRef.current = false;
+        drawEraserCursor(vx, vy);
+        eraseAtViewportPoint(vx, vy);
+        return;
+      }
+
+      // Pen mode: prepare low-latency live stroke canvas
+      const dpr = dprRef.current;
+      const strokeColor = colorRef.current;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.lineWidth = PEN_WIDTH;
+      ctx.strokeStyle = strokeColor;
+      ctx.fillStyle = strokeColor;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      lastViewXRef.current = vx;
+      lastViewYRef.current = vy;
+      lastViewMidXRef.current = vx;
+      lastViewMidYRef.current = vy;
+      activeDocPointsRef.current = [vx - origin.left, vy - origin.top];
 
       // Instant zero-delay contact dot
       ctx.beginPath();
-      ctx.arc(x, y, width * 0.5, 0, Math.PI * 2);
+      ctx.arc(vx, vy, PEN_WIDTH * 0.5, 0, Math.PI * 2);
       ctx.fill();
 
-      if (inkPresenterRef.current && !isEraser) {
+      if (inkPresenterRef.current) {
         try {
           inkPresenterRef.current.updateInkTrailStartPoint(e, {
             color: strokeColor,
-            diameter: width,
+            diameter: PEN_WIDTH,
           });
         } catch {
           // Ignore
@@ -412,45 +534,67 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     const handlePointerRawUpdate = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
       rawUpdateSeenRef.current = true;
-      processSamples(e);
+      if (modeRef.current === 'eraser') {
+        drawEraserCursor(e.clientX, e.clientY);
+        eraseAtViewportPoint(e.clientX, e.clientY);
+      } else {
+        processPenSamples(e);
+      }
     };
 
     const handlePointerMove = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
       if (rawUpdateSeenRef.current) return;
-      processSamples(e);
+      if (modeRef.current === 'eraser') {
+        drawEraserCursor(e.clientX, e.clientY);
+        eraseAtViewportPoint(e.clientX, e.clientY);
+      } else {
+        processPenSamples(e);
+      }
     };
 
     const finishStroke = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
-      const ctx = ctxRef.current;
-      const stroke = activeStrokeRef.current;
 
-      if (ctx && stroke) {
-        const endX = e.clientX;
-        const endY = e.clientY;
-        const dx = endX - lastXRef.current;
-        const dy = endY - lastYRef.current;
+      if (modeRef.current === 'pen') {
+        const origin = anchorOriginRef.current;
+        const endVx = e.clientX;
+        const endVy = e.clientY;
+        const dx = endVx - lastViewXRef.current;
+        const dy = endVy - lastViewYRef.current;
+        const docPts = activeDocPointsRef.current;
 
         if (dx * dx + dy * dy >= 0.25) {
-          ctx.beginPath();
-          ctx.moveTo(lastMidXRef.current, lastMidYRef.current);
-          ctx.quadraticCurveTo(lastXRef.current, lastYRef.current, endX, endY);
-          ctx.stroke();
-          stroke.points.push(endX, endY);
+          docPts.push(endVx - origin.left, endVy - origin.top);
         }
 
-        strokesRef.current.push(stroke);
-        if (strokesRef.current.length > MAX_STROKE_HISTORY) {
-          strokesRef.current.shift();
+        if (docPts.length >= 2) {
+          const prevList = committedStrokesRef.current;
+          pushUndoSnapshot(prevList);
+
+          const newStroke = createCommittedStroke(
+            nextStrokeIdRef.current++,
+            colorRef.current,
+            PEN_WIDTH,
+            docPts.slice()
+          );
+
+          const nextList =
+            prevList.length >= MAX_STROKE_HISTORY
+              ? [...prevList.slice(1), newStroke]
+              : [...prevList, newStroke];
+
+          committedStrokesRef.current = nextList;
+          setCommittedStrokes(nextList);
         }
-        setStrokeCount(strokesRef.current.length);
       }
 
+      clearLiveCanvas();
       isDrawingRef.current = false;
       activePointerIdRef.current = null;
-      activeStrokeRef.current = null;
+      activeDocPointsRef.current = [];
       rawUpdateSeenRef.current = false;
+      eraserPushedSnapshotRef.current = false;
 
       try {
         if (canvas.hasPointerCapture(e.pointerId)) {
@@ -470,7 +614,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     canvas.addEventListener('pointermove', handlePointerMove, { passive: true });
     canvas.addEventListener('pointerup', finishStroke, { passive: true });
     canvas.addEventListener('pointercancel', finishStroke, { passive: true });
-    window.addEventListener('resize', syncCanvasSize, { passive: true });
+    window.addEventListener('resize', syncLiveCanvasSize, { passive: true });
 
     return () => {
       cancelled = true;
@@ -482,16 +626,15 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       canvas.removeEventListener('pointermove', handlePointerMove);
       canvas.removeEventListener('pointerup', finishStroke);
       canvas.removeEventListener('pointercancel', finishStroke);
-      window.removeEventListener('resize', syncCanvasSize);
+      window.removeEventListener('resize', syncLiveCanvasSize);
       inkPresenterRef.current = null;
-      ctxRef.current = null;
+      liveCtxRef.current = null;
     };
-  }, [isActive, repaintCanvas]);
+  }, [isActive, clearLiveCanvas, pushUndoSnapshot]);
 
   const handleSelectColor = (hex: string) => {
     sound.playClick();
     if (mode === 'pen' && selectedColor === hex) {
-      // Tapping the already-active color toggles cleanly back to normal interactive mode
       setMode('interact');
       return;
     }
@@ -510,30 +653,71 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
   };
 
   const handleUndo = () => {
-    if (strokesRef.current.length === 0) return;
+    const prevSnapshot = undoStackRef.current.pop();
+    if (!prevSnapshot) return;
     sound.playClick();
-    strokesRef.current.pop();
-    setStrokeCount(strokesRef.current.length);
-    repaintCanvas();
+    committedStrokesRef.current = prevSnapshot;
+    setCommittedStrokes(prevSnapshot);
+    setCanUndo(undoStackRef.current.length > 0);
   };
 
   const handleClear = () => {
-    if (strokesRef.current.length === 0) return;
+    if (committedStrokesRef.current.length === 0) return;
     sound.playWrong();
-    clearStrokes();
+    pushUndoSnapshot(committedStrokesRef.current);
+    committedStrokesRef.current = [];
+    setCommittedStrokes([]);
+    clearLiveCanvas();
   };
 
   if (!isActive) return null;
 
   const isDrawingMode = mode !== 'interact';
-  const showExtendedControls = isDrawingMode || strokeCount > 0;
+  const strokeCount = committedStrokes.length;
+  const showExtendedControls = isDrawingMode || strokeCount > 0 || canUndo;
   const activeColorMeta = INK_COLORS.find((c) => c.hex === selectedColor) || INK_COLORS[0];
 
   return (
     <>
-      {/* Transparent Direct-On-Screen Drawing Layer (100% pass-through when mode === 'interact') */}
+      {/*
+        Document-Anchored Vector Ink Layer:
+        Positioned `absolute inset-0` inside the root scrollable page container so every drawn stroke
+        is physically glued to the exact content point where it was drawn, scrolling at 120fps in
+        hardware lockstep with zero frame lag or drift.
+      */}
+      <svg
+        ref={svgRef}
+        aria-hidden="true"
+        className={`pointer-events-none ${
+          elevated ? 'fixed inset-0 z-[51]' : 'absolute inset-0 z-[37]'
+        } w-full h-full overflow-visible`}
+      >
+        {committedStrokes.map((stroke) =>
+          stroke.pathD ? (
+            <path
+              key={stroke.id}
+              d={stroke.pathD}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ) : stroke.points.length >= 2 ? (
+            <circle
+              key={stroke.id}
+              cx={stroke.points[0]}
+              cy={stroke.points[1]}
+              r={stroke.width * 0.5}
+              fill={stroke.color}
+            />
+          ) : null
+        )}
+      </svg>
+
+      {/* Low-Latency Live Stroke Capture Canvas (100% pass-through when mode === 'interact') */}
       <canvas
-        ref={canvasRef}
+        ref={liveCanvasRef}
         aria-hidden={!isDrawingMode}
         className={`fixed inset-0 ${elevated ? 'z-[52]' : 'z-[38]'} w-screen h-screen block ${
           isDrawingMode && !isSuspended
@@ -596,7 +780,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
                     title={`Vẽ màu ${swatch.label}`}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-150 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                       isActiveDrawingColor
-                        ? `scale-110 ring-2 ring-white shadow-[0_0_14px_rgba(255,255,255,0.45)]`
+                        ? 'scale-110 ring-2 ring-white shadow-[0_0_14px_rgba(255,255,255,0.45)]'
                         : isSelected
                         ? `ring-1.5 ${swatch.ringClass} hover:scale-110`
                         : 'opacity-85 hover:opacity-100 hover:scale-110'
@@ -613,7 +797,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
               })}
             </div>
 
-            {/* Contextual Controls: only shown while drawing or when ink exists on screen */}
+            {/* Contextual Controls: only shown while drawing or when ink/undo history exists */}
             {showExtendedControls && (
               <>
                 <div className="h-6 w-px bg-sky-300/20 shrink-0" aria-hidden="true" />
@@ -634,13 +818,13 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
                   </button>
                 )}
 
-                {/* Eraser */}
+                {/* Stroke Eraser */}
                 <button
                   type="button"
                   onClick={handleToggleEraser}
                   aria-pressed={mode === 'eraser'}
                   aria-label="Tẩy nét vẽ trên màn hình"
-                  title="Tẩy từng nét vẽ"
+                  title="Quẹt lên nét vẽ để xóa nét đó"
                   className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors cursor-pointer shrink-0 ${
                     mode === 'eraser'
                       ? 'bg-gradient-to-r from-amber-300 to-orange-300 text-slate-950 shadow-[0_0_12px_rgba(251,191,36,0.45)]'
@@ -654,11 +838,11 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
                 <button
                   type="button"
                   onClick={handleUndo}
-                  disabled={strokeCount === 0}
-                  aria-label="Hoàn tác nét vẽ vừa rồi"
-                  title="Hoàn tác nét vẽ"
+                  disabled={!canUndo}
+                  aria-label="Hoàn tác thao tác vẽ vừa rồi"
+                  title="Hoàn tác"
                   className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-colors shrink-0 ${
-                    strokeCount > 0
+                    canUndo
                       ? 'bg-white/[0.07] hover:bg-sky-400/20 text-sky-100 border-sky-300/25 cursor-pointer'
                       : 'bg-white/[0.02] text-slate-500 border-white/10 cursor-not-allowed'
                   }`}
@@ -705,7 +889,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
               <span>
                 {mode === 'pen'
                   ? `Đang vẽ (${activeColorMeta.label}) · Bấm "Thao tác" hoặc Esc để gõ đáp án`
-                  : 'Đang tẩy nét · Bấm "Thao tác" hoặc Esc để gõ đáp án'}
+                  : 'Đang tẩy nét · Quẹt qua nét vẽ để xóa · Esc để quay lại'}
               </span>
             </div>
           )}

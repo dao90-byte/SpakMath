@@ -225,6 +225,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   const isAllDayCompleted = solvedCount === questions.length;
 
   const triggerDayVictory = useCallback(() => {
+    clearExerciseScreenInk();
     sound.playVictory();
     fireBrilliantCelebration();
     onCompleteDay(dayPlan.dayNumber, questions.length, questions.length, elapsedSeconds);
