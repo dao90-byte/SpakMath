@@ -595,10 +595,21 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     persistNow();
     onClose();
-  };
+  }, [persistNow, onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
@@ -606,11 +617,11 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#030617]/92 p-3 sm:p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-[#030617]/92 p-1.5 sm:p-2.5"
       onClick={handleClose}
     >
       <div
-        className="relative bg-[linear-gradient(160deg,_rgba(11,20,54,0.99),_rgba(5,10,32,1))] rounded-3xl shadow-[0_24px_64px_rgba(3,7,24,0.92),0_0_32px_rgba(34,211,238,0.16)] border border-sky-300/40 w-full max-w-4xl h-[86vh] flex flex-col overflow-hidden text-white"
+        className="relative bg-[linear-gradient(160deg,_rgba(11,20,54,0.99),_rgba(5,10,32,1))] rounded-2xl shadow-[0_24px_64px_rgba(3,7,24,0.92),0_0_32px_rgba(34,211,238,0.16)] border border-sky-300/40 w-[98vw] max-w-[1680px] h-[94vh] flex flex-col overflow-hidden text-white"
         onClick={(e) => e.stopPropagation()}
       >
         <span
@@ -618,33 +629,8 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
           className="pointer-events-none absolute top-0 inset-x-8 h-[2px] rounded-full bg-gradient-to-r from-sky-300 via-cyan-300 to-amber-300"
         />
 
-        {/* Header */}
-        <div className="relative bg-[linear-gradient(180deg,_rgba(11,22,60,0.98),_rgba(6,11,34,0.96))] border-b border-sky-300/35 px-5 py-3.5 flex items-center justify-between text-white">
-          <div className="flex items-center gap-3">
-            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-300 via-cyan-400 to-sky-500 text-slate-950 flex items-center justify-center shadow-[0_0_18px_rgba(56,189,248,0.45)] shrink-0">
-              <Pencil className="w-4 h-4" />
-            </span>
-            <div>
-              <h2 className="text-lg sm:text-xl font-black font-display text-sky-100">
-                Bảng Vẽ &amp; Tính Nháp Vũ Trụ
-              </h2>
-              <p className="text-xs font-medium text-sky-200/80">
-                Chế độ vẽ tức thì độ trễ siêu thấp — tự động lưu khi đóng.
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="w-9 h-9 rounded-xl bg-white/[0.08] hover:bg-sky-400/20 border border-sky-300/30 hover:border-sky-300/70 flex items-center justify-center transition-colors text-white cursor-pointer"
-            title="Đóng bảng nháp (vẫn giữ nguyên bài vẽ)"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Toolbar */}
-        <div className="relative bg-[linear-gradient(180deg,_rgba(11,21,58,0.96),_rgba(7,13,38,0.98))] border-b border-sky-300/30 px-5 py-2.5 flex flex-wrap items-center justify-between gap-3">
+        {/* Compact Single-Row Toolbar */}
+        <div className="relative bg-[linear-gradient(180deg,_rgba(11,21,58,0.98),_rgba(7,13,38,0.98))] border-b border-sky-300/30 px-3.5 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -652,7 +638,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
                 setTool('pencil');
                 sound.playClick();
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-colors cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
                 tool === 'pencil'
                   ? 'bg-gradient-to-r from-sky-300 to-cyan-300 text-slate-950 shadow-[0_0_14px_rgba(56,189,248,0.45)]'
                   : 'bg-white/[0.07] text-sky-100 border border-sky-300/30 hover:bg-sky-400/18'
@@ -667,7 +653,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
                 setTool('eraser');
                 sound.playClick();
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-colors cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
                 tool === 'eraser'
                   ? 'bg-gradient-to-r from-sky-300 to-cyan-300 text-slate-950 shadow-[0_0_14px_rgba(56,189,248,0.45)]'
                   : 'bg-white/[0.07] text-sky-100 border border-sky-300/30 hover:bg-sky-400/18'
@@ -681,7 +667,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
           {/* Color palette */}
           {tool === 'pencil' && (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-sky-200/95">Màu nét:</span>
+              <span className="text-xs font-bold text-sky-200/95 hidden sm:inline whitespace-nowrap">Màu nét:</span>
               <div className="flex items-center gap-1.5">
                 {colorPalette.map((c) => (
                   <button
@@ -706,7 +692,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
 
           {/* Line width */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-sky-200/95 tabular-nums">
+            <span className="text-xs font-bold text-sky-200/95 tabular-nums whitespace-nowrap">
               Nét bút: {lineWidth}px
             </span>
             <input
@@ -715,17 +701,17 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
               max="16"
               value={lineWidth}
               onChange={(e) => setLineWidth(Number(e.target.value))}
-              className="w-20 accent-sky-400 cursor-pointer"
+              className="w-20 sm:w-24 accent-sky-400 cursor-pointer"
             />
           </div>
 
-          {/* Undo & Clear All buttons */}
+          {/* Undo, Clear All & Close buttons */}
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={handleUndo}
               disabled={!canUndo}
-              className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold border transition-colors whitespace-nowrap ${
+              className={`flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-bold border transition-colors whitespace-nowrap shrink-0 ${
                 canUndo
                   ? 'bg-white/[0.08] text-sky-100 hover:bg-sky-400/20 border-sky-300/35 cursor-pointer'
                   : 'bg-white/[0.03] text-slate-500 border-white/10 cursor-not-allowed'
@@ -738,10 +724,22 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
             <button
               type="button"
               onClick={clearAllCanvas}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/20 text-rose-100 hover:bg-rose-500/30 text-xs font-bold border border-rose-400/50 transition-colors cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/20 text-rose-100 hover:bg-rose-500/30 text-xs font-bold border border-rose-400/50 transition-colors cursor-pointer whitespace-nowrap shrink-0"
             >
               <Trash2 className="w-3.5 h-3.5" />
               Xóa tất cả
+            </button>
+
+            <div className="h-6 w-px bg-sky-300/25 mx-0.5" aria-hidden="true" />
+
+            <button
+              type="button"
+              onClick={handleClose}
+              aria-label="Đóng bảng nháp"
+              title="Đóng bảng nháp (tự động lưu bài vẽ)"
+              className="w-9 h-9 rounded-xl bg-white/[0.08] hover:bg-sky-400/20 border border-sky-300/35 hover:border-sky-300/75 flex items-center justify-center transition-colors text-white cursor-pointer shrink-0"
+            >
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -755,16 +753,6 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
             ref={canvasRef}
             className="w-full h-full block touch-none"
           />
-        </div>
-
-        {/* Bottom Hint Strip (kept outside canvas to preserve hardware overlay scanout) */}
-        <div className="px-5 py-2 bg-[#060C24] border-t border-sky-300/20 text-xs text-sky-200/75 flex items-center justify-between gap-2">
-          <span>
-            Gợi ý: Dùng chuột, bút cảm ứng hoặc ngón tay để đặt tính và vẽ sơ đồ đoạn thẳng.
-          </span>
-          <span className="hidden sm:inline text-sky-300/70 font-semibold">
-            Tự động lưu khi đóng
-          </span>
         </div>
       </div>
     </div>

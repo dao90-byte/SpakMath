@@ -14,7 +14,15 @@ export interface BarModelSegment {
 }
 
 export interface InMonthVisualModelConfig {
-  type: 'bar_model' | 'remainder_groups' | 'interval_model' | 'measurement_lab';
+  type:
+    | 'bar_model'
+    | 'remainder_groups'
+    | 'interval_model'
+    | 'measurement_lab'
+    | 'perimeter_shape'
+    | 'place_value_chart'
+    | 'sequence_pattern'
+    | 'area_grid';
   title: string;
   subtitle?: string;
   // Standardized Singapore CPA Specification (Concrete - Pictorial - Abstract)

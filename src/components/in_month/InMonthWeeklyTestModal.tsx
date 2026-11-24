@@ -8,6 +8,7 @@ import {
 import { getMonthStorageKeys } from '../../data/inMonthGrade3Catalog';
 import { InMonthVisualModels } from './InMonthVisualModels';
 import { sound } from '../../utils/soundEffects';
+import { clearExerciseScreenInk } from '../ScreenAnnotationOverlay';
 import {
   getInMonthQuestionInputSpec,
   isInMonthAnswerCorrect,
@@ -133,6 +134,10 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
     remainingSeconds,
     isSubmitted,
   ]);
+
+  useEffect(() => {
+    clearExerciseScreenInk();
+  }, [currentIdx]);
 
   const computeScores = (
     ansMap: Record<string, string>,

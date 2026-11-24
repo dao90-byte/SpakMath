@@ -11,6 +11,16 @@ import {
   InMonthWeeklyTest,
   NOVEMBER_WEEKLY_TESTS,
 } from './inMonthWeeklyTestsData';
+import {
+  DECEMBER_IN_MONTH_DAYS,
+  DECEMBER_FINAL_EXAM,
+} from './inMonthDecemberData';
+import { DECEMBER_WEEKLY_TESTS } from './inMonthDecemberWeeklyTestsData';
+import {
+  JANUARY_IN_MONTH_DAYS,
+  JANUARY_FINAL_EXAM,
+} from './inMonthJanuaryData';
+import { JANUARY_WEEKLY_TESTS } from './inMonthJanuaryWeeklyTestsData';
 
 export interface InMonthWeekMeta {
   weekNumber: 1 | 2 | 3 | 4 | 5;
@@ -226,65 +236,9 @@ const MONTH_BLUEPRINTS: MonthBlueprint[] = [
     ],
     domainOrder: ['bar_model', 'remainder', 'interval', 'measurement'],
   },
-  // Month 11 uses existing NOVEMBER_IN_MONTH_DAYS & NOVEMBER_FINAL_EXAM
-  {
-    monthNumber: 12,
-    semester: 2,
-    label: 'Tháng 12',
-    shortLabel: 'T12',
-    title: 'Chu Vi Hình Vuông, Chữ Nhật, Hình Ghép & Đổi Gam–Lít',
-    heroTitle: 'Khám Phá Chu Vi Hình Ghép & Phòng Thí Nghiệm Khối Lượng–Thể Tích',
-    topics: [
-      'Chu vi hình vuông, hình chữ nhật & hình ghép',
-      'Giải toán đố ngược tìm cạnh khi biết chu vi',
-      'Đổi đơn vị gam – ki-lô-gam & lít – mi-li-lít',
-    ],
-    accentGradient: 'from-rose-500 to-pink-600',
-    weekNames: [
-      'Tuần 1 · Chu Vi Cơ Bản',
-      'Tuần 2 · Chu Vi Hình Ghép',
-      'Tuần 3 · Đổi Gam & Ki-lô-gam',
-      'Tuần 4 · Đổi Lít & Mi-li-lít',
-      'Tuần 5 · Tổng Ôn Tháng 12',
-    ],
-    dayFocusList: [
-      'Tính chu vi hình vuông và hình chữ nhật qua kích thước cạnh',
-      'Kỹ thuật dời cạnh tìm chu vi hình ghép chữ L, chữ U',
-      'Đọc cân đồng hồ, so sánh và đổi đơn vị kg – g',
-      'Đổi đơn vị lít (L) – mi-li-lít (mL) và bài toán san bình',
-      'Tổng ôn chu vi hình học & đo lường chuẩn Tháng 12',
-    ],
-    domainOrder: ['interval', 'bar_model', 'measurement', 'measurement'],
-  },
-  {
-    monthNumber: 1,
-    semester: 2,
-    label: 'Tháng 1',
-    shortLabel: 'T1',
-    title: 'Số Phạm Vi 10 000, Chuỗi Quy Luật & Diện Tích Hình Ghép',
-    heroTitle: 'Mở Rộng Số Đến 10 000 & Liên Kết Diện Tích Với Chu Vi',
-    topics: [
-      'Cấu tạo, so sánh & cộng trừ số phạm vi 10 000',
-      'Giải mã chuỗi số theo quy luật tăng giảm',
-      'Tính diện tích đếm ô vuông & hình ghép chữ nhật',
-    ],
-    accentGradient: 'from-indigo-500 to-blue-600',
-    weekNames: [
-      'Tuần 1 · Số Phạm Vi 10 000',
-      'Tuần 2 · Cộng Trừ & Quy Luật',
-      'Tuần 3 · Diện Tích Ô Vuông',
-      'Tuần 4 · Liên Kết Diện Tích & Chu Vi',
-      'Tuần 5 · Tổng Ôn Tháng 1',
-    ],
-    dayFocusList: [
-      'Phân tích hàng nghìn, trăm, chục, đơn vị trong phạm vi 10 000',
-      'Cộng trừ trong phạm vi 10 000 và tìm số tiếp theo trong chuỗi',
-      'Tính diện tích hình chữ nhật, hình vuông và hình ghép ô vuông',
-      'Giải toán liên kết giữa chu vi và diện tích',
-      'Tổng ôn số 10 000 & hình học diện tích Tháng 1',
-    ],
-    domainOrder: ['measurement', 'interval', 'bar_model', 'interval'],
-  },
+  // Month 11 uses NOVEMBER_IN_MONTH_DAYS, NOVEMBER_WEEKLY_TESTS & NOVEMBER_FINAL_EXAM
+  // Month 12 uses DECEMBER_IN_MONTH_DAYS, DECEMBER_WEEKLY_TESTS & DECEMBER_FINAL_EXAM
+  // Month 1 uses JANUARY_IN_MONTH_DAYS, JANUARY_WEEKLY_TESTS & JANUARY_FINAL_EXAM
   {
     monthNumber: 2,
     semester: 2,
@@ -1105,10 +1059,152 @@ const NOVEMBER_PROGRAM: InMonthMonthProgram = {
   weeklyTests: NOVEMBER_WEEKLY_TESTS,
 };
 
+// Month 12 uses the full hand-crafted Singapore CPA DECEMBER_IN_MONTH_DAYS, DECEMBER_WEEKLY_TESTS & DECEMBER_FINAL_EXAM
+const DECEMBER_WEEKS_META: InMonthWeekMeta[] = [
+  {
+    weekNumber: 1,
+    title: 'Tuần 1 · Chu Vi Cơ Bản',
+    shortLabel: 'Tuần 1 · Chu Vi Cơ Bản',
+    daysRange: [1, 7],
+    skillDomain: 'interval',
+    color: '#0284C7',
+    description: 'Chu vi hình vuông, hình chữ nhật, chừa cổng & toán ngược tìm cạnh',
+  },
+  {
+    weekNumber: 2,
+    title: 'Tuần 2 · Hình Ghép & Dời Cạnh',
+    shortLabel: 'Tuần 2 · Dời Cạnh',
+    daysRange: [8, 14],
+    skillDomain: 'bar_model',
+    color: '#0D9488',
+    description: 'Ghép hình vuông & kỹ thuật Dời cạnh chữ L, bậc thang, chữ U (+2×d)',
+  },
+  {
+    weekNumber: 3,
+    title: 'Tuần 3 · Khối Lượng kg – g',
+    shortLabel: 'Tuần 3 · Khối Lượng',
+    daysRange: [15, 21],
+    skillDomain: 'remainder',
+    color: '#7C3AED',
+    description: 'Đổi đơn vị kg – g, trừ bì, cân thăng bằng, cả thùng – nửa thùng & san giỏ',
+  },
+  {
+    weekNumber: 4,
+    title: 'Tuần 4 · Thể Tích L – mL',
+    shortLabel: 'Tuần 4 · Thể Tích',
+    daysRange: [22, 28],
+    skillDomain: 'measurement',
+    color: '#EA580C',
+    description: 'Đổi đơn vị L – mL, chia đều vào chai/cốc, san bình & toán ngược thể tích',
+  },
+  {
+    weekNumber: 5,
+    title: 'Tuần 5 · Tổng Ôn Tháng 12',
+    shortLabel: 'Tuần 5 · Tổng Ôn',
+    daysRange: [29, 30],
+    skillDomain: 'interval',
+    color: '#E11D48',
+    description: 'Tổng duyệt 4 trụ cột Chu vi, Dời cạnh, Khối lượng & Thể tích',
+  },
+];
+
+const DECEMBER_PROGRAM: InMonthMonthProgram = {
+  id: 'inmonth-g3-m12',
+  grade: 3,
+  monthNumber: 12,
+  semester: 2,
+  label: 'Tháng 12',
+  shortLabel: 'T12',
+  title: 'Chu Vi Hình Vuông, Chữ Nhật, Kỹ Thuật Dời Cạnh & Đo Lường kg–g, L–mL',
+  heroTitle: 'Làm Chủ Chu Vi Hình Ghép, Dời Cạnh Singapore & Phòng Thí Nghiệm Đo Lường',
+  topics: [
+    'Chu vi hình vuông, hình chữ nhật, toán ngược & rào vườn có cổng',
+    'Kỹ thuật Dời cạnh (Side-Shifting) hình ghép, chữ L, bậc thang & chữ U',
+    'Đo lường khối lượng (kg–g, cân thăng bằng) & thể tích (L–mL, san bình)',
+  ],
+  accentGradient: 'from-cyan-400 via-teal-400 to-amber-400',
+  days: DECEMBER_IN_MONTH_DAYS,
+  finalExam: DECEMBER_FINAL_EXAM,
+  weeksMeta: DECEMBER_WEEKS_META,
+  weeklyTests: DECEMBER_WEEKLY_TESTS,
+};
+
+// Month 1 uses the full hand-crafted Singapore CPA JANUARY_IN_MONTH_DAYS, JANUARY_WEEKLY_TESTS & JANUARY_FINAL_EXAM
+const JANUARY_WEEKS_META: InMonthWeekMeta[] = [
+  {
+    weekNumber: 1,
+    title: 'Tuần 1 · Số Phạm Vi 10 000',
+    shortLabel: 'Tuần 1 · Số 10 000',
+    daysRange: [1, 7],
+    skillDomain: 'measurement',
+    color: '#0284C7',
+    description: 'Thẻ giá trị vị trí (Place Value Discs), chữ số 0 giữ chỗ, ghép số & làm tròn trên trục số',
+  },
+  {
+    weekNumber: 2,
+    title: 'Tuần 2 · Cộng Trừ & Chuỗi Quy Luật',
+    shortLabel: 'Tuần 2 · Chuỗi Quy Luật',
+    daysRange: [8, 14],
+    skillDomain: 'interval',
+    color: '#0D9488',
+    description: 'Cộng trừ có nhớ 10 000 (trừ mượn qua số 0), sơ đồ thanh 2 bước & chuỗi quy luật bậc 2, Fibonacci, xen kẽ',
+  },
+  {
+    weekNumber: 3,
+    title: 'Tuần 3 · Diện Tích & Hình Ghép Chữ L',
+    shortLabel: 'Tuần 3 · Diện Tích',
+    daysRange: [15, 21],
+    skillDomain: 'bar_model',
+    color: '#7C3AED',
+    description: 'Đếm lưới ô vuông (gồm nửa ô tam giác), diện tích vuông/chữ nhật, hình chữ L (Cắt-Cộng / Bao-Trừ) & khung viền',
+  },
+  {
+    weekNumber: 4,
+    title: 'Tuần 4 · Liên Kết Diện Tích & Chu Vi',
+    shortLabel: 'Tuần 4 · Diện Tích ↔ Chu Vi',
+    daysRange: [22, 28],
+    skillDomain: 'remainder',
+    color: '#EA580C',
+    description: 'Chuyển đổi 2 chiều Chu vi ↔ Diện tích, sơ đồ tỉ số, tối ưu cùng chu vi, mở rộng cạnh & uốn dây',
+  },
+  {
+    weekNumber: 5,
+    title: 'Tuần 5 · Tổng Ôn Tháng 1',
+    shortLabel: 'Tuần 5 · Tổng Ôn',
+    daysRange: [29, 30],
+    skillDomain: 'measurement',
+    color: '#E11D48',
+    description: 'Tổng duyệt 4 trụ cột Số 10 000, Chuỗi quy luật, Diện tích hình ghép & Liên kết Chu vi – Diện tích',
+  },
+];
+
+const JANUARY_PROGRAM: InMonthMonthProgram = {
+  id: 'inmonth-g3-m1',
+  grade: 3,
+  monthNumber: 1,
+  semester: 2,
+  label: 'Tháng 1',
+  shortLabel: 'T1',
+  title: 'Số Phạm Vi 10 000, Chuỗi Số Quy Luật, Diện Tích Hình Ghép & Liên Kết Chu Vi',
+  heroTitle: 'Chinh Phục Số 10 000, Chuỗi Quy Luật & Phòng Thí Nghiệm Diện Tích Singapore CPA',
+  topics: [
+    'Thẻ giá trị vị trí đến 10 000, chữ số 0 giữ chỗ, ghép số & làm tròn',
+    'Cộng trừ có nhớ 10 000 & giải mã chuỗi quy luật bậc 2, Fibonacci, xen kẽ',
+    'Diện tích lưới ô vuông, hình chữ L, khung viền & liên kết Chu vi – Diện tích',
+  ],
+  accentGradient: 'from-indigo-400 via-blue-500 to-cyan-400',
+  days: JANUARY_IN_MONTH_DAYS,
+  finalExam: JANUARY_FINAL_EXAM,
+  weeksMeta: JANUARY_WEEKS_META,
+  weeklyTests: JANUARY_WEEKLY_TESTS,
+};
+
 // Academic order of Grade 3 Spark Math F3: Tháng 6..12 (Year 1) then Tháng 1..5 (Year 2)
 export const GRADE_3_IN_MONTH_PROGRAMS: InMonthMonthProgram[] = [
   ...MONTH_BLUEPRINTS.slice(0, 5).map(buildMonthProgram),
   NOVEMBER_PROGRAM,
+  DECEMBER_PROGRAM,
+  JANUARY_PROGRAM,
   ...MONTH_BLUEPRINTS.slice(5).map(buildMonthProgram),
 ];
 

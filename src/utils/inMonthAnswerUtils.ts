@@ -108,27 +108,31 @@ export function isInMonthAnswerCorrect(
     return true;
   }
 
-  // Number + unit match ("60m" or "60 m")
+  const normalizeUnit = (u: string) =>
+    u
+      .toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/cm2/g, 'cm²')
+      .replace(/dm2/g, 'dm²')
+      .replace(/m2/g, 'm²');
+
+  // Number + unit match ("60m" or "60 m" or "48cm2")
   if (spec.unitLabel) {
-    const unitLower = spec.unitLabel.toLowerCase();
-    const compactInput = cleaned.replace(/\s+/g, '');
-    const compactExpected = `${expectedStr}${unitLower}`.replace(/\s+/g, '');
+    const compactInput = normalizeUnit(cleaned);
+    const compactExpected = normalizeUnit(`${expectedStr}${spec.unitLabel}`);
     if (compactInput === compactExpected) {
       return true;
     }
   }
 
-  // Prefix + number (+ optional unit), e.g., "dư 1", "cần thêm 3", "dư 2 quả"
+  // Prefix + number (+ optional unit), e.g., "dư 1", "cần thêm 3", "dư 2 quả", "48 cm2"
   const numAndTail = cleaned.match(/^(?:[^\d]*?)(\d+)\s*(.*)$/);
   if (numAndTail) {
     const typedNum = parseInt(numAndTail[1], 10);
     const typedTail = (numAndTail[2] || '').trim();
     if (typedNum !== spec.expectedNumber) return false;
     if (!typedTail) return true;
-    if (
-      spec.unitLabel &&
-      typedTail.replace(/\s+/g, '') === spec.unitLabel.toLowerCase().replace(/\s+/g, '')
-    ) {
+    if (spec.unitLabel && normalizeUnit(typedTail) === normalizeUnit(spec.unitLabel)) {
       return true;
     }
   }

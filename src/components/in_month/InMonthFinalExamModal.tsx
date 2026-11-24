@@ -7,6 +7,7 @@ import {
 import { getMonthStorageKeys } from '../../data/inMonthGrade3Catalog';
 import { InMonthVisualModels } from './InMonthVisualModels';
 import { sound } from '../../utils/soundEffects';
+import { clearExerciseScreenInk } from '../ScreenAnnotationOverlay';
 import {
   getInMonthQuestionInputSpec,
   isInMonthAnswerCorrect,
@@ -49,16 +50,15 @@ interface InMonthFinalExamModalProps {
   onOpenScratchpad: () => void;
 }
 
-const PILLAR_META: Record<
-  InMonthSkillDomain,
-  {
-    title: string;
-    color: string;
-    reviewDays: number[];
-    strongComment: string;
-    improveComment: string;
-  }
-> = {
+type PillarMetaEntry = {
+  title: string;
+  color: string;
+  reviewDays: number[];
+  strongComment: string;
+  improveComment: string;
+};
+
+const DEFAULT_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
   bar_model: {
     title: 'Toán Đố Sơ Đồ Thanh (Nhân & Chia)',
     color: MINDMATH_PILLAR_COLORS.bar_model.fill,
@@ -94,6 +94,84 @@ const PILLAR_META: Record<
       'Đổi đơn vị đo (km-m-cm, kg-g, L-mL) thành thạo, đọc cân thăng bằng, tính vật rỗng/ruột và phân tích biểu đồ chính xác tuyệt đối.',
     improveComment:
       'Cần kiểm tra kỹ bước đổi về cùng một đơn vị đo trước khi cộng trừ và lưu ý trừ khối lượng vỏ hộp/chai khi tìm một nửa.',
+  },
+};
+
+const DECEMBER_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
+  interval: {
+    title: 'Chu Vi Hình Vuông, Hình Chữ Nhật & Toán Ngược',
+    color: MINDMATH_PILLAR_COLORS.interval.fill,
+    reviewDays: [1, 3, 5, 6],
+    strongComment:
+      'Thành thạo công thức chu vi, phân biệt rõ Nửa chu vi với Chu vi, giải chính xác bài toán ngược tìm cạnh và bài toán rào vườn chừa cổng.',
+    improveComment:
+      'Cần nhớ bước chia đôi tìm Nửa chu vi trước khi trừ chiều dài/rộng và chú ý trừ đi chiều rộng cổng khi tính lưới rào.',
+  },
+  bar_model: {
+    title: 'Chu Vi Hình Ghép & Kỹ Thuật Dời Cạnh (Side-Shifting)',
+    color: MINDMATH_PILLAR_COLORS.bar_model.fill,
+    reviewDays: [8, 10, 12, 13],
+    strongComment:
+      'Ứng dụng xuất sắc kỹ thuật Dời cạnh Singapore cho hình chữ L, bậc thang, đếm đúng cạnh viền hình ghép vuông và cộng đủ 2 thành khe lõm chữ U.',
+    improveComment:
+      'Cần phân biệt kỹ: ghép hình vuông mất 2 cạnh ở mỗi mối ghép; hình chữ L bằng khung bao; hình chữ U cộng thêm 2 lần độ sâu khe lõm.',
+  },
+  remainder: {
+    title: 'Đo Lường Khối Lượng (kg – g), Trừ Bì & Cân Thăng Bằng',
+    color: MINDMATH_PILLAR_COLORS.remainder.fill,
+    reviewDays: [15, 17, 19, 20],
+    strongComment:
+      'Đổi đơn vị kg – g chuẩn xác (không thiếu chữ số 0), xử lý mượt bài toán trừ bì, cân đĩa thăng bằng, cả thùng – nửa thùng và san giỏ.',
+    improveComment:
+      'Lưu ý quy tắc 1 kg = 1 000 g (3 chữ số phần gam) và hiệu giữa thùng đầy với thùng còn nửa hàng chính là một nửa lượng hàng bên trong.',
+  },
+  measurement: {
+    title: 'Đo Lường Thể Tích (L – mL), Chia Đều & San Bình',
+    color: MINDMATH_PILLAR_COLORS.measurement.fill,
+    reviewDays: [22, 24, 26, 28],
+    strongComment:
+      'Quy đổi L – mL nhanh nhạy, giải tốt bài toán rót đều vào chai/cốc, san bình bằng nhau (một nửa hiệu) và suy luận ngược thể tích.',
+    improveComment:
+      'Luôn đổi về cùng đơn vị mL trước khi cộng trừ hoặc chia đều, và nhớ khi rót x từ bình A sang B thì hiệu giữa hai bình thay đổi 2 × x.',
+  },
+};
+
+const JANUARY_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
+  measurement: {
+    title: 'Số Phạm Vi 10 000 (Cấu Tạo Hàng, So Sánh, Ghép Số & Làm Tròn)',
+    color: MINDMATH_PILLAR_COLORS.measurement.fill,
+    reviewDays: [1, 3, 5, 7],
+    strongComment:
+      'Đọc và phân tích chuẩn xác 4 hàng Nghìn – Trăm – Chục – Đơn vị trên Thẻ giá trị vị trí, giữ chỗ bằng chữ số 0 đúng vị trí, ghép số không đặt 0 đứng đầu và làm tròn tự tin trên trục số.',
+    improveComment:
+      'Cần kiểm tra kỹ chữ số 0 giữ chỗ khi hàng trống, tránh đặt chữ số 0 ở hàng nghìn khi ghép số nhỏ nhất, và nhớ quy tắc 5 làm tròn lên khi xét chữ số ngay bên phải.',
+  },
+  interval: {
+    title: 'Cộng Trừ Có Nhớ 10 000 & Giải Mã Chuỗi Số Quy Luật',
+    color: MINDMATH_PILLAR_COLORS.interval.fill,
+    reviewDays: [8, 10, 12, 14],
+    strongComment:
+      'Thực hiện thành thạo cộng trừ có nhớ và trừ mượn dây chuyền qua số 0 trong phạm vi 10 000, đồng thời phát hiện nhạy bén quy luật khoảng nhảy bậc 2, Fibonacci, cấp số nhân và dãy xen kẽ 2 nhánh.',
+    improveComment:
+      'Cần viết rõ các khoảng nhảy (vòng cung bước nhảy) giữa hai số hạng liên tiếp để phân biệt dãy cộng đều, dãy bậc 2 tăng dần và dãy xen kẽ vị trí lẻ – chẵn.',
+  },
+  bar_model: {
+    title: 'Diện Tích Ô Vuông, Hình Chữ Nhật, Hình Chữ L & Khung Viền',
+    color: MINDMATH_PILLAR_COLORS.bar_model.fill,
+    reviewDays: [15, 17, 19, 21],
+    strongComment:
+      'Hiểu bản chất diện tích qua đếm ô vuông đơn vị (kể cả ghép nửa ô tam giác), vận dụng linh hoạt 2 chiến lược Cắt–Cộng và Bao–Trừ cho hình chữ L và tính chính xác diện tích khung viền lối đi.',
+    improveComment:
+      'Lưu ý đổi hai cạnh về cùng đơn vị đo trước khi nhân diện tích, và với lối đi bao quanh rộng d ở cả 4 phía thì mỗi kích thước khung ngoài phải cộng thêm 2 × d.',
+  },
+  remainder: {
+    title: 'Liên Kết Chu Vi – Diện Tích, Tối Ưu Hình Học & Uốn Dây',
+    color: MINDMATH_PILLAR_COLORS.remainder.fill,
+    reviewDays: [22, 24, 26, 28],
+    strongComment:
+      'Chuyển đổi hai chiều giữa Chu vi và Diện tích chính xác, kết hợp xuất sắc Sơ đồ thanh tìm kích thước, hiểu sâu định lý cùng chu vi hình vuông diện tích lớn nhất và bảo toàn chu vi khi uốn lại dây.',
+    improveComment:
+      'Nhớ chia 2 để tìm Nửa chu vi (Dài + Rộng) trước khi chia phần hoặc tìm cạnh còn lại; khi kéo dài cạnh chữ nhật thì diện tích tăng thêm bằng phần kéo dài nhân cạnh không đổi.',
   },
 };
 
@@ -178,6 +256,10 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
       // ignore
     }
   }, [examDraftKey, studentName, currentIdx, answers, isSubmitted]);
+
+  useEffect(() => {
+    clearExerciseScreenInk();
+  }, [currentIdx]);
 
   const examQuestions = finalExam.questions;
   const currentQ = examQuestions[currentIdx];
@@ -653,8 +735,19 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 </h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {(Object.keys(PILLAR_META) as InMonthSkillDomain[]).map((pillarKey) => {
-                    const meta = PILLAR_META[pillarKey];
+                  {(monthNumber === 12
+                    ? (['interval', 'bar_model', 'remainder', 'measurement'] as InMonthSkillDomain[])
+                    : monthNumber === 1
+                    ? (['measurement', 'interval', 'bar_model', 'remainder'] as InMonthSkillDomain[])
+                    : (['bar_model', 'remainder', 'interval', 'measurement'] as InMonthSkillDomain[])
+                  ).map((pillarKey) => {
+                    const meta = (
+                      monthNumber === 12
+                        ? DECEMBER_PILLAR_META
+                        : monthNumber === 1
+                        ? JANUARY_PILLAR_META
+                        : DEFAULT_PILLAR_META
+                    )[pillarKey];
                     const stats = getPillarStats(pillarKey);
                     const isStrong = stats.pct >= 80;
 

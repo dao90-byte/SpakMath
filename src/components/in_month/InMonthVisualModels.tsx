@@ -4,12 +4,16 @@ import 'katex/dist/katex.min.css';
 import { InMonthVisualModelConfig } from '../../data/inMonthNovemberData';
 import { buildCPASpecForQuestion } from '../../utils/singaporeCPABuilder';
 import type {
+  AreaGridPictorialSpec,
   BarModelBarSpec,
   BarModelPictorialSpec,
   CPAConcreteGroup,
   IntervalPictorialSpec,
   MeasurementPictorialSpec,
+  PerimeterPictorialSpec,
+  PlaceValuePictorialSpec,
   RemainderPictorialSpec,
+  SequencePatternPictorialSpec,
   SingaporeCPASpec,
 } from '../../types/singaporeCPA';
 import {
@@ -2190,6 +2194,1425 @@ const CPASvgMeasurementDiagram: React.FC<{
 };
 
 /**
+ * Step 2E: Interactive Singapore Math Perimeter & Composite Shape (Side-Shifting) Diagram
+ */
+const CPASvgPerimeterDiagram: React.FC<{
+  pictorial: PerimeterPictorialSpec;
+  isAnswered: boolean;
+}> = ({ pictorial, isAnswered }) => {
+  const [shiftedView, setShiftedView] = useState(false);
+
+  useEffect(() => {
+    setShiftedView(false);
+  }, [pictorial]);
+
+  const {
+    shapeKind,
+    outerWidth,
+    outerHeight,
+    cutWidth,
+    cutHeight,
+    recessDepth,
+    recessWidth,
+    squareSide,
+    gridCols = 2,
+    gridRows = 1,
+    unitLabel,
+    unknownTarget,
+    gateWidth,
+    expectedPerimeter,
+    sideShiftHint,
+    showInteractiveShift,
+    widthLabel,
+    heightLabel,
+  } = pictorial;
+
+  const showLengthVal =
+    isAnswered || (unknownTarget !== 'side' && unknownTarget !== 'length');
+  const showWidthVal =
+    isAnswered || (unknownTarget !== 'side' && unknownTarget !== 'width');
+  const showPerimVal =
+    isAnswered ||
+    (unknownTarget !== 'perimeter' &&
+      unknownTarget !== 'half_perimeter' &&
+      unknownTarget !== 'fence_with_gate');
+  const showRecessVal = isAnswered || unknownTarget !== 'recess_depth';
+
+  const wText =
+    widthLabel ||
+    (showLengthVal ? `${outerWidth} ${unitLabel}` : `? ${unitLabel}`);
+  const hText =
+    heightLabel ||
+    (showWidthVal ? `${outerHeight} ${unitLabel}` : `? ${unitLabel}`);
+  const pText = showPerimVal
+    ? `Chu vi = ${expectedPerimeter} ${unitLabel}`
+    : unknownTarget === 'half_perimeter'
+    ? `Nửa chu vi = ? ${unitLabel}`
+    : unknownTarget === 'fence_with_gate' && gateWidth
+    ? `Hàng rào (trừ cổng ${gateWidth} ${unitLabel}) = ?`
+    : `Chu vi = ? ${unitLabel}`;
+
+  // Proportional bounding box inside SVG (viewBox 0 0 560 250)
+  const ratio = Math.min(2.2, Math.max(0.55, outerWidth / Math.max(1, outerHeight)));
+  const maxBoxH = 148;
+  const maxBoxW = 290;
+  let boxW = Math.min(maxBoxW, Math.round(maxBoxH * ratio));
+  let boxH = Math.min(maxBoxH, Math.round(boxW / ratio));
+  if (shapeKind === 'square') {
+    const sq = 136;
+    boxW = sq;
+    boxH = sq;
+  }
+  const ox = Math.round((560 - boxW) / 2);
+  const oy = Math.round((238 - boxH) / 2) + 4;
+
+  const canToggleShift =
+    showInteractiveShift !== false &&
+    (shapeKind === 'rectangle' ||
+      shapeKind === 'l_shape' ||
+      shapeKind === 'staircase' ||
+      shapeKind === 'u_shape' ||
+      shapeKind === 't_shape');
+
+  const toggleButtonLabel =
+    shapeKind === 'rectangle'
+      ? shiftedView
+        ? 'Xem toàn bộ 4 cạnh'
+        : 'Tách Nửa Chu Vi (1 Dài + 1 Rộng)'
+      : shapeKind === 'u_shape' || shapeKind === 't_shape'
+      ? shiftedView
+        ? 'Trở về hình ghép ban đầu'
+        : 'Dời cạnh & Soi 2 cạnh lõm (+2×d)'
+      : shiftedView
+      ? 'Trở về hình ghép ban đầu'
+      : 'Dời cạnh tạo Hình chữ nhật (Side-Shift)';
+
+  const renderShapeSVG = () => {
+    // 1. SQUARE
+    if (shapeKind === 'square') {
+      return (
+        <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ chu vi hình vuông">
+          <defs>
+            <pattern id="perimGridSq" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(103,232,249,0.08)" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect x="16" y="10" width="528" height="230" rx="14" fill="url(#perimGridSq)" />
+          <rect
+            x={ox}
+            y={oy}
+            width={boxW}
+            height={boxH}
+            fill="rgba(56,189,248,0.16)"
+            stroke="#38BDF8"
+            strokeWidth="3.5"
+            rx="3"
+          />
+          {/* Equal-side congruence ticks on all 4 sides */}
+          <line x1={ox + boxW / 2} y1={oy - 6} x2={ox + boxW / 2} y2={oy + 6} stroke="#FBBF24" strokeWidth="2.5" />
+          <line x1={ox + boxW / 2} y1={oy + boxH - 6} x2={ox + boxW / 2} y2={oy + boxH + 6} stroke="#FBBF24" strokeWidth="2.5" />
+          <line x1={ox - 6} y1={oy + boxH / 2} x2={ox + 6} y2={oy + boxH / 2} stroke="#FBBF24" strokeWidth="2.5" />
+          <line x1={ox + boxW - 6} y1={oy + boxH / 2} x2={ox + boxW + 6} y2={oy + boxH / 2} stroke="#FBBF24" strokeWidth="2.5" />
+          {/* Right angle corner marker */}
+          <path d={`M ${ox} ${oy + 14} L ${ox + 14} ${oy + 14} L ${ox + 14} ${oy}`} fill="none" stroke="#67E8F9" strokeWidth="1.6" />
+          {/* Side labels */}
+          <text x={ox + boxW / 2} y={oy - 14} textAnchor="middle" fill="#E0F2FE" fontSize="14" fontWeight="800">
+            Cạnh = {wText}
+          </text>
+          <text x={ox + boxW + 16} y={oy + boxH / 2 + 5} textAnchor="start" fill="#BAE6FD" fontSize="13" fontWeight="700">
+            {wText}
+          </text>
+          {/* Center badge */}
+          <text x={ox + boxW / 2} y={oy + boxH / 2 - 4} textAnchor="middle" fill="#FDE68A" fontSize="13" fontWeight="800">
+            4 cạnh bằng nhau
+          </text>
+          <text x={ox + boxW / 2} y={oy + boxH / 2 + 16} textAnchor="middle" fill="#67E8F9" fontSize="13" fontWeight="900">
+            {pText}
+          </text>
+        </svg>
+      );
+    }
+
+    // 2. RECTANGLE (with optional Half-Perimeter highlight & gate opening)
+    if (shapeKind === 'rectangle') {
+      const gatePx =
+        unknownTarget === 'fence_with_gate' && gateWidth
+          ? Math.min(boxW * 0.36, Math.max(36, (gateWidth / Math.max(1, outerWidth)) * boxW))
+          : 0;
+      const gateStartX = ox + (boxW - gatePx) / 2;
+
+      return (
+        <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ chu vi hình chữ nhật">
+          <defs>
+            <pattern id="perimGridRect" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(103,232,249,0.08)" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect x="16" y="10" width="528" height="230" rx="14" fill="url(#perimGridRect)" />
+          <rect
+            x={ox}
+            y={oy}
+            width={boxW}
+            height={boxH}
+            fill="rgba(56,189,248,0.14)"
+            stroke={shiftedView ? 'rgba(148,163,184,0.45)' : '#38BDF8'}
+            strokeWidth={shiftedView ? '2.5' : '3.5'}
+            strokeDasharray={shiftedView ? '6 5' : undefined}
+            rx="3"
+          />
+          {/* Half-perimeter highlight: Top (Length) + Right (Width) */}
+          {shiftedView && (
+            <path
+              d={`M ${ox} ${oy} L ${ox + boxW} ${oy} L ${ox + boxW} ${oy + boxH}`}
+              fill="none"
+              stroke="#FBBF24"
+              strokeWidth="4.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+          {/* Gate opening on bottom side if fence_with_gate */}
+          {gatePx > 0 && (
+            <>
+              <line
+                x1={gateStartX}
+                y1={oy + boxH}
+                x2={gateStartX + gatePx}
+                y2={oy + boxH}
+                stroke="#060D24"
+                strokeWidth="6"
+              />
+              <line
+                x1={gateStartX}
+                y1={oy + boxH}
+                x2={gateStartX + gatePx}
+                y2={oy + boxH}
+                stroke="#F59E0B"
+                strokeWidth="2.5"
+                strokeDasharray="4 4"
+              />
+              <text
+                x={ox + boxW / 2}
+                y={oy + boxH + 22}
+                textAnchor="middle"
+                fill="#FCD34D"
+                fontSize="12"
+                fontWeight="800"
+              >
+                Cổng ra vào: {gateWidth} {unitLabel} (không rào)
+              </text>
+            </>
+          )}
+          {/* Length & Width labels */}
+          <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill={shiftedView ? '#FDE68A' : '#E0F2FE'} fontSize="14" fontWeight="800">
+            Chiều dài = {wText}
+          </text>
+          <text x={ox + boxW + 14} y={oy + boxH / 2 + 5} textAnchor="start" fill={shiftedView ? '#FDE68A' : '#BAE6FD'} fontSize="13.5" fontWeight="800">
+            Rộng = {hText}
+          </text>
+          {/* Center summary */}
+          <text x={ox + boxW / 2} y={oy + boxH / 2 - 4} textAnchor="middle" fill="#67E8F9" fontSize="13.5" fontWeight="900">
+            {shiftedView ? 'Nửa chu vi = Dài + Rộng' : pText}
+          </text>
+          <text x={ox + boxW / 2} y={oy + boxH / 2 + 16} textAnchor="middle" fill="#CBD5E1" fontSize="11.5" fontWeight="700">
+            {shiftedView
+              ? 'Chu vi = Nửa chu vi × 2'
+              : '2 cạnh dài bằng nhau · 2 cạnh rộng bằng nhau'}
+          </text>
+        </svg>
+      );
+    }
+
+    // 3. L-SHAPE or STAIRCASE (Side-Shifting to Bounding Rectangle!)
+    if (shapeKind === 'l_shape' || shapeKind === 'staircase') {
+      const cw = Math.round(
+        boxW *
+          Math.min(0.62, Math.max(0.28, (cutWidth || outerWidth * 0.4) / Math.max(1, outerWidth)))
+      );
+      const ch = Math.round(
+        boxH *
+          Math.min(0.62, Math.max(0.28, (cutHeight || outerHeight * 0.45) / Math.max(1, outerHeight)))
+      );
+      const stepX = ox + boxW - cw;
+      const stepY = oy + ch;
+
+      const polyPoints =
+        shapeKind === 'l_shape'
+          ? `${ox},${oy} ${stepX},${oy} ${stepX},${stepY} ${ox + boxW},${stepY} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`
+          : `${ox},${oy} ${ox + Math.round(boxW * 0.34)},${oy} ${ox + Math.round(boxW * 0.34)},${oy + Math.round(boxH * 0.33)} ${ox + Math.round(boxW * 0.67)},${oy + Math.round(boxH * 0.33)} ${ox + Math.round(boxW * 0.67)},${oy + Math.round(boxH * 0.66)} ${ox + boxW},${oy + Math.round(boxH * 0.66)} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`;
+
+      return (
+        <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ dời cạnh tính chu vi hình ghép">
+          <defs>
+            <pattern id="perimGridL" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(103,232,249,0.08)" strokeWidth="1" />
+            </pattern>
+            <marker id="shiftArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24" />
+            </marker>
+          </defs>
+          <rect x="16" y="10" width="528" height="230" rx="14" fill="url(#perimGridL)" />
+
+          {/* Outer bounding rectangle projection when shiftedView is active */}
+          {shiftedView && (
+            <rect
+              x={ox}
+              y={oy}
+              width={boxW}
+              height={boxH}
+              fill="rgba(251,191,36,0.08)"
+              stroke="#FBBF24"
+              strokeWidth="3"
+              strokeDasharray="7 5"
+            />
+          )}
+
+          {/* Original Composite Polygon */}
+          <polygon
+            points={polyPoints}
+            fill="rgba(56,189,248,0.18)"
+            stroke="#38BDF8"
+            strokeWidth="3.2"
+            strokeLinejoin="round"
+          />
+
+          {/* Side-shift arrows demonstrating pushing-out method */}
+          {shiftedView && shapeKind === 'l_shape' && (
+            <>
+              {/* Push inner horizontal edge UP */}
+              <line
+                x1={stepX + cw / 2}
+                y1={stepY - 4}
+                x2={stepX + cw / 2}
+                y2={oy + 6}
+                stroke="#FBBF24"
+                strokeWidth="2.4"
+                markerEnd="url(#shiftArrow)"
+              />
+              {/* Push inner vertical edge RIGHT */}
+              <line
+                x1={stepX + 4}
+                y1={oy + ch / 2}
+                x2={ox + boxW - 6}
+                y2={oy + ch / 2}
+                stroke="#34D399"
+                strokeWidth="2.4"
+                markerEnd="url(#shiftArrow)"
+              />
+              <text x={stepX + cw / 2 + 4} y={oy + ch / 2 - 8} textAnchor="middle" fill="#FDE68A" fontSize="11" fontWeight="800">
+                Dời ra khung ngoài!
+              </text>
+            </>
+          )}
+
+          {shiftedView && shapeKind === 'staircase' && (
+            <>
+              <line
+                x1={ox + Math.round(boxW * 0.5)}
+                y1={oy + Math.round(boxH * 0.33) - 3}
+                x2={ox + Math.round(boxW * 0.5)}
+                y2={oy + 6}
+                stroke="#FBBF24"
+                strokeWidth="2.2"
+                markerEnd="url(#shiftArrow)"
+              />
+              <line
+                x1={ox + Math.round(boxW * 0.67) + 3}
+                y1={oy + Math.round(boxH * 0.5)}
+                x2={ox + boxW - 6}
+                y2={oy + Math.round(boxH * 0.5)}
+                stroke="#34D399"
+                strokeWidth="2.2"
+                markerEnd="url(#shiftArrow)"
+              />
+              <text x={ox + Math.round(boxW * 0.8)} y={oy + 24} textAnchor="middle" fill="#FDE68A" fontSize="11" fontWeight="800">
+                Dời bậc thang!
+              </text>
+            </>
+          )}
+
+          {/* Outer dimensions */}
+          <text x={ox + boxW / 2} y={oy + boxH + 22} textAnchor="middle" fill="#E0F2FE" fontSize="13.5" fontWeight="800">
+            Chiều ngang ngoài = {wText}
+          </text>
+          <text x={ox - 12} y={oy + boxH / 2 + 4} textAnchor="end" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            Cao = {hText}
+          </text>
+          <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="800">
+            {shiftedView
+              ? 'Sau khi dời cạnh = Đúng hình chữ nhật bao ngoài!'
+              : pText}
+          </text>
+        </svg>
+      );
+    }
+
+    // 4. U-SHAPE or T-SHAPE (Bounding Rectangle + 2 EXTRA RECESSED WALLS!)
+    if (shapeKind === 'u_shape' || shapeKind === 't_shape') {
+      const rDepthPx = Math.round(
+        boxH * Math.min(0.55, Math.max(0.28, (recessDepth || outerHeight * 0.4) / Math.max(1, outerHeight)))
+      );
+      const rWidthPx = Math.round(
+        boxW * Math.min(0.45, Math.max(0.26, (recessWidth || outerWidth * 0.34) / Math.max(1, outerWidth)))
+      );
+      const notchLeft = ox + Math.round((boxW - rWidthPx) / 2);
+      const notchRight = notchLeft + rWidthPx;
+      const notchBottom = oy + rDepthPx;
+
+      const uPoints = `${ox},${oy} ${notchLeft},${oy} ${notchLeft},${notchBottom} ${notchRight},${notchBottom} ${notchRight},${oy} ${ox + boxW},${oy} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`;
+
+      return (
+        <svg viewBox="0 0 560 255" className="w-full h-auto max-h-[250px]" role="img" aria-label="Sơ đồ hình chữ U có 2 cạnh lõm">
+          <defs>
+            <pattern id="perimGridU" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(103,232,249,0.08)" strokeWidth="1" />
+            </pattern>
+            <marker id="uShiftArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#34D399" />
+            </marker>
+          </defs>
+          <rect x="16" y="10" width="528" height="235" rx="14" fill="url(#perimGridU)" />
+
+          {/* Polygon fill */}
+          <polygon
+            points={uPoints}
+            fill="rgba(56,189,248,0.16)"
+            stroke="#38BDF8"
+            strokeWidth="3.2"
+            strokeLinejoin="round"
+          />
+
+          {/* Highlight the 2 EXTRA vertical recessed walls */}
+          <line
+            x1={notchLeft}
+            y1={oy}
+            x2={notchLeft}
+            y2={notchBottom}
+            stroke="#F59E0B"
+            strokeWidth={shiftedView ? '4.8' : '3.8'}
+          />
+          <line
+            x1={notchRight}
+            y1={oy}
+            x2={notchRight}
+            y2={notchBottom}
+            stroke="#F59E0B"
+            strokeWidth={shiftedView ? '4.8' : '3.8'}
+          />
+
+          {/* Dashed shifted top segment when shiftedView is active */}
+          {shiftedView && (
+            <>
+              <line
+                x1={notchLeft}
+                y1={oy}
+                x2={notchRight}
+                y2={oy}
+                stroke="#34D399"
+                strokeWidth="3"
+                strokeDasharray="6 4"
+              />
+              <line
+                x1={(notchLeft + notchRight) / 2}
+                y1={notchBottom - 3}
+                x2={(notchLeft + notchRight) / 2}
+                y2={oy + 6}
+                stroke="#34D399"
+                strokeWidth="2.2"
+                markerEnd="url(#uShiftArrow)"
+              />
+            </>
+          )}
+
+          {/* Labels for the 2 recessed walls */}
+          <text
+            x={notchLeft - 8}
+            y={oy + rDepthPx / 2 + 4}
+            textAnchor="end"
+            fill="#FCD34D"
+            fontSize="12"
+            fontWeight="900"
+          >
+            +{showRecessVal ? `${recessDepth}` : '?'}
+          </text>
+          <text
+            x={notchRight + 8}
+            y={oy + rDepthPx / 2 + 4}
+            textAnchor="start"
+            fill="#FCD34D"
+            fontSize="12"
+            fontWeight="900"
+          >
+            +{showRecessVal ? `${recessDepth}` : '?'}
+          </text>
+
+          {/* Outer labels */}
+          <text x={ox + boxW / 2} y={oy + boxH + 22} textAnchor="middle" fill="#E0F2FE" fontSize="13.5" fontWeight="800">
+            Chiều ngang ngoài = {wText}
+          </text>
+          <text x={ox - 12} y={oy + boxH / 2 + 4} textAnchor="end" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            Cao = {hText}
+          </text>
+          <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="800">
+            {shiftedView
+              ? 'Khung ngoài + 2 cạnh lõm màu vàng!'
+              : pText}
+          </text>
+        </svg>
+      );
+    }
+
+    // 5. JOINED SQUARES (Grid of gridCols × gridRows identical squares)
+    const cellSize = Math.min(72, Math.floor(260 / Math.max(1, gridCols)), Math.floor(140 / Math.max(1, gridRows)));
+    const totalW = cellSize * gridCols;
+    const totalH = cellSize * gridRows;
+    const jx = Math.round((560 - totalW) / 2);
+    const jy = Math.round((238 - totalH) / 2) + 4;
+
+    return (
+      <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ ghép các hình vuông bằng nhau">
+        <defs>
+          <pattern id="perimGridJoin" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(103,232,249,0.08)" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect x="16" y="10" width="528" height="230" rx="14" fill="url(#perimGridJoin)" />
+
+        {/* Individual square fills & dashed internal shared edges */}
+        {Array.from({ length: gridRows }).map((_, r) =>
+          Array.from({ length: gridCols }).map((__, c) => (
+            <rect
+              key={`${r}-${c}`}
+              x={jx + c * cellSize}
+              y={jy + r * cellSize}
+              width={cellSize}
+              height={cellSize}
+              fill={(r + c) % 2 === 0 ? 'rgba(56,189,248,0.16)' : 'rgba(52,211,153,0.16)'}
+              stroke="rgba(251,191,36,0.55)"
+              strokeWidth="1.6"
+              strokeDasharray="4 4"
+            />
+          ))
+        )}
+
+        {/* Solid bright outer perimeter frame */}
+        <rect
+          x={jx}
+          y={jy}
+          width={totalW}
+          height={totalH}
+          fill="none"
+          stroke="#38BDF8"
+          strokeWidth="4"
+          rx="2"
+        />
+
+        {/* Labels */}
+        <text x={jx + totalW / 2} y={jy - 12} textAnchor="middle" fill="#E0F2FE" fontSize="13.5" fontWeight="800">
+          {gridCols} ô ngang ({squareSide ? `${squareSide} ${unitLabel}/ô` : wText})
+        </text>
+        <text x={jx + totalW + 12} y={jy + totalH / 2 + 4} textAnchor="start" fill="#BAE6FD" fontSize="13" fontWeight="800">
+          {gridRows} ô cao
+        </text>
+        <text x={jx + totalW / 2} y={jy + totalH + 22} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="800">
+          Đường nét đứt bên trong KHÔNG tính vào chu vi · {pText}
+        </text>
+      </svg>
+    );
+  };
+
+  return (
+    <div className="space-y-3">
+      {canToggleShift && (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-semibold text-[color:var(--mm-ink-secondary)]">
+            {sideShiftHint || 'Quan sát đường viền bao ngoài để xác định chu vi chính xác'}
+          </span>
+          <button
+            type="button"
+            onClick={() => setShiftedView((prev) => !prev)}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all duration-200 cursor-pointer ${
+              shiftedView
+                ? 'bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_70%,transparent)] border-[color:var(--mm-amber-accent)] text-[color:var(--mm-amber-bright)] shadow-[0_0_16px_rgba(251,191,36,0.28)]'
+                : 'bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_60%,transparent)] border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-bright)] hover:border-[color:var(--mm-cyan-accent)]'
+            }`}
+          >
+            <ArrowLeftRight className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{toggleButtonLabel}</span>
+          </button>
+        </div>
+      )}
+
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_65%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.58)]">
+        {renderShapeSVG()}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Step 2F: Singapore Place Value Chart & Number Line (Phạm vi 10 000 — Đĩa số & Tia số làm tròn)
+ */
+const CPASvgPlaceValueDiagram: React.FC<{
+  pictorial: PlaceValuePictorialSpec;
+  isAnswered: boolean;
+}> = ({ pictorial, isAnswered }) => {
+  const [showRegroupGuide, setShowRegroupGuide] = useState(false);
+
+  useEffect(() => {
+    setShowRegroupGuide(false);
+  }, [pictorial]);
+
+  const splitDigits = (n: number) => ({
+    thousands: Math.floor(n / 1000) % 10,
+    hundreds: Math.floor(n / 100) % 10,
+    tens: Math.floor(n / 10) % 10,
+    ones: n % 10,
+  });
+
+  const cols: Array<{
+    key: 'thousands' | 'hundreds' | 'tens' | 'ones';
+    label: string;
+    discText: string;
+    fill: string;
+    stroke: string;
+  }> = [
+    { key: 'thousands', label: 'Hàng Nghìn', discText: '1000', fill: '#0284C7', stroke: '#7DD3FC' },
+    { key: 'hundreds', label: 'Hàng Trăm', discText: '100', fill: '#0D9488', stroke: '#5EEAD4' },
+    { key: 'tens', label: 'Hàng Chục', discText: '10', fill: '#7C3AED', stroke: '#C4B5FD' },
+    { key: 'ones', label: 'Hàng Đơn vị', discText: '1', fill: '#D97706', stroke: '#FDE68A' },
+  ];
+
+  const renderPlaceValueSVG = () => {
+    // Mode 1: NUMBER LINE ROUNDING
+    if (
+      pictorial.mode === 'number_line_round' &&
+      pictorial.roundLow !== undefined &&
+      pictorial.roundHigh !== undefined
+    ) {
+      const low = pictorial.roundLow;
+      const high = pictorial.roundHigh;
+      const mid = (low + high) / 2;
+      const ratio = Math.min(1, Math.max(0, (pictorial.primaryNumber - low) / Math.max(1, high - low)));
+      const lineX1 = 70;
+      const lineX2 = 490;
+      const lineY = 128;
+      const midX = (lineX1 + lineX2) / 2;
+      const numX = lineX1 + ratio * (lineX2 - lineX1);
+
+      return (
+        <svg viewBox="0 0 560 215" className="w-full h-auto max-h-[215px]" role="img" aria-label="Tia số làm tròn trong phạm vi 10 000">
+          <rect x="14" y="10" width="532" height="195" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+          <text x="280" y="34" textAnchor="middle" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            {pictorial.chartHint || `Tia số làm tròn đến hàng ${pictorial.roundTo}`}
+          </text>
+
+          {/* Main number line */}
+          <line x1={lineX1} y1={lineY} x2={lineX2} y2={lineY} stroke="#38BDF8" strokeWidth="4" strokeLinecap="round" />
+
+          {/* 10 sub-ticks */}
+          {Array.from({ length: 11 }).map((_, idx) => {
+            const tx = lineX1 + (idx / 10) * (lineX2 - lineX1);
+            const isMajor = idx === 0 || idx === 5 || idx === 10;
+            return (
+              <line
+                key={idx}
+                x1={tx}
+                y1={lineY - (isMajor ? 14 : 7)}
+                x2={tx}
+                y2={lineY + (isMajor ? 14 : 7)}
+                stroke={idx === 5 ? '#F59E0B' : '#7DD3FC'}
+                strokeWidth={isMajor ? 2.8 : 1.4}
+              />
+            );
+          })}
+
+          {/* Low, Mid, High labels */}
+          <text x={lineX1} y={lineY + 34} textAnchor="middle" fill="#E0F2FE" fontSize="14" fontWeight="900">
+            {low}
+          </text>
+          <text x={midX} y={lineY + 32} textAnchor="middle" fill="#FCD34D" fontSize="12.5" fontWeight="800">
+            Mốc giữa: {mid}
+          </text>
+          <text x={lineX2} y={lineY + 34} textAnchor="middle" fill="#E0F2FE" fontSize="14" fontWeight="900">
+            {high}
+          </text>
+
+          {/* Target number marker */}
+          <line x1={numX} y1={lineY - 46} x2={numX} y2={lineY - 8} stroke="#34D399" strokeWidth="2.4" strokeDasharray="4 3" />
+          <circle cx={numX} cy={lineY} r="7.5" fill="#34D399" stroke="#ECFDF5" strokeWidth="2.5" />
+          <rect x={numX - 38} y={lineY - 72} width="76" height="26" rx="8" fill="#065F46" stroke="#34D399" strokeWidth="1.6" />
+          <text x={numX} y={lineY - 54} textAnchor="middle" fill="#ECFDF5" fontSize="13.5" fontWeight="900">
+            {pictorial.primaryNumber}
+          </text>
+
+          {/* Footer rule */}
+          <text x="280" y="190" textAnchor="middle" fill={isAnswered ? '#6EE7B7' : '#FDE68A'} fontSize="12.5" fontWeight="800">
+            {isAnswered
+              ? `Số ${pictorial.primaryNumber} làm tròn thành ${pictorial.expectedResult}`
+              : 'Từ mốc giữa trở lên → làm tròn LÊN; nhỏ hơn mốc giữa → làm tròn XUỐNG'}
+          </text>
+        </svg>
+      );
+    }
+
+    // Mode 2: BUILD NUMBER FROM DIGIT CARDS
+    if (pictorial.mode === 'build_number' && pictorial.digitCards && pictorial.digitCards.length > 0) {
+      const answerDigits = splitDigits(pictorial.expectedResult);
+      const ansArr = [answerDigits.thousands, answerDigits.hundreds, answerDigits.tens, answerDigits.ones];
+
+      return (
+        <svg viewBox="0 0 560 225" className="w-full h-auto max-h-[225px]" role="img" aria-label="Ghép số 4 chữ số từ thẻ số">
+          <rect x="14" y="10" width="532" height="205" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+          <text x="280" y="34" textAnchor="middle" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            {pictorial.chartHint || 'Thẻ chữ số cho trước — sắp xếp vào đúng vị trí hàng'}
+          </text>
+
+          {/* Available digit cards */}
+          {pictorial.digitCards.map((d, i) => {
+            const startX = 280 - (pictorial.digitCards!.length * 64) / 2 + i * 64 + 8;
+            return (
+              <g key={i}>
+                <rect x={startX} y={48} width="48" height="44" rx="10" fill="#1E293B" stroke="#38BDF8" strokeWidth="2.2" />
+                <text x={startX + 24} y={77} textAnchor="middle" fill="#F0F9FF" fontSize="20" fontWeight="900">
+                  {d}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* 4 Place value target slots */}
+          {cols.map((col, idx) => {
+            const sx = 44 + idx * 122;
+            const digitVal = isAnswered ? String(ansArr[idx]) : '?';
+            return (
+              <g key={col.key}>
+                <rect x={sx} y={114} width="108" height="28" rx="7" fill={col.fill} fillOpacity="0.88" />
+                <text x={sx + 54} y={132} textAnchor="middle" fill="#FFFFFF" fontSize="11.5" fontWeight="800">
+                  {col.label}
+                </text>
+                <rect
+                  x={sx}
+                  y={146}
+                  width="108"
+                  height="52"
+                  rx="10"
+                  fill={isAnswered ? 'rgba(16,185,129,0.18)' : 'rgba(15,23,42,0.75)'}
+                  stroke={isAnswered ? '#34D399' : col.stroke}
+                  strokeWidth="2.2"
+                  strokeDasharray={isAnswered ? undefined : '5 4'}
+                />
+                <text
+                  x={sx + 54}
+                  y={180}
+                  textAnchor="middle"
+                  fill={isAnswered ? '#6EE7B7' : '#FCD34D'}
+                  fontSize="24"
+                  fontWeight="900"
+                >
+                  {digitVal}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      );
+    }
+
+    // Mode 3: COMPARE OR ADD/SUBTRACT TWO NUMBERS
+    if ((pictorial.mode === 'compare' || pictorial.mode === 'add_sub') && pictorial.secondaryNumber !== undefined) {
+      const d1 = splitDigits(pictorial.primaryNumber);
+      const d2 = splitDigits(pictorial.secondaryNumber);
+      const dRes = splitDigits(pictorial.expectedResult);
+      const arr1 = [d1.thousands, d1.hundreds, d1.tens, d1.ones];
+      const arr2 = [d2.thousands, d2.hundreds, d2.tens, d2.ones];
+      const arrRes = [dRes.thousands, dRes.hundreds, dRes.tens, dRes.ones];
+      const isAddSub = pictorial.mode === 'add_sub';
+      const opSymbol = pictorial.operation === 'subtract' ? '−' : '+';
+
+      return (
+        <svg viewBox="0 0 560 235" className="w-full h-auto max-h-[235px]" role="img" aria-label="Bảng hàng so sánh hoặc đặt tính số 4 chữ số">
+          <rect x="14" y="10" width="532" height="215" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+          <text x="280" y="32" textAnchor="middle" fill="#BAE6FD" fontSize="12.5" fontWeight="800">
+            {pictorial.chartHint ||
+              (isAddSub
+                ? 'Đặt tính thẳng cột: Đơn vị → Chục → Trăm → Nghìn'
+                : 'So sánh từng hàng từ trái sang phải: Nghìn → Trăm → Chục → Đơn vị')}
+          </text>
+
+          {/* Column headers */}
+          {cols.map((col, idx) => {
+            const cx = 86 + idx * 108;
+            const isHL = pictorial.highlightPlace === col.key;
+            return (
+              <g key={col.key}>
+                <rect
+                  x={cx}
+                  y={44}
+                  width="98"
+                  height="26"
+                  rx="7"
+                  fill={col.fill}
+                  stroke={isHL ? '#FDE047' : 'none'}
+                  strokeWidth={isHL ? 2.5 : 0}
+                />
+                <text x={cx + 49} y={61} textAnchor="middle" fill="#FFFFFF" fontSize="11.5" fontWeight="800">
+                  {col.label}
+                </text>
+
+                {/* Row 1 */}
+                <rect x={cx} y={76} width="98" height="38" rx="8" fill="rgba(56,189,248,0.12)" stroke="rgba(125,211,252,0.3)" />
+                <text x={cx + 49} y={102} textAnchor="middle" fill="#F0F9FF" fontSize="20" fontWeight="900">
+                  {arr1[idx]}
+                </text>
+
+                {/* Row 2 */}
+                <rect x={cx} y={120} width="98" height="38" rx="8" fill="rgba(168,85,247,0.12)" stroke="rgba(196,181,253,0.3)" />
+                <text x={cx + 49} y={146} textAnchor="middle" fill="#E9D5FF" fontSize="20" fontWeight="900">
+                  {arr2[idx]}
+                </text>
+
+                {/* Result Row for add_sub */}
+                {isAddSub && (
+                  <>
+                    <rect
+                      x={cx}
+                      y={168}
+                      width="98"
+                      height="42"
+                      rx="8"
+                      fill={isAnswered ? 'rgba(16,185,129,0.2)' : 'rgba(251,191,36,0.1)'}
+                      stroke={isAnswered ? '#34D399' : '#F59E0B'}
+                      strokeWidth="2"
+                      strokeDasharray={isAnswered ? undefined : '4 4'}
+                    />
+                    <text
+                      x={cx + 49}
+                      y={196}
+                      textAnchor="middle"
+                      fill={isAnswered ? '#6EE7B7' : '#FCD34D'}
+                      fontSize="21"
+                      fontWeight="900"
+                    >
+                      {isAnswered ? arrRes[idx] : '?'}
+                    </text>
+                  </>
+                )}
+              </g>
+            );
+          })}
+
+          {/* Left side labels */}
+          <text x="50" y="100" textAnchor="middle" fill="#7DD3FC" fontSize="12" fontWeight="800">
+            Số 1
+          </text>
+          <text x="50" y="144" textAnchor="middle" fill="#C4B5FD" fontSize={isAddSub ? '22' : '12'} fontWeight="900">
+            {isAddSub ? opSymbol : 'Số 2'}
+          </text>
+          {isAddSub ? (
+            <line x1="78" y1="163" x2="516" y2="163" stroke="#94A3B8" strokeWidth="2.5" />
+          ) : (
+            <text x="280" y="196" textAnchor="middle" fill={isAnswered ? '#6EE7B7' : '#FDE68A'} fontSize="13.5" fontWeight="800">
+              {isAnswered
+                ? `Kết quả kiểm chứng: ${pictorial.expectedResult}`
+                : 'Quan sát cột đầu tiên có chữ số khác nhau từ trái sang phải'}
+            </text>
+          )}
+        </svg>
+      );
+    }
+
+    // Mode 4: DECOMPOSE (4-column Place Value Discs chart)
+    const d = splitDigits(pictorial.primaryNumber);
+    const counts = {
+      thousands: d.thousands,
+      hundreds: d.hundreds,
+      tens: d.tens,
+      ones: d.ones,
+    };
+
+    return (
+      <svg viewBox="0 0 560 245" className="w-full h-auto max-h-[245px]" role="img" aria-label="Bảng đĩa số Singapore 4 hàng đến 10 000">
+        <rect x="14" y="10" width="532" height="225" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+        <text x="280" y="33" textAnchor="middle" fill="#BAE6FD" fontSize="13" fontWeight="800">
+          {pictorial.chartHint || 'Bảng đĩa số Singapore: Nghìn · Trăm · Chục · Đơn vị'}
+        </text>
+
+        {cols.map((col, idx) => {
+          const cx = 28 + idx * 128;
+          const cnt = counts[col.key];
+          const isHL = pictorial.highlightPlace === col.key;
+          const hideDigit = !isAnswered && pictorial.hideResultBeforeSolve && isHL;
+
+          return (
+            <g key={col.key}>
+              {/* Column frame */}
+              <rect
+                x={cx}
+                y={46}
+                width="120"
+                height="176"
+                rx="11"
+                fill={isHL ? 'rgba(251,191,36,0.12)' : 'rgba(30,41,59,0.55)'}
+                stroke={isHL ? '#FBBF24' : 'rgba(148,163,184,0.28)'}
+                strokeWidth={isHL ? 2.4 : 1.2}
+              />
+              {/* Header */}
+              <rect x={cx + 4} y={50} width="112" height="26" rx="7" fill={col.fill} />
+              <text x={cx + 60} y={67} textAnchor="middle" fill="#FFFFFF" fontSize="11.5" fontWeight="800">
+                {col.label}
+              </text>
+
+              {/* Number Discs (up to 9 discs neatly arranged in 3x3 grid) */}
+              {!hideDigit ? (
+                Array.from({ length: cnt }).map((_, i) => {
+                  const row = Math.floor(i / 3);
+                  const colPos = i % 3;
+                  const dx = cx + 26 + colPos * 34;
+                  const dy = 96 + row * 31;
+                  return (
+                    <g key={i}>
+                      <circle cx={dx} cy={dy} r="14" fill={col.fill} stroke={col.stroke} strokeWidth="1.8" />
+                      <text x={dx} y={dy + 4} textAnchor="middle" fill="#FFFFFF" fontSize="8.5" fontWeight="900">
+                        {col.discText}
+                      </text>
+                    </g>
+                  );
+                })
+              ) : (
+                <text x={cx + 60} y={134} textAnchor="middle" fill="#FCD34D" fontSize="28" fontWeight="900">
+                  ?
+                </text>
+              )}
+
+              {/* Bottom count footer */}
+              <rect x={cx + 10} y={190} width="100" height="24" rx="6" fill="rgba(15,23,42,0.85)" />
+              <text x={cx + 60} y={206} textAnchor="middle" fill={isHL ? '#FDE047' : '#E0F2FE'} fontSize="12" fontWeight="900">
+                {hideDigit ? '? đĩa' : `${cnt} đĩa`}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    );
+  };
+
+  return (
+    <div className="space-y-3">
+      {pictorial.mode === 'add_sub' && (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-semibold text-[color:var(--mm-ink-secondary)]">
+            {showRegroupGuide
+              ? 'Quy tắc đổi hàng Singapore: 10 đơn vị = 1 chục · 10 chục = 1 trăm · 10 trăm = 1 nghìn'
+              : 'Tính lần lượt từng cột từ phải sang trái (Đơn vị → Chục → Trăm → Nghìn)'}
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowRegroupGuide((v) => !v)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_60%,transparent)] border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-bright)] hover:border-[color:var(--mm-cyan-accent)] cursor-pointer transition-all"
+          >
+            <ArrowLeftRight className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{showRegroupGuide ? 'Ẩn mẹo nhớ/mượn' : 'Xem quy đổi 10 đĩa'}</span>
+          </button>
+        </div>
+      )}
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_65%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.58)]">
+        {renderPlaceValueSVG()}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Step 2G: Singapore Number Sequence & Jump Arcs (Chuỗi số quy luật)
+ */
+const CPASvgSequencePatternDiagram: React.FC<{
+  pictorial: SequencePatternPictorialSpec;
+  isAnswered: boolean;
+}> = ({ pictorial, isAnswered }) => {
+  const [showPatternHint, setShowPatternHint] = useState(false);
+
+  useEffect(() => {
+    setShowPatternHint(false);
+  }, [pictorial]);
+
+  const terms = pictorial.terms;
+  const n = terms.length;
+  const nodeW = Math.min(72, Math.floor(460 / Math.max(4, n)));
+  const gap = Math.max(14, Math.floor((512 - n * nodeW) / Math.max(1, n - 1)));
+  const totalRowW = n * nodeW + (n - 1) * gap;
+  const startX = Math.round((560 - totalRowW) / 2);
+  const nodeY = 104;
+  const nodeH = 48;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-xs font-semibold text-[color:var(--mm-ink-secondary)]">
+          {showPatternHint ? pictorial.ruleHint : 'Quan sát mối liên hệ giữa các số hạng liền kề trên dãy số'}
+        </span>
+        <button
+          type="button"
+          onClick={() => setShowPatternHint((v) => !v)}
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all cursor-pointer ${
+            showPatternHint
+              ? 'bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_70%,transparent)] border-[color:var(--mm-amber-accent)] text-[color:var(--mm-amber-bright)]'
+              : 'bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_60%,transparent)] border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-bright)] hover:border-[color:var(--mm-cyan-accent)]'
+          }`}
+        >
+          <ArrowLeftRight className="w-3.5 h-3.5" aria-hidden="true" />
+          <span>{showPatternHint ? 'Ẩn gợi ý quy luật' : 'Hiện gợi ý bước nhảy'}</span>
+        </button>
+      </div>
+
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_65%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.58)]">
+        <svg viewBox="0 0 560 198" className="w-full h-auto max-h-[198px]" role="img" aria-label="Sơ đồ chuỗi số quy luật với cung bước nhảy">
+          <defs>
+            <marker id="seqArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#38BDF8" />
+            </marker>
+            <marker id="seqArrowAmber" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#FBBF24" />
+            </marker>
+          </defs>
+          <rect x="14" y="10" width="532" height="178" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+
+          {/* Curved Jump Arcs */}
+          {terms.slice(0, -1).map((_, idx) => {
+            const x1 = startX + idx * (nodeW + gap) + nodeW / 2;
+            const x2 = startX + (idx + 1) * (nodeW + gap) + nodeW / 2;
+            const midX = (x1 + x2) / 2;
+            const touchesMissing = idx === pictorial.missingIndex || idx + 1 === pictorial.missingIndex;
+            const rawStep = pictorial.stepLabels?.[idx];
+            const arcLabel = isAnswered
+              ? rawStep || ''
+              : touchesMissing
+              ? '?'
+              : showPatternHint && rawStep
+              ? rawStep
+              : '→';
+
+            return (
+              <g key={`arc-${idx}`}>
+                <path
+                  d={`M ${x1} ${nodeY - 4} Q ${midX} ${nodeY - 46} ${x2} ${nodeY - 4}`}
+                  fill="none"
+                  stroke={touchesMissing ? '#FBBF24' : '#38BDF8'}
+                  strokeWidth={touchesMissing ? 2.4 : 1.9}
+                  strokeDasharray={touchesMissing && !isAnswered ? '5 4' : undefined}
+                  markerEnd={touchesMissing ? 'url(#seqArrowAmber)' : 'url(#seqArrow)'}
+                />
+                {arcLabel && (
+                  <text
+                    x={midX}
+                    y={nodeY - 34}
+                    textAnchor="middle"
+                    fill={touchesMissing ? '#FDE68A' : '#7DD3FC'}
+                    fontSize="11.5"
+                    fontWeight="900"
+                  >
+                    {arcLabel}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+
+          {/* Sequence Node Boxes */}
+          {terms.map((val, idx) => {
+            const x = startX + idx * (nodeW + gap);
+            const isMissing = idx === pictorial.missingIndex;
+            const displayVal = isMissing && !isAnswered ? '?' : String(val);
+
+            return (
+              <g key={`node-${idx}`}>
+                <rect
+                  x={x}
+                  y={nodeY}
+                  width={nodeW}
+                  height={nodeH}
+                  rx="10"
+                  fill={
+                    isMissing
+                      ? isAnswered
+                        ? 'rgba(16,185,129,0.24)'
+                        : 'rgba(251,191,36,0.16)'
+                      : 'rgba(56,189,248,0.14)'
+                  }
+                  stroke={isMissing ? (isAnswered ? '#34D399' : '#FBBF24') : '#38BDF8'}
+                  strokeWidth={isMissing ? 2.6 : 1.8}
+                  strokeDasharray={isMissing && !isAnswered ? '5 4' : undefined}
+                />
+                <text
+                  x={x + nodeW / 2}
+                  y={nodeY + 30}
+                  textAnchor="middle"
+                  fill={isMissing ? (isAnswered ? '#6EE7B7' : '#FDE047') : '#F0F9FF'}
+                  fontSize={displayVal.length >= 4 ? '14.5' : '17'}
+                  fontWeight="900"
+                >
+                  {displayVal}
+                </text>
+                <text
+                  x={x + nodeW / 2}
+                  y={nodeY + nodeH + 18}
+                  textAnchor="middle"
+                  fill="#94A3B8"
+                  fontSize="10.5"
+                  fontWeight="700"
+                >
+                  Số {idx + 1}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Step 2H: Singapore Area Grid, Composite L-Shape & Area–Perimeter Link Lab
+ */
+const CPASvgAreaGridDiagram: React.FC<{
+  pictorial: AreaGridPictorialSpec;
+  isAnswered: boolean;
+}> = ({ pictorial, isAnswered }) => {
+  const [altView, setAltView] = useState(false);
+
+  useEffect(() => {
+    setAltView(false);
+  }, [pictorial]);
+
+  const {
+    shapeKind,
+    outerWidth,
+    outerHeight,
+    cutWidth = 0,
+    cutHeight = 0,
+    innerWidth = 0,
+    innerHeight = 0,
+    fullUnitTiles,
+    halfUnitTiles = 0,
+    compareWidth,
+    compareHeight,
+    lengthUnit,
+    areaUnit,
+    unknownTarget,
+    expectedArea,
+    expectedPerimeter,
+    visualHint,
+    showInteractiveToggle,
+  } = pictorial;
+
+  const hideW = !isAnswered && (unknownTarget === 'length' || unknownTarget === 'side');
+  const hideH = !isAnswered && (unknownTarget === 'width' || unknownTarget === 'side');
+  const hideArea = !isAnswered && (unknownTarget === 'area' || unknownTarget === 'tile_count' || unknownTarget === 'area_diff');
+  const hidePerim = !isAnswered && unknownTarget === 'perimeter';
+
+  const wLabel = hideW ? `? ${lengthUnit}` : `${outerWidth} ${lengthUnit}`;
+  const hLabel = hideH ? `? ${lengthUnit}` : `${outerHeight} ${lengthUnit}`;
+  const areaLabel = hideArea ? `Diện tích = ? ${areaUnit}` : `Diện tích = ${expectedArea} ${areaUnit}`;
+
+  const toggleBtnText =
+    shapeKind === 'l_shape_area'
+      ? altView
+        ? 'Đang xem: Trừ bù (Khung − Khuyết)'
+        : 'Chuyển sang: Trừ bù (Khung − Khuyết)'
+      : shapeKind === 'area_perim_link'
+      ? altView
+        ? 'Đang tô: Mặt Diện tích (bên trong)'
+        : 'Đổi nổi bật: Viền Chu vi ↔ Diện tích'
+      : altView
+      ? 'Ẩn lưới ô vuông đơn vị'
+      : 'Hiện lưới ô vuông 1×1';
+
+  const renderAreaSVG = () => {
+    // 1. UNIT GRID (with optional half-unit triangles)
+    if (shapeKind === 'unit_grid') {
+      const cols = Math.min(10, Math.max(2, outerWidth));
+      const rows = Math.min(6, Math.max(2, outerHeight));
+      const cell = Math.min(34, Math.floor(320 / cols), Math.floor(144 / rows));
+      const gw = cols * cell;
+      const gh = rows * cell;
+      const ox = Math.round((560 - gw) / 2);
+      const oy = Math.round((224 - gh) / 2);
+      const totalFull = fullUnitTiles ?? cols * rows;
+      const totalHalf = halfUnitTiles;
+
+      return (
+        <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Lưới đếm ô vuông đơn vị diện tích">
+          <rect x="14" y="10" width="532" height="230" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+          {Array.from({ length: rows }).map((_, r) =>
+            Array.from({ length: cols }).map((__, c) => {
+              const tileIdx = r * cols + c;
+              const isFull = tileIdx < totalFull;
+              const isHalf = !isFull && tileIdx < totalFull + totalHalf;
+              const x = ox + c * cell;
+              const y = oy + r * cell;
+              return (
+                <g key={`${r}-${c}`}>
+                  <rect
+                    x={x}
+                    y={y}
+                    width={cell}
+                    height={cell}
+                    fill={isFull ? 'rgba(56,189,248,0.28)' : 'rgba(15,23,42,0.4)'}
+                    stroke="#38BDF8"
+                    strokeWidth="1.4"
+                  />
+                  {isHalf && (
+                    <polygon
+                      points={`${x},${y + cell} ${x + cell},${y + cell} ${x},${y}`}
+                      fill="rgba(251,191,36,0.45)"
+                      stroke="#FBBF24"
+                      strokeWidth="1.5"
+                    />
+                  )}
+                </g>
+              );
+            })
+          )}
+          <text x="280" y={oy - 12} textAnchor="middle" fill="#BAE6FD" fontSize="12.5" fontWeight="800">
+            Mỗi ô vuông nhỏ = 1 {areaUnit} {totalHalf > 0 ? `· Có ${totalHalf} nửa ô tam giác (2 nửa = 1 ô)` : ''}
+          </text>
+          <text x="280" y={oy + gh + 24} textAnchor="middle" fill="#FDE68A" fontSize="13.5" fontWeight="900">
+            {areaLabel}
+          </text>
+        </svg>
+      );
+    }
+
+    // 2. L-SHAPE AREA (Split & Add vs Subtract Cutout)
+    if (shapeKind === 'l_shape_area') {
+      const boxW = 290;
+      const boxH = 154;
+      const ox = Math.round((560 - boxW) / 2);
+      const oy = 46;
+      const cwPx = Math.round(boxW * Math.min(0.65, Math.max(0.25, cutWidth / Math.max(1, outerWidth))));
+      const chPx = Math.round(boxH * Math.min(0.65, Math.max(0.25, cutHeight / Math.max(1, outerHeight))));
+      const stepX = ox + boxW - cwPx;
+      const stepY = oy + chPx;
+      const lPts = `${ox},${oy} ${stepX},${oy} ${stepX},${stepY} ${ox + boxW},${stepY} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`;
+
+      return (
+        <svg viewBox="0 0 560 255" className="w-full h-auto max-h-[250px]" role="img" aria-label="Sơ đồ tính diện tích hình ghép chữ L">
+          <rect x="14" y="10" width="532" height="235" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+
+          {!altView ? (
+            <>
+              {/* Split & Add mode: Region A (left vertical) + Region B (right bottom) */}
+              <rect x={ox} y={oy} width={stepX - ox} height={boxH} fill="rgba(56,189,248,0.26)" />
+              <rect x={stepX} y={stepY} width={cwPx} height={boxH - chPx} fill="rgba(52,211,153,0.28)" />
+              <line x1={stepX} y1={stepY} x2={stepX} y2={oy + boxH} stroke="#FDE047" strokeWidth="2.4" strokeDasharray="6 4" />
+              <text x={ox + (stepX - ox) / 2} y={oy + boxH / 2 + 4} textAnchor="middle" fill="#E0F2FE" fontSize="13" fontWeight="900">
+                Phần A
+              </text>
+              <text x={stepX + cwPx / 2} y={stepY + (boxH - chPx) / 2 + 4} textAnchor="middle" fill="#A7F3D0" fontSize="13" fontWeight="900">
+                Phần B
+              </text>
+            </>
+          ) : (
+            <>
+              {/* Subtract Cutout mode: Full bounding box minus top-right cutout */}
+              <polygon points={lPts} fill="rgba(56,189,248,0.22)" />
+              <rect
+                x={stepX}
+                y={oy}
+                width={cwPx}
+                height={chPx}
+                fill="rgba(244,63,94,0.22)"
+                stroke="#FB7185"
+                strokeWidth="2.2"
+                strokeDasharray="5 4"
+              />
+              <text x={stepX + cwPx / 2} y={oy + chPx / 2 + 4} textAnchor="middle" fill="#FDA4AF" fontSize="11.5" fontWeight="900">
+                Phần khuyết ({cutWidth}×{cutHeight})
+              </text>
+            </>
+          )}
+
+          <polygon points={lPts} fill="none" stroke="#38BDF8" strokeWidth="3.2" strokeLinejoin="round" />
+
+          {/* Dimension labels */}
+          <text x={ox + boxW / 2} y={oy + boxH + 22} textAnchor="middle" fill="#E0F2FE" fontSize="13" fontWeight="800">
+            Đáy ngoài = {outerWidth} {lengthUnit}
+          </text>
+          <text x={ox - 10} y={oy + boxH / 2 + 4} textAnchor="end" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            Cao = {outerHeight} {lengthUnit}
+          </text>
+          <text x={ox + (stepX - ox) / 2} y={oy - 10} textAnchor="middle" fill="#7DD3FC" fontSize="12" fontWeight="800">
+            {outerWidth - cutWidth} {lengthUnit}
+          </text>
+          <text x={ox + boxW + 10} y={stepY + (boxH - chPx) / 2 + 4} textAnchor="start" fill="#6EE7B7" fontSize="12" fontWeight="800">
+            {outerHeight - cutHeight} {lengthUnit}
+          </text>
+          <text x="280" y="236" textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="900">
+            {altView ? 'Chiến lược Trừ bù: S_ngoài − S_khuyết · ' : 'Chiến lược Cắt cộng: S_A + S_B · '}
+            {areaLabel}
+          </text>
+        </svg>
+      );
+    }
+
+    // 3. FRAME BORDER / WALKWAY AROUND GARDEN
+    if (shapeKind === 'frame_border') {
+      const boxW = 300;
+      const boxH = 152;
+      const ox = Math.round((560 - boxW) / 2);
+      const oy = 46;
+      const iwPx = Math.round(boxW * Math.min(0.76, Math.max(0.35, innerWidth / Math.max(1, outerWidth))));
+      const ihPx = Math.round(boxH * Math.min(0.76, Math.max(0.35, innerHeight / Math.max(1, outerHeight))));
+      const ix = ox + Math.round((boxW - iwPx) / 2);
+      const iy = oy + Math.round((boxH - ihPx) / 2);
+
+      return (
+        <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ tính diện tích khung viền lối đi">
+          <rect x="14" y="10" width="532" height="230" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+          <rect x={ox} y={oy} width={boxW} height={boxH} rx="4" fill="rgba(251,191,36,0.25)" stroke="#FBBF24" strokeWidth="3" />
+          <rect x={ix} y={iy} width={iwPx} height={ihPx} rx="3" fill="rgba(15,23,42,0.88)" stroke="#38BDF8" strokeWidth="2.4" strokeDasharray="5 3" />
+
+          <text x={ox + boxW / 2} y={oy - 10} textAnchor="middle" fill="#FDE68A" fontSize="13" fontWeight="800">
+            Khung ngoài: {outerWidth} {lengthUnit} × {outerHeight} {lengthUnit}
+          </text>
+          <text x={ix + iwPx / 2} y={iy + ihPx / 2 + 5} textAnchor="middle" fill="#BAE6FD" fontSize="13" fontWeight="900">
+            Lõi trong: {innerWidth} {lengthUnit} × {innerHeight} {lengthUnit}
+          </text>
+          <text x="280" y={oy + boxH + 26} textAnchor="middle" fill="#6EE7B7" fontSize="13" fontWeight="900">
+            Diện tích phần viền tô vàng = S_ngoài − S_trong · {areaLabel}
+          </text>
+        </svg>
+      );
+    }
+
+    // 4. DUAL COMPARISON (Same Perimeter, Different Area)
+    if (shapeKind === 'area_perim_link' && compareWidth && compareHeight) {
+      return (
+        <svg viewBox="0 0 560 245" className="w-full h-auto max-h-[245px]" role="img" aria-label="So sánh hai hình cùng chu vi nhưng khác diện tích">
+          <rect x="14" y="10" width="532" height="225" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+          <text x="280" y="34" textAnchor="middle" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            So sánh hai hình: Viền Chu vi (vàng) vs Mặt Diện tích (xanh)
+          </text>
+
+          {/* Shape 1 */}
+          <rect x="64" y="64" width="160" height="104" rx="4" fill="rgba(56,189,248,0.22)" stroke="#FBBF24" strokeWidth="3.2" />
+          <text x="144" y="114" textAnchor="middle" fill="#E0F2FE" fontSize="13" fontWeight="900">
+            Hình 1 ({outerWidth}×{outerHeight})
+          </text>
+          <text x="144" y="134" textAnchor="middle" fill="#7DD3FC" fontSize="11.5" fontWeight="800">
+            {hideArea ? `S₁ = ? ${areaUnit}` : `S₁ = ${outerWidth * outerHeight} ${areaUnit}`}
+          </text>
+
+          {/* Shape 2 */}
+          <rect x="336" y="54" width="124" height="124" rx="4" fill="rgba(52,211,153,0.22)" stroke="#FBBF24" strokeWidth="3.2" />
+          <text x="398" y="114" textAnchor="middle" fill="#ECFDF5" fontSize="13" fontWeight="900">
+            Hình 2 ({compareWidth}×{compareHeight})
+          </text>
+          <text x="398" y="134" textAnchor="middle" fill="#6EE7B7" fontSize="11.5" fontWeight="800">
+            {hideArea ? `S₂ = ? ${areaUnit}` : `S₂ = ${compareWidth * compareHeight} ${areaUnit}`}
+          </text>
+
+          <text x="280" y="212" textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="900">
+            Cùng chu vi, hình càng gần hình vuông thì diện tích càng LỚN!
+          </text>
+        </svg>
+      );
+    }
+
+    // 5. SQUARE / RECTANGLE / AREA-PERIMETER LINK
+    const isSq = shapeKind === 'square_area' || outerWidth === outerHeight;
+    const aspect = isSq ? 1 : Math.min(2.1, Math.max(1.25, outerWidth / Math.max(1, outerHeight)));
+    const boxH = isSq ? 136 : 126;
+    const boxW = Math.round(boxH * aspect);
+    const ox = Math.round((560 - boxW) / 2);
+    const oy = 52;
+    const showGrid = outerWidth <= 12 && outerHeight <= 12 && (!showInteractiveToggle || altView || shapeKind !== 'area_perim_link');
+    const highlightPerim = shapeKind === 'area_perim_link' && !altView;
+
+    return (
+      <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ diện tích hình vuông hoặc hình chữ nhật">
+        <rect x="14" y="10" width="532" height="230" rx="14" fill="rgba(15,23,42,0.55)" stroke="rgba(56,189,248,0.22)" />
+
+        <rect
+          x={ox}
+          y={oy}
+          width={boxW}
+          height={boxH}
+          rx="4"
+          fill={highlightPerim ? 'rgba(56,189,248,0.12)' : 'rgba(56,189,248,0.24)'}
+          stroke={highlightPerim ? '#FBBF24' : '#38BDF8'}
+          strokeWidth={highlightPerim ? 4.4 : 3.2}
+        />
+
+        {/* Optional internal unit grid */}
+        {showGrid &&
+          Array.from({ length: outerWidth - 1 }).map((_, i) => {
+            const gx = ox + ((i + 1) / outerWidth) * boxW;
+            return <line key={`vx-${i}`} x1={gx} y1={oy} x2={gx} y2={oy + boxH} stroke="rgba(125,211,252,0.28)" strokeWidth="1" />;
+          })}
+        {showGrid &&
+          Array.from({ length: outerHeight - 1 }).map((_, j) => {
+            const gy = oy + ((j + 1) / outerHeight) * boxH;
+            return <line key={`hy-${j}`} x1={ox} y1={gy} x2={ox + boxW} y2={gy} stroke="rgba(125,211,252,0.28)" strokeWidth="1" />;
+          })}
+
+        {/* Center badge */}
+        <rect x={ox + boxW / 2 - 76} y={oy + boxH / 2 - 15} width="152" height="30" rx="8" fill="rgba(15,23,42,0.82)" stroke="rgba(125,211,252,0.4)" />
+        <text x={ox + boxW / 2} y={oy + boxH / 2 + 5} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="900">
+          {hideArea ? `S = ? ${areaUnit}` : `S = ${expectedArea} ${areaUnit}`}
+        </text>
+
+        {/* Dimensions */}
+        <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill="#E0F2FE" fontSize="13.5" fontWeight="800">
+          {isSq ? `Cạnh = ${wLabel}` : `Chiều dài = ${wLabel}`}
+        </text>
+        {!isSq && (
+          <text x={ox - 12} y={oy + boxH / 2 + 4} textAnchor="end" fill="#BAE6FD" fontSize="13" fontWeight="800">
+            Rộng = {hLabel}
+          </text>
+        )}
+        <text x="280" y={oy + boxH + 28} textAnchor="middle" fill="#6EE7B7" fontSize="12.5" fontWeight="800">
+          {expectedPerimeter !== undefined
+            ? `Chu vi = ${hidePerim ? `? ${lengthUnit}` : `${expectedPerimeter} ${lengthUnit}`} · ${areaLabel}`
+            : areaLabel}
+        </text>
+      </svg>
+    );
+  };
+
+  return (
+    <div className="space-y-3">
+      {(showInteractiveToggle || visualHint) && (
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-xs font-semibold text-[color:var(--mm-ink-secondary)]">
+            {visualHint || 'Quan sát lưới ô vuông bên trong để tính diện tích chính xác'}
+          </span>
+          {showInteractiveToggle && (
+            <button
+              type="button"
+              onClick={() => setAltView((v) => !v)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold border transition-all cursor-pointer ${
+                altView
+                  ? 'bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_70%,transparent)] border-[color:var(--mm-amber-accent)] text-[color:var(--mm-amber-bright)]'
+                  : 'bg-[color:color-mix(in_oklch,var(--mm-cyan-tint)_60%,transparent)] border-[color:var(--mm-cyan-border)] text-[color:var(--mm-cyan-bright)] hover:border-[color:var(--mm-cyan-accent)]'
+              }`}
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>{toggleBtnText}</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="rounded-2xl bg-[radial-gradient(ellipse_at_center,_color-mix(in_oklch,var(--mm-cyan-accent)_10%,transparent),_transparent_70%),var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_65%,transparent)] p-3 overflow-x-auto shadow-[inset_0_2px_18px_rgba(0,0,0,0.58)]">
+        {renderAreaSVG()}
+      </div>
+    </div>
+  );
+};
+
+/**
  * Step 3: Abstract LaTeX Mathematical Panel (A — Biểu thức toán học)
  */
 const CPAAbstractLatexPanel: React.FC<{
@@ -2276,6 +3699,14 @@ export const InMonthVisualModels: React.FC<InMonthVisualModelsProps> = ({
       ? 'Mô hình chia nhóm & phần dư'
       : cpaSpec.pictorial.kind === 'interval_model'
       ? 'Mô hình khoảng cách & điểm mốc'
+      : cpaSpec.pictorial.kind === 'perimeter_shape'
+      ? 'Sơ đồ hình học chu vi & kỹ thuật dời cạnh'
+      : cpaSpec.pictorial.kind === 'place_value_chart'
+      ? 'Bảng đĩa số hàng Nghìn–Trăm–Chục–Đơn vị & Tia số'
+      : cpaSpec.pictorial.kind === 'sequence_pattern'
+      ? 'Sơ đồ chuỗi số quy luật & cung bước nhảy'
+      : cpaSpec.pictorial.kind === 'area_grid'
+      ? 'Lưới ô vuông diện tích & Liên kết Diện tích – Chu vi'
       : 'Phòng thí nghiệm đo lường & biểu đồ';
 
   return (
@@ -2346,6 +3777,34 @@ export const InMonthVisualModels: React.FC<InMonthVisualModelsProps> = ({
 
           {cpaSpec.pictorial.kind === 'measurement_lab' && (
             <CPASvgMeasurementDiagram
+              pictorial={cpaSpec.pictorial}
+              isAnswered={isAnswered}
+            />
+          )}
+
+          {cpaSpec.pictorial.kind === 'perimeter_shape' && (
+            <CPASvgPerimeterDiagram
+              pictorial={cpaSpec.pictorial}
+              isAnswered={isAnswered}
+            />
+          )}
+
+          {cpaSpec.pictorial.kind === 'place_value_chart' && (
+            <CPASvgPlaceValueDiagram
+              pictorial={cpaSpec.pictorial}
+              isAnswered={isAnswered}
+            />
+          )}
+
+          {cpaSpec.pictorial.kind === 'sequence_pattern' && (
+            <CPASvgSequencePatternDiagram
+              pictorial={cpaSpec.pictorial}
+              isAnswered={isAnswered}
+            />
+          )}
+
+          {cpaSpec.pictorial.kind === 'area_grid' && (
+            <CPASvgAreaGridDiagram
               pictorial={cpaSpec.pictorial}
               isAnswered={isAnswered}
             />

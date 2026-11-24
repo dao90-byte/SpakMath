@@ -4,6 +4,10 @@ import {
   RemainderPictorialSpec,
   IntervalPictorialSpec,
   MeasurementPictorialSpec,
+  PerimeterPictorialSpec,
+  PlaceValuePictorialSpec,
+  SequencePatternPictorialSpec,
+  AreaGridPictorialSpec,
 } from '../types/singaporeCPA';
 
 export interface MathVerificationResult {
@@ -264,6 +268,307 @@ export function verifyMeasurementPictorial(spec: MeasurementPictorialSpec): Math
 }
 
 /**
+ * Verifies Singapore Math Perimeter & Composite Shape (Side-Shifting) invariants.
+ */
+export function verifyPerimeterPictorial(spec: PerimeterPictorialSpec): MathVerificationResult {
+  const errors: string[] = [];
+
+  if (spec.outerWidth <= 0 || spec.outerHeight <= 0) {
+    errors.push(
+      `outerWidth (${spec.outerWidth}) and outerHeight (${spec.outerHeight}) must be > 0`
+    );
+  }
+
+  let computedPerimeter = 0;
+  switch (spec.shapeKind) {
+    case 'square': {
+      if (spec.outerWidth !== spec.outerHeight) {
+        errors.push(
+          `square requires outerWidth (${spec.outerWidth}) === outerHeight (${spec.outerHeight})`
+        );
+      }
+      computedPerimeter = spec.outerWidth * 4;
+      break;
+    }
+    case 'rectangle':
+    case 'l_shape':
+    case 'staircase': {
+      if (spec.shapeKind === 'l_shape' || spec.shapeKind === 'staircase') {
+        if (
+          spec.cutWidth !== undefined &&
+          (spec.cutWidth <= 0 || spec.cutWidth >= spec.outerWidth)
+        ) {
+          errors.push(
+            `${spec.shapeKind} cutWidth (${spec.cutWidth}) must satisfy 0 < cutWidth < outerWidth (${spec.outerWidth})`
+          );
+        }
+        if (
+          spec.cutHeight !== undefined &&
+          (spec.cutHeight <= 0 || spec.cutHeight >= spec.outerHeight)
+        ) {
+          errors.push(
+            `${spec.shapeKind} cutHeight (${spec.cutHeight}) must satisfy 0 < cutHeight < outerHeight (${spec.outerHeight})`
+          );
+        }
+      }
+      computedPerimeter = 2 * (spec.outerWidth + spec.outerHeight);
+      break;
+    }
+    case 'u_shape':
+    case 't_shape': {
+      const recess = spec.recessDepth ?? 0;
+      if (recess <= 0 || recess >= spec.outerHeight) {
+        errors.push(
+          `${spec.shapeKind} recessDepth (${recess}) must satisfy 0 < recessDepth < outerHeight (${spec.outerHeight})`
+        );
+      }
+      computedPerimeter = 2 * (spec.outerWidth + spec.outerHeight) + 2 * recess;
+      break;
+    }
+    case 'joined_squares': {
+      const side = spec.squareSide ?? 0;
+      const cols = spec.gridCols ?? 1;
+      const rows = spec.gridRows ?? 1;
+      if (side <= 0 || cols <= 0 || rows <= 0) {
+        errors.push(
+          `joined_squares requires positive squareSide (${side}), gridCols (${cols}), gridRows (${rows})`
+        );
+      }
+      if (spec.outerWidth !== side * cols || spec.outerHeight !== side * rows) {
+        errors.push(
+          `joined_squares outer dimensions (${spec.outerWidth}×${spec.outerHeight}) must match (${side * cols}×${side * rows})`
+        );
+      }
+      computedPerimeter = 2 * (spec.outerWidth + spec.outerHeight);
+      break;
+    }
+  }
+
+  if (Math.abs(spec.expectedPerimeter - computedPerimeter) > 1e-6) {
+    errors.push(
+      `perimeter_shape (${spec.shapeKind}) expectedPerimeter (${spec.expectedPerimeter}) !== computed (${computedPerimeter})`
+    );
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Verifies Singapore Place Value (4-digit up to 10,000) CPA invariants.
+ */
+export function verifyPlaceValuePictorial(spec: PlaceValuePictorialSpec): MathVerificationResult {
+  const errors: string[] = [];
+
+  if (!Number.isInteger(spec.primaryNumber) || spec.primaryNumber < 0 || spec.primaryNumber > 10000) {
+    errors.push(`primaryNumber (${spec.primaryNumber}) must be an integer in [0, 10000]`);
+  }
+  if (!Number.isFinite(spec.expectedResult) || spec.expectedResult < 0) {
+    errors.push(`expectedResult (${spec.expectedResult}) must be a non-negative finite number`);
+  }
+
+  if (spec.mode === 'add_sub') {
+    if (spec.secondaryNumber === undefined || !spec.operation) {
+      errors.push('add_sub mode requires secondaryNumber and operation');
+    } else {
+      const computed =
+        spec.operation === 'add'
+          ? spec.primaryNumber + spec.secondaryNumber
+          : spec.primaryNumber - spec.secondaryNumber;
+      if (computed !== spec.expectedResult) {
+        errors.push(
+          `place_value add_sub invariant failed: ${spec.primaryNumber} ${spec.operation} ${spec.secondaryNumber} = ${computed}, expectedResult = ${spec.expectedResult}`
+        );
+      }
+    }
+  }
+
+  if (spec.mode === 'number_line_round') {
+    if (!spec.roundTo || spec.roundLow === undefined || spec.roundHigh === undefined) {
+      errors.push('number_line_round mode requires roundTo, roundLow, and roundHigh');
+    } else {
+      if (spec.roundHigh - spec.roundLow !== spec.roundTo) {
+        errors.push(
+          `number_line_round interval (${spec.roundHigh} - ${spec.roundLow}) !== roundTo (${spec.roundTo})`
+        );
+      }
+      if (spec.primaryNumber < spec.roundLow || spec.primaryNumber > spec.roundHigh) {
+        errors.push(
+          `primaryNumber (${spec.primaryNumber}) is outside [${spec.roundLow}, ${spec.roundHigh}]`
+        );
+      }
+      const computedRounded = Math.round(spec.primaryNumber / spec.roundTo) * spec.roundTo;
+      if (computedRounded !== spec.expectedResult) {
+        errors.push(
+          `number_line_round invariant failed: round(${spec.primaryNumber}, ${spec.roundTo}) = ${computedRounded}, got ${spec.expectedResult}`
+        );
+      }
+    }
+  }
+
+  if (spec.mode === 'compare' && spec.secondaryNumber !== undefined) {
+    if (spec.secondaryNumber < 0 || spec.secondaryNumber > 10000) {
+      errors.push(`secondaryNumber (${spec.secondaryNumber}) must be in [0, 10000]`);
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Verifies Number Sequence Pattern CPA invariants.
+ */
+export function verifySequencePatternPictorial(
+  spec: SequencePatternPictorialSpec
+): MathVerificationResult {
+  const errors: string[] = [];
+
+  if (!spec.terms || spec.terms.length < 4) {
+    errors.push('sequence_pattern must contain at least 4 terms');
+    return { valid: false, errors };
+  }
+  if (spec.missingIndex < 0 || spec.missingIndex >= spec.terms.length) {
+    errors.push(`missingIndex (${spec.missingIndex}) out of bounds for length ${spec.terms.length}`);
+    return { valid: false, errors };
+  }
+  if (spec.terms[spec.missingIndex] !== spec.expectedValue) {
+    errors.push(
+      `sequence_pattern terms[${spec.missingIndex}] (${spec.terms[spec.missingIndex]}) !== expectedValue (${spec.expectedValue})`
+    );
+  }
+
+  if (spec.patternKind === 'arithmetic') {
+    const diff = spec.terms[1] - spec.terms[0];
+    for (let i = 2; i < spec.terms.length; i++) {
+      if (spec.terms[i] - spec.terms[i - 1] !== diff) {
+        errors.push(
+          `arithmetic sequence invariant failed at index ${i}: ${spec.terms[i]} - ${spec.terms[i - 1]} !== ${diff}`
+        );
+      }
+    }
+  } else if (spec.patternKind === 'increasing_diff') {
+    const d0 = spec.terms[1] - spec.terms[0];
+    const d1 = spec.terms[2] - spec.terms[1];
+    const step2 = d1 - d0;
+    for (let i = 3; i < spec.terms.length; i++) {
+      const di = spec.terms[i] - spec.terms[i - 1];
+      const prevD = spec.terms[i - 1] - spec.terms[i - 2];
+      if (di - prevD !== step2) {
+        errors.push(
+          `increasing_diff second-order difference failed at index ${i}: (${di} - ${prevD}) !== ${step2}`
+        );
+      }
+    }
+  } else if (spec.patternKind === 'fibonacci_sum') {
+    for (let i = 2; i < spec.terms.length; i++) {
+      if (spec.terms[i] !== spec.terms[i - 1] + spec.terms[i - 2]) {
+        errors.push(
+          `fibonacci_sum failed at index ${i}: ${spec.terms[i]} !== ${spec.terms[i - 1]} + ${spec.terms[i - 2]}`
+        );
+      }
+    }
+  } else if (spec.patternKind === 'multiplicative') {
+    if (spec.terms[0] > 0 && spec.terms[1] > spec.terms[0]) {
+      const ratio = spec.terms[1] / spec.terms[0];
+      for (let i = 2; i < spec.terms.length; i++) {
+        if (Math.abs(spec.terms[i] - spec.terms[i - 1] * ratio) > 1e-6) {
+          errors.push(`multiplicative (×${ratio}) failed at index ${i}`);
+        }
+      }
+    } else if (spec.terms[1] > 0 && spec.terms[0] > spec.terms[1]) {
+      const divRatio = spec.terms[0] / spec.terms[1];
+      for (let i = 2; i < spec.terms.length; i++) {
+        if (Math.abs(spec.terms[i] * divRatio - spec.terms[i - 1]) > 1e-6) {
+          errors.push(`multiplicative (÷${divRatio}) failed at index ${i}`);
+        }
+      }
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Verifies Area Grid & Area-Perimeter Link CPA invariants.
+ */
+export function verifyAreaGridPictorial(spec: AreaGridPictorialSpec): MathVerificationResult {
+  const errors: string[] = [];
+
+  if (spec.outerWidth <= 0 || spec.outerHeight <= 0) {
+    errors.push(`outerWidth (${spec.outerWidth}) and outerHeight (${spec.outerHeight}) must be > 0`);
+  }
+
+  let computedArea = 0;
+  switch (spec.shapeKind) {
+    case 'unit_grid': {
+      const full = spec.fullUnitTiles ?? spec.outerWidth * spec.outerHeight;
+      const halves = spec.halfUnitTiles ?? 0;
+      if (halves % 2 !== 0) {
+        errors.push(`unit_grid halfUnitTiles (${halves}) must be even to form whole square units`);
+      }
+      computedArea = full + halves / 2;
+      break;
+    }
+    case 'square_area': {
+      if (spec.outerWidth !== spec.outerHeight) {
+        errors.push(
+          `square_area requires outerWidth (${spec.outerWidth}) === outerHeight (${spec.outerHeight})`
+        );
+      }
+      computedArea = spec.outerWidth * spec.outerWidth;
+      break;
+    }
+    case 'rect_area':
+    case 'area_perim_link': {
+      computedArea = spec.outerWidth * spec.outerHeight;
+      break;
+    }
+    case 'l_shape_area': {
+      const cw = spec.cutWidth ?? 0;
+      const ch = spec.cutHeight ?? 0;
+      if (cw <= 0 || cw >= spec.outerWidth || ch <= 0 || ch >= spec.outerHeight) {
+        errors.push(
+          `l_shape_area cutout (${cw}×${ch}) must fit strictly inside (${spec.outerWidth}×${spec.outerHeight})`
+        );
+      }
+      computedArea = spec.outerWidth * spec.outerHeight - cw * ch;
+      break;
+    }
+    case 'frame_border': {
+      const iw = spec.innerWidth ?? 0;
+      const ih = spec.innerHeight ?? 0;
+      if (iw <= 0 || iw >= spec.outerWidth || ih <= 0 || ih >= spec.outerHeight) {
+        errors.push(
+          `frame_border inner (${iw}×${ih}) must fit strictly inside (${spec.outerWidth}×${spec.outerHeight})`
+        );
+      }
+      computedArea = spec.outerWidth * spec.outerHeight - iw * ih;
+      break;
+    }
+  }
+
+  if (Math.abs(spec.expectedArea - computedArea) > 1e-6) {
+    errors.push(
+      `area_grid (${spec.shapeKind}) expectedArea (${spec.expectedArea}) !== computed (${computedArea})`
+    );
+  }
+
+  if (spec.expectedPerimeter !== undefined) {
+    const computedPerim = 2 * (spec.outerWidth + spec.outerHeight);
+    if (Math.abs(spec.expectedPerimeter - computedPerim) > 1e-6) {
+      errors.push(
+        `area_grid expectedPerimeter (${spec.expectedPerimeter}) !== 2*(${spec.outerWidth}+${spec.outerHeight}) = ${computedPerim}`
+      );
+    }
+  }
+
+  if (!Number.isFinite(spec.expectedNumericResult) || spec.expectedNumericResult <= 0) {
+    errors.push(`area_grid expectedNumericResult (${spec.expectedNumericResult}) must be > 0`);
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
  * Master verifier for a complete SingaporeCPASpec object and its parent question.
  */
 export function verifySingaporeCPASpec(
@@ -300,6 +605,14 @@ export function verifySingaporeCPASpec(
     picResult = verifyIntervalPictorial(pic);
   } else if (pic.kind === 'measurement_lab') {
     picResult = verifyMeasurementPictorial(pic);
+  } else if (pic.kind === 'perimeter_shape') {
+    picResult = verifyPerimeterPictorial(pic);
+  } else if (pic.kind === 'place_value_chart') {
+    picResult = verifyPlaceValuePictorial(pic);
+  } else if (pic.kind === 'sequence_pattern') {
+    picResult = verifySequencePatternPictorial(pic);
+  } else if (pic.kind === 'area_grid') {
+    picResult = verifyAreaGridPictorial(pic);
   }
   errors.push(...picResult.errors);
 

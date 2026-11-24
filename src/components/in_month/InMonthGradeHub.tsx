@@ -409,8 +409,12 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {visibleMonths.map(({ program, completedCount, examScore, nextDayNumber }) => {
             const pct = Math.round((completedCount / 30) * 100);
-            const isNovember = program.monthNumber === 11;
+            const isFeaturedMonth =
+              program.monthNumber === 11 ||
+              program.monthNumber === 12 ||
+              program.monthNumber === 1;
             const isStarted = completedCount > 0;
+            const weeklyTestCount = program.weeklyTests?.length || 0;
 
             return (
               <button
@@ -418,7 +422,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                 type="button"
                 onClick={() => onSelectMonth(program)}
                 className={`group relative overflow-hidden rounded-3xl p-6 border text-left transition-all duration-200 hover:-translate-y-1.5 flex flex-col justify-between cursor-pointer backdrop-blur-xl ${
-                  isNovember
+                  isFeaturedMonth
                     ? 'bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklch,var(--mm-cyan-accent)_22%,transparent),_transparent_52%),linear-gradient(145deg,_var(--mm-surface-2),_var(--mm-surface-1))] border-[color:var(--mm-cyan-accent)] animate-cosmic-beacon hover:border-[color:var(--mm-cyan-bright)] hover:shadow-[0_0_48px_rgba(34,211,238,0.48),0_18px_50px_rgba(192,132,252,0.3)]'
                     : isStarted
                     ? 'bg-[linear-gradient(145deg,_var(--mm-surface-2),_var(--mm-surface-1))] border-[color:var(--mm-emerald-border)] hover:border-[color:var(--mm-emerald-accent)] shadow-[0_14px_34px_rgba(3,7,24,0.55),0_0_20px_rgba(52,211,153,0.14)] hover:shadow-[0_0_42px_rgba(52,211,153,0.36),0_16px_44px_rgba(34,211,238,0.24)]'
@@ -437,7 +441,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                   {/* Quiet Unboxed Metadata Kicker (Zero-Pill Rule) */}
                   <div className="flex items-center justify-between gap-2 text-xs font-bold">
                     <div className="flex items-center gap-1.5 text-[color:var(--mm-cyan-text)] tabular-nums">
-                      {isNovember && (
+                      {isFeaturedMonth && (
                         <span className="w-2 h-2 rounded-full bg-[color:var(--mm-cyan-brightFill)] shadow-[0_0_10px_rgba(34,211,238,0.95)] animate-ping shrink-0" aria-hidden="true" />
                       )}
                       <span className="text-sm font-extrabold text-[color:var(--mm-ink-primary)]">{program.label}</span>
@@ -497,7 +501,11 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                   <div className="flex items-center justify-between text-xs font-black">
                     <span className="text-[color:var(--mm-ink-secondary)] inline-flex items-center gap-1.5 font-semibold">
                       <BookOpen className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
-                      <span>330 bài tập · Bài thi 20 câu</span>
+                      <span>
+                        {weeklyTestCount > 0
+                          ? `330 bài · ${weeklyTestCount} đề 15p · Thi 20 câu`
+                          : '330 bài tập · Bài thi 20 câu'}
+                      </span>
                     </span>
                     <span className="text-[color:var(--mm-cyan-text)] group-hover:text-[color:var(--mm-violet-text)] inline-flex items-center gap-1 whitespace-nowrap transition-colors">
                       <span>

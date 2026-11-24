@@ -6,6 +6,7 @@ import { AdventureMap } from './components/AdventureMap';
 import { LessonsCatalog } from './components/LessonsCatalog';
 import { LessonContainer } from './components/LessonContainer';
 import { Scratchpad } from './components/Scratchpad';
+import { ScreenAnnotationOverlay } from './components/ScreenAnnotationOverlay';
 import { SelfAssessmentModal } from './components/SelfAssessmentModal';
 import { MistakeNotebookModal } from './components/MistakeNotebookModal';
 import { DevErrorConsoleModal } from './components/DevErrorConsoleModal';
@@ -381,6 +382,27 @@ export default function App() {
   const currentLesson: LessonQuestion | undefined = ALL_LESSONS.find(
     (l) => l.id === activeLessonId
   );
+
+  // Determine whether the user is currently inside an active exercise / test screen
+  const isExerciseViewActive = Boolean(
+    (programMode === 'inmonth' &&
+      activeMonthProgram &&
+      (activeInMonthDay || activeInMonthWeeklyTest || isInMonthExamOpen)) ||
+      (programMode === 'thinking' && (currentLesson || isPeriodicRunnerOpen)) ||
+      (programMode === 'textbook' && (activeVnLesson || isVnAssessmentOpen))
+  );
+
+  const exerciseContextKey = [
+    programMode,
+    activeMonthProgram?.monthNumber ?? 'none',
+    activeInMonthDay?.dayNumber ?? 'none',
+    activeInMonthWeeklyTest?.weekNumber ?? 'none',
+    isInMonthExamOpen ? 'exam' : 'no-exam',
+    activeLessonId ?? 'none',
+    activeVnLesson?.id ?? 'none',
+    isPeriodicRunnerOpen ? activePeriodicAssessmentId ?? 'periodic' : 'no-periodic',
+    isVnAssessmentOpen ? 'vn-assess' : 'no-vn-assess',
+  ].join(':');
 
   return (
     <div className="min-h-screen flex flex-col font-sans relative transition-colors duration-500 mm-cosmic-canvas text-[color:var(--mm-ink-primary)] selection:bg-[color:var(--mm-cyan-brightFill)] selection:text-[#020412]">
@@ -769,6 +791,14 @@ export default function App() {
           setVnAssessmentScore(score);
           setTotalStars((prev) => prev + 5);
         }}
+      />
+
+      {/* Direct On-Screen 3-Color Drawing Pen for Exercise Views */}
+      <ScreenAnnotationOverlay
+        isActive={isExerciseViewActive}
+        isSuspended={isScratchpadOpen}
+        elevated={isPeriodicRunnerOpen || isVnAssessmentOpen}
+        contextKey={exerciseContextKey}
       />
 
       {/* In-Screen Scratchpad Modal */}

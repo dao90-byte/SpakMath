@@ -73,7 +73,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
   onBackToGrade,
 }) => {
   const [selectedWeek, setSelectedWeek] = useState<number | 'all'>('all');
-  const [unlockAllPreview, setUnlockAllPreview] = useState<boolean>(false);
+  const [unlockAllPreview, setUnlockAllPreview] = useState<boolean>(true);
   const effectiveUnlockAll = unlockAllPreview || isTeacherMode;
 
   useEffect(() => {
@@ -296,7 +296,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             </div>
 
             <div className="relative flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3.5 pt-1">
-              {pendingWeeklyTest && onOpenWeeklyTest ? (
+              {pendingWeeklyTest && !effectiveUnlockAll && onOpenWeeklyTest ? (
                 <button
                   type="button"
                   onClick={() => onOpenWeeklyTest(pendingWeeklyTest)}
@@ -509,7 +509,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             {effectiveUnlockAll ? (
               <>
                 <Unlock className="w-4 h-4 text-emerald-300 shrink-0" aria-hidden="true" />
-                <span>{isTeacherMode ? 'Chế độ Giáo viên: Đã mở 30 ngày' : 'Mở Toàn Bộ 30 Ngày'}</span>
+                <span>{isTeacherMode ? 'Chế độ Giáo viên: Đã mở 30 ngày' : 'Đã Mở Toàn Bộ 30 Ngày'}</span>
               </>
             ) : (
               <>
@@ -708,7 +708,9 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                                       : 'Đã hoàn tất trọn vẹn 5 tuần học!'
                                   }`
                                 : wtUnlocked
-                                ? `Cần đạt từ ${weeklyTestAfterThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp.`
+                                ? effectiveUnlockAll
+                                  ? `Đã mở khóa sẵn · Làm bài kiểm tra 15 phút để đánh giá năng lực tuần (mục tiêu ≥ ${weeklyTestAfterThisDay.passingScore}/100 điểm).`
+                                  : `Cần đạt từ ${weeklyTestAfterThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp.`
                                 : `Hoàn thành bài học Ngày ${weeklyTestAfterThisDay.triggerAfterDayNumber} để mở bài kiểm tra 15 phút này.`}
                             </p>
                           </div>

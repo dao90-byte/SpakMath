@@ -36,11 +36,9 @@ export const PeriodicAssessmentHub: React.FC<PeriodicAssessmentHubProps> = ({
 }) => {
   const completedAssessmentIds = getCompletedPeriodicIds();
 
-  // Helper to check if an assessment is unlocked
-  const isAssessmentUnlocked = (assessment: PeriodicAssessment): boolean => {
-    if (isTeacherMode) return true;
-    // Check if all prerequisite lessons are completed
-    return assessment.prerequisiteLessonIds.every((id) => completedLessonIds.includes(id));
+  // Mặc định mở khóa toàn bộ các bài khảo sát & đánh giá định kỳ
+  const isAssessmentUnlocked = (_assessment: PeriodicAssessment): boolean => {
+    return true;
   };
 
   const grandAssessment = PERIODIC_ASSESSMENTS.find((a) => a.isComprehensive);

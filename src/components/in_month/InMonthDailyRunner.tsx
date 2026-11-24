@@ -8,6 +8,7 @@ import {
 import { getMonthStorageKeys } from '../../data/inMonthGrade3Catalog';
 import { InMonthVisualModels } from './InMonthVisualModels';
 import { sound } from '../../utils/soundEffects';
+import { clearExerciseScreenInk } from '../ScreenAnnotationOverlay';
 import {
   getInMonthQuestionInputSpec,
   isInMonthAnswerCorrect,
@@ -29,7 +30,6 @@ import {
   BellRing,
   Calculator,
   MessageSquareQuote,
-  Lock,
 } from 'lucide-react';
 import {
   InMonthWeeklyTest,
@@ -191,6 +191,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
     }
   }, [monthNumber, dayPlan.dayNumber, currentIdx, answers, solvedMap, wrongAttemptsMap, elapsedSeconds]);
 
+  // Clear direct on-screen ink annotations when moving to another question
+  useEffect(() => {
+    clearExerciseScreenInk();
+  }, [currentIdx]);
+
   // 30-Minute Session Timer
   useEffect(() => {
     if (isPaused || showCelebration) return;
@@ -213,10 +218,8 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   const shouldShowHint = !isSolved && wrongAttempts >= 4;
   const inputSpec = getInMonthQuestionInputSpec(currentQ.correctAnswer);
 
-  // Furthest reachable question index (Teacher Mode unlocks all stages/questions for instant inspection)
-  const firstUnsolvedIdx = questions.findIndex((q) => !solvedMap[q.id]);
-  const maxReachableIdx =
-    isTeacherMode || firstUnsolvedIdx === -1 ? questions.length - 1 : firstUnsolvedIdx;
+  // All stages & questions within each daily lesson are unlocked by default
+  const maxReachableIdx = questions.length - 1;
 
   const solvedCount = Object.values(solvedMap).filter(Boolean).length;
   const isAllDayCompleted = solvedCount === questions.length;
@@ -869,39 +872,28 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                       <ChevronRight className="w-4 h-4" aria-hidden="true" />
                     </button>
 
-                    {weeklyTestResult?.passed || isTeacherMode ? (
-                      dayPlan.dayNumber < 30 ? (
-                        <button
-                          type="button"
-                          onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
-                          className="w-full py-3 rounded-2xl bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/70 text-emerald-100 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all min-h-[46px]"
-                        >
-                          <span>
-                            {weeklyTestResult?.passed
-                              ? `Học Tiếp Ngày ${dayPlan.dayNumber + 1} (Đã mở khóa)`
-                              : `Học Tiếp Ngày ${dayPlan.dayNumber + 1} (Chế độ Giáo viên)`}
-                          </span>
-                          <ChevronRight className="w-4 h-4" aria-hidden="true" />
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={onOpenExam}
-                          className="w-full py-3 rounded-2xl bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/70 text-emerald-100 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all min-h-[46px]"
-                        >
-                          <Sparkles className="w-4 h-4" aria-hidden="true" />
-                          <span>Kiểm Tra Cuối {monthLabel}</span>
-                        </button>
-                      )
-                    ) : (
-                      <div className="px-3.5 py-2.5 rounded-xl bg-slate-950/75 border border-amber-300/35 text-[11px] font-bold text-amber-200 flex items-center justify-center gap-1.5">
-                        <Lock className="w-3.5 h-3.5 text-amber-300 shrink-0" aria-hidden="true" />
+                    {dayPlan.dayNumber < 30 ? (
+                      <button
+                        type="button"
+                        onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
+                        className="w-full py-3 rounded-2xl bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/70 text-emerald-100 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all min-h-[46px]"
+                      >
                         <span>
-                          {dayPlan.dayNumber < 30
-                            ? `Hoàn thành Kiểm tra 15p (≥ 70đ) để mở khóa Ngày ${dayPlan.dayNumber + 1}`
-                            : 'Hoàn thành Kiểm tra 15p Tuần 5 để hoàn tất trọn vẹn 5 tuần'}
+                          {weeklyTestResult?.passed
+                            ? `Học Tiếp Ngày ${dayPlan.dayNumber + 1} (Đã đạt KT 15p)`
+                            : `Học Tiếp Ngày ${dayPlan.dayNumber + 1}`}
                         </span>
-                      </div>
+                        <ChevronRight className="w-4 h-4" aria-hidden="true" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={onOpenExam}
+                        className="w-full py-3 rounded-2xl bg-emerald-500/25 hover:bg-emerald-500/35 border border-emerald-300/70 text-emerald-100 font-black text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all min-h-[46px]"
+                      >
+                        <Sparkles className="w-4 h-4" aria-hidden="true" />
+                        <span>Kiểm Tra Cuối {monthLabel}</span>
+                      </button>
                     )}
                   </>
                 ) : (

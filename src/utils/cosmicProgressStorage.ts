@@ -31,8 +31,18 @@ export interface CosmicProgressData {
 
 const STORAGE_KEY = 'grade3_math_cosmic_progress_v1';
 
+export const ALL_COSMIC_LESSON_IDS: string[] = [
+  'vn3-c4-l23',
+  'vn3-c4-l24',
+  'vn3-c4-l25',
+  'vn3-c4-l26',
+  'vn3-c4-l27',
+  'vn3-c4-l28',
+  'vn3-c4-l29',
+];
+
 export const INITIAL_COSMIC_PROGRESS: CosmicProgressData = {
-  unlockedLessons: ['vn3-c4-l23'], // Bài 23 mở sẵn mặc định
+  unlockedLessons: [...ALL_COSMIC_LESSON_IDS], // Mặc định mở khóa toàn bộ tất cả bài học
   conqueredLessons: [],
   socraticCompletedCards: {},
   exerciseProgress: {},
@@ -139,7 +149,9 @@ export function getCosmicProgress(): CosmicProgressData {
     return {
       ...INITIAL_COSMIC_PROGRESS,
       ...parsed,
-      unlockedLessons: parsed.unlockedLessons || INITIAL_COSMIC_PROGRESS.unlockedLessons,
+      unlockedLessons: Array.from(
+        new Set([...ALL_COSMIC_LESSON_IDS, ...(parsed.unlockedLessons || [])])
+      ),
       socraticCompletedCards: parsed.socraticCompletedCards || {},
       exerciseProgress: parsed.exerciseProgress || {}
     };

@@ -7,7 +7,11 @@ export type CPADomain =
   | 'bar_model'
   | 'remainder_groups'
   | 'interval_model'
-  | 'measurement_lab';
+  | 'measurement_lab'
+  | 'perimeter_shape'
+  | 'place_value_chart'
+  | 'sequence_pattern'
+  | 'area_grid';
 
 export interface CPAConcreteGroup {
   id: string;
@@ -188,11 +192,165 @@ export interface MeasurementPictorialSpec {
   chartItems?: { label: string; value: number; unit: string; color: string; masked?: boolean }[];
 }
 
+export type PerimeterShapeKind =
+  | 'square'
+  | 'rectangle'
+  | 'l_shape'
+  | 'staircase'
+  | 'u_shape'
+  | 't_shape'
+  | 'joined_squares';
+
+export interface PerimeterPictorialSpec {
+  kind: 'perimeter_shape';
+  shapeKind: PerimeterShapeKind;
+  /** Bounding outer horizontal dimension (or square side for 'square') */
+  outerWidth: number;
+  /** Bounding outer vertical dimension (equals outerWidth for 'square') */
+  outerHeight: number;
+  /** Cutout dimensions for l_shape / staircase */
+  cutWidth?: number;
+  cutHeight?: number;
+  /** Recessed slot depth & width for u_shape / t_shape (adds +2 * recessDepth to bounding rectangle perimeter) */
+  recessDepth?: number;
+  recessWidth?: number;
+  /** Joined squares parameters */
+  squareSide?: number;
+  gridCols?: number;
+  gridRows?: number;
+  /** Unit of measurement: cm, m, dm */
+  unitLabel: string;
+  /** Which quantity is unknown before solving */
+  unknownTarget:
+    | 'perimeter'
+    | 'side'
+    | 'length'
+    | 'width'
+    | 'half_perimeter'
+    | 'fence_with_gate'
+    | 'recess_depth';
+  /** Optional gate opening subtracted from perimeter (for fence_with_gate problems) */
+  gateWidth?: number;
+  /** Verified mathematical perimeter of the shape */
+  expectedPerimeter: number;
+  /** Interactive side-shifting / decomposition hint */
+  sideShiftHint?: string;
+  /** Enables interactive Side-Shift / Half-Perimeter toggle button in SVG viewer */
+  showInteractiveShift?: boolean;
+  /** Optional custom labels for the outer sides */
+  widthLabel?: string;
+  heightLabel?: string;
+}
+
+export type PlaceValueMode =
+  | 'decompose'
+  | 'compare'
+  | 'build_number'
+  | 'add_sub'
+  | 'number_line_round';
+
+export interface PlaceValuePictorialSpec {
+  kind: 'place_value_chart';
+  mode: PlaceValueMode;
+  /** Primary 4-digit number shown in the place value chart (0..10000) */
+  primaryNumber: number;
+  /** Optional second number for compare or add/subtract operations */
+  secondaryNumber?: number;
+  /** Operation for add_sub mode */
+  operation?: 'add' | 'subtract';
+  /** Highlighted place column: 'thousands' | 'hundreds' | 'tens' | 'ones' */
+  highlightPlace?: 'thousands' | 'hundreds' | 'tens' | 'ones';
+  /** Available digit cards for build_number mode */
+  digitCards?: number[];
+  /** Target rounding base (10, 100, or 1000) for number_line_round mode */
+  roundTo?: 10 | 100 | 1000;
+  /** Lower and upper rounding bounds for number_line_round mode */
+  roundLow?: number;
+  roundHigh?: number;
+  /** Expected verified numeric result */
+  expectedResult: number;
+  /** Whether the chart hides the final answer number before solving */
+  hideResultBeforeSolve?: boolean;
+  /** Optional pedagogical caption shown in the chart header (must not leak answer) */
+  chartHint?: string;
+}
+
+export type SequencePatternKind =
+  | 'arithmetic'
+  | 'increasing_diff'
+  | 'alternating'
+  | 'fibonacci_sum'
+  | 'multiplicative';
+
+export interface SequencePatternPictorialSpec {
+  kind: 'sequence_pattern';
+  patternKind: SequencePatternKind;
+  /** Complete sequence including the unknown term(s) for mathematical verification */
+  terms: number[];
+  /** Zero-based index of the unknown term hidden as '?' before solving */
+  missingIndex: number;
+  /** Step labels for visible arcs (e.g. "+15", "+4", "×2"); arc leading into missingIndex is masked before solve */
+  stepLabels?: string[];
+  /** Pedagogical rule hint shown on toggle without leaking the answer */
+  ruleHint: string;
+  /** Verified expected numeric value at terms[missingIndex] */
+  expectedValue: number;
+}
+
+export type AreaGridShapeKind =
+  | 'unit_grid'
+  | 'square_area'
+  | 'rect_area'
+  | 'l_shape_area'
+  | 'frame_border'
+  | 'area_perim_link';
+
+export interface AreaGridPictorialSpec {
+  kind: 'area_grid';
+  shapeKind: AreaGridShapeKind;
+  /** Outer width (in unitLength) */
+  outerWidth: number;
+  /** Outer height (in unitLength) */
+  outerHeight: number;
+  /** For l_shape_area: cutout rectangle dimensions at top-right */
+  cutWidth?: number;
+  cutHeight?: number;
+  /** For frame_border: inner rectangle dimensions */
+  innerWidth?: number;
+  innerHeight?: number;
+  /** For unit_grid with half-square triangles: count of full tiles & half-tiles (must be even) */
+  fullUnitTiles?: number;
+  halfUnitTiles?: number;
+  /** Optional second shape for comparison (same perimeter, different area) */
+  compareWidth?: number;
+  compareHeight?: number;
+  /** Length unit (cm, dm, m) */
+  lengthUnit: 'cm' | 'dm' | 'm';
+  /** Area unit (cm², dm², m²) */
+  areaUnit: 'cm²' | 'dm²' | 'm²';
+  /** Which quantity is unknown before solving */
+  unknownTarget: 'area' | 'perimeter' | 'length' | 'width' | 'side' | 'tile_count' | 'area_diff';
+  /** Verified mathematical area of the main shape */
+  expectedArea: number;
+  /** Verified mathematical perimeter of the main shape (optional) */
+  expectedPerimeter?: number;
+  /** Final expected numeric value (usually expectedArea, or side/perimeter/tile_count/area_diff) */
+  expectedNumericResult: number;
+  /** Enables interactive Split/Cutout or Area/Perimeter highlight toggle in SVG */
+  showInteractiveToggle?: boolean;
+  /** Non-leaking visual hint */
+  visualHint?: string;
+}
+
 export type CPAPictorialSpec =
   | BarModelPictorialSpec
   | RemainderPictorialSpec
   | IntervalPictorialSpec
-  | MeasurementPictorialSpec;
+  | MeasurementPictorialSpec
+  | PerimeterPictorialSpec
+  | PlaceValuePictorialSpec
+  | SequencePatternPictorialSpec
+  | AreaGridPictorialSpec;
 
 export interface CPAAbstractSpec {
   unknownSymbol: string; // Always "?"
