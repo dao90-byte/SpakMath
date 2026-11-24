@@ -275,7 +275,7 @@ function buildWeek1Day(day: number): InMonthDayPlan {
   const q10Ans = `${q10Small + q10Mid + q10Big} điểm`;
   const q11Transfer = 6 + day;
   const q11Equal = 40 + day * 5;
-  const q11Ans = `${q11Equal + q11Transfer} năng lượng`;
+  const q11Ans = `${q11Equal + q11Transfer} viên năng lượng`;
 
   const questions: InMonthQuestion[] = [
     // WARMUP (2 questions)
@@ -343,7 +343,7 @@ function buildWeek1Day(day: number): InMonthDayPlan {
         subtitle: `Gộp số phần của Bình X (1 phần) và Bình Y (${mult} phần)`,
         bars: [
           { label: 'Bình X', valueLabel: `${baseA} L`, units: 1, color: '#0284C7' },
-          { label: 'Bình Y', valueLabel: `${bigVal} L`, units: mult, color: '#F59E0B' }
+          { label: 'Bình Y', valueLabel: `? L (${mult} phần)`, units: mult, color: '#F59E0B' }
         ],
         totalBracketLabel: `Tổng cả 2 bình = ? Lít`
       }
@@ -367,7 +367,7 @@ function buildWeek1Day(day: number): InMonthDayPlan {
         subtitle: `So sánh phần hơn giữa Đội 2 (${mult} phần) và Đội 1 (1 phần)`,
         bars: [
           { label: 'Đội 1', valueLabel: `${baseA} thùng`, units: 1, color: '#10B981' },
-          { label: 'Đội 2', valueLabel: `${bigVal} thùng`, units: mult, color: '#7C3AED' }
+          { label: 'Đội 2', valueLabel: `? thùng (${mult} phần)`, units: mult, color: '#7C3AED' }
         ],
         differenceBracketLabel: `Nhiều hơn ? thùng`
       }
@@ -399,20 +399,20 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q6`,
       stage: 'practice',
       skillDomain: 'bar_model',
-      prompt: `Một kiện hàng thiết bị nặng ${baseA} kg. Kiện hàng máy móc nặng kém ${mult} lần kiện thiết bị là ${bonus} kg (tức là gấp ${mult} lần rồi bớt đi ${bonus} kg). Hỏi kiện máy móc nặng bao nhiêu ki-lô-gam?`,
+      prompt: `Một kiện hàng thiết bị nặng ${baseA} kg. Kiện hàng máy móc nhẹ hơn ${mult} lần khối lượng kiện thiết bị là ${bonus} kg. Hỏi kiện máy móc nặng bao nhiêu ki-lô-gam?`,
       options: makeOptions(q6Ans, [`${bigVal} kg`, `${bigVal + bonus} kg`, `${bigVal - bonus - 5} kg`]),
       correctAnswer: q6Ans,
-      hint: `Tính ${baseA} × ${mult} trước, sau đó trừ đi phần kém ${bonus} kg.`,
+      hint: `Tính ${baseA} × ${mult} trước, sau đó trừ đi phần nhẹ hơn ${bonus} kg.`,
       stepByStepExplanation: [
-        `Bước 1: Gấp ${mult} lần kiện thiết bị là: ${baseA} × ${mult} = ${bigVal} (kg).`,
-        `Bước 2: Bớt đi ${bonus} kg: ${bigVal} - ${bonus} = ${bigVal - bonus} (kg).`
+        `Bước 1: ${mult} lần khối lượng kiện thiết bị là: ${baseA} × ${mult} = ${bigVal} (kg).`,
+        `Bước 2: Kiện máy móc nặng là: ${bigVal} - ${bonus} = ${bigVal - bonus} (kg).`
       ],
       visualModel: {
         type: 'bar_model',
         title: `Gấp ${mult} lần rồi bớt ${bonus} kg`,
         bars: [
           { label: 'Thiết bị', valueLabel: `${baseA} kg`, units: 1, color: '#0284C7' },
-          { label: 'Máy móc', valueLabel: `${bigVal} - ${bonus} = ? kg`, units: mult, color: '#E11D48', highlightNote: `Bớt ${bonus} kg` }
+          { label: 'Máy móc', valueLabel: `? kg (${mult} phần bớt ${bonus} kg)`, units: mult, color: '#E11D48', highlightNote: `Bớt ${bonus} kg` }
         ]
       }
     },
@@ -442,23 +442,23 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q8`,
       stage: 'practice',
       skillDomain: 'bar_model',
-      prompt: `Tàu con thoi Alpha chở ${q8Small} hành khách. Tàu Beta chở nhiều hơn tàu Alpha đúng bằng ${mult - 1} lần số khách của tàu Alpha (tức là gấp ${mult} lần Alpha). Hỏi cả hai tàu chở bao nhiêu hành khách?`,
+      prompt: `Mỗi toa tàu tốc hành chở được ${q8Small} hành khách. Đoàn tàu Alpha có 1 toa, đoàn tàu Beta có ${mult} toa như thế. Hỏi cả hai đoàn tàu chở được tất cả bao nhiêu hành khách?`,
       options: makeOptions(q8Ans, [`${q8Small * mult} hành khách`, `${q8Small * (mult + 2)} hành khách`, `${q8Small * mult + 10} hành khách`]),
       correctAnswer: q8Ans,
-      hint: `Alpha là 1 phần (${q8Small} khách), Beta là ${mult} phần. Tổng cả hai tàu là ${mult + 1} phần!`,
+      hint: `Đoàn tàu Alpha có 1 toa (${q8Small} khách), đoàn tàu Beta có ${mult} toa. Tổng cả hai đoàn tàu có 1 + ${mult} = ${mult + 1} toa!`,
       stepByStepExplanation: [
-        `Tàu Alpha chiếm 1 phần = ${q8Small} hành khách.`,
-        `Tàu Beta chiếm ${mult} phần = ${q8Small} × ${mult} = ${q8Small * mult} hành khách.`,
-        `Tổng số hành khách trên cả hai tàu là: ${q8Small} + ${q8Small * mult} = ${q8Small * (mult + 1)} (hành khách).`
+        `Đoàn tàu Alpha (1 toa) chở: ${q8Small} hành khách.`,
+        `Đoàn tàu Beta (${mult} toa) chở: ${q8Small} × ${mult} = ${q8Small * mult} hành khách.`,
+        `Tổng số hành khách trên cả hai đoàn tàu là: ${q8Small} + ${q8Small * mult} = ${q8Small * (mult + 1)} (hành khách).`
       ],
       visualModel: {
         type: 'bar_model',
         title: 'Tổng hai đại lượng theo số phần',
         bars: [
-          { label: 'Tàu Alpha', valueLabel: `${q8Small} khách`, units: 1, color: '#0284C7' },
-          { label: 'Tàu Beta', valueLabel: `${q8Small * mult} khách`, units: mult, color: '#7C3AED' }
+          { label: 'Đoàn tàu Alpha', valueLabel: `${q8Small} khách (1 toa)`, units: 1, color: '#0284C7' },
+          { label: 'Đoàn tàu Beta', valueLabel: `? khách (${mult} toa)`, units: mult, color: '#7C3AED' }
         ],
-        totalBracketLabel: `Tổng cả 2 tàu = ?`
+        totalBracketLabel: `Tổng cả 2 đoàn tàu = ?`
       }
     },
     {
@@ -504,8 +504,8 @@ function buildWeek1Day(day: number): InMonthDayPlan {
         title: 'Sơ đồ thanh 3 đại lượng liên kết',
         bars: [
           { label: 'Bạn An', valueLabel: `${q10Small} điểm`, units: 1, color: '#0284C7' },
-          { label: 'Bạn Bình', valueLabel: `${q10Mid} điểm`, units: 2, color: '#F59E0B' },
-          { label: 'Bạn Chi', valueLabel: `${q10Mid} + 15 điểm`, units: 3, color: '#7C3AED', highlightNote: '+15 điểm' }
+          { label: 'Bạn Bình', valueLabel: `? điểm (2 phần)`, units: 2, color: '#F59E0B' },
+          { label: 'Bạn Chi', valueLabel: `? điểm (2 phần + 15)`, units: 2, color: '#7C3AED', highlightNote: '+15 điểm' }
         ],
         totalBracketLabel: 'Tổng điểm cả 3 bạn = ?'
       }
@@ -515,7 +515,7 @@ function buildWeek1Day(day: number): InMonthDayPlan {
       stage: 'challenge',
       skillDomain: 'bar_model',
       prompt: `Tư duy Trước - Sau (Working Backwards): Nếu chuyển ${q11Transfer} viên năng lượng từ Trạm X sang Trạm Y thì hai trạm có số viên bằng nhau và mỗi trạm đều có ${q11Equal} viên. Hỏi LÚC ĐẦU Trạm X có bao nhiêu viên năng lượng?`,
-      options: makeOptions(q11Ans, [`${q11Equal - q11Transfer} năng lượng`, `${q11Equal + q11Transfer * 2} năng lượng`, `${q11Equal} năng lượng`]),
+      options: makeOptions(q11Ans, [`${q11Equal - q11Transfer} viên năng lượng`, `${q11Equal + q11Transfer * 2} viên năng lượng`, `${q11Equal} viên năng lượng`]),
       correctAnswer: q11Ans,
       hint: `Sau khi cho đi ${q11Transfer} viên, Trạm X còn ${q11Equal} viên. Vậy lúc đầu Trạm X phải có nhiều hơn ${q11Equal} viên!`,
       stepByStepExplanation: [
@@ -682,7 +682,7 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       stage: 'visualModel',
       skillDomain: 'remainder',
       prompt: `Tìm số bị chia X, biết X chia cho ${q3Divisor} được thương là ${q3Quot} và số dư là ${q3Rem}.`,
-      options: makeOptions(q3Ans, [`${q3Divisor * q3Quot}`, `${q3Dividend - q3Rem}`, `${q3Dividend + 2}`]),
+      options: makeOptions(q3Ans, [`${q3Divisor * q3Quot}`, `${q3Divisor * q3Quot - q3Rem}`, `${q3Dividend + 2}`]),
       correctAnswer: q3Ans,
       hint: `Công thức: Số bị chia = Thương × Số chia + Số dư.`,
       stepByStepExplanation: [
@@ -751,8 +751,8 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q6`,
       stage: 'practice',
       skillDomain: 'remainder',
-      prompt: `Từ bài toán chia ${dividend} viên đá vào các hộp (mỗi hộp ${actualDivisor} viên), ta thấy còn dư ${remainder} viên. Hỏi cần lấy THÊM ít nhất bao nhiêu viên đá nữa để hộp cuối cùng cũng vừa đầy?`,
-      options: makeOptions(q6Ans, [`Cần thêm ${remainder} viên`, `Cần thêm ${actualDivisor} viên`, `Cần thêm 1 viên`]),
+      prompt: `Khi xếp ${dividend} viên đá vào các hộp (mỗi hộp chứa đủ ${actualDivisor} viên) thì còn thừa ${remainder} viên bỏ vào hộp cuối cùng chưa đầy. Hỏi cần lấy THÊM ít nhất bao nhiêu viên đá nữa để hộp cuối cùng đó cũng vừa đầy?`,
+      options: makeOptions(q6Ans, [`Cần thêm ${q6NeedMore + 1} viên`, `Cần thêm ${Math.max(1, q6NeedMore - 1)} viên`, `Cần thêm ${q6NeedMore + 2} viên`]),
       correctAnswer: q6Ans,
       hint: `Mỗi hộp cần ${actualDivisor} viên, hiện tại hộp dở dang đã có ${remainder} viên. Ta lấy ${actualDivisor} - ${remainder}.`,
       stepByStepExplanation: [
@@ -781,7 +781,9 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       stepByStepExplanation: [
         `Chu kỳ lặp lại gồm 4 màu: (1) Đỏ, (2) Vàng, (3) Xanh, (4) Tím.`,
         `Ta lấy: ${q7Pos} : 4 = ${Math.floor(q7Pos / 4)} (dư ${q7Rem}).`,
-        `Số dư là ${q7Rem} nên bóng đèn thứ ${q7Pos} có ${q7Ans}!`
+        q7Rem === 0
+          ? `Vì phép chia hết (dư 0) nên bóng đèn thứ ${q7Pos} là bóng cuối cùng của chu kỳ thứ ${Math.floor(q7Pos / 4)}, mang ${q7Ans}!`
+          : `Số dư là ${q7Rem} nên bóng đèn thứ ${q7Pos} mang ${q7Ans}!`
       ],
       visualModel: {
         type: 'remainder_groups',
@@ -799,13 +801,19 @@ function buildWeek2Day(day: number): InMonthDayPlan {
       stage: 'practice',
       skillDomain: 'remainder',
       prompt: `Hôm nay là Chủ Nhật. Hỏi sau ${q8DaysLater} ngày nữa sẽ là thứ mấy trong tuần?`,
-      options: makeOptions(q8Ans, ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Chủ Nhật']),
+      options: makeOptions(q8Ans, [
+        weekDays[((q8DaysLater % 7) + 1) % 7],
+        weekDays[((q8DaysLater % 7) + 6) % 7],
+        weekDays[((q8DaysLater % 7) + 2) % 7]
+      ]),
       correctAnswer: q8Ans,
       hint: `Một tuần có 7 ngày lặp lại. Lấy ${q8DaysLater} chia cho 7 để tìm số ngày lẻ ra sau các tuần tròn!`,
       stepByStepExplanation: [
         `Mỗi tuần có 7 ngày nên cứ sau 7 ngày lại trở về Chủ Nhật.`,
         `Ta có: ${q8DaysLater} : 7 = ${Math.floor(q8DaysLater / 7)} tuần (dư ${q8DaysLater % 7} ngày).`,
-        `Đếm thêm ${q8DaysLater % 7} ngày từ Chủ Nhật, ta được: ${q8Ans}.`
+        q8DaysLater % 7 === 0
+          ? `Vì ${q8DaysLater} chia hết cho 7 (đúng ${Math.floor(q8DaysLater / 7)} tuần tròn, dư 0 ngày) nên sau ${q8DaysLater} ngày lại đúng vào Chủ Nhật.`
+          : `Đếm thêm ${q8DaysLater % 7} ngày từ Chủ Nhật, ta được: ${q8Ans}.`
       ],
       visualModel: {
         type: 'remainder_groups',
@@ -977,7 +985,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q1`,
       stage: 'warmup',
       skillDomain: 'interval',
-      prompt: `Một đoạn đường dài ${totalDist} m được chia thành các đoạn nhỏ bằng nhau, mỗi đoạn dài ${stepDist} m. Hỏi có tất cả bao nhiêu KHOẢNG CÁCH?`,
+      prompt: `Một đoạn đường dài ${totalDist} m được chia thành các khoảng cách đều nhau, mỗi khoảng dài ${stepDist} m. Hỏi trên đoạn đường đó có tất cả bao nhiêu KHOẢNG CÁCH?`,
       options: makeOptions(q1Ans, [
         `${intervals + 1} khoảng cách`,
         `${intervals - 1} khoảng cách`,
@@ -1005,7 +1013,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q2`,
       stage: 'warmup',
       skillDomain: 'interval',
-      prompt: `Trên đoạn đường dài ${totalDist} m, người ta trồng cây ở CẢ HAI ĐẦU ĐƯỜNG, cứ cách ${stepDist} m trồng 1 cây. Hỏi trồng được tất cả bao nhiêu cây?`,
+      prompt: `Dọc theo MỘT BÊN của đoạn đường dài ${totalDist} m, người ta trồng cây ở CẢ HAI ĐẦU ĐƯỜNG, cứ cách ${stepDist} m trồng 1 cây. Hỏi bên đường đó trồng được tất cả bao nhiêu cây?`,
       options: makeOptions(q2Ans, [`${intervals} cây`, `${intervals - 1} cây`, `${intervals + 2} cây`]),
       correctAnswer: q2Ans,
       hint: `Khi trồng ở cả hai đầu đường: Số cây = Số khoảng + 1.`,
@@ -1029,10 +1037,10 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q3`,
       stage: 'visualModel',
       skillDomain: 'interval',
-      prompt: `Dọc theo lối đi dài ${totalDist} m dẫn vào cổng trạm vũ trụ, ở đầu cổng đã có sẵn nhà bảo vệ nên chỉ lắp cột đèn ở MỘT ĐẦU ĐƯỜNG (đầu kia không lắp), mỗi cột cách nhau ${stepDist} m. Hỏi có bao nhiêu cột đèn?`,
+      prompt: `Dọc theo một bên lối đi dài ${totalDist} m dẫn vào cổng trạm vũ trụ, người ta lắp các cột đèn cách đều nhau ${stepDist} m. Biết đầu cổng đã có nhà bảo vệ nên KHÔNG lắp cột đèn ở đầu cổng, còn đầu kia CÓ lắp cột đèn. Hỏi trên lối đi đó có tất cả bao nhiêu cột đèn?`,
       options: makeOptions(q3Ans, [`${intervals + 1} cột đèn`, `${intervals - 1} cột đèn`, `${intervals + 2} cột đèn`]),
       correctAnswer: q3Ans,
-      hint: `Khi chỉ trồng/lắp ở MỘT đầu đường: Số cột đèn = Số khoảng cách!`,
+      hint: `Khi chỉ lắp cột đèn ở MỘT đầu đường (đầu kia không lắp): Số cột đèn = Số khoảng cách!`,
       stepByStepExplanation: [
         `Số khoảng cách trên lối đi là: ${totalDist} : ${stepDist} = ${intervals} (khoảng).`,
         `Vì chỉ lắp cột đèn ở 1 đầu đường nên mỗi khoảng ứng với đúng 1 cột đèn: Số cột đèn = ${intervals}.`
@@ -1053,7 +1061,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q4`,
       stage: 'visualModel',
       skillDomain: 'interval',
-      prompt: `Giữa hai tòa tháp cách nhau ${totalDist} m, người ta đặt các biển báo cách đều nhau ${stepDist} m (sát chân hai tòa tháp ở HAI ĐẦU KHÔNG ĐẶT biển báo). Hỏi có bao nhiêu biển báo?`,
+      prompt: `Dọc theo một bên đoạn đường thẳng nối giữa hai tòa tháp cách nhau ${totalDist} m, người ta đặt các biển báo cách đều nhau ${stepDist} m (sát chân hai tòa tháp ở HAI ĐẦU KHÔNG ĐẶT biển báo). Hỏi có tất cả bao nhiêu biển báo?`,
       options: makeOptions(q4Ans, [`${intervals} biển báo`, `${intervals + 1} biển báo`, `${intervals - 2} biển báo`]),
       correctAnswer: q4Ans,
       hint: `Khi cả hai đầu đều KHÔNG đặt vật: Số biển báo = Số khoảng - 1.`,
@@ -1157,7 +1165,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q8`,
       stage: 'practice',
       skillDomain: 'interval',
-      prompt: `Một hàng cây có ${q8Trees} cây trồng thẳng hàng ở cả hai đầu đường, hai cây liên tiếp cách nhau ${q8Gap} m. Hỏi khoảng cách từ cây đầu tiên đến cây cuối cùng là bao nhiêu mét?`,
+      prompt: `Một hàng cây gồm ${q8Trees} cây được trồng thẳng hàng, hai cây liên tiếp cách nhau ${q8Gap} m. Hỏi khoảng cách từ cây đầu tiên đến cây cuối cùng dài bao nhiêu mét?`,
       options: makeOptions(q8Ans, [`${q8Trees * q8Gap} m`, `${(q8Trees + 1) * q8Gap} m`, `${q8Len - 3} m`]),
       correctAnswer: q8Ans,
       hint: `Có ${q8Trees} cây thì giữa chúng có bao nhiêu khoảng cách? (Số khoảng = Số cây - 1).`,
@@ -1206,7 +1214,7 @@ function buildWeek3Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q10`,
       stage: 'challenge',
       skillDomain: 'interval',
-      prompt: `Thử thách Đồng hồ đổ chuông: Lúc 4 giờ, đồng hồ gõ ${q10ChimesA} tiếng chuông mất hết ${q10TimeA} giây (tính từ tiếng thứ nhất đến tiếng thứ tư). Hỏi lúc ${q10ChimesB} giờ, đồng hồ gõ ${q10ChimesB} tiếng chuông thì mất bao nhiêu giây?`,
+      prompt: `Thử thách Đồng hồ đổ chuông: Lúc 4 giờ, đồng hồ gõ ${q10ChimesA} tiếng chuông mất hết ${q10TimeA} giây (tính từ tiếng thứ nhất đến tiếng thứ tư, biết khoảng thời gian giữa hai tiếng chuông liên tiếp luôn bằng nhau). Hỏi lúc ${q10ChimesB} giờ, đồng hồ gõ ${q10ChimesB} tiếng chuông thì mất bao nhiêu giây?`,
       options: makeOptions(q10Ans, [
         `${q10ChimesB * 2} giây`,
         `${q10TimeB - 2} giây`,
@@ -1442,7 +1450,7 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       stage: 'visualModel',
       skillDomain: 'measurement',
       prompt: `Bình chứa ban đầu có ${startLiters} L nước tinh khiết. Phi hành gia rót ra ${pourOutMl} mL để tưới vườn cây vũ trụ. Hỏi trong bình còn lại bao nhiêu mi-li-lít (mL) nước?`,
-      options: makeOptions(q5Ans, [`${remainMl + 100} mL`, `${remainMl - 100} mL`, `${startLiters * 100 - pourOutMl} mL`]),
+      options: makeOptions(q5Ans, [`${remainMl + 100} mL`, `${remainMl - 100} mL`, `${remainMl + 500} mL`]),
       correctAnswer: q5Ans,
       hint: `Đổi ${startLiters} L = ${startLiters * 1000} mL trước, rồi trừ đi ${pourOutMl} mL!`,
       stepByStepExplanation: [
@@ -1486,7 +1494,7 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       stage: 'practice',
       skillDomain: 'measurement',
       prompt: `Cuộn dây cáp dài ${ropeMeters} m. Kỹ sư cắt ra một đoạn dài ${usedCm} cm để nối mạch điện. Hỏi cuộn dây cáp còn lại dài bao nhiêu xăng-ti-mét?`,
-      options: makeOptions(q7Ans, [`${remainCm - 20} cm`, `${remainCm + 10} cm`, `${ropeMeters * 10 - usedCm} cm`]),
+      options: makeOptions(q7Ans, [`${remainCm - 20} cm`, `${remainCm + 10} cm`, `${remainCm + 100} cm`]),
       correctAnswer: q7Ans,
       hint: `Đổi ${ropeMeters} m = ${ropeMeters * 100} cm rồi trừ đi ${usedCm} cm.`,
       stepByStepExplanation: [
@@ -1548,7 +1556,7 @@ function buildWeek4Day(day: number): InMonthDayPlan {
       id: `nov-d${day}-q10`,
       stage: 'challenge',
       skillDomain: 'measurement',
-      prompt: `Thử thách Cân Cả Vỏ Và Ruột: Một hũ thủy tinh đựng ĐẦY mật ong cân nặng ${fullTotalG} g. Nếu chỉ đựng NỬA hũ mật ong thì cân nặng ${halfTotalG} g. Hỏi riêng cái vỏ hũ thủy tinh rỗng nặng bao nhiêu gam?`,
+      prompt: `Thử thách Cân Cả Vỏ Và Ruột: Một hũ thủy tinh đựng ĐẦY mật ong cân nặng ${fullTotalG} g. Nếu chỉ đựng một nửa lượng mật ong đó thì cả hũ nặng ${halfTotalG} g. Hỏi riêng cái vỏ hũ thủy tinh rỗng nặng bao nhiêu gam?`,
       options: makeOptions(q10Ans, [`${emptyBottleG + 50} g`, `${emptyBottleG - 30} g`, `${halfHoneyG} g`]),
       correctAnswer: q10Ans,
       hint: `Hiệu giữa hũ đầy (${fullTotalG} g) và nửa hũ (${halfTotalG} g) chính là khối lượng của NỬA lượng mật ong (không tính vỏ)!`,
@@ -1632,9 +1640,9 @@ function buildReviewDay(day: number): InMonthDayPlan {
         title: 'Sơ đồ Phần - Tổng 4 phần',
         bars: [
           { label: 'Tiên Phong', valueLabel: `${18 * k}`, units: 1, color: '#0284C7' },
-          { label: 'Tinh Vân', valueLabel: `${54 * k}`, units: 3, color: '#7C3AED' }
+          { label: 'Tinh Vân', valueLabel: `? (3 phần)`, units: 3, color: '#7C3AED' }
         ],
-        totalBracketLabel: `Tổng = ${72 * k} phi thuyền`
+        totalBracketLabel: `Tổng = ? phi thuyền`
       }
     },
     {
@@ -1666,7 +1674,7 @@ function buildReviewDay(day: number): InMonthDayPlan {
       id: `nov-d${day}-q3`,
       stage: 'visualModel',
       skillDomain: 'remainder',
-      prompt: `Có ${38 + k * 7} học sinh đăng ký tham quan đài thiên văn bằng xe điện, mỗi xe chở tối đa 7 học sinh. Hỏi cần ít nhất bao nhiêu chuyến xe điện để chở hết học sinh?`,
+      prompt: `Có ${38 + k * 7} học sinh đăng ký tham quan đài thiên văn bằng xe điện, mỗi chuyến xe điện chở được tối đa 7 học sinh. Hỏi cần ít nhất bao nhiêu chuyến xe điện để chở hết số học sinh đó?`,
       options: makeOptions(`${6 + k} chuyến xe`, [`${5 + k} chuyến xe`, `${7 + k} chuyến xe`, `${4 + k} chuyến xe`]),
       correctAnswer: `${6 + k} chuyến xe`,
       hint: `Lấy ${38 + k * 7} chia cho 7. Số học sinh còn dư vẫn cần thêm 1 chuyến xe nữa!`,
@@ -1733,7 +1741,7 @@ function buildReviewDay(day: number): InMonthDayPlan {
       id: `nov-d${day}-q6`,
       stage: 'practice',
       skillDomain: 'bar_model',
-      prompt: `Kho A có ${25 * k} thùng hàng. Kho B có nhiều hơn gấp 2 lần Kho A là 10 thùng. Hỏi Kho B có nhiều hơn Kho A bao nhiêu thùng hàng?`,
+      prompt: `Kho A có ${25 * k} thùng hàng. Kho B có nhiều hơn 2 lần số thùng ở Kho A là 10 thùng. Hỏi Kho B có nhiều hơn Kho A bao nhiêu thùng hàng?`,
       options: makeOptions(`${25 * k + 10} thùng`, [`${50 * k + 10} thùng`, `${25 * k} thùng`, `${50 * k} thùng`]),
       correctAnswer: `${25 * k + 10} thùng`,
       hint: `Bước 1: Tìm số thùng ở Kho B (${25 * k} × 2 + 10). Bước 2: Lấy Kho B trừ đi Kho A!`,
@@ -1746,9 +1754,9 @@ function buildReviewDay(day: number): InMonthDayPlan {
         title: 'Sơ đồ so sánh Kho A và Kho B',
         bars: [
           { label: 'Kho A', valueLabel: `${25 * k} thùng`, units: 1, color: '#0284C7' },
-          { label: 'Kho B', valueLabel: `${50 * k} + 10 thùng`, units: 2, color: '#F59E0B', highlightNote: '+10 thùng' }
+          { label: 'Kho B', valueLabel: `? thùng (2 phần + 10)`, units: 2, color: '#F59E0B', highlightNote: '+10 thùng' }
         ],
-        differenceBracketLabel: `Hơn = ${25 * k + 10} thùng`
+        differenceBracketLabel: `Hơn = ? thùng`
       }
     },
     {
@@ -1941,9 +1949,9 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
         title: 'Sơ đồ Phần - Tổng',
         bars: [
           { label: 'Trạm A', valueLabel: '24', units: 1, color: '#0284C7' },
-          { label: 'Trạm B', valueLabel: '24 × 3 = 72', units: 3, color: '#7C3AED' }
+          { label: 'Trạm B', valueLabel: '? (3 phần)', units: 3, color: '#7C3AED' }
         ],
-        totalBracketLabel: 'Tổng = 96 vệ tinh'
+        totalBracketLabel: 'Tổng = ? vệ tinh'
       }
     },
     {
@@ -1952,7 +1960,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       points: 5,
       skillDomain: 'bar_model',
       relatedDayNumbers: [3, 4],
-      prompt: 'Thùng thứ nhất chứa 18 lít nhiên liệu. Thùng thứ hai chứa nhiều hơn gấp 4 lần thùng thứ nhất là 6 lít. Hỏi thùng thứ hai chứa bao nhiêu lít nhiên liệu?',
+      prompt: 'Thùng thứ nhất chứa 18 lít nhiên liệu. Thùng thứ hai chứa nhiều hơn 4 lần số nhiên liệu của thùng thứ nhất là 6 lít. Hỏi thùng thứ hai chứa bao nhiêu lít nhiên liệu?',
       options: ['72 lít', '78 lít', '66 lít', '84 lít'],
       correctAnswer: '78 lít',
       explanation: '4 lần thùng thứ nhất là: 18 × 4 = 72 (lít). Thùng thứ hai chứa: 72 + 6 = 78 (lít).',
@@ -2013,7 +2021,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       points: 5,
       skillDomain: 'interval',
       relatedDayNumbers: [15, 16],
-      prompt: 'Trên một đoạn đường dài 48 m, người ta trồng cây ở cả hai đầu đường, cứ cách 6 m trồng một cây. Hỏi trên đoạn đường đó có tất cả bao nhiêu cây?',
+      prompt: 'Dọc theo một bên của đoạn đường dài 48 m, người ta trồng cây ở cả hai đầu đường, cứ cách 6 m trồng một cây. Hỏi trên bên đường đó có tất cả bao nhiêu cây?',
       options: ['8 cây', '9 cây', '7 cây', '10 cây'],
       correctAnswer: '9 cây',
       explanation: 'Số khoảng cách là: 48 : 6 = 8 (khoảng). Vì trồng ở cả hai đầu đường nên số cây là: 8 + 1 = 9 (cây).',
@@ -2122,8 +2130,8 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
         type: 'bar_model',
         title: 'Bài toán Rút về đơn vị',
         bars: [
-          { label: '7 hộp', valueLabel: '56 viên (1 hộp = 8)', units: 7, color: '#0284C7' },
-          { label: '5 hộp', valueLabel: '8 × 5 = 40 viên', units: 5, color: '#10B981' }
+          { label: '7 hộp', valueLabel: '56 viên', units: 7, color: '#0284C7' },
+          { label: '5 hộp', valueLabel: '? viên (5 phần)', units: 5, color: '#10B981' }
         ]
       }
     },
@@ -2196,7 +2204,7 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
       points: 5,
       skillDomain: 'remainder',
       relatedDayNumbers: [13, 14],
-      prompt: '[Olympic Chu kỳ] Một chuỗi 50 ngôi sao được xếp theo quy luật lặp lại 5 màu: Đỏ, Cam, Vàng, Lục, Lam. Nếu đếm từ đầu đến ngôi sao thứ 47 thì có tất cả bao nhiêu ngôi sao màu Đỏ và màu Cam?',
+      prompt: '[Olympic Chu kỳ] Một chuỗi 50 ngôi sao được xếp theo quy luật lặp lại 5 màu: Đỏ, Cam, Vàng, Lục, Lam. Tính từ ngôi sao thứ nhất đến ngôi sao thứ 47 thì có tất cả bao nhiêu ngôi sao màu Đỏ và màu Cam?',
       options: ['18 ngôi sao', '19 ngôi sao', '20 ngôi sao', '21 ngôi sao'],
       correctAnswer: '20 ngôi sao',
       explanation: 'Ta có 47 : 5 = 9 nhóm (dư 2 ngôi sao). Mỗi nhóm có 2 ngôi sao (Đỏ, Cam), và 2 ngôi sao dư cuối cùng cũng chính là Đỏ và Cam! Tổng cộng: 9 × 2 + 2 = 20 ngôi sao.',
@@ -2329,9 +2337,9 @@ const RAW_NOVEMBER_FINAL_EXAM: InMonthFinalExam = {
         type: 'bar_model',
         title: 'Sơ đồ 3 bình A, B, C (Tổng = 2 L 400 mL)',
         bars: [
-          { label: 'Bình B', valueLabel: '300 mL', units: 1, color: '#0284C7' },
-          { label: 'Bình A', valueLabel: '300 + 200 = 500 mL', units: 2, color: '#10B981', highlightNote: '+200 mL' },
-          { label: 'Bình C', valueLabel: '1600 mL (Gấp đôi A+B)', units: 4, color: '#7C3AED' }
+          { label: 'Bình B', valueLabel: '? mL', units: 1, color: '#0284C7' },
+          { label: 'Bình A', valueLabel: '? mL (B + 200 mL)', units: 1, color: '#10B981', highlightNote: '+200 mL' },
+          { label: 'Bình C', valueLabel: '? mL (Gấp đôi A+B)', units: 2, color: '#7C3AED' }
         ],
         totalBracketLabel: 'Tổng 3 bình = 2 L 400 mL (2400 mL)'
       }

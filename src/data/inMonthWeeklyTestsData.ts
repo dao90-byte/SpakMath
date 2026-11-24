@@ -94,7 +94,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
     unlocksWeekNumber: 2,
     unlocksDayNumber: 8,
     title: 'Kiểm Tra 15 Phút Cuối Tuần 1: Toán Đố Nhân Chia & Sơ Đồ Thanh',
-    subtitle: 'Hoàn thành từ 70/100 điểm trở lên để mở khóa các bài học của Tuần 2 (Ngày 8 – 14)',
+    subtitle: 'Đạt từ 70/100 điểm trở lên để chinh phục huy hiệu Tuần 1 và củng cố nền tảng cho Tuần 2 (Ngày 8 – 14)',
     durationMinutes: 15,
     passingScore: 70,
     questions: [
@@ -193,7 +193,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           title: 'Thùng B = 2 phần Thùng A (18 L) + thêm 9 L',
           bars: [
             { label: 'Thùng A', valueLabel: '18 L', units: 1, color: '#0284C7' },
-            { label: 'Thùng B', valueLabel: '18 × 2 + 9 = ? L', units: 3, color: '#8B5CF6', highlightNote: '+9 L' },
+            { label: 'Thùng B', valueLabel: '2 phần + 9 L = ? L', units: 2, color: '#8B5CF6', highlightNote: '+9 L' },
           ],
         },
       },
@@ -229,7 +229,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         options: [
           'Sai, vì bao lớn 4 phần và bao nhỏ 1 phần nên tổng cộng có 4 + 1 = 5 phần; phải lấy 100 : 5 = 20 kg.',
           'Đúng, vì đề bài nói gấp 4 lần nên chỉ cần lấy tổng chia cho 4.',
-          'Sai, vì phải lấy 100 : (4 - 1) = 3 phần.',
+          'Sai, vì phải lấy 100 chia cho (4 - 1) = 3 phần.',
           'Sai, vì phải lấy 100 × 4 = 400 kg.',
         ],
         correctAnswer:
@@ -294,7 +294,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         prompt: '[Nghị luận 3] Mai có 15 bông hoa. Lan có số hoa kém 3 lần số hoa của Mai là 7 bông. Để tìm số hoa của Lan, em thực hiện các bước lập luận nào?',
         options: [
           'Bước 1 lấy 15 × 3 = 45 (bông) để tìm 3 lần số hoa của Mai; Bước 2 lấy 45 - 7 = 38 (bông) vì kém 7 bông.',
-          'Bước 1 lấy 15 : 3 = 5 (bông); Bước 2 lấy 5 - 7.',
+          'Bước 1 lấy 15 : 3 = 5 (bông); Bước 2 lấy 5 + 7 = 12 (bông).',
           'Bước 1 lấy 15 × 3 = 45 (bông); Bước 2 lấy 45 + 7 = 52 (bông).',
           'Bước 1 lấy 15 - 7 = 8 (bông); Bước 2 lấy 8 × 3 = 24 (bông).',
         ],
@@ -366,7 +366,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
     unlocksWeekNumber: 3,
     unlocksDayNumber: 15,
     title: 'Kiểm Tra 15 Phút Cuối Tuần 2: Phép Chia Có Dư & Chu Kỳ Lặp',
-    subtitle: 'Hoàn thành từ 70/100 điểm trở lên để mở khóa các bài học của Tuần 3 (Ngày 15 – 21)',
+    subtitle: 'Đạt từ 70/100 điểm trở lên để chinh phục huy hiệu Tuần 2 và củng cố nền tảng cho Tuần 3 (Ngày 15 – 21)',
     durationMinutes: 15,
     passingScore: 70,
     questions: [
@@ -539,7 +539,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'remainder',
         relatedDayNumbers: [10, 11],
-        prompt: '[Nghị luận 2] Cùng là phép chia 38 : 5 = 7 (dư 3), nhưng vì sao bài toán "38 học sinh đi đò, mỗi đò chở 5 em" lại đáp số là 8 chuyến đò, còn bài toán "38 m vải may áo, mỗi áo hết 5 m" lại đáp số là 7 chiếc áo?',
+        prompt: '[Nghị luận 2] Cùng là phép chia 38 : 5 = 7 (dư 3), nhưng vì sao bài toán "38 học sinh đi đò, mỗi chuyến đò chở tối đa 5 học sinh" lại đáp số là 8 chuyến đò, còn bài toán "38 m vải may áo, mỗi áo hết 5 m" lại đáp số là 7 chiếc áo?',
         options: [
           'Vì 3 học sinh dư vẫn cần thêm 1 chuyến đò để sang sông (7 + 1 = 8), còn 3 m vải dư không đủ may thêm 1 chiếc áo hoàn chỉnh nên chỉ được 7 áo.',
           'Vì bài toán đi đò luôn cộng thêm 2, còn may áo luôn trừ đi 1.',
@@ -607,7 +607,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'remainder',
         relatedDayNumbers: [13, 14],
-        prompt: '[Nghị luận 4] Để xếp các giỏ quà Tết mà mỗi giỏ cần đủ: 3 hộp bánh, 4 gói kẹo và 2 chai nước. Hiện kho có 20 hộp bánh, 25 gói kẹo và 15 chai nước. Làm thế nào để biết xếp được tối đa bao nhiêu giỏ quà đủ cả 3 món?',
+        prompt: '[Nghị luận 4] Người ta muốn xếp các giỏ quà Tết, mỗi giỏ cần đủ: 3 hộp bánh, 4 gói kẹo và 2 chai nước. Hiện trong kho có 20 hộp bánh, 25 gói kẹo và 15 chai nước. Làm thế nào để tìm số giỏ quà tối đa xếp được đủ cả 3 món?',
         options: [
           'Chia riêng từng loại (20:3 = 6 dư 2; 25:4 = 6 dư 1; 15:2 = 7 dư 1) rồi chọn thương nhỏ nhất là 6 giỏ quà.',
           'Cộng tất cả lại (20 + 25 + 15 = 60) rồi chia cho (3 + 4 + 2 = 9).',
@@ -626,7 +626,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Một giỏ quà hoàn chỉnh cần đủ cả 3 thành phần, nên số giỏ quà tối đa bị giới hạn bởi thành phần hết trước (thương nhỏ nhất trong các phép chia = 6 giỏ).',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Xếp giỏ quà đủ 3 món (20 bánh · 25 kẹo · 15 nước)',
+          title: 'Minh họa thành phần giới hạn (20 hộp bánh : 3) trong 3 món quà',
           dividend: 20,
           divisor: 3,
           quotient: 6,
@@ -651,7 +651,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
     unlocksWeekNumber: 4,
     unlocksDayNumber: 22,
     title: 'Kiểm Tra 15 Phút Cuối Tuần 3: Toán Đố Khoảng Cách & Ứng Dụng',
-    subtitle: 'Hoàn thành từ 70/100 điểm trở lên để mở khóa các bài học của Tuần 4 (Ngày 22 – 28)',
+    subtitle: 'Đạt từ 70/100 điểm trở lên để chinh phục huy hiệu Tuần 3 và củng cố nền tảng cho Tuần 4 (Ngày 22 – 28)',
     durationMinutes: 15,
     passingScore: 70,
     questions: [
@@ -756,7 +756,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         explanation: 'Từ tầng 1 lên tầng 5 có số khoảng tầng là: 5 - 1 = 4 (khoảng tầng). Tổng số bậc thang phải leo là: 18 × 4 = 72 (bậc thang).',
         visualModel: {
           type: 'interval_model',
-          title: 'Leo cầu thang từ Tầng 1 lên Tầng 5 (18 bậc mỗi tầng)',
+          title: 'Leo cầu thang từ Tầng 1 lên Tầng 5 (18 bậc mỗi khoảng tầng)',
           intervalSubtype: 'stairs',
           totalLength: 72,
           stepLength: 18,
@@ -866,10 +866,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'interval',
         relatedDayNumbers: [20],
-        prompt: '[Nghị luận 3] Một chiếc đồng hồ quả lắc cứ đánh 4 tiếng chuông thì mất 9 giây (tính từ tiếng thứ nhất đến tiếng thứ tư). Một bạn tính 1 tiếng chuông là 9 : 4, cách tính đó sai ở đâu và đánh 6 tiếng chuông mất bao nhiêu giây?',
+        prompt: '[Nghị luận 3] Lúc 4 giờ, một chiếc đồng hồ quả lắc đánh 4 tiếng chuông mất 9 giây (tính từ tiếng thứ nhất đến tiếng thứ tư, biết các khoảng nghỉ giữa hai tiếng chuông liên tiếp đều bằng nhau). Một bạn tính thời gian mỗi tiếng chuông bằng cách lấy 9 : 4. Cách tính đó sai ở đâu và đồng hồ đánh 6 tiếng chuông mất bao nhiêu giây?',
         options: [
           'Sai vì thời gian chờ nằm ở khoảng nghỉ giữa các tiếng chuông (4 tiếng chỉ có 4 - 1 = 3 khoảng nghỉ, mỗi khoảng 9 : 3 = 3 giây). Đánh 6 tiếng có 5 khoảng nghỉ nên mất 5 × 3 = 15 giây.',
-          'Đúng, mỗi tiếng chuông mất 2 giây.',
+          'Đúng, vì đánh 4 tiếng mất 9 giây nên lấy tổng thời gian chia cho 4 tiếng.',
           'Sai vì phải lấy 9 × 6 = 54 giây.',
           'Sai vì 6 tiếng chuông có 6 khoảng nghỉ nên mất 18 giây.',
         ],
@@ -920,7 +920,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Trên đường thẳng trồng 2 đầu có (K + 1) điểm mốc vì điểm đầu và điểm cuối tách rời; khi nối 2 đầu lại thành vòng khép kín, 2 điểm mốc đầu-cuối chập thành 1 nên còn đúng K điểm mốc.',
         visualModel: {
           type: 'interval_model',
-          title: 'Mô hình đường khép kín quanh hồ tròn',
+          title: 'Ví dụ minh họa: Hồ tròn chu vi 60 m, cách đều 5 m (Số cây = Số khoảng)',
           intervalSubtype: 'closed_loop',
           totalLength: 60,
           stepLength: 5,
@@ -946,7 +946,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
     unlocksWeekNumber: 5,
     unlocksDayNumber: 29,
     title: 'Kiểm Tra 15 Phút Cuối Tuần 4: Đo Lường Độ Dài, Khối Lượng, Thể Tích',
-    subtitle: 'Hoàn thành từ 70/100 điểm trở lên để mở khóa các bài học của Tuần 5 (Ngày 29 – 30)',
+    subtitle: 'Đạt từ 70/100 điểm trở lên để chinh phục huy hiệu Tuần 4 và củng cố nền tảng cho Tuần 5 (Ngày 29 – 30)',
     durationMinutes: 15,
     passingScore: 70,
     questions: [
@@ -1139,7 +1139,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'measurement',
         relatedDayNumbers: [26, 28],
-        prompt: '[Nghị luận 3] Khi dán nối tiếp 4 băng giấy mỗi băng dài 30 cm thành một băng giấy dài, biết mỗi chỗ dán chồng lên nhau 2 cm. Vì sao ta chỉ trừ đi 3 chỗ dán (3 × 2 = 6 cm) mà không trừ 4 chỗ dán?',
+        prompt: '[Nghị luận 3] Khi dán nối tiếp 4 băng giấy mỗi băng dài 30 cm thành một băng giấy dài thẳng hàng, biết mỗi chỗ dán chồng lên nhau 2 cm. Vì sao ta chỉ trừ đi 3 chỗ dán (3 × 2 = 6 cm) mà không trừ 4 chỗ dán?',
         options: [
           'Vì ghép 4 băng giấy thẳng hàng chỉ có 4 - 1 = 3 điểm tiếp giáp giữa các băng giấy liền kề, nên chỉ có 3 mối dán chồng lên nhau.',
           'Vì băng giấy cuối cùng không cần dán.',
@@ -1171,7 +1171,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'measurement',
         relatedDayNumbers: [24, 28],
-        prompt: '[Nghị luận 4] Biết 1 quả dưa hấu nặng bằng 3 quả bưởi, và 1 quả bưởi nặng bằng 4 quả táo (mỗi quả táo nặng 200 g). Em lập luận như thế nào để tìm khối lượng của 1 quả dưa hấu?',
+        prompt: '[Nghị luận 4] Biết 1 quả dưa hấu nặng bằng 3 quả bưởi, và 1 quả bưởi nặng bằng 4 quả táo (các quả cùng loại nặng như nhau, mỗi quả táo nặng 200 g). Em lập luận như thế nào để tìm khối lượng của 1 quả dưa hấu?',
         options: [
           'Bước 1 tìm số quả táo nặng bằng 1 quả dưa hấu (3 × 4 = 12 quả táo); Bước 2 lấy 200 g × 12 = 2400 g (hoặc tìm 1 quả bưởi = 800 g rồi nhân 3).',
           'Lấy 3 + 4 = 7 quả táo rồi nhân với 200 g = 1400 g.',
@@ -1211,7 +1211,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
     weekTitle: 'Tuần 5 · Tổng Ôn Tháng 11',
     triggerAfterDayNumber: 30,
     title: 'Kiểm Tra 15 Phút Cuối Tuần 5: Tổng Duyệt Chiến Lược Tháng 11',
-    subtitle: 'Hoàn thành từ 70/100 điểm trở lên để hoàn tất trọn vẹn 5/5 Tuần và bước vào Kỳ Thi Cuối Tháng 11',
+    subtitle: 'Đạt từ 70/100 điểm trở lên để chinh phục trọn vẹn 5/5 huy hiệu Tuần và sẵn sàng cho Kỳ Thi Cuối Tháng 11',
     durationMinutes: 15,
     passingScore: 70,
     questions: [
@@ -1349,7 +1349,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'bar_model',
         relatedDayNumbers: [4, 29],
-        prompt: '[Nghị luận 1] Năm nay bố 36 tuổi, con 6 tuổi (bố hơn con 30 tuổi). Một bạn nói rằng 4 năm nữa bố sẽ hơn con 34 tuổi. Lập luận của bạn đó đúng hay sai và khi tuổi bố gấp 4 lần tuổi con thì con bao nhiêu tuổi?',
+        prompt: '[Nghị luận 1] Năm nay bố 36 tuổi, con 6 tuổi (bố hơn con 30 tuổi). Một bạn nói rằng 4 năm nữa bố sẽ hơn con 34 tuổi. Lập luận của bạn đó đúng hay sai, và khi tuổi bố gấp 4 lần tuổi con thì lúc đó con bao nhiêu tuổi?',
         options: [
           'Sai vì hiệu số tuổi giữa hai người không bao giờ thay đổi theo thời gian (luôn là 30 tuổi). Khi bố gấp 4 lần con, hiệu 30 tuổi ứng với 4 - 1 = 3 phần nên tuổi con là 30 : 3 = 10 tuổi.',
           'Đúng vì sau 4 năm hiệu số tuổi tăng thêm 4.',
@@ -1401,7 +1401,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Đang dư R trong phép chia cho B: muốn bớt ít nhất thì bớt R; muốn thêm ít nhất để chia hết thì thêm (B - R) để đủ 1 nhóm mới.',
         visualModel: {
           type: 'remainder_groups',
-          title: 'Phép chia cho 9 còn dư 5: Bớt đi hay thêm vào để chia hết?',
+          title: 'Ví dụ minh họa (50 : 9 = 5 dư 5): Bớt đi hay thêm vào để chia hết?',
           dividend: 50,
           divisor: 9,
           quotient: 5,
@@ -1416,10 +1416,10 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'interval',
         relatedDayNumbers: [16, 20, 30],
-        prompt: '[Nghị luận 3] Một tòa nhà có các tầng đánh số từ Tầng 1 (tầng trệt) lên đến Tầng 7. Vì sao quãng đường đi thang bộ từ Tầng 1 lên Tầng 7 lại gấp ĐÔI (chứ không phải gấp 7/3) quãng đường từ Tầng 1 lên Tầng 4?',
+        prompt: '[Nghị luận 3] Một tòa nhà có các tầng đánh số từ Tầng 1 (tầng trệt) lên đến Tầng 7, số bậc thang giữa hai tầng liên tiếp đều bằng nhau. Bạn An đi thang bộ từ Tầng 1 lên Tầng 4, còn bạn Bình đi từ Tầng 1 lên Tầng 7. Vì sao số bậc thang bạn Bình phải đi lại gấp ĐÔI số bậc thang của bạn An (mặc dù số 7 không gấp đôi số 4)?',
         options: [
           'Vì tính theo số khoảng tầng cần leo: từ Tầng 1 lên Tầng 4 có 4 - 1 = 3 khoảng tầng, còn từ Tầng 1 lên Tầng 7 có 7 - 1 = 6 khoảng tầng (6 gấp đôi 3).',
-          'Vì Tầng 7 cao gấp đôi Tầng 4 do 7 : 4 = 2.',
+          'Vì Tầng 7 cao gấp đôi Tầng 4 nên không cần tính số khoảng tầng.',
           'Vì Tầng 1 không có bậc thang.',
           'Vì thang bộ ở các tầng trên ngắn hơn.',
         ],
@@ -1435,14 +1435,14 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
           'Trong bài toán cầu thang, quãng đường tỉ lệ với số khoảng tầng (Tầng đến - Tầng đi), tuyệt đối không lấy trực tiếp số thứ tự tầng chia cho nhau.',
         visualModel: {
           type: 'interval_model',
-          title: 'So sánh số nhịp cầu thang: Tầng 1➔4 và Tầng 1➔7',
+          title: 'So sánh số khoảng tầng cầu thang: Tầng 1 ➔ Tầng 4 và Tầng 1 ➔ Tầng 7',
           intervalSubtype: 'stairs',
-          totalLength: 60,
-          stepLength: 10,
+          totalLength: 90,
+          stepLength: 15,
           intervalsCount: 6,
           objectsCount: 7,
           objectIcon: '🪜',
-          unitLabel: 'm',
+          unitLabel: 'bậc',
         },
       },
       {

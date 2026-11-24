@@ -267,4 +267,151 @@ describe('Tháng 11 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
 
     expect(leaks).toEqual([]);
   });
+
+  it('Tất cả 400 câu hỏi Tháng 11 đều có 4 phương án duy nhất, không chứa đại lượng âm và đáp án đúng nằm trong options', () => {
+    const issues: string[] = [];
+
+    for (const q of all400Questions) {
+      if (q.options.length !== 4) {
+        issues.push(`[${q.id}] Số phương án phải là 4, thực tế: ${q.options.length}`);
+      }
+      const unique = new Set(q.options.map((o) => o.trim()));
+      if (unique.size !== q.options.length) {
+        issues.push(`[${q.id}] Có phương án trùng lặp: ${JSON.stringify(q.options)}`);
+      }
+      if (!q.options.includes(q.correctAnswer)) {
+        issues.push(`[${q.id}] correctAnswer "${q.correctAnswer}" không nằm trong options`);
+      }
+      for (const opt of q.options) {
+        if (
+          /^\s*-\d+/.test(opt) ||
+          /(?:^|\s)-\d+\s*(?:cm|m|km|g|kg|mL|L|cây|viên|thùng|bình|quyển|điểm|giây|phút|bậc)/i.test(opt)
+        ) {
+          issues.push(`[${q.id}] Phương án chứa đại lượng âm phi logic: "${opt}"`);
+        }
+      }
+    }
+
+    expect(issues).toEqual([]);
+  });
+
+  it('Tất cả các ô (blocks) trong Bar Model (bars, beforeBars, afterBars) đều có numericValue > 0', () => {
+    const invalidBlocks: string[] = [];
+
+    for (const q of all400Questions) {
+      const pic = q.visualModel.cpaSpec?.pictorial;
+      if (pic?.kind !== 'bar_model') continue;
+
+      const allBars = [
+        ...pic.bars,
+        ...(pic.beforeBars || []),
+        ...(pic.afterBars || []),
+      ];
+      for (const bar of allBars) {
+        for (const blk of bar.blocks) {
+          if (blk.numericValue <= 0) {
+            invalidBlocks.push(
+              `[${q.id}] Bar "${bar.id}" block "${blk.label}" có numericValue <= 0 (${blk.numericValue})`
+            );
+          }
+        }
+      }
+    }
+
+    expect(invalidBlocks).toEqual([]);
+  });
+
+  it('Kiểm chứng các lỗi diễn đạt, logic toán học và cờ hiển thị CPA đã được khắc phục triệt để trong Tháng 11', () => {
+    const findQ = (id: string) => {
+      const found = all400Questions.find((q) => q.id === id);
+      expect(found, `Không tìm thấy câu hỏi ${id}`).toBeDefined();
+      return found!;
+    };
+
+    // 1. Không còn mô tả "mở khóa" lỗi thời trên 5 đề tuần
+    for (const test of NOVEMBER_WEEKLY_TESTS) {
+      expect(test.subtitle.toLowerCase()).not.toContain('mở khóa');
+    }
+
+    // 2. Không còn các câu diễn đạt/toán học sai đã phát hiện
+    const forbiddenSnippets = [
+      '7/3',
+      '100 : (4 - 1) = 3',
+      '5 - 7.',
+      'do 7 : 4 = 2',
+      'Từ bài toán chia',
+      'trồng thẳng hàng ở cả hai đầu đường',
+    ];
+    for (const q of all400Questions) {
+      const combined = [
+        q.prompt,
+        'explanation' in q && typeof q.explanation === 'string' ? q.explanation : '',
+        ...q.options,
+        ...('stepByStepExplanation' in q && Array.isArray(q.stepByStepExplanation)
+          ? q.stepByStepExplanation
+          : []),
+      ].join(' | ');
+      for (const snippet of forbiddenSnippets) {
+        expect(combined, `[${q.id}] vẫn chứa cụm từ lỗi "${snippet}"`).not.toContain(snippet);
+      }
+    }
+
+    // 3. Tuần 1 Q11 thống nhất đơn vị "viên năng lượng"
+    for (let day = 1; day <= 7; day++) {
+      const q11 = findQ(`nov-d${day}-q11`);
+      expect(q11.prompt).toContain('viên năng lượng');
+      for (const opt of q11.options) {
+        expect(opt).toContain('viên năng lượng');
+      }
+    }
+
+    // 4. Cờ chống rò rỉ CPA trên các bài toán đặc thù
+    const w2q6 = findQ('nov-w2-q6').visualModel.cpaSpec!.pictorial;
+    expect(w2q6.kind).toBe('remainder_groups');
+    if (w2q6.kind === 'remainder_groups') {
+      expect(w2q6.hideDividendBeforeSolve).toBe(true);
+    }
+
+    for (const id of ['nov-d15-q10', 'nov-exam-b5', 'nov-w3-q9', 'nov-w5-q9']) {
+      const pic = findQ(id).visualModel.cpaSpec!.pictorial;
+      expect(pic.kind).toBe('interval_model');
+      if (pic.kind === 'interval_model') {
+        expect(pic.hideStepBeforeSolve).toBe(true);
+      }
+    }
+
+    for (const id of ['nov-d29-q8', 'nov-d30-q8']) {
+      const pic = findQ(id).visualModel.cpaSpec!.pictorial;
+      expect(pic.kind).toBe('interval_model');
+      if (pic.kind === 'interval_model') {
+        expect(pic.timeUnit).toBe('giây');
+      }
+    }
+
+    const w1q10Pic = findQ('nov-w1-q10').visualModel.cpaSpec!.pictorial;
+    expect(w1q10Pic.kind).toBe('bar_model');
+    if (w1q10Pic.kind === 'bar_model') {
+      expect(w1q10Pic.bars.every((b) => b.isSymbolicOnly === true)).toBe(true);
+    }
+
+    const w5q9Pic = findQ('nov-w5-q9').visualModel.cpaSpec!.pictorial;
+    expect(w5q9Pic.kind).toBe('interval_model');
+    if (w5q9Pic.kind === 'interval_model') {
+      expect(w5q9Pic.unitLabel).toBe('bậc');
+    }
+
+    // 5. Concrete groups ở các bài có offset thanh khớp tổng giá trị của thanh đối chiếu
+    for (const id of ['nov-d29-q6', 'nov-exam-a2', 'nov-exam-b10', 'nov-w1-q5', 'nov-w1-q9']) {
+      const cpa = findQ(id).visualModel.cpaSpec!;
+      expect(cpa.pictorial.kind).toBe('bar_model');
+      if (cpa.pictorial.kind === 'bar_model') {
+        const barTotalSum = cpa.pictorial.bars.reduce((s, b) => s + b.numericValue, 0);
+        const concreteSum = cpa.concrete.groups.reduce((s, g) => s + g.totalValue, 0);
+        expect(concreteSum, `[${id}] Concrete sum (${concreteSum}) phải khớp tổng Bar Model (${barTotalSum})`).toBe(
+          barTotalSum
+        );
+      }
+    }
+  });
 });
+

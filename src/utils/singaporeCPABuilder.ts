@@ -49,22 +49,32 @@ export function createBarBlocks(
       });
     }
   } else {
-    // Negative offset: reduce the last block so sum of blocks === units * unitValue + offset
-    for (let i = 0; i < units - 1; i++) {
+    // Negative offset: deduct Math.abs(offset) from trailing blocks so every block stays > 0
+    // and sum of blocks === units * unitValue + offset
+    let remainingDeduct = Math.abs(offset);
+    const values: number[] = Array.from({ length: units }, () => unitValue);
+    for (let i = units - 1; i >= 0 && remainingDeduct > 0; i--) {
+      if (i > 0 && remainingDeduct >= values[i]) {
+        remainingDeduct -= values[i];
+        values[i] = 0;
+      } else {
+        values[i] = values[i] - remainingDeduct;
+        remainingDeduct = 0;
+      }
+    }
+    let idx = 0;
+    for (let i = 0; i < values.length; i++) {
+      if (values[i] <= 0) continue;
+      const isModified = values[i] !== unitValue;
       blocks.push({
-        index: i,
-        label: `${unitValue}`,
-        numericValue: unitValue,
+        index: idx++,
+        label: options?.isUnknownBar ? '?' : `${values[i]}`,
+        numericValue: values[i],
+        isUnknown: options?.isUnknownBar,
+        isDelta: isModified ? true : undefined,
+        deltaType: isModified ? options?.deltaType || 'removed' : undefined,
       });
     }
-    const lastVal = unitValue + offset; // offset is negative
-    blocks.push({
-      index: units - 1,
-      label: `${ unitValue } - ${ Math.abs(offset) }`,
-      numericValue: lastVal,
-      isDelta: true,
-      deltaType: options?.deltaType || 'removed',
-    });
   }
 
   return blocks;
@@ -82,6 +92,7 @@ export function makeBarSpec(params: {
   displayValue: string;
   isUnknown?: boolean;
   hideOffsetBeforeSolve?: boolean;
+  isSymbolicOnly?: boolean;
   color: string;
   highlightNote?: string;
   deltaType?: 'added' | 'removed' | 'transferred_in' | 'transferred_out';
@@ -98,6 +109,7 @@ export function makeBarSpec(params: {
     displayValue: params.displayValue,
     isUnknown: params.isUnknown,
     hideOffsetBeforeSolve: params.hideOffsetBeforeSolve,
+    isSymbolicOnly: params.isSymbolicOnly,
     color: params.color,
     highlightNote: params.highlightNote,
     deltaType: params.deltaType,
@@ -180,14 +192,6 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           unitReferenceValue: baseA,
           unitName: 'ngôi sao',
           bars: [barA, barB],
-          differenceBracket: {
-            longerBarId: 'bar_b',
-            shorterBarId: 'bar_a',
-            diffUnits: mult - 1,
-            numericValue: diffAB,
-            displayLabel: `Hơn ${mult - 1} phần`,
-            isUnknown: true,
-          },
         },
         abstract: {
           unknownSymbol: '?',
@@ -244,14 +248,6 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           unitReferenceValue: baseA,
           unitName: 'viên đá',
           bars: [barLarge, barSmall],
-          differenceBracket: {
-            longerBarId: 'bar_large',
-            shorterBarId: 'bar_small',
-            diffUnits: mult - 1,
-            numericValue: diffAB,
-            displayLabel: `Chênh lệch ${mult - 1} phần`,
-            isUnknown: true,
-          },
         },
         abstract: {
           unknownSymbol: '?',
@@ -436,13 +432,6 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           unitReferenceValue: baseA,
           unitName: 'cây',
           bars: [barA, barB],
-          differenceBracket: {
-            longerBarId: 'bar_b',
-            shorterBarId: 'bar_a',
-            numericValue: totalB - baseA,
-            displayLabel: `Hơn ? cây`,
-            isUnknown: true,
-          },
         },
         abstract: {
           unknownSymbol: '?',
@@ -502,13 +491,6 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           unitReferenceValue: baseA,
           unitName: 'kg',
           bars: [barA, barB],
-          differenceBracket: {
-            longerBarId: 'bar_b',
-            shorterBarId: 'bar_a',
-            numericValue: totalB - baseA,
-            displayLabel: `Chênh lệch ? kg`,
-            isUnknown: true,
-          },
         },
         abstract: {
           unknownSymbol: '?',
@@ -566,14 +548,6 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           unitReferenceValue: q7Unit,
           unitName: 'quyển',
           bars: [barKnown, barTarget],
-          differenceBracket: {
-            longerBarId: 'bar_target',
-            shorterBarId: 'bar_known',
-            diffUnits: q7TargetBoxes - q7Boxes,
-            numericValue: targetVal - q7Total,
-            displayLabel: `Thêm ${q7TargetBoxes - q7Boxes} hộp`,
-            isUnknown: true,
-          },
         },
         abstract: {
           unknownSymbol: '?',
@@ -592,23 +566,23 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
     }
 
     case 8: {
-      // Part-Whole: Alpha (1 unit = q8Small) + Beta (mult units = q8Small * mult) = Total
+      // Part-Whole: Alpha (1 car = q8Small) + Beta (mult cars = q8Small * mult) = Total
       const betaVal = q8Small * mult;
       const totalPassengers = q8Small * (mult + 1);
       const barAlpha = makeBarSpec({
         id: 'bar_alpha',
-        label: 'Tàu Alpha',
+        label: 'Đoàn tàu Alpha',
         units: 1,
         unitValue: q8Small,
-        displayValue: `${q8Small} khách`,
+        displayValue: `${q8Small} khách (1 toa)`,
         color: '#38BDF8',
       });
       const barBeta = makeBarSpec({
         id: 'bar_beta',
-        label: 'Tàu Beta',
+        label: 'Đoàn tàu Beta',
         units: mult,
         unitValue: q8Small,
-        displayValue: `? khách (${mult} phần)`,
+        displayValue: `? khách (${mult} toa)`,
         isUnknown: true,
         color: '#A855F7',
       });
@@ -618,11 +592,11 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
         concrete: {
           itemName: 'hành khách',
           unitLabel: 'hành khách',
-          actionPrompt: 'Gộp số phần hành khách của Tàu Alpha và Tàu Beta',
-          interactiveRule: `Tàu Alpha có 1 phần (${q8Small} khách), Tàu Beta có ${mult} phần.`,
+          actionPrompt: 'Gộp số toa của Đoàn tàu Alpha và Đoàn tàu Beta để tính tổng số hành khách',
+          interactiveRule: `Mỗi toa chở ${q8Small} khách · Đoàn tàu Alpha có 1 toa, Đoàn tàu Beta có ${mult} toa.`,
           groups: [
-            { id: 'g_alpha', label: 'Tàu Alpha (1 phần)', icon: '🚀', count: 1, unitValue: q8Small, totalValue: q8Small, color: '#38BDF8' },
-            { id: 'g_beta', label: `Tàu Beta (${mult} phần)`, icon: '🛸', count: mult, unitValue: q8Small, totalValue: betaVal, color: '#A855F7', isUnknown: true },
+            { id: 'g_alpha', label: 'Đoàn tàu Alpha (1 toa)', icon: '🚆', count: 1, unitValue: q8Small, totalValue: q8Small, color: '#38BDF8' },
+            { id: 'g_beta', label: `Đoàn tàu Beta (${mult} toa)`, icon: '🚄', count: mult, unitValue: q8Small, totalValue: betaVal, color: '#A855F7', isUnknown: true },
           ],
         },
         pictorial: {
@@ -641,11 +615,11 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
         abstract: {
           unknownSymbol: '?',
           guidedLatexSteps: [
-            `\\text{Tàu Beta (${mult} phần)} = ${q8Small} \\;?\\; ${mult} = ?`,
-            `\\text{Tổng cả hai tàu} = ${q8Small} \\;?\\; \\text{Tàu Beta} = ?`,
+            `\\text{Đoàn tàu Beta (${mult} toa)} = ${q8Small} \\;?\\; ${mult} = ?`,
+            `\\text{Tổng cả hai đoàn tàu} = ${q8Small} \\;?\\; \\text{Đoàn tàu Beta} = ?`,
           ],
           fullLatexSteps: [
-            `\\text{Tổng số phần} = 1 + ${mult} = ${mult + 1}\\text{ (phần)}`,
+            `\\text{Tổng số toa tàu} = 1 + ${mult} = ${mult + 1}\\text{ (toa)}`,
             `\\text{Tổng số hành khách} = ${q8Small} \\times ${mult + 1} = ${totalPassengers}\\text{ (hành khách)}`,
           ],
           finalAnswerLatex: `${totalPassengers}\\text{ hành khách}`,
@@ -844,7 +818,7 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
         domain: 'bar_model',
         concrete: {
           itemName: 'viên năng lượng',
-          unitLabel: 'năng lượng',
+          unitLabel: 'viên năng lượng',
           actionPrompt: 'Bấm chuyển đổi trạng thái TRƯỚC ⇄ SAU để quan sát phần năng lượng chuyển từ Trạm X sang Trạm Y',
           interactiveRule: `Sau khi chuyển ${q11Transfer} viên từ X sang Y thì cả hai trạm đều có ${q11Equal} viên.`,
           groups: [
@@ -856,7 +830,7 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           kind: 'bar_model',
           family: 'before_after',
           unitReferenceValue: q11Equal,
-          unitName: 'năng lượng',
+          unitName: 'viên năng lượng',
           bars: [beforeX, beforeY],
           beforeBars: [beforeX, beforeY],
           afterBars: [afterX, afterY],
@@ -882,9 +856,9 @@ export function buildWeek1QuestionCPA(day: number, qIndex1Based: number, correct
           ],
           fullLatexSteps: [
             `\\text{Sau khi chuyển đi } ${q11Transfer}\\text{ viên, Trạm X còn } ${q11Equal}\\text{ viên}`,
-            `\\text{Trạm X lúc đầu} = ${q11Equal} + ${q11Transfer} = ${initialX}\\text{ (năng lượng)}`,
+            `\\text{Trạm X lúc đầu} = ${q11Equal} + ${q11Transfer} = ${initialX}\\text{ (viên năng lượng)}`,
           ],
-          finalAnswerLatex: `${initialX}\\text{ năng lượng}`,
+          finalAnswerLatex: `${initialX}\\text{ viên năng lượng}`,
           finalNumericValue: extractPrimaryNumber(correctAnswer),
         },
       };
@@ -1357,7 +1331,8 @@ export function buildCPASpecForQuestion(params: {
           interactiveRule: `Kho A có ${valA} thùng, Kho B gấp 2 lần và thêm 10 thùng.`,
           groups: [
             { id: 'cg_bar_1', label: 'Kho A (1 phần)', icon: '📦', count: 1, unitValue: valA, totalValue: valA, color: '#38BDF8' },
-            { id: 'cg_bar_2', label: 'Kho B (2 phần + 10)', icon: '🏗️', count: 2, unitValue: valA, totalValue: 50 * k, color: '#F59E0B', note: '+10 thùng', isUnknown: true },
+            { id: 'cg_bar_2', label: 'Kho B (2 phần chuẩn)', icon: '🏗️', count: 2, unitValue: valA, totalValue: 50 * k, color: '#F59E0B', isUnknown: true },
+            { id: 'cg_bar_2_bonus', label: 'Kho B (Phần thêm)', icon: '➕', count: 1, unitValue: 10, totalValue: 10, color: '#34D399' },
           ],
         },
         pictorial: {
@@ -1417,7 +1392,8 @@ export function buildCPASpecForQuestion(params: {
           interactiveRule: 'Thùng 1 chứa 18 L, Thùng 2 gấp 4 lần và thêm 6 L.',
           groups: [
             { id: 'cg_bar_1', label: 'Thùng 1 (1 phần)', icon: '⛽', count: 1, unitValue: 18, totalValue: 18, color: '#38BDF8' },
-            { id: 'cg_bar_2', label: 'Thùng 2 (4 phần + 6)', icon: '🛢️', count: 4, unitValue: 18, totalValue: 72, color: '#F59E0B', note: '+6 L', isUnknown: true },
+            { id: 'cg_bar_2', label: 'Thùng 2 (4 phần chuẩn)', icon: '🛢️', count: 4, unitValue: 18, totalValue: 72, color: '#F59E0B', isUnknown: true },
+            { id: 'cg_bar_2_bonus', label: 'Thùng 2 (Phần thêm)', icon: '➕', count: 1, unitValue: 6, totalValue: 6, color: '#34D399' },
           ],
         },
         pictorial: {
@@ -1532,7 +1508,7 @@ export function buildCPASpecForQuestion(params: {
           interactiveRule: 'Tổng 3 bình = 2 L 400 mL. C gấp đôi (A + B), A hơn B 200 mL.',
           groups: [
             { id: 'cg_bar_b', label: 'Bình B', icon: '🧪', count: 1, unitValue: 300, totalValue: 300, color: '#38BDF8', isUnknown: true },
-            { id: 'cg_bar_a', label: 'Bình A (B + 200)', icon: '⚗️', count: 1, unitValue: 300, totalValue: 300, color: '#34D399', note: '+200 mL', isUnknown: true },
+            { id: 'cg_bar_a', label: 'Bình A (B + 200 mL)', icon: '⚗️', count: 1, unitValue: 500, totalValue: 500, color: '#34D399', isUnknown: true },
             { id: 'cg_bar_c', label: 'Bình C (2 × (A+B))', icon: '🫙', count: 2, unitValue: 800, totalValue: 1600, color: '#A855F7', isUnknown: true },
           ],
         },
@@ -1715,7 +1691,8 @@ export function buildCPASpecForQuestion(params: {
           interactiveRule: 'Thùng B nhiều hơn 2 lần Thùng A là 9 L.',
           groups: [
             { id: 'cg_1', label: 'Thùng A (1 phần)', icon: '🛢️', count: 1, unitValue: 18, totalValue: 18, color: '#0284C7' },
-            { id: 'cg_2', label: 'Thùng B (2 phần + 9 L)', icon: '⛽', count: 2, unitValue: 18, totalValue: 36, color: '#8B5CF6', note: '+9 L', isUnknown: true },
+            { id: 'cg_2', label: 'Thùng B (2 phần chuẩn)', icon: '⛽', count: 2, unitValue: 18, totalValue: 36, color: '#8B5CF6', isUnknown: true },
+            { id: 'cg_3', label: 'Thùng B (Phần thêm)', icon: '➕', count: 1, unitValue: 9, totalValue: 9, color: '#34D399' },
           ],
         },
         pictorial: { kind: 'bar_model', family: 'comparison', unitReferenceValue: 18, unitName: 'lít', bars: [bA, bB] },
@@ -1861,7 +1838,7 @@ export function buildCPASpecForQuestion(params: {
           interactiveRule: 'Mai = 15 bông. Lan kém 3 lần số hoa của Mai là 7 bông.',
           groups: [
             { id: 'cg_1', label: 'Mai (1 phần)', icon: '🌸', count: 1, unitValue: 15, totalValue: 15, color: '#0284C7' },
-            { id: 'cg_2', label: 'Lan (3 phần bớt 7)', icon: '🌺', count: 3, unitValue: 15, totalValue: 45, color: '#EC4899', note: '-7 bông', isUnknown: true },
+            { id: 'cg_2', label: 'Lan (3 phần bớt 7 bông)', icon: '🌺', count: 1, unitValue: 38, totalValue: 38, color: '#EC4899', isUnknown: true },
           ],
         },
         pictorial: { kind: 'bar_model', family: 'comparison', unitReferenceValue: 15, unitName: 'bông', bars: [bMai, bLan] },
@@ -1879,10 +1856,10 @@ export function buildCPASpecForQuestion(params: {
     }
 
     if (id === 'nov-w1-q10') {
-      const bKhoABefore = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc đầu)', units: 1, unitValue: 20, offsetValue: 24, displayValue: '? tấn (Hơn Kho B)', isUnknown: true, hideOffsetBeforeSolve: true, color: '#10B981', highlightNote: 'Chuyển 12 tấn', deltaType: 'transferred_out' });
-      const bKhoBBefore = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc đầu)', units: 1, unitValue: 20, displayValue: '? tấn (1 phần)', isUnknown: true, color: '#0284C7' });
-      const bKhoAAfter = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc sau)', units: 1, unitValue: 32, displayValue: 'Bằng Kho B', isUnknown: true, color: '#10B981' });
-      const bKhoBAfter = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc sau)', units: 1, unitValue: 20, offsetValue: 12, displayValue: 'Nhận +12 tấn', isUnknown: true, color: '#0284C7', deltaType: 'transferred_in' });
+      const bKhoABefore = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc đầu)', units: 1, unitValue: 20, offsetValue: 24, displayValue: 'Hơn Kho B ? tấn', isUnknown: true, hideOffsetBeforeSolve: true, isSymbolicOnly: true, color: '#10B981', highlightNote: 'Chuyển 12 tấn', deltaType: 'transferred_out' });
+      const bKhoBBefore = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc đầu)', units: 1, unitValue: 20, displayValue: '1 phần ban đầu', isUnknown: true, isSymbolicOnly: true, color: '#0284C7' });
+      const bKhoAAfter = makeBarSpec({ id: 'bar_1', label: 'Kho A (Lúc sau)', units: 1, unitValue: 32, displayValue: 'Bằng Kho B', isUnknown: true, isSymbolicOnly: true, color: '#10B981' });
+      const bKhoBAfter = makeBarSpec({ id: 'bar_2', label: 'Kho B (Lúc sau)', units: 1, unitValue: 20, offsetValue: 12, displayValue: 'Nhận +12 tấn', isUnknown: true, isSymbolicOnly: true, color: '#0284C7', deltaType: 'transferred_in' });
       return {
         version: '1.0',
         domain: 'bar_model',
@@ -2108,6 +2085,8 @@ export function buildCPASpecForQuestion(params: {
     let finalNumericValue = primaryNum;
     let finalAnswerLatex = formatToLatex(correctAnswer);
     let hideRemainderInConcrete = false;
+    let hideDividendBeforeSolve = false;
+    let isExampleIllustration = false;
 
     if (dayNumber && dayNumber >= 8 && dayNumber <= 14 && qIndex1Based) {
       switch (qIndex1Based) {
@@ -2120,6 +2099,7 @@ export function buildCPASpecForQuestion(params: {
         case 2:
           unknownTarget = 'remainder';
           contextMode = 'max_remainder';
+          isExampleIllustration = true;
           contextActionHint = 'Quy tắc bất biến: Số dư lớn nhất luôn bé hơn Số chia đúng 1 đơn vị.';
           guidedLatexSteps = [`\\text{Số dư lớn nhất} = ${divisor} \\;?\\; 1 = ?`];
           break;
@@ -2274,6 +2254,7 @@ export function buildCPASpecForQuestion(params: {
       unknownTarget = 'remainder';
       contextMode = 'standard_division';
       hideRemainderInConcrete = true;
+      hideDividendBeforeSolve = true;
       contextActionHint = 'Bước 1 khôi phục số tự nhiên từ phép chia cho 6; Bước 2 đem số đó chia cho 7 tìm số dư.';
       guidedLatexSteps = [
         `\\text{Số tự nhiên ban đầu} = (9 \\;?\\; 6) \\;?\\; 4 = ?`,
@@ -2346,6 +2327,7 @@ export function buildCPASpecForQuestion(params: {
     } else if (id === 'nov-w5-q8') {
       unknownTarget = 'remainder';
       contextMode = 'complement_to_full';
+      isExampleIllustration = true;
       contextActionHint = 'Đang dư 5 khi chia cho 9: bớt đúng số dư (5) hoặc bù phần còn thiếu để đủ 1 nhóm 9.';
       guidedLatexSteps = [
         `\\text{Bớt ít nhất (bằng số dư)} = ?\\text{ (đơn vị)}`,
@@ -2418,14 +2400,18 @@ export function buildCPASpecForQuestion(params: {
         contextActionHint,
         unknownTarget,
         targetValue: finalNumericValue,
+        hideDividendBeforeSolve: hideDividendBeforeSolve || undefined,
+        isExampleIllustration: isExampleIllustration || undefined,
       },
       abstract: {
         unknownSymbol: '?',
         guidedLatexSteps,
-        fullLatexSteps: [
-          `${dividend} = ${divisor} \\times ${quotient} + ${remainder}\\quad (0 \\le ${remainder} < ${divisor})`,
-          ...stepByStepExplanation.map(formatToLatex),
-        ],
+        fullLatexSteps: isExampleIllustration
+          ? stepByStepExplanation.map(formatToLatex)
+          : [
+              `${dividend} = ${divisor} \\times ${quotient} + ${remainder}\\quad (0 \\le ${remainder} < ${divisor})`,
+              ...stepByStepExplanation.map(formatToLatex),
+            ],
         finalAnswerLatex,
         finalNumericValue,
       },
@@ -2467,6 +2453,7 @@ export function buildCPASpecForQuestion(params: {
     let timePerCut: number | undefined = undefined;
     let timeUnit: string | undefined = undefined;
     let itemInGapIcon: string | undefined = undefined;
+    let hideStepBeforeSolve = false;
     const startFloor = subtype === 'stairs' ? 1 : undefined;
 
     if (dayNumber && dayNumber >= 15 && dayNumber <= 21 && qIndex1Based) {
@@ -2536,6 +2523,7 @@ export function buildCPASpecForQuestion(params: {
           break;
         case 10:
           unknownTarget = 'total_length';
+          hideStepBeforeSolve = true;
           guidedLatexSteps = [
             `\\text{Thời gian 1 khoảng nghỉ} = 6 \\;?\\; (4 \\;?\\; 1) = ?`,
             `\\text{Số khoảng khi gõ ${objectsCount} tiếng} = ${objectsCount} \\;?\\; 1 = ?`,
@@ -2561,7 +2549,7 @@ export function buildCPASpecForQuestion(params: {
       unknownTarget = 'objects';
       if (objectsCount > 0 && primaryNum > objectsCount && primaryNum % objectsCount === 0) {
         timePerCut = primaryNum / objectsCount;
-        timeUnit = 'phút';
+        timeUnit = id === 'nov-exam-a6' ? 'phút' : 'giây';
       }
       guidedLatexSteps = [
         `\\text{Số lần cắt} = ${intervalsCount} \\;?\\; 1 = ?`,
@@ -2577,6 +2565,7 @@ export function buildCPASpecForQuestion(params: {
       ];
     } else if (id === 'nov-exam-b5') {
       unknownTarget = 'total_length';
+      hideStepBeforeSolve = true;
       guidedLatexSteps = [
         `\\text{Số bậc 1 khoảng tầng} = 36 \\;?\\; (3 \\;?\\; 1) = ?`,
         `\\text{Từ Tầng 1 lên Tầng 7} = 7 \\;?\\; 1 = ?\\text{ (khoảng)}`,
@@ -2653,6 +2642,7 @@ export function buildCPASpecForQuestion(params: {
       guidedLatexSteps = [`\\text{Số lần cưa tách thành 6 đoạn} = 6 \\;?\\; 1 = ?\\text{ (lần)}`];
     } else if (id === 'nov-w3-q9') {
       unknownTarget = 'total_length';
+      hideStepBeforeSolve = true;
       finalNumericValue = 15;
       finalAnswerLatex = '15\\text{ giây}';
       guidedLatexSteps = [
@@ -2664,7 +2654,7 @@ export function buildCPASpecForQuestion(params: {
       unknownTarget = 'objects';
       finalNumericValue = 1;
       finalAnswerLatex = '\\text{Số cây} = \\text{Số khoảng}';
-      guidedLatexSteps = [`\\text{Trên đường khép kín: Số cây} \\;?\\; \\text{Số khoảng} = ?`];
+      guidedLatexSteps = [`\\text{Trên đường khép kín: Số cây} \\;?\\; \\text{Số khoảng}`];
     } else if (id === 'nov-w5-q3') {
       unknownTarget = 'objects';
       sidesMultiplier = 2;
@@ -2687,6 +2677,7 @@ export function buildCPASpecForQuestion(params: {
       ];
     } else if (id === 'nov-w5-q9') {
       unknownTarget = 'intervals';
+      hideStepBeforeSolve = true;
       finalNumericValue = 6;
       finalAnswerLatex = '(7 - 1) \\div (4 - 1) = 6 \\div 3 = 2\\text{ (lần)}';
       guidedLatexSteps = [
@@ -2706,8 +2697,18 @@ export function buildCPASpecForQuestion(params: {
           : [`\\text{Tổng độ dài} = (\\text{Số khoảng}) \\;?\\; ${stepLength} = ?`];
     }
 
+    const useDirectExplanationSteps =
+      unknownTarget === 'total_length' ||
+      unknownTarget === 'step_length' ||
+      sidesMultiplier === 2 ||
+      id === 'nov-w3-q7' ||
+      id === 'nov-w3-q10' ||
+      id === 'nov-w5-q9';
+
     const intervalFullSteps =
-      subtype === 'wood_cuts' && stepLength === 1
+      useDirectExplanationSteps
+        ? stepByStepExplanation.map(formatToLatex)
+        : subtype === 'wood_cuts' && stepLength === 1
         ? [ruleFormula, ...stepByStepExplanation.map(formatToLatex)]
         : subtype === 'stairs'
         ? [
@@ -2721,9 +2722,13 @@ export function buildCPASpecForQuestion(params: {
             ...stepByStepExplanation.map(formatToLatex),
           ];
 
+    const isMetalCut = subtype === 'wood_cuts' && objectIcon === '⚡';
+
     const intervalActionPrompt =
       subtype === 'closed_loop'
         ? 'Quan sát vòng khép kín: điểm đầu và điểm cuối chập trùng thành một nên Số mốc = Số khoảng'
+        : isMetalCut
+        ? 'Đếm số mạch cắt nằm giữa các đoạn thép để thấy: Số lần cắt = Số đoạn − 1'
         : subtype === 'wood_cuts'
         ? 'Đếm số mạch cưa nằm giữa các đoạn gỗ để thấy: Số lần cưa = Số đoạn − 1'
         : subtype === 'stairs'
@@ -2733,12 +2738,20 @@ export function buildCPASpecForQuestion(params: {
         : 'Quan sát 2 điểm mút đầu–cuối để xác định đúng quy tắc liên hệ giữa Số mốc và Số khoảng';
 
     const intervalInteractiveRule =
-      subtype === 'wood_cuts'
+      isMetalCut
+        ? timePerCut
+          ? `Mỗi lần cắt hết ${timePerCut} ${timeUnit || 'giây'} · Mạch cắt nằm bên trong thanh thép.`
+          : 'Mạch cắt nằm bên trong thanh thép — lần cắt cuối tách rời cả 2 đoạn cuối.'
+        : subtype === 'wood_cuts'
         ? timePerCut
           ? `Mỗi lần cưa hết ${timePerCut} ${timeUnit || 'phút'} · Mạch cưa nằm bên trong thanh gỗ.`
           : 'Mạch cưa nằm ở giữa thanh gỗ — nhát cưa cuối tách rời cả 2 đoạn cuối.'
         : subtype === 'stairs'
-        ? `Mỗi khoảng tầng có ${stepLength} ${unitLabel}.`
+        ? hideStepBeforeSolve
+          ? 'Số bậc thang giữa hai tầng liên tiếp đều bằng nhau · Tính theo số khoảng tầng.'
+          : `Mỗi khoảng tầng có ${stepLength} ${unitLabel}.`
+        : hideStepBeforeSolve
+        ? 'Tìm độ lớn của 1 khoảng nghỉ/khoảng cách trước, rồi nhân với số khoảng cần tìm.'
         : unknownTarget === 'step_length'
         ? `Tổng chiều dài ${totalLength} ${unitLabel} · Tìm độ dài 1 khoảng cách.`
         : `Mỗi khoảng dài ${stepLength} ${unitLabel}${sidesMultiplier === 2 ? ' · Áp dụng cho cả 2 bên đường' : ''}.`;
@@ -2747,7 +2760,7 @@ export function buildCPASpecForQuestion(params: {
       version: '1.0',
       domain: 'interval_model',
       concrete: {
-        itemName: subtype === 'wood_cuts' ? 'mạch cưa' : subtype === 'stairs' ? 'tầng' : 'mốc khoảng cách',
+        itemName: isMetalCut ? 'lần cắt' : subtype === 'wood_cuts' ? 'mạch cưa' : subtype === 'stairs' ? 'tầng' : 'mốc khoảng cách',
         unitLabel,
         actionPrompt: intervalActionPrompt,
         interactiveRule: intervalInteractiveRule,
@@ -2755,14 +2768,16 @@ export function buildCPASpecForQuestion(params: {
           {
             id: 'cg_intervals',
             label:
-              subtype === 'wood_cuts'
+              isMetalCut
+                ? 'Số đoạn thép'
+                : subtype === 'wood_cuts'
                 ? 'Số đoạn gỗ'
                 : subtype === 'stairs'
                 ? 'Số khoảng tầng'
                 : unknownTarget === 'intervals'
                 ? '? khoảng cách'
                 : 'Khoảng cách',
-            icon: subtype === 'wood_cuts' ? '🪵' : subtype === 'stairs' ? '🪜' : '📏',
+            icon: isMetalCut ? '🔩' : subtype === 'wood_cuts' ? '🪵' : subtype === 'stairs' ? '🪜' : '📏',
             count: intervalsCount,
             unitValue: stepLength,
             totalValue: totalLength,
@@ -2773,7 +2788,9 @@ export function buildCPASpecForQuestion(params: {
           {
             id: 'cg_objects',
             label:
-              subtype === 'wood_cuts'
+              isMetalCut
+                ? 'Số lần cắt'
+                : subtype === 'wood_cuts'
                 ? 'Số lần cưa'
                 : subtype === 'stairs'
                 ? `Từ Tầng 1 đến Tầng ${objectsCount}`
@@ -2806,6 +2823,7 @@ export function buildCPASpecForQuestion(params: {
         timeUnit,
         itemInGapIcon,
         startFloor,
+        hideStepBeforeSolve: hideStepBeforeSolve || undefined,
       },
       abstract: {
         unknownSymbol: '?',

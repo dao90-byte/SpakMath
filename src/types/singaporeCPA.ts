@@ -55,6 +55,8 @@ export interface BarModelBarSpec {
   isUnknown?: boolean;
   /** When true, masks the offset badge/label before solving (e.g. when the offset itself is the answer) */
   hideOffsetBeforeSolve?: boolean;
+  /** When true, avoids displaying invented absolute bar totals after solving (keeps symbolic/relative labels) */
+  isSymbolicOnly?: boolean;
   color: string;
   highlightNote?: string;
   deltaType?: 'added' | 'removed' | 'transferred_in' | 'transferred_out';
@@ -121,6 +123,10 @@ export interface RemainderPictorialSpec {
   contextActionHint?: string;
   unknownTarget: 'quotient_and_remainder' | 'dividend' | 'quotient' | 'remainder';
   targetValue?: number; // Final answer value (e.g. q + 1 for round_up, q for round_down)
+  /** When true, hides the intermediate dividend (and quotient/remainder) before solving */
+  hideDividendBeforeSolve?: boolean;
+  /** When true, marks the numeric values as an illustrative example rather than given prompt numbers */
+  isExampleIllustration?: boolean;
 }
 
 export interface IntervalPictorialSpec {
@@ -143,6 +149,8 @@ export interface IntervalPictorialSpec {
   itemInGapIcon?: string;
   /** Starting floor for stairs problems (default 1) */
   startFloor?: number;
+  /** When true, hides stepLength before solving because it is an unstated intermediate quantity */
+  hideStepBeforeSolve?: boolean;
 }
 
 export type MeasurementOperation =
