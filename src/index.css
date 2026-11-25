@@ -86,28 +86,16 @@
 @layer base {
   body {
     font-family: 'Nunito', system-ui, -apple-system, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--mm-ink-primary);
-    background-color: var(--mm-canvas);
+    color: #1e293b;
+    background-color: #f8fafc;
     user-select: none;
     -webkit-user-select: none;
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, .font-display {
-    font-family: 'Baloo 2', 'Nunito', system-ui, -apple-system, sans-serif;
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
     font-weight: 800;
-  }
-
-  button, a, input, select, textarea, [role="button"] {
-    &:focus-visible {
-      outline: 2px solid var(--mm-cyan-accent);
-      outline-offset: 2px;
-      box-shadow:
-        0 0 0 4px color-mix(in oklch, var(--mm-cyan-accent) 26%, transparent),
-        0 0 22px color-mix(in oklch, var(--mm-violet-accent) 36%, transparent);
-    }
   }
 }
 
