@@ -382,30 +382,24 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#030617]/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fade-in">
-      <div className="relative bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.2),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.18),_transparent_55%),linear-gradient(160deg,_rgba(15,24,68,0.98),_rgba(7,12,38,0.99))] rounded-3xl shadow-[0_28px_70px_rgba(3,7,24,0.88),0_0_42px_rgba(34,211,238,0.18)] border border-cyan-300/45 max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden text-white">
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-fuchsia-400 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
-        />
-
+    <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fade-in">
+      <div className="bg-white rounded-3xl shadow-2xl border-4 border-amber-400 max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden">
         {/* Top Header */}
-        <div className="bg-[#060B24]/90 border-b border-cyan-300/25 px-5 sm:px-6 py-4 text-white flex items-center justify-between shrink-0">
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-5 sm:px-6 py-4 text-white flex items-center justify-between shrink-0 shadow-md">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-300 via-sky-400 to-fuchsia-400 text-slate-950 flex items-center justify-center text-2xl shadow-[0_0_18px_rgba(34,211,238,0.45)] shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner">
               {selectedAssessment.icon || '🧠'}
             </div>
             <div>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="font-black uppercase tracking-wider text-cyan-300">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-black/25 text-amber-200 px-2 py-0.5 rounded-full border border-white/20">
                   {selectedAssessment.code}
                 </span>
-                <span className="text-slate-500" aria-hidden="true">·</span>
-                <span className="text-cyan-100/80 font-bold">
+                <span className="text-xs text-amber-100 font-bold">
                   {selectedAssessment.stationName}
                 </span>
               </div>
-              <h2 className="text-base sm:text-lg font-black tracking-tight leading-snug text-white">
+              <h2 className="text-base sm:text-lg font-black tracking-tight leading-snug">
                 {selectedAssessment.title}
               </h2>
             </div>
@@ -416,7 +410,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
               sound.playClick();
               onClose();
             }}
-            className="w-10 h-10 rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 border border-white/15 hover:border-cyan-300/60 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] text-white flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+            className="p-2 rounded-xl bg-white/10 hover:bg-white/25 text-white transition-all active:scale-95"
             title="Đóng bài kiểm tra định kỳ"
           >
             <X className="w-5 h-5" />
@@ -424,7 +418,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
         </div>
 
         {/* Step Indicator Bar */}
-        <div className="bg-[#091238]/90 border-b border-cyan-300/20 px-4 sm:px-6 py-2.5 flex items-center justify-between overflow-x-auto gap-2 text-xs font-bold scrollbar-none">
+        <div className="bg-amber-50/80 border-b border-amber-200 px-4 sm:px-6 py-2.5 flex items-center justify-between overflow-x-auto gap-2 text-xs font-bold scrollbar-none">
           {[
             { num: 1, title: '1. Bản chất trực quan' },
             { num: 2, title: '2. Khái niệm cốt lõi' },
@@ -439,16 +433,16 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                 sound.playClick();
                 setCurrentStep(s.num);
               }}
-              className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all flex items-center gap-1.5 ${
                 currentStep === s.num
-                  ? 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 font-black shadow-[0_0_18px_rgba(34,211,238,0.45)]'
+                  ? 'bg-amber-500 text-white shadow-xs ring-2 ring-amber-300 font-black'
                   : currentStep > s.num
-                  ? 'bg-emerald-500/15 border border-emerald-400/40 text-emerald-200'
-                  : 'bg-white/[0.04] text-cyan-100/75 hover:text-white hover:bg-cyan-400/15 border border-white/10'
+                  ? 'bg-emerald-100 text-emerald-800'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {currentStep > s.num ? (
-                <Check className="w-3.5 h-3.5 text-emerald-300 stroke-[3]" />
+                <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
               ) : (
                 <span>{s.num}.</span>
               )}
@@ -460,11 +454,11 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
         {/* Modal Main Content Area */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6">
           {/* Visual Model Canvas */}
-          <div className="bg-[#050A1F]/95 rounded-2xl p-4 sm:p-5 text-white shadow-inner relative overflow-hidden border border-cyan-300/30">
+          <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white shadow-lg relative overflow-hidden border border-slate-800">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-cyan-300" />
-                <span className="text-xs font-black uppercase tracking-wider text-cyan-200">
+                <Sliders className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-black uppercase tracking-wider text-amber-300">
                   Mô Hình Tư Duy: {selectedAssessment.thinkingModelName}
                 </span>
               </div>
@@ -475,7 +469,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                     sound.playClick();
                     setShowCutLine(!showCutLine);
                   }}
-                  className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-cyan-400/15 text-cyan-100 border border-cyan-300/30 flex items-center gap-1.5 transition-all cursor-pointer"
+                  className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1.5 transition-colors"
                 >
                   <span>{showCutLine ? 'Ẩn' : 'Hiện'} vạch dóng so sánh</span>
                 </button>
@@ -491,9 +485,9 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
           ======================================================== */}
           {currentStep >= 1 && currentStep <= 4 && (
             <div className="space-y-5 animate-fade-in">
-              <div className="bg-[#091238]/90 border border-cyan-300/30 rounded-2xl p-4 sm:p-5">
+              <div className="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4 sm:p-5">
                 <div className="flex items-start gap-3">
-                  <div className="p-2.5 rounded-xl bg-cyan-500/20 border border-cyan-300/40 text-cyan-300 shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-xl bg-sky-500 text-white shrink-0 mt-0.5">
                     {currentStep === 1 ? (
                       <Lightbulb className="w-5 h-5" />
                     ) : currentStep === 2 ? (
@@ -505,10 +499,10 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                     )}
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-white">
+                    <h3 className="text-base font-black text-sky-900">
                       Giai đoạn {currentStep}: {currentStepData.title || `Khảo sát Giai đoạn ${currentStep}`}
                     </h3>
-                    <p className="text-xs sm:text-sm text-cyan-100/85 mt-1 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-sky-800 mt-1 leading-relaxed">
                       {currentStepData.desc || 'Em hãy đọc kỹ câu hỏi và tư duy để chọn hoặc điền câu trả lời chính xác.'}
                     </p>
                   </div>
@@ -526,19 +520,19 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                   return (
                     <div
                       key={q.questionId}
-                      className={`bg-[#070D28]/90 border rounded-2xl p-5 space-y-3 transition-colors ${
+                      className={`bg-white border-2 rounded-2xl p-5 space-y-3 transition-colors ${
                         isCorrect
-                          ? 'border-emerald-400/60 bg-emerald-500/10'
+                          ? 'border-emerald-400 bg-emerald-50/20'
                           : isWrong
-                          ? 'border-rose-400/60 bg-rose-500/10'
-                          : 'border-cyan-300/25'
+                          ? 'border-rose-300 bg-rose-50/20'
+                          : 'border-slate-200'
                       }`}
                     >
                       <div className="flex items-start gap-2.5">
-                        <span className="w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-300/40 text-cyan-200 text-xs font-black flex items-center justify-center shrink-0 mt-0.5 tabular-nums">
+                        <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-800 text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
                           {currentStep}.{idx + 1}
                         </span>
-                        <label className="text-sm font-bold text-white leading-snug">
+                        <label className="text-sm font-bold text-slate-800 leading-snug">
                           {q.prompt}
                         </label>
                       </div>
@@ -554,19 +548,19 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                                 sound.playClick();
                                 setAnswers((prev) => ({ ...prev, [q.questionId]: opt.id }));
                               }}
-                              className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-2.5 text-xs cursor-pointer ${
+                              className={`w-full text-left p-3 rounded-xl border-2 transition-all flex items-start gap-2.5 text-xs ${
                                 val === opt.id
                                   ? hasSubmitted
                                     ? opt.isCorrect
-                                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-100 font-bold'
-                                      : 'bg-rose-500/20 border-rose-400 text-rose-100 font-bold'
-                                    : 'bg-cyan-500/20 border-cyan-300 text-white font-bold shadow-[0_0_16px_rgba(34,211,238,0.22)]'
-                                  : 'bg-[#0B133B]/80 border-white/15 hover:border-cyan-300/50 text-slate-200'
+                                      ? 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold'
+                                      : 'bg-rose-50 border-rose-400 text-rose-900 font-bold'
+                                    : 'bg-amber-50 border-amber-500 text-amber-950 font-bold ring-2 ring-amber-200'
+                                  : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
                               }`}
                             >
                               <span
                                 className={`w-4 h-4 rounded-full border mt-0.5 flex items-center justify-center shrink-0 ${
-                                  val === opt.id ? 'bg-cyan-300 border-cyan-200 text-slate-950' : 'border-cyan-300/40'
+                                  val === opt.id ? 'bg-amber-500 text-white' : 'border-slate-300'
                                 }`}
                               >
                                 {val === opt.id && <Check className="w-2.5 h-2.5 stroke-[3]" />}
@@ -586,10 +580,10 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                               setAnswers((prev) => ({ ...prev, [q.questionId]: e.target.value }))
                             }
                             placeholder={q.placeholder || 'Nhập đáp số...'}
-                            className="w-48 px-4 py-2.5 text-sm font-black rounded-xl bg-[#050A1F] border border-cyan-300/35 text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none text-center tabular-nums"
+                            className="w-48 px-4 py-2.5 text-sm font-black rounded-xl border-2 border-slate-200 focus:border-amber-500 focus:outline-none text-center"
                           />
                           {q.unit && (
-                            <span className="text-sm font-bold text-cyan-200">{q.unit}</span>
+                            <span className="text-sm font-bold text-slate-700">{q.unit}</span>
                           )}
                         </div>
                       )}
@@ -603,7 +597,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                               setAnswers((prev) => ({ ...prev, [q.questionId]: e.target.value }))
                             }
                             placeholder={q.placeholder || 'Nhập câu trả lời của em...'}
-                            className="w-full px-4 py-2.5 text-sm rounded-xl bg-[#050A1F] border border-cyan-300/35 text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                            className="w-full px-4 py-2.5 text-sm rounded-xl border-2 border-slate-200 focus:border-amber-500 focus:outline-none"
                           />
                         </div>
                       )}
@@ -612,12 +606,12 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                       {hasSubmitted && (
                         <div className="text-xs pt-1">
                           {isCorrect ? (
-                            <span className="text-emerald-300 font-bold flex items-center gap-1.5">
+                            <span className="text-emerald-600 font-bold flex items-center gap-1.5">
                               <CheckCircle2 className="w-4 h-4 shrink-0" />
                               <span>{q.explanation}</span>
                             </span>
                           ) : (
-                            <span className="text-rose-300 font-medium flex items-center gap-1.5">
+                            <span className="text-rose-600 font-medium flex items-center gap-1.5">
                               <AlertCircle className="w-4 h-4 shrink-0" />
                               <span>Gợi ý tư duy: {q.hint}</span>
                             </span>
@@ -638,7 +632,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                       sound.playClick();
                       setCurrentStep((prev) => prev - 1);
                     }}
-                    className="px-4 py-2 rounded-xl text-xs font-bold text-cyan-200 bg-white/[0.06] border border-white/15 hover:bg-cyan-400/15 hover:border-cyan-300/50 flex items-center gap-1.5 cursor-pointer transition-all"
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-1.5"
                   >
                     <ArrowLeft className="w-4 h-4" /> Quay lại
                   </button>
@@ -650,7 +644,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                   <button
                     type="button"
                     onClick={handleCheckStep}
-                    className="px-5 py-2.5 rounded-xl font-black text-slate-950 bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 active:scale-95 shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl font-bold text-white bg-amber-500 hover:bg-amber-600 active:scale-95 shadow-xs transition-all"
                   >
                     Kiểm tra câu trả lời
                   </button>
@@ -662,7 +656,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                         sound.playClick();
                         setCurrentStep((prev) => prev + 1);
                       }}
-                      className="px-5 py-2.5 rounded-xl font-black text-slate-950 bg-gradient-to-r from-emerald-300 to-cyan-300 hover:brightness-110 active:scale-95 shadow-[0_0_22px_rgba(52,211,153,0.45)] flex items-center gap-2 transition-all cursor-pointer"
+                      className="px-5 py-2.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 shadow-xs flex items-center gap-2 transition-all animate-bounce-slow"
                     >
                       <span>
                         {currentStep === 4 ? 'Xem Sơ đồ & Nhận Chứng Nhận' : `Qua Giai đoạn ${currentStep + 1}`}
@@ -680,59 +674,62 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
           ======================================================== */}
           {currentStep === 5 && (
             <div className="space-y-6 animate-fade-in">
-              <div className="bg-[radial-gradient(ellipse_at_top,_rgba(56,189,248,0.22),_transparent_60%),linear-gradient(135deg,_rgba(30,58,138,0.65),_rgba(88,28,135,0.55))] border border-cyan-300/40 rounded-3xl p-6 text-white text-center shadow-[0_0_32px_rgba(34,211,238,0.2)] space-y-3">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-300 to-yellow-400 text-slate-950 flex items-center justify-center text-4xl shadow-[0_0_24px_rgba(251,191,36,0.45)]">
+              <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 rounded-3xl p-6 text-white text-center shadow-xl space-y-3">
+                <div className="w-16 h-16 mx-auto rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl shadow-inner border border-white/30 animate-bounce-slow">
                   🎖️
                 </div>
-                <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-                  Xác Nhận Đạt Chuẩn Bài Kiểm Tra Định Kỳ
+                <h3 className="text-xl sm:text-2xl font-black tracking-tight">
+                  Xác Nhận Đạt Chuẩn Bài Kiểm Tra Định Kỳ!
                 </h3>
-                <p className="text-xs sm:text-sm text-cyan-100/90 max-w-xl mx-auto leading-relaxed">
+                <p className="text-xs sm:text-sm text-amber-100 max-w-xl mx-auto leading-relaxed">
                   Em đã hoàn thành xuất sắc toàn bộ bài kiểm tra định kỳ của mô hình tư duy:{' '}
-                  <strong className="text-amber-300">{selectedAssessment.thinkingModelName}</strong>! Cụm bài tập kế tiếp đã được mở khóa.
+                  <strong>{selectedAssessment.thinkingModelName}</strong>! Cụm bài tập kế tiếp đã được mở khóa.
                 </p>
-                <div className="pt-2 flex items-center justify-center gap-3 text-xs font-bold text-cyan-200">
-                  <span>Học sinh: {studentName}</span>
-                  <span aria-hidden="true">·</span>
-                  <span className="text-emerald-300">Trạng thái: Đạt chuẩn tư duy</span>
+                <div className="pt-2 flex items-center justify-center gap-2">
+                  <span className="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-full">
+                    Học sinh: {studentName}
+                  </span>
+                  <span className="text-xs font-bold text-emerald-900 bg-emerald-100 px-3 py-1 rounded-full">
+                    Trạng thái: Đạt chuẩn tư duy Spark Math
+                  </span>
                 </div>
               </div>
 
               {/* Sơ đồ tư duy */}
-              <div className="bg-[#070D28]/90 border border-cyan-300/30 rounded-2xl p-5 sm:p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-cyan-300/20 pb-3">
+              <div className="bg-white border-2 border-amber-300 rounded-2xl p-5 sm:p-6 shadow-md space-y-4">
+                <div className="flex items-center justify-between border-b pb-3">
                   <div className="flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-cyan-300" />
-                    <h4 className="font-black text-white text-sm sm:text-base">
+                    <BookOpen className="w-5 h-5 text-amber-600" />
+                    <h4 className="font-black text-slate-800 text-sm sm:text-base">
                       Bảo Bối Tư Duy: Sơ Đồ Hệ Thống Hóa Quy Tắc Vàng
                     </h4>
                   </div>
-                  <span className="text-xs font-black text-emerald-300">
+                  <span className="text-[11px] font-black uppercase text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
                     Đã kiểm tra đạt
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                   {selectedAssessment.keyRuleSummary.map((rule, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-[#0B133B]/80 border border-cyan-300/20 space-y-1.5">
-                      <div className="font-black text-amber-300 text-xs sm:text-sm flex items-center gap-1.5">
-                        <Target className="w-4 h-4 text-cyan-300 shrink-0" />
+                    <div key={idx} className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 space-y-1.5">
+                      <div className="font-black text-amber-900 text-xs sm:text-sm flex items-center gap-1.5">
+                        <Target className="w-4 h-4 text-amber-600 shrink-0" />
                         <span>Quy Tắc {idx + 1}</span>
                       </div>
-                      <p className="text-slate-200 leading-relaxed font-medium">{rule}</p>
+                      <p className="text-slate-700 leading-relaxed font-medium">{rule}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#050A1F]/80 p-4 rounded-xl border border-cyan-300/25">
-                  <div className="text-xs text-cyan-100/90 font-medium">
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 bg-amber-50/50 p-4 rounded-xl border border-amber-200">
+                  <div className="text-xs text-amber-950 font-medium">
                     {savedToNotebook ? (
-                      <span className="text-emerald-300 font-bold flex items-center gap-1">
+                      <span className="text-emerald-700 font-bold flex items-center gap-1">
                         <CheckCircle2 className="w-4 h-4" /> Đã lưu nội dung kiểm tra định kỳ này vào Sổ Ôn Tập!
                       </span>
                     ) : (
                       <span>
-                        Lưu bản tóm tắt bài kiểm tra định kỳ vào <strong className="text-white">Sổ Ôn Tập</strong> để tự ôn tập khi gặp bài toán khó nhé!
+                        Lưu bản tóm tắt bài kiểm tra định kỳ vào <strong>Sổ Ôn Tập</strong> để tự ôn tập khi gặp bài toán khó nhé!
                       </span>
                     )}
                   </div>
@@ -740,10 +737,10 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                     type="button"
                     onClick={handleSaveToReviewNotebook}
                     disabled={savedToNotebook}
-                    className={`px-4 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all shrink-0 ${
+                    className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shrink-0 ${
                       savedToNotebook
-                        ? 'bg-emerald-500/25 border border-emerald-400/50 text-emerald-200 cursor-default'
-                        : 'bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 text-slate-950 hover:brightness-110 shadow-[0_0_18px_rgba(34,211,238,0.38)] active:scale-95 cursor-pointer'
+                        ? 'bg-emerald-600 text-white cursor-default'
+                        : 'bg-amber-600 hover:bg-amber-700 text-white shadow-xs active:scale-95'
                     }`}
                   >
                     <BookmarkPlus className="w-4 h-4" />
@@ -760,7 +757,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                     sound.playClick();
                     setCurrentStep(1);
                   }}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-cyan-200 bg-white/[0.06] border border-white/15 hover:bg-cyan-400/15 hover:border-cyan-300/50 flex items-center gap-1.5 cursor-pointer transition-all"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-1.5"
                 >
                   <RotateCcw className="w-4 h-4" /> Ôn lại từ đầu
                 </button>
@@ -771,7 +768,7 @@ export const PeriodicAssessmentRunnerModal: React.FC<PeriodicAssessmentRunnerMod
                     sound.playClick();
                     onClose();
                   }}
-                  className="px-6 py-2.5 rounded-xl font-black text-slate-950 bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 active:scale-95 shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl font-black text-white bg-slate-900 hover:bg-slate-800 active:scale-95 shadow-md transition-all"
                 >
                   Hoàn thành &amp; Đóng bài kiểm tra
                 </button>
