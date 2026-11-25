@@ -80,12 +80,27 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
     setSelectedWeek('all');
   }, [monthProgram.monthNumber]);
 
-  const completedCount = Object.keys(completedDays).length;
-  const progressPct = Math.round((completedCount / 30) * 100);
+  const totalDays = monthProgram.days.length;
+  const totalWeeks = monthProgram.weeksMeta.length;
+  const unitLabel = monthProgram.unitLabel || 'Ngày';
+  const unitLower = unitLabel.toLowerCase();
+  const completedCount = monthProgram.days.filter((d) => !!completedDays[d.dayNumber]).length;
+  const progressPct = totalDays > 0 ? Math.round((completedCount / totalDays) * 100) : 0;
   const weeklyTests = monthProgram.weeklyTests || [];
 
+  const examQuestions = monthProgram.finalExam.questions;
+  const examPartACount = examQuestions.filter((q) => q.part === 'A').length;
+  const examPartBCount = examQuestions.filter((q) => q.part === 'B').length;
+  const examPartCCount = examQuestions.filter((q) => q.part === 'C').length;
+  const examDurationText =
+    monthProgram.finalExam.durationRangeLabel || `${monthProgram.finalExam.durationMinutes} phút`;
+  const examSummaryBadge =
+    examPartCCount > 0
+      ? `${examPartACount} Cơ bản · ${examPartBCount} Olympic · ${examPartCCount} Nghị luận · ${examDurationText}`
+      : `${examQuestions.length} câu Cơ bản & Tư duy Olympic · ${examDurationText}`;
+
   // Sequential unlock + Weekly 15-minute test gate:
-  // Day 1 is open; Day N opens when Day N-1 is completed AND all prior weeks' 15-minute tests are passed
+  // Session 1 is open; Session N opens when Session N-1 is completed AND all prior weeks' 15-minute tests are passed
   const getBlockingWeeklyTestForDay = (dayNum: number): InMonthWeeklyTest | null => {
     if (effectiveUnlockAll || weeklyTests.length === 0) return null;
     for (const wt of weeklyTests) {
@@ -113,10 +128,10 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
   };
 
   const nextActiveDayNumber = (() => {
-    for (let d = 1; d <= 30; d++) {
+    for (let d = 1; d <= totalDays; d++) {
       if (!completedDays[d]) return d;
     }
-    return 30;
+    return totalDays;
   })();
 
   const pendingWeeklyTest: InMonthWeeklyTest | null = (() => {
@@ -183,7 +198,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
 
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/15 text-[11px] font-bold text-[color:var(--mm-cyan-text)] tabular-nums">
             <Orbit className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
-            <span>30 chặng · {completedCount}/30 hoàn thành</span>
+            <span>{totalDays} {unitLower} · {completedCount}/{totalDays} hoàn thành</span>
           </div>
         </div>
       </div>
@@ -319,7 +334,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   className="justify-center px-6 sm:px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-200 to-fuchsia-300 hover:from-cyan-200 hover:via-white hover:to-fuchsia-200 text-slate-950 font-black text-sm sm:text-base ring-2 ring-cyan-200/90 shadow-[0_0_38px_rgba(34,211,238,0.72),0_0_72px_rgba(217,70,239,0.48),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_0_54px_rgba(34,211,238,0.92),0_0_92px_rgba(217,70,239,0.68)] flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer min-h-[48px] whitespace-nowrap"
                 >
                   <Sparkles className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  <span>Bắt Đầu Ngay: Ngày {nextActiveDayNumber}/30</span>
+                  <span>Bắt Đầu Ngay: {unitLabel} {nextActiveDayNumber}/{totalDays}</span>
                   <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
                 </button>
               )}
@@ -354,7 +369,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
               <div className="flex items-center justify-between gap-3">
                 <div className="text-2xl sm:text-3xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums leading-none">
                   {completedCount}
-                  <span className="text-xs font-mono font-bold text-[color:var(--mm-ink-muted)] ml-1.5">/ 30</span>
+                  <span className="text-xs font-mono font-bold text-[color:var(--mm-ink-muted)] ml-1.5">/ {totalDays}</span>
                 </div>
                 <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-[0_0_10px_rgba(56,189,248,0.4)]" aria-hidden="true">
                   <defs>
@@ -372,7 +387,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                     stroke="url(#monthProgressGrad)"
                     strokeWidth="3.5"
                     strokeLinecap="round"
-                    strokeDasharray={`${Math.max(4, Math.round((completedCount / 30) * 113.1))} 113.1`}
+                    strokeDasharray={`${Math.max(4, Math.round((completedCount / Math.max(1, totalDays)) * 113.1))} 113.1`}
                     transform="rotate(-90 24 24)"
                   />
                   <text x="24" y="27.5" textAnchor="middle" className="fill-cyan-100 text-[10px] font-black font-mono tabular-nums">
@@ -381,7 +396,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                 </svg>
               </div>
               <span className="text-xs text-[color:var(--mm-ink-muted)] font-medium tabular-nums">
-                Đã hoàn thành {completedCount} ngày
+                Đã hoàn thành {completedCount} {unitLower}
               </span>
             </div>
 
@@ -451,7 +466,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   : 'bg-indigo-950/60 text-cyan-50 hover:text-white hover:bg-gradient-to-r hover:from-cyan-400/20 hover:to-fuchsia-400/20 border border-indigo-300/25 hover:border-cyan-300/65 font-bold'
               }`}
             >
-              Tất cả 30 ngày
+              Tất cả {totalDays} {unitLower}
             </button>
             {monthProgram.weeksMeta.map((w) => {
               const wt = weeklyTests.find((item) => item.weekNumber === w.weekNumber);
@@ -509,7 +524,11 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             {effectiveUnlockAll ? (
               <>
                 <Unlock className="w-4 h-4 text-emerald-300 shrink-0" aria-hidden="true" />
-                <span>{isTeacherMode ? 'Chế độ Giáo viên: Đã mở 30 ngày' : 'Đã Mở Toàn Bộ 30 Ngày'}</span>
+                <span>
+                  {isTeacherMode
+                    ? `Chế độ Giáo viên: Đã mở ${totalDays} ${unitLower}`
+                    : `Đã Mở Toàn Bộ ${totalDays} ${unitLabel}`}
+                </span>
               </>
             ) : (
               <>
@@ -520,7 +539,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
           </button>
         </div>
 
-        {/* 30-Day Cosmic Grid + End-of-Week 15-Minute Test Gate Cards (for Tháng 11) */}
+        {/* Session Cosmic Grid + End-of-Week 15-Minute Test Gate Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredDays.map((dayPlan) => {
             const unlocked = isDayUnlocked(dayPlan.dayNumber);
@@ -533,7 +552,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
               ? dayPlan.questions.length
               : getSavedDaySolvedCount(monthProgram.monthNumber, dayPlan.dayNumber);
             const isCurrentTarget = dayPlan.dayNumber === nextActiveDayNumber && unlocked;
-            const cleanTitle = dayPlan.title.replace(/^Ngày\s+\d+\s*:\s*/i, '');
+            const cleanTitle = dayPlan.title.replace(/^(?:Ngày|Buổi)\s+\d+\s*:\s*/i, '');
 
             const weeklyTestAfterThisDay = weeklyTests.find(
               (wt) => wt.triggerAfterDayNumber === dayPlan.dayNumber
@@ -547,7 +566,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                   onClick={() => {
                     if (unlocked) onSelectDay(dayPlan);
                   }}
-                  aria-label={`Ngày ${dayPlan.dayNumber}: ${cleanTitle}`}
+                  aria-label={`${unitLabel} ${dayPlan.dayNumber}: ${cleanTitle}`}
                   className={`group relative overflow-hidden rounded-3xl p-6 border text-left transition-all duration-200 min-h-[144px] flex flex-col justify-between backdrop-blur-xl ${
                     unlocked
                       ? isCurrentTarget
@@ -583,7 +602,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                           <span className="w-2 h-2 rounded-full bg-[color:var(--mm-cyan-brightFill)] shadow-[0_0_10px_rgba(34,211,238,0.95)] animate-ping shrink-0" aria-hidden="true" />
                         )}
                         <span className="text-sm font-extrabold text-[color:var(--mm-ink-primary)] tabular-nums whitespace-nowrap shrink-0">
-                          Ngày {dayPlan.dayNumber}
+                          {unitLabel} {dayPlan.dayNumber}
                         </span>
                         <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)] shrink-0">·</span>
                         <span className="truncate text-[color:var(--mm-cyan-text)] font-semibold">
@@ -704,14 +723,16 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                               {isPassed
                                 ? `Đã vượt qua xuất sắc với ${wtResult.totalScore}/100 điểm (Tính toán: ${wtResult.calculationScore}/60đ · Nghị luận: ${wtResult.reasoningScore}/40đ). ${
                                     weeklyTestAfterThisDay.unlocksDayNumber
-                                      ? `Đã mở khóa Tuần ${weeklyTestAfterThisDay.weekNumber + 1} (từ Ngày ${weeklyTestAfterThisDay.unlocksDayNumber})!`
-                                      : 'Đã hoàn tất trọn vẹn 5 tuần học!'
+                                      ? `Đã mở khóa Tuần ${weeklyTestAfterThisDay.weekNumber + 1} (từ ${unitLabel} ${weeklyTestAfterThisDay.unlocksDayNumber})!`
+                                      : `Đã hoàn tất trọn vẹn ${totalWeeks} tuần học!`
                                   }`
                                 : wtUnlocked
                                 ? effectiveUnlockAll
                                   ? `Đã mở khóa sẵn · Làm bài kiểm tra 15 phút để đánh giá năng lực tuần (mục tiêu ≥ ${weeklyTestAfterThisDay.passingScore}/100 điểm).`
-                                  : `Cần đạt từ ${weeklyTestAfterThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp.`
-                                : `Hoàn thành bài học Ngày ${weeklyTestAfterThisDay.triggerAfterDayNumber} để mở bài kiểm tra 15 phút này.`}
+                                  : weeklyTestAfterThisDay.unlocksDayNumber
+                                  ? `Cần đạt từ ${weeklyTestAfterThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp.`
+                                  : `Hoàn thành bài kiểm tra 15 phút cuối tuần với điểm ≥ ${weeklyTestAfterThisDay.passingScore}/100 để sẵn sàng cho Kỳ Thi Cuối ${monthProgram.label}.`
+                                : `Hoàn thành bài học ${unitLabel} ${weeklyTestAfterThisDay.triggerAfterDayNumber} để mở bài kiểm tra 15 phút này.`}
                             </p>
                           </div>
 
@@ -734,7 +755,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                             ) : (
                               <span className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/15 text-[color:var(--mm-ink-muted)] font-bold text-xs inline-flex items-center gap-1.5">
                                 <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-                                <span>Mở sau Ngày {weeklyTestAfterThisDay.triggerAfterDayNumber}</span>
+                                <span>Mở sau {unitLabel} {weeklyTestAfterThisDay.triggerAfterDayNumber}</span>
                               </span>
                             )}
                           </div>
@@ -755,11 +776,11 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
             className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-azure-accent)] to-[color:var(--mm-violet-accent)] shadow-[0_0_18px_rgba(34,211,238,0.8)]"
           />
           <div className="relative z-10 space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2 text-xs font-bold text-[color:var(--mm-cyan-text)]">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[color:var(--mm-cyan-text)]">
               <Trophy className="w-4 h-4 text-[color:var(--mm-amber-accent)] drop-shadow-[0_0_8px_rgba(251,191,36,0.75)]" aria-hidden="true" />
               <span>Chặng Cuối {monthProgram.label}</span>
               <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)]">·</span>
-              <span className="text-[color:var(--mm-violet-text)]">20 câu Cơ bản &amp; Tư duy Olympic</span>
+              <span className="text-[color:var(--mm-violet-text)]">{examSummaryBadge}</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold font-display bg-gradient-to-r from-white via-cyan-100 to-fuchsia-200 bg-clip-text text-transparent cosmic-glow-title-cyan">
               Bài Kiểm Tra Tổng Kết &amp; Đánh Giá Năng Lực {monthProgram.label}

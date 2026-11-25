@@ -39,6 +39,7 @@ export interface InMonthMonthProgram {
   semester: 1 | 2;
   label: string; // "Tháng 11"
   shortLabel: string; // "T11"
+  unitLabel?: 'Ngày' | 'Buổi'; // 'Buổi' cho khung chuẩn mới 20 buổi (từ Tháng 12), 'Ngày' cho các tháng cũ 30 ngày
   title: string;
   heroTitle: string;
   topics: string[];
@@ -48,7 +49,7 @@ export interface InMonthMonthProgram {
   weeksMeta: InMonthWeekMeta[];
   /**
    * Optional 15-minute weekly tests (Calculation + Reasoning) at the end of each week.
-   * Currently populated for Month 11 (Tháng 11); ready to be attached whenever a new month's content is designed.
+   * For the 20-session standard (4 weeks × 5 sessions): triggered after sessions 5, 10, 15, and 20.
    */
   weeklyTests?: InMonthWeeklyTest[];
 }
@@ -1059,52 +1060,43 @@ const NOVEMBER_PROGRAM: InMonthMonthProgram = {
   weeklyTests: NOVEMBER_WEEKLY_TESTS,
 };
 
-// Month 12 uses the full hand-crafted Singapore CPA DECEMBER_IN_MONTH_DAYS, DECEMBER_WEEKLY_TESTS & DECEMBER_FINAL_EXAM
+// Month 12 follows the 20-session monthly standard (4 weeks × 5 sessions, 4 × 15-min tests, 45–60 min final exam)
 const DECEMBER_WEEKS_META: InMonthWeekMeta[] = [
   {
     weekNumber: 1,
     title: 'Tuần 1 · Chu Vi Cơ Bản',
     shortLabel: 'Tuần 1 · Chu Vi Cơ Bản',
-    daysRange: [1, 7],
+    daysRange: [1, 5],
     skillDomain: 'interval',
     color: '#0284C7',
-    description: 'Chu vi hình vuông, hình chữ nhật, chừa cổng & toán ngược tìm cạnh',
+    description: 'Chu vi hình vuông, hình chữ nhật, chừa cổng & toán ngược tìm cạnh (Buổi 1–5)',
   },
   {
     weekNumber: 2,
     title: 'Tuần 2 · Hình Ghép & Dời Cạnh',
     shortLabel: 'Tuần 2 · Dời Cạnh',
-    daysRange: [8, 14],
+    daysRange: [6, 10],
     skillDomain: 'bar_model',
     color: '#0D9488',
-    description: 'Ghép hình vuông & kỹ thuật Dời cạnh chữ L, bậc thang, chữ U (+2×d)',
+    description: 'Ghép hình vuông & kỹ thuật Dời cạnh chữ L, bậc thang, chữ U (+2×d) (Buổi 6–10)',
   },
   {
     weekNumber: 3,
     title: 'Tuần 3 · Khối Lượng kg – g',
     shortLabel: 'Tuần 3 · Khối Lượng',
-    daysRange: [15, 21],
+    daysRange: [11, 15],
     skillDomain: 'remainder',
     color: '#7C3AED',
-    description: 'Đổi đơn vị kg – g, trừ bì, cân thăng bằng, cả thùng – nửa thùng & san giỏ',
+    description: 'Đổi đơn vị kg – g, trừ bì, cân thăng bằng, cả thùng – nửa thùng & san giỏ (Buổi 11–15)',
   },
   {
     weekNumber: 4,
     title: 'Tuần 4 · Thể Tích L – mL',
     shortLabel: 'Tuần 4 · Thể Tích',
-    daysRange: [22, 28],
+    daysRange: [16, 20],
     skillDomain: 'measurement',
     color: '#EA580C',
-    description: 'Đổi đơn vị L – mL, chia đều vào chai/cốc, san bình & toán ngược thể tích',
-  },
-  {
-    weekNumber: 5,
-    title: 'Tuần 5 · Tổng Ôn Tháng 12',
-    shortLabel: 'Tuần 5 · Tổng Ôn',
-    daysRange: [29, 30],
-    skillDomain: 'interval',
-    color: '#E11D48',
-    description: 'Tổng duyệt 4 trụ cột Chu vi, Dời cạnh, Khối lượng & Thể tích',
+    description: 'Đổi đơn vị L – mL, chia đều vào chai/cốc, san bình & toán ngược thể tích (Buổi 16–20)',
   },
 ];
 
@@ -1115,8 +1107,9 @@ const DECEMBER_PROGRAM: InMonthMonthProgram = {
   semester: 2,
   label: 'Tháng 12',
   shortLabel: 'T12',
+  unitLabel: 'Buổi',
   title: 'Chu Vi Hình Vuông, Chữ Nhật, Kỹ Thuật Dời Cạnh & Đo Lường kg–g, L–mL',
-  heroTitle: 'Làm Chủ Chu Vi Hình Ghép, Dời Cạnh Singapore & Phòng Thí Nghiệm Đo Lường',
+  heroTitle: 'Hành Trình 20 Buổi Chinh Phục Chu Vi, Dời Cạnh Singapore & Đo Lường',
   topics: [
     'Chu vi hình vuông, hình chữ nhật, toán ngược & rào vườn có cổng',
     'Kỹ thuật Dời cạnh (Side-Shifting) hình ghép, chữ L, bậc thang & chữ U',

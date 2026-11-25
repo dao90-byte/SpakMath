@@ -22,23 +22,38 @@ import {
   INITIAL_COSMIC_PROGRESS,
 } from '../utils/cosmicProgressStorage';
 
-describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (Toàn bộ 400 câu: 30 Ngày + 5 Đề Tuần 15p + Đề Cuối Tháng)', () => {
+describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Singapore CPA (270 câu: 20 Buổi + 4 Đề 15p + Đề Cuối Kỳ 45–60p)', () => {
   const allDailyQuestions = DECEMBER_IN_MONTH_DAYS.flatMap((d) => d.questions);
   const allWeeklyQuestions = DECEMBER_WEEKLY_TESTS.flatMap((w) => w.questions);
   const allExamQuestions = DECEMBER_FINAL_EXAM.questions;
-  const all400Questions = [
+  const allQuestions = [
     ...allDailyQuestions,
     ...allWeeklyQuestions,
     ...allExamQuestions,
   ];
 
-  it('Có đủ 30 ngày học (330 câu), 5 đề kiểm tra 15p (50 câu: 6 Tính toán + 4 Nghị luận mỗi đề) và 20 câu thi cuối tháng = đúng 400 câu Tháng 12', () => {
-    expect(DECEMBER_IN_MONTH_DAYS.length).toBe(30);
-    expect(allDailyQuestions.length).toBe(330);
-    expect(DECEMBER_WEEKLY_TESTS.length).toBe(5);
-    expect(allWeeklyQuestions.length).toBe(50);
-    expect(allExamQuestions.length).toBe(20);
-    expect(all400Questions.length).toBe(400);
+  it('Đạt đúng khung chuẩn 20 buổi (4 tuần × 5 buổi = 220 câu), 4 đề 15p sau Buổi 5–10–15–20 (40 câu), và Đề Cuối Kỳ 45–60p gồm 5 Cơ bản + 3 Olympic + 2 Nghị luận (10 câu) = 270 câu', () => {
+    expect(DECEMBER_IN_MONTH_DAYS.length).toBe(20);
+    expect(allDailyQuestions.length).toBe(220);
+    expect(DECEMBER_WEEKLY_TESTS.length).toBe(4);
+    expect(allWeeklyQuestions.length).toBe(40);
+    expect(allExamQuestions.length).toBe(10);
+    expect(allQuestions.length).toBe(270);
+
+    // Kiểm tra phân bổ 4 tuần × 5 buổi liên tiếp 1..20
+    DECEMBER_IN_MONTH_DAYS.forEach((session, idx) => {
+      const expectedNum = idx + 1;
+      const expectedWeek = Math.floor(idx / 5) + 1;
+      expect(session.dayNumber).toBe(expectedNum);
+      expect(session.weekNumber).toBe(expectedWeek);
+      expect(session.title).toMatch(new RegExp(`^Buổi ${expectedNum}:`));
+      expect(session.questions.length).toBe(11);
+    });
+
+    // Kiểm tra 4 đề 15p đặt sau buổi 5, 10, 15, 20
+    expect(DECEMBER_WEEKLY_TESTS.map((w) => w.weekNumber)).toEqual([1, 2, 3, 4]);
+    expect(DECEMBER_WEEKLY_TESTS.map((w) => w.triggerAfterDayNumber)).toEqual([5, 10, 15, 20]);
+    expect(DECEMBER_WEEKLY_TESTS.map((w) => w.unlocksDayNumber)).toEqual([6, 11, 16, undefined]);
 
     for (const wt of DECEMBER_WEEKLY_TESTS) {
       expect(wt.monthNumber).toBe(12);
@@ -52,20 +67,65 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
       expect(reasonCount).toBe(4);
       const totalPts = wt.questions.reduce((s, q) => s + q.points, 0);
       expect(totalPts).toBe(100);
+      for (const q of wt.questions) {
+        expect(q.relatedDayNumbers.length).toBeGreaterThan(0);
+        for (const dNum of q.relatedDayNumbers) {
+          expect(dNum).toBeGreaterThanOrEqual(1);
+          expect(dNum).toBeLessThanOrEqual(20);
+        }
+      }
       for (const rq of wt.questions.filter((q) => q.section === 'reasoning')) {
         expect(rq.reasoningPrompt && rq.reasoningPrompt.length > 10).toBe(true);
         expect(rq.reasoningKeywords && rq.reasoningKeywords.length >= 3).toBe(true);
         expect(rq.reasoningSampleAnswer && rq.reasoningSampleAnswer.length > 10).toBe(true);
       }
     }
+
+    // Kiểm tra Đề Cuối Kỳ 45–60p: 5 Cơ bản (50đ) + 3 Olympic (30đ) + 2 Nghị luận (20đ) = 100đ
+    expect(DECEMBER_FINAL_EXAM.durationMinutes).toBeGreaterThanOrEqual(45);
+    expect(DECEMBER_FINAL_EXAM.durationMinutes).toBeLessThanOrEqual(60);
+    expect(DECEMBER_FINAL_EXAM.durationRangeLabel).toBe('45–60 phút');
+    const partA = allExamQuestions.filter((q) => q.part === 'A');
+    const partB = allExamQuestions.filter((q) => q.part === 'B');
+    const partC = allExamQuestions.filter((q) => q.part === 'C');
+    expect(partA.length).toBe(5);
+    expect(partB.length).toBe(3);
+    expect(partC.length).toBe(2);
+    expect(partA.reduce((s, q) => s + q.points, 0)).toBe(50);
+    expect(partB.reduce((s, q) => s + q.points, 0)).toBe(30);
+    expect(partC.reduce((s, q) => s + q.points, 0)).toBe(20);
+    expect(allExamQuestions.reduce((s, q) => s + q.points, 0)).toBe(100);
+
+    // Đề cuối kỳ phủ đủ 4 trụ cột năng lực và mọi relatedDayNumbers nằm trong 1..20
+    const examPillars = new Set(allExamQuestions.map((q) => q.skillDomain));
+    expect(examPillars).toEqual(new Set(['interval', 'bar_model', 'remainder', 'measurement']));
+    for (const q of allExamQuestions) {
+      for (const dNum of q.relatedDayNumbers) {
+        expect(dNum).toBeGreaterThanOrEqual(1);
+        expect(dNum).toBeLessThanOrEqual(20);
+      }
+    }
+    for (const cq of partC) {
+      expect(cq.reasoningPrompt && cq.reasoningPrompt.length > 10).toBe(true);
+      expect(cq.reasoningKeywords && cq.reasoningKeywords.length >= 3).toBe(true);
+      expect(cq.reasoningSampleAnswer && cq.reasoningSampleAnswer.length > 10).toBe(true);
+    }
   });
 
-  it('Tháng 12 được gắn chuẩn xác trong danh mục Lớp 3 (GRADE_3_IN_MONTH_PROGRAMS) cùng đầy đủ 5 đề kiểm tra 15 phút', () => {
+  it('Tháng 12 được gắn chuẩn xác trong danh mục Lớp 3 (GRADE_3_IN_MONTH_PROGRAMS) theo khung 20 buổi (4 tuần × 5 buổi)', () => {
     const decProgram = GRADE_3_IN_MONTH_PROGRAMS.find((p) => p.monthNumber === 12);
     expect(decProgram).toBeDefined();
-    expect(decProgram?.days.length).toBe(30);
-    expect(decProgram?.weeklyTests?.length).toBe(5);
-    expect(decProgram?.finalExam.questions.length).toBe(20);
+    expect(decProgram?.unitLabel).toBe('Buổi');
+    expect(decProgram?.days.length).toBe(20);
+    expect(decProgram?.weeksMeta.length).toBe(4);
+    expect(decProgram?.weeksMeta.map((w) => w.daysRange)).toEqual([
+      [1, 5],
+      [6, 10],
+      [11, 15],
+      [16, 20],
+    ]);
+    expect(decProgram?.weeklyTests?.length).toBe(4);
+    expect(decProgram?.finalExam.questions.length).toBe(10);
   });
 
   it('Mặc định mở khóa toàn bộ 7 bài học SGK Lớp 3 trong INITIAL_COSMIC_PROGRESS', () => {
@@ -75,10 +135,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     }
   });
 
-  it('Toàn bộ 400 câu hỏi Tháng 12 đều có cpaSpec hợp lệ và vượt qua bộ kiểm chứng bất biến Toán học', () => {
+  it('Toàn bộ 270 câu hỏi Tháng 12 đều có cpaSpec hợp lệ và vượt qua bộ kiểm chứng bất biến Toán học', () => {
     const failures: string[] = [];
 
-    for (const q of all400Questions) {
+    for (const q of allQuestions) {
       const cpa = q.visualModel.cpaSpec;
       if (!cpa) {
         failures.push(`[${q.id}] Thiếu cpaSpec`);
@@ -94,10 +154,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
   });
 
   it('Kiểm chứng chuyên sâu Hình học Chu vi & Kỹ thuật Dời cạnh (Tuần 1, Tuần 2 & Đề tuần): Square, Rectangle, Joined Squares, L-shape, Staircase, U-shape', () => {
-    const perimQs = all400Questions.filter(
+    const perimQs = allQuestions.filter(
       (q) => q.visualModel.cpaSpec?.pictorial.kind === 'perimeter_shape'
     );
-    expect(perimQs.length).toBeGreaterThanOrEqual(160);
+    expect(perimQs.length).toBeGreaterThanOrEqual(105);
 
     const shapeCounts: Record<string, number> = {};
     for (const q of perimQs) {
@@ -110,19 +170,19 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
       }
     }
 
-    expect(shapeCounts.square).toBeGreaterThan(10);
-    expect(shapeCounts.rectangle).toBeGreaterThan(20);
-    expect(shapeCounts.joined_squares).toBeGreaterThan(10);
-    expect(shapeCounts.l_shape).toBeGreaterThan(10);
-    expect(shapeCounts.staircase).toBeGreaterThan(5);
-    expect(shapeCounts.u_shape).toBeGreaterThan(10);
+    expect(shapeCounts.square).toBeGreaterThanOrEqual(10);
+    expect(shapeCounts.rectangle).toBeGreaterThanOrEqual(20);
+    expect(shapeCounts.joined_squares).toBeGreaterThanOrEqual(10);
+    expect(shapeCounts.l_shape).toBeGreaterThanOrEqual(8);
+    expect(shapeCounts.staircase).toBeGreaterThanOrEqual(5);
+    expect(shapeCounts.u_shape).toBeGreaterThanOrEqual(8);
   });
 
   it('Kiểm chứng chuyên sâu Đo lường Khối lượng (kg–g) & Thể tích (L–mL) trên toàn bộ bài tập và đề kiểm tra Tháng 12', () => {
-    const measQs = all400Questions.filter(
+    const measQs = allQuestions.filter(
       (q) => q.visualModel.cpaSpec?.pictorial.kind === 'measurement_lab'
     );
-    expect(measQs.length).toBeGreaterThanOrEqual(130);
+    expect(measQs.length).toBeGreaterThanOrEqual(90);
 
     for (const q of measQs) {
       const pic = q.visualModel.cpaSpec!.pictorial;
@@ -155,8 +215,8 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     }
   });
 
-  it('Kiểm chứng toàn bộ sơ đồ thanh Bar Model xuất hiện trong Tháng 12 (San giỏ, San bình, Toán ngược, Before-After)', () => {
-    const barQs = all400Questions.filter(
+  it('Kiểm chứng toàn bộ sơ đồ thanh Bar Model xuất hiện trong Tháng 12 (San giỏ, San bình, Toán ngược)', () => {
+    const barQs = allQuestions.filter(
       (q) => q.visualModel.cpaSpec?.pictorial.kind === 'bar_model'
     );
     expect(barQs.length).toBeGreaterThan(0);
@@ -200,10 +260,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     expect(invalidBlocks).toEqual([]);
   });
 
-  it('Toàn bộ biểu thức LaTeX trong bước Abstract của 400 câu hỏi Tháng 12 đều render KaTeX chính xác 100%', () => {
+  it('Toàn bộ biểu thức LaTeX trong bước Abstract của 270 câu hỏi Tháng 12 đều render KaTeX chính xác 100%', () => {
     const latexErrors: string[] = [];
 
-    for (const q of all400Questions) {
+    for (const q of allQuestions) {
       const cpa = q.visualModel.cpaSpec!;
       const allFormulas = [
         ...cpa.abstract.guidedLatexSteps,
@@ -231,10 +291,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     expect(latexErrors).toEqual([]);
   });
 
-  it('Tất cả 400 câu hỏi Tháng 12 đều ẩn phép tính (\\;?\\;) và kết quả chưa giải (= ?) trong guidedLatexSteps', () => {
+  it('Tất cả 270 câu hỏi Tháng 12 đều ẩn phép tính (\\;?\\;) và kết quả chưa giải (= ?) trong guidedLatexSteps', () => {
     const leaks: string[] = [];
 
-    for (const q of all400Questions) {
+    for (const q of allQuestions) {
       const cpa = q.visualModel.cpaSpec!;
       const guided = cpa.abstract.guidedLatexSteps;
 
@@ -269,10 +329,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     expect(leaks).toEqual([]);
   });
 
-  it('Tất cả 400 câu hỏi Tháng 12 đều có 4 phương án duy nhất, không chứa đại lượng âm, khớp bộ chấm điểm nhập đáp án & chấm nghị luận', () => {
+  it('Tất cả 270 câu hỏi Tháng 12 đều có 4 phương án duy nhất, không chứa đại lượng âm, khớp bộ chấm điểm nhập đáp án & chấm nghị luận', () => {
     const issues: string[] = [];
 
-    for (const q of all400Questions) {
+    for (const q of allQuestions) {
       if (q.options.length !== 4) {
         issues.push(`[${q.id}] Số phương án phải là 4, thực tế: ${q.options.length}`);
       }
@@ -292,7 +352,9 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
         }
       }
 
-      const isReasoning = 'section' in q && q.section === 'reasoning';
+      const isReasoning =
+        ('section' in q && q.section === 'reasoning') ||
+        ('part' in q && q.part === 'C');
       const ansNum = q.visualModel.cpaSpec!.abstract.finalNumericValue;
 
       if (!isReasoning) {
@@ -314,7 +376,13 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
           }
         }
       } else {
-        const rq = q as (typeof DECEMBER_WEEKLY_TESTS)[number]['questions'][number];
+        const rq = q as {
+          id: string;
+          options: string[];
+          correctAnswer: string;
+          reasoningSampleAnswer?: string;
+          reasoningKeywords?: string[];
+        };
         for (const opt of rq.options) {
           if (opt !== rq.correctAnswer && isInMonthAnswerCorrect(opt, rq.correctAnswer)) {
             issues.push(`[${q.id}] Phương án nhiễu nghị luận "${opt}" bị chấm nhầm là đúng`);
@@ -332,10 +400,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     expect(issues).toEqual([]);
   });
 
-  it('Không có bất kỳ rò rỉ đáp án nào trong tiêu đề mô hình, nhóm Concrete, thanh offset, hoặc gợi ý nghị luận trên cả 400 câu Tháng 12', () => {
+  it('Không có bất kỳ rò rỉ đáp án nào trong tiêu đề mô hình, nhóm Concrete, thanh offset, hoặc gợi ý nghị luận trên cả 270 câu Tháng 12', () => {
     const leaks: string[] = [];
 
-    for (const q of all400Questions) {
+    for (const q of allQuestions) {
       const cpa = q.visualModel.cpaSpec!;
       const ansNum = cpa.abstract.finalNumericValue;
       const normPrompt = q.prompt.replace(/\b(\d{1,3})\s(\d{3})\b/g, '$1$2');
@@ -384,8 +452,14 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
         }
       }
 
-      if ('section' in q && q.section === 'reasoning' && ansNum >= 2 && !ansInPrompt) {
-        const rq = q as (typeof DECEMBER_WEEKLY_TESTS)[number]['questions'][number];
+      const isReasoning =
+        ('section' in q && q.section === 'reasoning') ||
+        ('part' in q && q.part === 'C');
+      if (isReasoning && ansNum >= 2 && !ansInPrompt) {
+        const rq = q as {
+          reasoningPrompt?: string;
+          reasoningPlaceholder?: string;
+        };
         const regex = new RegExp(`(?<!\\d)${ansNum}(?!\\d)`);
         if (rq.reasoningPrompt && regex.test(rq.reasoningPrompt)) {
           leaks.push(`[${q.id}] Lộ đáp án (${ansNum}) trong reasoningPrompt: "${rq.reasoningPrompt}"`);
@@ -400,24 +474,24 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     expect(leaks).toEqual([]);
   });
 
-  it('Kiểm chứng các lỗi toán học, logic trực quan và cờ chống rò rỉ CPA đã được khắc phục triệt để trong Tháng 12', () => {
+  it('Kiểm chứng các lỗi toán học, logic trực quan và cờ chống rò rỉ CPA đã được khắc phục triệt để trong Tháng 12 (20 buổi)', () => {
     const findQ = (id: string) => {
-      const found = all400Questions.find((q) => q.id === id);
+      const found = allQuestions.find((q) => q.id === id);
       expect(found, `Không tìm thấy câu hỏi ${id}`).toBeDefined();
       return found!;
     };
 
-    // 1. dec-exam-b8 không còn mâu thuẫn toán học (2000 - 250 = 3500) mà dùng cân thăng bằng balance_eq
-    const examB8Pic = findQ('dec-exam-b8').visualModel.cpaSpec!.pictorial;
-    expect(examB8Pic.kind).toBe('measurement_lab');
-    if (examB8Pic.kind === 'measurement_lab') {
-      expect(examB8Pic.visualParams?.mode).toBe('balance_eq');
-      expect(examB8Pic.visualParams?.labelA).toBe('1 quả dưa + 250 g');
-      expect(examB8Pic.visualParams?.labelB).toBe('2 kg');
+    // 1. dec-exam-b3 (cân thăng bằng 2 bước) dùng đúng balance_eq
+    const examB3Pic = findQ('dec-exam-b3').visualModel.cpaSpec!.pictorial;
+    expect(examB3Pic.kind).toBe('measurement_lab');
+    if (examB3Pic.kind === 'measurement_lab') {
+      expect(examB3Pic.visualParams?.mode).toBe('balance_eq');
+      expect(examB3Pic.visualParams?.labelA).toBe('1 quả dưa + 250 g');
+      expect(examB3Pic.visualParams?.labelB).toBe('2 kg');
     }
 
-    // 2. Các bài cân đĩa thăng bằng đặt đúng đĩa trái / đĩa phải
-    for (const id of ['dec-d15-q9', 'dec-d21-q9', 'dec-w3-q4', 'dec-w3-q9']) {
+    // 2. Các bài cân đĩa thăng bằng đặt đúng đĩa trái / đĩa phải (Tuần 3: Buổi 11..15 & Đề Tuần 3)
+    for (const id of ['dec-d11-q9', 'dec-d15-q9', 'dec-w3-q4', 'dec-w3-q9']) {
       const pic = findQ(id).visualModel.cpaSpec!.pictorial;
       expect(pic.kind).toBe('measurement_lab');
       if (pic.kind === 'measurement_lab') {
@@ -426,8 +500,8 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
       }
     }
 
-    // 3. Tuần 3 Q4: thanh bar_packs ẩn tổng trước khi giải và hiển thị đơn vị mỗi gói
-    for (let day = 15; day <= 21; day++) {
+    // 3. Tuần 3 Q4 (Buổi 11..15): thanh bar_packs ẩn tổng trước khi giải và hiển thị đơn vị mỗi gói
+    for (let day = 11; day <= 15; day++) {
       const pic = findQ(`dec-d${day}-q4`).visualModel.cpaSpec!.pictorial;
       expect(pic.kind).toBe('bar_model');
       if (pic.kind === 'bar_model') {
@@ -437,7 +511,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     }
 
     // 4. Uốn dây bảo toàn chu vi ẩn chu vi chưa tính trước khi giải
-    for (const id of ['dec-d1-q10', 'dec-d7-q10', 'dec-d29-q10', 'dec-exam-b1']) {
+    for (const id of ['dec-d1-q10', 'dec-d5-q10', 'dec-exam-b1']) {
       const pic = findQ(id).visualModel.cpaSpec!.pictorial;
       expect(pic.kind).toBe('perimeter_shape');
       if (pic.kind === 'perimeter_shape') {
@@ -445,8 +519,8 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
       }
     }
 
-    // 5. Tổng nửa chu vi trong Bar Model (Tuần 1 Q11 & dec-exam-b2) ẩn kết quả chia 2 trước khi giải
-    for (const id of ['dec-d1-q11', 'dec-d7-q11', 'dec-exam-b2']) {
+    // 5. Tổng nửa chu vi trong Bar Model (Tuần 1 Q11) ẩn kết quả chia 2 trước khi giải
+    for (const id of ['dec-d1-q11', 'dec-d5-q11']) {
       const pic = findQ(id).visualModel.cpaSpec!.pictorial;
       expect(pic.kind).toBe('bar_model');
       if (pic.kind === 'bar_model') {
@@ -468,15 +542,8 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
       expect(w2q10Pic.stepCount).toBe(4);
     }
 
-    // 8. dec-exam-b6 hiển thị đúng nhãn 2 lối cổng
-    const examB6Pic = findQ('dec-exam-b6').visualModel.cpaSpec!.pictorial;
-    expect(examB6Pic.kind).toBe('perimeter_shape');
-    if (examB6Pic.kind === 'perimeter_shape') {
-      expect(examB6Pic.gateLabel).toContain('2 lối cổng');
-    }
-
-    // 9. Không còn bất kỳ câu hình chữ U nào mô tả sai màu "đỏ" (SVG vẽ màu vàng cam #F59E0B)
-    for (const q of all400Questions) {
+    // 8. Không còn bất kỳ câu hình chữ U nào mô tả sai màu "đỏ" (SVG vẽ màu vàng cam #F59E0B)
+    for (const q of allQuestions) {
       const cpa = q.visualModel.cpaSpec!;
       if (cpa.pictorial.kind === 'perimeter_shape' && cpa.pictorial.shapeKind === 'u_shape') {
         const text = [
@@ -488,15 +555,13 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
       }
     }
 
-    // 10. dec-w5-q10 Bar Model Before-After đồng bộ ID thanh và ẩn kết quả 1000 mL lúc sau trước khi giải
-    const w5q10Pic = findQ('dec-w5-q10').visualModel.cpaSpec!.pictorial;
-    expect(w5q10Pic.kind).toBe('bar_model');
-    if (w5q10Pic.kind === 'bar_model') {
-      expect(w5q10Pic.family).toBe('before_after');
-      expect(w5q10Pic.beforeBars?.map((b) => b.id)).toEqual(['bar_a', 'bar_b']);
-      expect(w5q10Pic.afterBars?.map((b) => b.id)).toEqual(['bar_a', 'bar_b']);
-      expect(w5q10Pic.afterBars?.every((b) => b.isUnknown === true)).toBe(true);
+    // 9. Kiểm tra 2 câu Phần C Nghị luận Đề Cuối Kỳ Tháng 12 đạt tối đa 5/5 điểm bài mẫu
+    for (const id of ['dec-exam-c1', 'dec-exam-c2']) {
+      const q = findQ(id) as (typeof DECEMBER_FINAL_EXAM.questions)[number];
+      expect(q.part).toBe('C');
+      const evalRes = evaluateWeeklyReasoningText(q.reasoningSampleAnswer, q.reasoningKeywords);
+      expect(evalRes.points).toBe(5);
+      expect(evalRes.matchedKeywords.length).toBeGreaterThanOrEqual(2);
     }
   });
 });
-

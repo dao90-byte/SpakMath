@@ -21,12 +21,14 @@ interface InMonthGradeHubProps {
   onQuickStartDay: (monthProgram: InMonthMonthProgram, dayNumber: number) => void;
 }
 
-function readMonthProgressSummary(monthNumber: number): {
+function readMonthProgressSummary(program: InMonthMonthProgram): {
   completedCount: number;
+  totalSessions: number;
   examScore: number | null;
   nextDayNumber: number;
 } {
-  const keys = getMonthStorageKeys(monthNumber);
+  const keys = getMonthStorageKeys(program.monthNumber);
+  const totalSessions = program.days.length;
   let completedDays: Record<number, InMonthDayProgress> = {};
   let examResult: InMonthExamSavedResult | null = null;
 
@@ -44,9 +46,10 @@ function readMonthProgressSummary(monthNumber: number): {
     examResult = null;
   }
 
-  const completedCount = Object.keys(completedDays).length;
-  let nextDayNumber = 30;
-  for (let d = 1; d <= 30; d++) {
+  // Count only valid sessions belonging to the current program structure
+  const completedCount = program.days.filter((d) => !!completedDays[d.dayNumber]).length;
+  let nextDayNumber = totalSessions;
+  for (let d = 1; d <= totalSessions; d++) {
     if (!completedDays[d]) {
       nextDayNumber = d;
       break;
@@ -55,6 +58,7 @@ function readMonthProgressSummary(monthNumber: number): {
 
   return {
     completedCount,
+    totalSessions,
     examScore: examResult ? examResult.totalScore : null,
     nextDayNumber,
   };
@@ -68,24 +72,29 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
 
   const monthSummaries = GRADE_3_IN_MONTH_PROGRAMS.map((prog) => ({
     program: prog,
-    ...readMonthProgressSummary(prog.monthNumber),
+    ...readMonthProgressSummary(prog),
   }));
 
   const totalCompletedDays = monthSummaries.reduce(
     (sum, item) => sum + item.completedCount,
     0
   );
+  const totalYearSessions = monthSummaries.reduce(
+    (sum, item) => sum + item.totalSessions,
+    0
+  );
   const completedExamsCount = monthSummaries.filter(
     (item) => item.examScore !== null
   ).length;
 
-  // Featured resume target: Month with in-progress days or Tháng 11 by default
+  // Featured resume target: Month with in-progress sessions or Tháng 11 by default
   const featuredItem =
     monthSummaries.find(
-      (item) => item.completedCount > 0 && item.completedCount < 30
+      (item) => item.completedCount > 0 && item.completedCount < item.totalSessions
     ) ||
     monthSummaries.find((item) => item.program.monthNumber === 11) ||
     monthSummaries[0];
+  const featuredUnitLabel = featuredItem.program.unitLabel || 'Ngày';
 
   const visibleMonths =
     semesterFilter === 'all'
@@ -135,7 +144,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
 
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/15 text-[11px] font-bold text-[color:var(--mm-cyan-text)] tabular-nums">
             <Sparkles className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
-            <span>12 tháng · 360 ngày rèn luyện</span>
+            <span>12 tháng · {totalYearSessions} chặng rèn luyện</span>
           </div>
         </div>
       </div>
@@ -254,7 +263,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
               >
                 <Sparkles className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>
-                  Học Tiếp: {featuredItem.program.label} · Ngày {featuredItem.nextDayNumber}
+                  Học Tiếp: {featuredItem.program.label} · {featuredUnitLabel} {featuredItem.nextDayNumber}
                 </span>
                 <ChevronRight className="w-4 h-4 shrink-0" aria-hidden="true" />
               </button>
@@ -285,7 +294,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
               <div className="flex items-center justify-between gap-3">
                 <div className="text-2xl sm:text-3xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums leading-none">
                   {totalCompletedDays}
-                  <span className="text-xs font-mono font-bold text-[color:var(--mm-ink-muted)] ml-1.5">/ 360</span>
+                  <span className="text-xs font-mono font-bold text-[color:var(--mm-ink-muted)] ml-1.5">/ {totalYearSessions}</span>
                 </div>
                 <svg viewBox="0 0 48 48" className="w-12 h-12 shrink-0 drop-shadow-[0_0_10px_rgba(56,189,248,0.4)]" aria-hidden="true">
                   <defs>
@@ -303,16 +312,16 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                     stroke="url(#gradeProgressGrad)"
                     strokeWidth="3.5"
                     strokeLinecap="round"
-                    strokeDasharray={`${Math.max(4, Math.round((totalCompletedDays / 360) * 113.1))} 113.1`}
+                    strokeDasharray={`${Math.max(4, Math.round((totalCompletedDays / Math.max(1, totalYearSessions)) * 113.1))} 113.1`}
                     transform="rotate(-90 24 24)"
                   />
                   <text x="24" y="27.5" textAnchor="middle" className="fill-cyan-100 text-[10px] font-black font-mono tabular-nums">
-                    {Math.round((totalCompletedDays / 360) * 100)}%
+                    {Math.round((totalCompletedDays / Math.max(1, totalYearSessions)) * 100)}%
                   </text>
                 </svg>
               </div>
               <span className="text-xs text-[color:var(--mm-ink-muted)] font-medium tabular-nums">
-                Đã hoàn thành {totalCompletedDays} ngày
+                Đã hoàn thành {totalCompletedDays} chặng
               </span>
             </div>
 
@@ -407,14 +416,18 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
 
         {/* 12-Month Curriculum Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {visibleMonths.map(({ program, completedCount, examScore, nextDayNumber }) => {
-            const pct = Math.round((completedCount / 30) * 100);
+          {visibleMonths.map(({ program, completedCount, totalSessions, examScore, nextDayNumber }) => {
+            const pct = totalSessions > 0 ? Math.round((completedCount / totalSessions) * 100) : 0;
+            const unitLabel = program.unitLabel || 'Ngày';
+            const unitLower = unitLabel.toLowerCase();
             const isFeaturedMonth =
               program.monthNumber === 11 ||
               program.monthNumber === 12 ||
               program.monthNumber === 1;
             const isStarted = completedCount > 0;
             const weeklyTestCount = program.weeklyTests?.length || 0;
+            const totalExercises = program.days.reduce((sum, d) => sum + d.questions.length, 0);
+            const examQuestionCount = program.finalExam.questions.length;
 
             return (
               <button
@@ -448,7 +461,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                       <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)]">·</span>
                       <span>Học kỳ {program.semester}</span>
                       <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)]">·</span>
-                      <span>30 ngày</span>
+                      <span>{totalSessions} {unitLower}</span>
                     </div>
 
                     {examScore !== null ? (
@@ -456,7 +469,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                         <Trophy className="w-3.5 h-3.5" aria-hidden="true" />
                         {examScore}/100đ
                       </span>
-                    ) : completedCount === 30 ? (
+                    ) : completedCount === totalSessions ? (
                       <span className="text-[color:var(--mm-emerald-text)] font-black inline-flex items-center gap-1 whitespace-nowrap">
                         <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
                         Hoàn tất
@@ -488,7 +501,7 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs font-bold tabular-nums">
                       <span className="text-[color:var(--mm-ink-muted)]">Tiến độ tháng</span>
-                      <span className="text-[color:var(--mm-ink-primary)]">{completedCount}/30 ngày ({pct}%)</span>
+                      <span className="text-[color:var(--mm-ink-primary)]">{completedCount}/{totalSessions} {unitLower} ({pct}%)</span>
                     </div>
                     <div className="w-full h-2 rounded-full bg-[color:var(--mm-surface-inset)] overflow-hidden border border-white/10">
                       <div
@@ -503,14 +516,14 @@ export const InMonthGradeHub: React.FC<InMonthGradeHubProps> = ({
                       <BookOpen className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
                       <span>
                         {weeklyTestCount > 0
-                          ? `330 bài · ${weeklyTestCount} đề 15p · Thi 20 câu`
-                          : '330 bài tập · Bài thi 20 câu'}
+                          ? `${totalExercises} bài · ${weeklyTestCount} đề 15p · Thi ${examQuestionCount} câu`
+                          : `${totalExercises} bài tập · Bài thi ${examQuestionCount} câu`}
                       </span>
                     </span>
                     <span className="text-[color:var(--mm-cyan-text)] group-hover:text-[color:var(--mm-violet-text)] inline-flex items-center gap-1 whitespace-nowrap transition-colors">
                       <span>
-                        {completedCount > 0 && completedCount < 30
-                          ? `Tiếp Ngày ${nextDayNumber}`
+                        {completedCount > 0 && completedCount < totalSessions
+                          ? `Tiếp ${unitLabel} ${nextDayNumber}`
                           : `Mở ${program.label}`}
                       </span>
                       <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />

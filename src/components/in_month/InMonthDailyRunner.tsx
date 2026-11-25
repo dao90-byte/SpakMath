@@ -39,6 +39,9 @@ import {
 interface InMonthDailyRunnerProps {
   monthNumber: number;
   monthLabel: string;
+  totalDays?: number;
+  totalWeeks?: number;
+  unitLabel?: 'Ngày' | 'Buổi';
   dayPlan: InMonthDayPlan;
   weeklyTestForThisDay?: InMonthWeeklyTest | null;
   weeklyTestResult?: InMonthWeeklyTestSavedResult | null;
@@ -132,6 +135,9 @@ function fireBrilliantCelebration() {
 export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   monthNumber,
   monthLabel,
+  totalDays = 30,
+  totalWeeks = 5,
+  unitLabel = 'Ngày',
   dayPlan,
   weeklyTestForThisDay,
   weeklyTestResult,
@@ -142,6 +148,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   onOpenExam,
   onOpenWeeklyTest,
 }) => {
+  const unitLower = unitLabel.toLowerCase();
   const questions = dayPlan.questions;
 
   const [currentIdx, setCurrentIdx] = useState<number>(() =>
@@ -359,12 +366,12 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
               <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
                 <span className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-amber-400/25 to-orange-400/20 border border-amber-300/60 text-amber-200 font-black uppercase tracking-wider tabular-nums inline-flex items-center gap-1.5 shadow-[0_0_18px_rgba(251,191,36,0.32)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(251,191,36,1)]" aria-hidden="true" />
-                  <span>Ngày {dayPlan.dayNumber}/30</span>
+                  <span>{unitLabel} {dayPlan.dayNumber}/{totalDays}</span>
                 </span>
                 {weeklyTestForThisDay && (
                   <span className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-fuchsia-500/30 to-cyan-500/25 border border-fuchsia-300/65 text-fuchsia-100 font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-[0_0_16px_rgba(232,121,249,0.35)]">
                     <BellRing className="w-3 h-3 text-amber-300" aria-hidden="true" />
-                    <span>Ngày cuối {dayPlan.weekTitle} · Có Kiểm tra 15p</span>
+                    <span>{unitLabel} cuối {dayPlan.weekTitle} · Có Kiểm tra 15p</span>
                   </span>
                 )}
               </div>
@@ -462,18 +469,18 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider">
                     <span className="text-amber-300">
-                      Thông Báo Trước Ở Phần Mở Đầu · Ngày Cuối Tuần {weeklyTestForThisDay.weekNumber}
+                      Thông Báo Trước Ở Phần Mở Đầu · {unitLabel} Cuối Tuần {weeklyTestForThisDay.weekNumber}
                     </span>
                     <span className="px-2 py-0.5 rounded-md bg-white/10 border border-cyan-300/40 text-cyan-200 text-[11px]">
                       15 Phút · 6 Tính Toán + 4 Nghị Luận
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm font-bold text-white leading-relaxed">
-                    Hôm nay là ngày học cuối cùng của <strong>{dayPlan.weekTitle}</strong>! Ngay sau khi hoàn thành bài học hôm nay, em sẽ thực hiện{' '}
+                    Hôm nay là {unitLower} học cuối cùng của <strong>{dayPlan.weekTitle}</strong>! Ngay sau khi hoàn thành bài học hôm nay, em sẽ thực hiện{' '}
                     <strong className="text-amber-200">{weeklyTestForThisDay.title}</strong> (15 phút · gồm 6 câu Tính toán &amp; 4 câu Nghị luận).{' '}
                     {weeklyTestForThisDay.unlocksDayNumber
-                      ? `Em cần hoàn thành và đạt từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp (bắt đầu từ Ngày ${weeklyTestForThisDay.unlocksDayNumber}).`
-                      : `Em hãy hoàn thành bài kiểm tra với kết quả từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để khép lại trọn vẹn 5 tuần học!`}
+                      ? `Em cần hoàn thành và đạt từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp (bắt đầu từ ${unitLabel} ${weeklyTestForThisDay.unlocksDayNumber}).`
+                      : `Em hãy hoàn thành bài kiểm tra với kết quả từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để khép lại trọn vẹn ${totalWeeks} tuần học và bước vào Bài Kiểm Tra Cuối ${monthLabel}!`}
                   </p>
                 </div>
               </div>
@@ -771,8 +778,8 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 <Trophy className="w-4 h-4" aria-hidden="true" />
                 <span>
                   {weeklyTestForThisDay
-                    ? `Hoàn Thành Ngày ${dayPlan.dayNumber} & Kiểm Tra 15p`
-                    : `Hoàn Thành Ngày ${dayPlan.dayNumber}`}
+                    ? `Hoàn Thành ${unitLabel} ${dayPlan.dayNumber} & Kiểm Tra 15p`
+                    : `Hoàn Thành ${unitLabel} ${dayPlan.dayNumber}`}
                 </span>
               </button>
             )}
@@ -805,7 +812,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
 
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-400/20 border border-amber-300/50 text-amber-200 font-black text-xs uppercase">
                 <PartyPopper className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Chinh phục rực rỡ Ngày {dayPlan.dayNumber}/30</span>
+                <span>Chinh phục rực rỡ {unitLabel} {dayPlan.dayNumber}/{totalDays}</span>
               </span>
 
               <h3 id="celebration-title" className="text-2xl font-extrabold font-display text-white mt-3">
@@ -827,7 +834,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                 </div>
               </div>
 
-              {/* IF THIS IS THE LAST DAY OF A WEEK WITH A 15-MINUTE WEEKLY TEST */}
+              {/* IF THIS IS THE LAST SESSION OF A WEEK WITH A 15-MINUTE WEEKLY TEST */}
               {weeklyTestForThisDay && onOpenWeeklyTest && (
                 <div className="my-4 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_right,_rgba(232,121,249,0.28),_transparent_55%),linear-gradient(145deg,_rgba(15,23,66,0.95),_rgba(30,15,72,0.95))] border-2 border-fuchsia-300/75 text-left space-y-2.5 shadow-[0_0_32px_rgba(232,121,249,0.28)]">
                   <div className="flex items-center justify-between gap-2">
@@ -840,8 +847,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                     </span>
                   </div>
                   <p className="text-xs text-indigo-100 leading-relaxed">
-                    Em đã hoàn thành ngày học cuối của <strong>{dayPlan.weekTitle}</strong>! Hãy thực hiện Bài Kiểm Tra 15 Phút gồm{' '}
-                    <strong>6 câu Tính Toán (60đ)</strong> và <strong>4 câu Nghị Luận Tư Duy (40đ)</strong> để mở khóa các bài học của tuần kế tiếp.
+                    Em đã hoàn thành {unitLower} học cuối của <strong>{dayPlan.weekTitle}</strong>! Hãy thực hiện Bài Kiểm Tra 15 Phút gồm{' '}
+                    <strong>6 câu Tính Toán (60đ)</strong> và <strong>4 câu Nghị Luận Tư Duy (40đ)</strong>{' '}
+                    {weeklyTestForThisDay.unlocksDayNumber
+                      ? 'để mở khóa các bài học của tuần kế tiếp.'
+                      : `để hoàn tất ${totalWeeks} tuần học và bước vào Kỳ Thi Cuối ${monthLabel}.`}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-cyan-200">
                     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-300/40">
@@ -873,7 +883,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                       <ChevronRight className="w-4 h-4" aria-hidden="true" />
                     </button>
 
-                    {dayPlan.dayNumber < 30 ? (
+                    {dayPlan.dayNumber < totalDays ? (
                       <button
                         type="button"
                         onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
@@ -881,8 +891,8 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                       >
                         <span>
                           {weeklyTestResult?.passed
-                            ? `Học Tiếp Ngày ${dayPlan.dayNumber + 1} (Đã đạt KT 15p)`
-                            : `Học Tiếp Ngày ${dayPlan.dayNumber + 1}`}
+                            ? `Học Tiếp ${unitLabel} ${dayPlan.dayNumber + 1} (Đã đạt KT 15p)`
+                            : `Học Tiếp ${unitLabel} ${dayPlan.dayNumber + 1}`}
                         </span>
                         <ChevronRight className="w-4 h-4" aria-hidden="true" />
                       </button>
@@ -899,13 +909,13 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                   </>
                 ) : (
                   isAllDayCompleted && (
-                    dayPlan.dayNumber < 30 ? (
+                    dayPlan.dayNumber < totalDays ? (
                       <button
                         type="button"
                         onClick={() => onSelectNextDay(dayPlan.dayNumber + 1)}
                         className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 via-orange-400 to-pink-500 hover:brightness-110 text-slate-950 font-black text-sm shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 min-h-[50px]"
                       >
-                        <span>Học Tiếp Ngày {dayPlan.dayNumber + 1}</span>
+                        <span>Học Tiếp {unitLabel} {dayPlan.dayNumber + 1}</span>
                         <ChevronRight className="w-4 h-4" aria-hidden="true" />
                       </button>
                     ) : (
@@ -926,7 +936,7 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                   onClick={onBack}
                   className="w-full py-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-xs cursor-pointer transition-colors duration-200 min-h-[44px]"
                 >
-                  Quay Về Lịch 30 Ngày {monthLabel}
+                  Quay Về Lịch {totalDays} {unitLabel} {monthLabel}
                 </button>
               </div>
             </div>

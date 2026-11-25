@@ -96,15 +96,16 @@ export default function App() {
       // Auto-detect an in-progress month if none was explicitly stored yet
       for (const prog of GRADE_3_IN_MONTH_PROGRAMS) {
         const keys = getMonthStorageKeys(prog.monthNumber);
+        const totalSessions = prog.days.length;
         const rawCompleted = localStorage.getItem(keys.completedDaysKey);
         if (rawCompleted) {
           const parsedDays = JSON.parse(rawCompleted);
-          const count = Object.keys(parsedDays || {}).length;
-          if (count > 0 && count < 30) {
+          const count = prog.days.filter((d) => !!parsedDays?.[d.dayNumber]).length;
+          if (count > 0 && count < totalSessions) {
             return prog.monthNumber;
           }
         }
-        for (let d = 1; d <= 30; d++) {
+        for (let d = 1; d <= totalSessions; d++) {
           if (localStorage.getItem(keys.dayProgressKey(d))) {
             return prog.monthNumber;
           }
@@ -492,6 +493,7 @@ export default function App() {
             <InMonthWeeklyTestModal
               key={`${activeMonthProgram.monthNumber}-w${activeInMonthWeeklyTest.weekNumber}`}
               monthNumber={activeMonthProgram.monthNumber}
+              unitLabel={activeMonthProgram.unitLabel || 'Ngày'}
               weeklyTest={activeInMonthWeeklyTest}
               savedResult={
                 (inMonthWeeklyTestsByMonth[activeMonthProgram.monthNumber] || {})[
@@ -527,6 +529,7 @@ export default function App() {
             <InMonthFinalExamModal
               key={activeMonthProgram.monthNumber}
               monthNumber={activeMonthProgram.monthNumber}
+              unitLabel={activeMonthProgram.unitLabel || 'Ngày'}
               finalExam={activeMonthProgram.finalExam}
               savedResult={inMonthExamByMonth[activeMonthProgram.monthNumber] || null}
               onSaveResult={(res) =>
@@ -562,6 +565,9 @@ export default function App() {
                 <InMonthDailyRunner
                   monthNumber={activeMonthProgram.monthNumber}
                   monthLabel={activeMonthProgram.label}
+                  totalDays={activeMonthProgram.days.length}
+                  totalWeeks={activeMonthProgram.weeksMeta.length}
+                  unitLabel={activeMonthProgram.unitLabel || 'Ngày'}
                   dayPlan={activeInMonthDay}
                   weeklyTestForThisDay={weeklyTestForThisDay}
                   weeklyTestResult={weeklyTestResult}

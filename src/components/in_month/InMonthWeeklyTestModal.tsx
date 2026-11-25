@@ -36,6 +36,7 @@ import {
 
 interface InMonthWeeklyTestModalProps {
   monthNumber: number;
+  unitLabel?: 'Ngày' | 'Buổi';
   weeklyTest: InMonthWeeklyTest;
   savedResult: InMonthWeeklyTestSavedResult | null;
   onSaveResult: (res: InMonthWeeklyTestSavedResult) => void;
@@ -80,6 +81,7 @@ function loadWeeklyDraft(
 
 export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
   monthNumber,
+  unitLabel = 'Ngày',
   weeklyTest,
   savedResult,
   onSaveResult,
@@ -416,8 +418,8 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                 <p className="text-sm text-[color:var(--mm-ink-secondary)] leading-relaxed">
                   {liveScores.passed
                     ? weeklyTest.unlocksDayNumber
-                      ? `Chúc mừng em! Đạt ${liveScores.totalScore}/100 điểm (≥ ${weeklyTest.passingScore}%). Toàn bộ bài học của Tuần ${weeklyTest.weekNumber + 1} (bắt đầu từ Ngày ${weeklyTest.unlocksDayNumber}) đã chính thức được mở khóa!`
-                      : `Chúc mừng em đã hoàn thành trọn vẹn Bài Kiểm Tra 15 Phút Tuần 5 với ${liveScores.totalScore}/100 điểm và sẵn sàng bước vào Kỳ Thi Tổng Kết Cuối ${weeklyTest.monthLabel}!`
+                      ? `Chúc mừng em! Đạt ${liveScores.totalScore}/100 điểm (≥ ${weeklyTest.passingScore}%). Toàn bộ bài học của Tuần ${weeklyTest.weekNumber + 1} (bắt đầu từ ${unitLabel} ${weeklyTest.unlocksDayNumber}) đã chính thức được mở khóa!`
+                      : `Chúc mừng em đã hoàn thành trọn vẹn Bài Kiểm Tra 15 Phút Tuần ${weeklyTest.weekNumber} với ${liveScores.totalScore}/100 điểm và sẵn sàng bước vào Kỳ Thi Tổng Kết Cuối ${weeklyTest.monthLabel}!`
                     : `Em đạt ${liveScores.totalScore}/100 điểm. Để mở khóa các bài học của tuần kế tiếp, em cần đạt tối thiểu ${weeklyTest.passingScore}/100 điểm. Hãy xem lại hướng dẫn từng câu bên dưới và bấm "Làm Lại Bài Kiểm Tra Ngay" nhé!`}
                 </p>
               </div>
@@ -460,12 +462,16 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                 {liveScores.passed ? (
                   <span className="text-emerald-300 flex items-center gap-1.5">
                     <Unlock className="w-4 h-4" aria-hidden="true" />
-                    <span>Đã mở khóa tuần tiếp theo!</span>
+                    <span>
+                      {weeklyTest.unlocksDayNumber
+                        ? 'Đã mở khóa tuần tiếp theo!'
+                        : `Đã hoàn tất bài kiểm tra tuần · Sẵn sàng thi cuối ${weeklyTest.monthLabel}!`}
+                    </span>
                   </span>
                 ) : (
                   <span className="text-amber-300 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4" aria-hidden="true" />
-                    <span>Cần đạt từ {weeklyTest.passingScore}/100 điểm để mở khóa tuần kế tiếp</span>
+                    <span>Cần đạt từ {weeklyTest.passingScore}/100 điểm để vượt qua bài kiểm tra</span>
                   </span>
                 )}
               </div>
@@ -487,7 +493,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                     className="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-300 via-cyan-300 to-sky-300 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-2 shadow-[0_0_32px_rgba(52,211,153,0.5)] cursor-pointer transition-all"
                   >
                     <Unlock className="w-4 h-4" aria-hidden="true" />
-                    <span>Mở Khóa &amp; Học Tiếp Ngày {weeklyTest.unlocksDayNumber}</span>
+                    <span>Mở Khóa &amp; Học Tiếp {unitLabel} {weeklyTest.unlocksDayNumber}</span>
                     <ChevronRight className="w-4 h-4" aria-hidden="true" />
                   </button>
                 )}

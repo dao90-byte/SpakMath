@@ -4,6 +4,7 @@ import {
   InMonthFinalExam,
   InMonthSkillDomain,
 } from '../../data/inMonthNovemberData';
+import { evaluateWeeklyReasoningText } from '../../data/inMonthWeeklyTestsData';
 import { getMonthStorageKeys } from '../../data/inMonthGrade3Catalog';
 import { InMonthVisualModels } from './InMonthVisualModels';
 import { sound } from '../../utils/soundEffects';
@@ -29,12 +30,19 @@ import {
   BarChart3,
   Lightbulb,
   BookOpen,
+  Clock,
+  Pause,
+  Play,
+  MessageSquareQuote,
 } from 'lucide-react';
 
 export interface InMonthExamSavedResult {
   totalScore: number;
   basicScore: number;
   olympiadScore: number;
+  reasoningScore?: number;
+  reasoningTexts?: Record<string, string>;
+  elapsedSeconds?: number;
   completedAt: string;
   studentName: string;
   answers: Record<string, string>;
@@ -42,6 +50,7 @@ export interface InMonthExamSavedResult {
 
 interface InMonthFinalExamModalProps {
   monthNumber: number;
+  unitLabel?: 'Ngày' | 'Buổi';
   finalExam: InMonthFinalExam;
   savedResult: InMonthExamSavedResult | null;
   onSaveResult: (result: InMonthExamSavedResult) => void;
@@ -101,7 +110,7 @@ const DECEMBER_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
   interval: {
     title: 'Chu Vi Hình Vuông, Hình Chữ Nhật & Toán Ngược',
     color: MINDMATH_PILLAR_COLORS.interval.fill,
-    reviewDays: [1, 3, 5, 6],
+    reviewDays: [1, 2, 4, 5],
     strongComment:
       'Thành thạo công thức chu vi, phân biệt rõ Nửa chu vi với Chu vi, giải chính xác bài toán ngược tìm cạnh và bài toán rào vườn chừa cổng.',
     improveComment:
@@ -110,7 +119,7 @@ const DECEMBER_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
   bar_model: {
     title: 'Chu Vi Hình Ghép & Kỹ Thuật Dời Cạnh (Side-Shifting)',
     color: MINDMATH_PILLAR_COLORS.bar_model.fill,
-    reviewDays: [8, 10, 12, 13],
+    reviewDays: [6, 7, 9, 10],
     strongComment:
       'Ứng dụng xuất sắc kỹ thuật Dời cạnh Singapore cho hình chữ L, bậc thang, đếm đúng cạnh viền hình ghép vuông và cộng đủ 2 thành khe lõm chữ U.',
     improveComment:
@@ -119,7 +128,7 @@ const DECEMBER_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
   remainder: {
     title: 'Đo Lường Khối Lượng (kg – g), Trừ Bì & Cân Thăng Bằng',
     color: MINDMATH_PILLAR_COLORS.remainder.fill,
-    reviewDays: [15, 17, 19, 20],
+    reviewDays: [11, 12, 13, 14],
     strongComment:
       'Đổi đơn vị kg – g chuẩn xác (không thiếu chữ số 0), xử lý mượt bài toán trừ bì, cân đĩa thăng bằng, cả thùng – nửa thùng và san giỏ.',
     improveComment:
@@ -128,7 +137,7 @@ const DECEMBER_PILLAR_META: Record<InMonthSkillDomain, PillarMetaEntry> = {
   measurement: {
     title: 'Đo Lường Thể Tích (L – mL), Chia Đều & San Bình',
     color: MINDMATH_PILLAR_COLORS.measurement.fill,
-    reviewDays: [22, 24, 26, 28],
+    reviewDays: [16, 17, 18, 20],
     strongComment:
       'Quy đổi L – mL nhanh nhạy, giải tốt bài toán rót đều vào chai/cốc, san bình bằng nhau (một nửa hiệu) và suy luận ngược thể tích.',
     improveComment:
@@ -203,6 +212,7 @@ function fireExamCelebration() {
 
 export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   monthNumber,
+  unitLabel = 'Ngày',
   finalExam,
   savedResult,
   onSaveResult,
@@ -211,6 +221,9 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
   onOpenScratchpad,
 }) => {
   const examDraftKey = getMonthStorageKeys(monthNumber).examDraftKey;
+  const examQuestions = finalExam.questions;
+  const totalQuestions = examQuestions.length;
+  const defaultSeconds = finalExam.durationMinutes * 60;
 
   const [studentName, setStudentName] = useState(() => {
     if (savedResult?.studentName) return savedResult.studentName;
@@ -226,7 +239,12 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
     if (savedResult) return 0;
     try {
       const raw = localStorage.getItem(examDraftKey);
-      if (raw) return Math.min(Math.max(0, JSON.parse(raw).currentIdx || 0), 19);
+      if (raw) {
+        return Math.min(
+          Math.max(0, JSON.parse(raw).currentIdx || 0),
+          Math.max(0, totalQuestions - 1)
+        );
+      }
     } catch {
       // ignore
     }
@@ -242,6 +260,32 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
     }
     return {};
   });
+  const [reasoningTexts, setReasoningTexts] = useState<Record<string, string>>(() => {
+    if (savedResult?.reasoningTexts) return savedResult.reasoningTexts;
+    try {
+      const raw = localStorage.getItem(examDraftKey);
+      if (raw) return JSON.parse(raw).reasoningTexts || {};
+    } catch {
+      // ignore
+    }
+    return {};
+  });
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(() => {
+    if (savedResult) return defaultSeconds;
+    try {
+      const raw = localStorage.getItem(examDraftKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.remainingSeconds === 'number' && parsed.remainingSeconds > 0) {
+          return Math.min(parsed.remainingSeconds, defaultSeconds);
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return defaultSeconds;
+  });
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(!!savedResult);
   const [activeTab, setActiveTab] = useState<'report' | 'review'>('report');
 
@@ -250,43 +294,82 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
     try {
       localStorage.setItem(
         examDraftKey,
-        JSON.stringify({ studentName, currentIdx, answers })
+        JSON.stringify({ studentName, currentIdx, answers, reasoningTexts, remainingSeconds })
       );
     } catch {
       // ignore
     }
-  }, [examDraftKey, studentName, currentIdx, answers, isSubmitted]);
+  }, [examDraftKey, studentName, currentIdx, answers, reasoningTexts, remainingSeconds, isSubmitted]);
 
   useEffect(() => {
     clearExerciseScreenInk();
   }, [currentIdx]);
 
-  const examQuestions = finalExam.questions;
-  const currentQ = examQuestions[currentIdx];
+  const currentQ = examQuestions[Math.min(currentIdx, Math.max(0, totalQuestions - 1))];
   const currentExamInputSpec = getInMonthQuestionInputSpec(currentQ.correctAnswer);
+
+  const partAQuestions = examQuestions.filter((q) => q.part === 'A');
+  const partBQuestions = examQuestions.filter((q) => q.part === 'B');
+  const partCQuestions = examQuestions.filter((q) => q.part === 'C');
+  const hasPartC = partCQuestions.length > 0;
+
+  const partAStartIdx = examQuestions.findIndex((q) => q.part === 'A');
+  const partBStartIdx = examQuestions.findIndex((q) => q.part === 'B');
+  const partCStartIdx = examQuestions.findIndex((q) => q.part === 'C');
+
+  const partAMax = partAQuestions.reduce((acc, q) => acc + q.points, 0);
+  const partBMax = partBQuestions.reduce((acc, q) => acc + q.points, 0);
+  const partCMax = partCQuestions.reduce((acc, q) => acc + q.points, 0);
 
   const handleSelectOption = (opt: string) => {
     if (isSubmitted) return;
     setAnswers((prev) => ({ ...prev, [currentQ.id]: opt }));
   };
 
-  const handleSubmitExam = () => {
-    let basicScore = 0;
-    let olympiadScore = 0;
+  const computeExamScores = (
+    ansMap: Record<string, string>,
+    textMap: Record<string, string>
+  ) => {
+    let basic = 0;
+    let olympiad = 0;
+    let reasoning = 0;
 
     examQuestions.forEach((q) => {
-      const userAns = (answers[q.id] || '').trim();
-      if (isInMonthAnswerCorrect(userAns, q.correctAnswer)) {
-        if (q.part === 'A') basicScore += q.points;
-        else olympiadScore += q.points;
+      const userAns = (ansMap[q.id] || '').trim();
+      const isRightOption = isInMonthAnswerCorrect(userAns, q.correctAnswer);
+      if (q.part === 'A') {
+        if (isRightOption) basic += q.points;
+      } else if (q.part === 'B') {
+        if (isRightOption) olympiad += q.points;
+      } else {
+        // Phần C (Nghị luận Tư duy): 5đ chọn lập luận đúng + tối đa 5đ viết lời giải trình bày
+        const evalRes = evaluateWeeklyReasoningText(textMap[q.id] || '', q.reasoningKeywords);
+        const halfPts = Math.floor(q.points / 2);
+        const textMax = q.points - halfPts;
+        if (isRightOption) reasoning += halfPts;
+        reasoning += Math.min(textMax, evalRes.points);
       }
     });
 
-    const totalScore = basicScore + olympiadScore;
+    return {
+      basicScore: basic,
+      olympiadScore: olympiad,
+      reasoningScore: reasoning,
+      totalScore: basic + olympiad + reasoning,
+    };
+  };
+
+  const handleSubmitExam = () => {
+    const scores = computeExamScores(answers, reasoningTexts);
+    const elapsedSeconds = Math.max(1, defaultSeconds - remainingSeconds);
+
     const result: InMonthExamSavedResult = {
-      totalScore,
-      basicScore,
-      olympiadScore,
+      totalScore: scores.totalScore,
+      basicScore: scores.basicScore,
+      olympiadScore: scores.olympiadScore,
+      reasoningScore: scores.reasoningScore,
+      reasoningTexts,
+      elapsedSeconds,
       completedAt: new Date().toLocaleDateString('vi-VN'),
       studentName: studentName.trim() || 'Phi Hành Gia Nhí',
       answers,
@@ -305,6 +388,29 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
     fireExamCelebration();
   };
 
+  // Countdown timer for final exam (e.g. 50 minutes for 45–60 min standard)
+  useEffect(() => {
+    if (isSubmitted || isPaused) return;
+    const timer = setInterval(() => {
+      setRemainingSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isSubmitted, isPaused]);
+
+  // Auto-submit when countdown hits 0
+  useEffect(() => {
+    if (!isSubmitted && remainingSeconds === 0) {
+      handleSubmitExam();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remainingSeconds, isSubmitted]);
+
   const handleRetakeExam = () => {
     try {
       localStorage.removeItem(examDraftKey);
@@ -312,36 +418,49 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
       // ignore
     }
     setAnswers({});
+    setReasoningTexts({});
     setCurrentIdx(0);
+    setRemainingSeconds(defaultSeconds);
+    setIsPaused(false);
     setIsSubmitted(false);
+  };
+
+  const formatCountdown = (secs: number) => {
+    const mins = Math.floor(secs / 60);
+    const rem = secs % 60;
+    return `${String(mins).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+  };
+
+  const isQuestionAnswered = (q: (typeof examQuestions)[number]) => {
+    const ans = (answers[q.id] || '').trim();
+    if (q.part === 'C') {
+      const txt = (reasoningTexts[q.id] || '').trim();
+      return ans !== '' && txt.length >= 6;
+    }
+    return ans !== '';
+  };
+
+  const isQuestionMastered = (q: (typeof examQuestions)[number]) => {
+    const ans = (answers[q.id] || '').trim();
+    const isOptRight = isInMonthAnswerCorrect(ans, q.correctAnswer);
+    if (q.part === 'C') {
+      const evalRes = evaluateWeeklyReasoningText(reasoningTexts[q.id] || '', q.reasoningKeywords);
+      return isOptRight && evalRes.isComplete;
+    }
+    return isOptRight;
   };
 
   const getPillarStats = (pillar: InMonthSkillDomain) => {
     const qs = examQuestions.filter((q) => q.skillDomain === pillar);
-    const correct = qs.filter((q) =>
-      isInMonthAnswerCorrect(answers[q.id] || '', q.correctAnswer)
-    ).length;
+    const correct = qs.filter((q) => isQuestionMastered(q)).length;
     const pct = qs.length > 0 ? Math.round((correct / qs.length) * 100) : 0;
     return { total: qs.length, correct, pct };
   };
 
-  const basicScore = examQuestions
-    .filter(
-      (q) =>
-        q.part === 'A' &&
-        isInMonthAnswerCorrect(answers[q.id] || '', q.correctAnswer)
-    )
-    .reduce((acc, q) => acc + q.points, 0);
-
-  const olympiadScore = examQuestions
-    .filter(
-      (q) =>
-        q.part === 'B' &&
-        isInMonthAnswerCorrect(answers[q.id] || '', q.correctAnswer)
-    )
-    .reduce((acc, q) => acc + q.points, 0);
-
-  const totalScore = basicScore + olympiadScore;
+  const { basicScore, olympiadScore, reasoningScore, totalScore } = computeExamScores(
+    answers,
+    reasoningTexts
+  );
 
   const getRankBadge = (score: number) => {
     if (score >= 90)
@@ -360,15 +479,17 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
         badgeColor: 'from-emerald-400 to-teal-500 text-slate-950',
       };
     return {
-      rank: 'Tân Binh Vũ Trụ (Cần ôn tập lại các ngày trọng tâm)',
+      rank: `Tân Binh Vũ Trụ (Cần ôn tập lại các ${unitLabel.toLowerCase()} trọng tâm)`,
       badgeColor: 'from-purple-500 to-indigo-600 text-white',
     };
   };
 
   const rankInfo = getRankBadge(totalScore);
-  const answeredCount = examQuestions.filter(
-    (q) => (answers[q.id] || '').trim() !== ''
-  ).length;
+  const answeredCount = examQuestions.filter((q) => isQuestionAnswered(q)).length;
+  const currentReasoningEval =
+    currentQ.part === 'C'
+      ? evaluateWeeklyReasoningText(reasoningTexts[currentQ.id] || '', currentQ.reasoningKeywords)
+      : null;
 
   return (
     <div className="min-h-screen mm-cosmic-canvas pb-16 relative overflow-hidden">
@@ -417,9 +538,11 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               <span>Quay Về Lịch {finalExam.monthLabel}</span>
             </button>
             <div>
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-300">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-300">
                 <span className="w-2 h-2 rounded-full bg-amber-300 shadow-[0_0_12px_rgba(251,191,36,1)]" aria-hidden="true" />
-                <span className="drop-shadow-[0_0_8px_rgba(251,191,36,0.45)]">Lớp 3 · {finalExam.monthLabel}</span>
+                <span className="drop-shadow-[0_0_8px_rgba(251,191,36,0.45)]">
+                  Lớp 3 · {finalExam.monthLabel} · {finalExam.durationRangeLabel || `${finalExam.durationMinutes} phút`}
+                </span>
               </div>
               <h2 className="text-base sm:text-xl font-extrabold font-display bg-gradient-to-r from-amber-200 via-white to-cyan-200 bg-clip-text text-transparent mt-0.5 cosmic-glow-title-cyan">
                 {finalExam.title}
@@ -428,6 +551,32 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5">
+            {!isSubmitted && (
+              <div
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl border font-black text-xs sm:text-sm tabular-nums min-h-[44px] ${
+                  remainingSeconds <= 300
+                    ? 'bg-rose-950/90 border-rose-400 text-rose-200 shadow-[0_0_24px_rgba(244,63,94,0.45)] animate-pulse'
+                    : 'bg-[#0A1136]/95 border-cyan-300/55 text-cyan-200 shadow-[0_0_28px_rgba(34,211,238,0.28)]'
+                }`}
+              >
+                <Clock className="w-4 h-4 text-amber-300 shrink-0" aria-hidden="true" />
+                <span>{formatCountdown(remainingSeconds)}</span>
+                <button
+                  type="button"
+                  onClick={() => setIsPaused(!isPaused)}
+                  aria-label={isPaused ? 'Tiếp tục đồng hồ' : 'Tạm dừng đồng hồ'}
+                  className="w-7 h-7 rounded-lg bg-white/10 hover:bg-cyan-400/25 border border-cyan-300/30 flex items-center justify-center text-white cursor-pointer"
+                  title={isPaused ? 'Tiếp tục' : 'Tạm dừng'}
+                >
+                  {isPaused ? (
+                    <Play className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+                  ) : (
+                    <Pause className="w-3.5 h-3.5 text-cyan-200" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+            )}
+
             <button
               type="button"
               onClick={onOpenScratchpad}
@@ -454,7 +603,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
       {/* Mode 1: Taking the Exam */}
       {!isSubmitted ? (
         <div className="relative z-10 max-w-7xl mx-auto px-4 mt-6">
-          {/* Student Name & Part Switcher Banner */}
+          {/* Student Name & Dynamic Part Switcher Banner */}
           <div className="relative overflow-hidden rounded-3xl mm-surface-card backdrop-blur-2xl border p-4 sm:p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
             <span
               aria-hidden="true"
@@ -475,55 +624,78 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             </div>
 
             <div role="group" aria-label="Chọn phần thi" className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                aria-pressed={currentQ.part === 'A'}
-                onClick={() => setCurrentIdx(0)}
-                className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
-                  currentQ.part === 'A'
-                    ? 'bg-[color:var(--mm-cyan-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(34,211,238,0.35)]'
-                    : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
-                }`}
-              >
-                Phần A: Cơ Bản (Câu 1–10 • 50đ)
-              </button>
-              <button
-                type="button"
-                aria-pressed={currentQ.part === 'B'}
-                onClick={() => setCurrentIdx(10)}
-                className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
-                  currentQ.part === 'B'
-                    ? 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(251,191,36,0.35)]'
-                    : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
-                }`}
-              >
-                Phần B: Tư Duy Olympic (Câu 11–20 • 50đ)
-              </button>
+              {partAStartIdx !== -1 && (
+                <button
+                  type="button"
+                  aria-pressed={currentQ.part === 'A'}
+                  onClick={() => setCurrentIdx(partAStartIdx)}
+                  className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
+                    currentQ.part === 'A'
+                      ? 'bg-[color:var(--mm-cyan-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(34,211,238,0.35)]'
+                      : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
+                  }`}
+                >
+                  Phần A: Cơ Bản ({partAQuestions.length} câu • {partAMax}đ)
+                </button>
+              )}
+              {partBStartIdx !== -1 && (
+                <button
+                  type="button"
+                  aria-pressed={currentQ.part === 'B'}
+                  onClick={() => setCurrentIdx(partBStartIdx)}
+                  className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] ${
+                    currentQ.part === 'B'
+                      ? 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(251,191,36,0.35)]'
+                      : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
+                  }`}
+                >
+                  Phần B: Tư Duy Olympic ({partBQuestions.length} câu • {partBMax}đ)
+                </button>
+              )}
+              {hasPartC && partCStartIdx !== -1 && (
+                <button
+                  type="button"
+                  aria-pressed={currentQ.part === 'C'}
+                  onClick={() => setCurrentIdx(partCStartIdx)}
+                  className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer min-h-[42px] inline-flex items-center gap-1.5 ${
+                    currentQ.part === 'C'
+                      ? 'bg-[color:var(--mm-violet-brightFill)] text-[#05081D] shadow-[0_0_20px_rgba(232,121,249,0.4)]'
+                      : 'bg-white/10 text-[color:var(--mm-ink-secondary)] hover:bg-white/20'
+                  }`}
+                >
+                  <MessageSquareQuote className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Phần C: Nghị Luận ({partCQuestions.length} câu • {partCMax}đ)</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Constellation 20 Question Number Navigator */}
+          {/* Dynamic Constellation Question Number Navigator */}
           <div className="relative overflow-hidden rounded-3xl mm-surface-card backdrop-blur-2xl border p-4 mb-6 flex flex-wrap items-center justify-between gap-3 shadow-[0_20px_52px_rgba(3,7,24,0.72),0_0_30px_rgba(34,211,238,0.14),inset_0_1px_0_rgba(255,255,255,0.14)]">
             <span
               aria-hidden="true"
               className="pointer-events-none absolute top-0 inset-x-6 h-[2.5px] rounded-full bg-gradient-to-r from-[color:var(--mm-cyan-brightFill)] via-[color:var(--mm-violet-accent)] to-[color:var(--mm-amber-brightFill)] shadow-[0_0_16px_rgba(34,211,238,0.7)]"
             />
-            <div role="group" aria-label="Danh sách 20 câu thi" className="flex flex-wrap gap-1.5">
+            <div role="group" aria-label={`Danh sách ${totalQuestions} câu thi`} className="flex flex-wrap gap-1.5">
               {examQuestions.map((q, idx) => {
-                const hasAns = (answers[q.id] || '').trim() !== '';
+                const hasAns = isQuestionAnswered(q);
                 const isCurr = idx === currentIdx;
                 return (
                   <button
                     key={q.id}
                     type="button"
-                    aria-label={`Câu ${idx + 1}${hasAns ? ' (Đã chọn)' : ''}`}
+                    aria-label={`Câu ${idx + 1}${hasAns ? ' (Đã hoàn thành)' : ''}`}
                     aria-pressed={isCurr}
                     onClick={() => setCurrentIdx(idx)}
                     className={`w-10 h-10 rounded-xl font-black text-xs transition-all duration-200 cursor-pointer tabular-nums ${
                       isCurr
-                        ? 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-amber-bright)] shadow-[0_0_22px_rgba(251,191,36,0.55)] scale-105'
+                        ? q.part === 'C'
+                          ? 'bg-[color:var(--mm-violet-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-violet-bright)] shadow-[0_0_22px_rgba(232,121,249,0.55)] scale-105'
+                          : 'bg-[color:var(--mm-amber-brightFill)] text-[#05081D] ring-2 ring-[color:var(--mm-amber-bright)] shadow-[0_0_22px_rgba(251,191,36,0.55)] scale-105'
                         : hasAns
-                        ? 'bg-[color:var(--mm-cyan-fill)] text-white border border-[color:var(--mm-cyan-accent)] shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+                        ? q.part === 'C'
+                          ? 'bg-[color:var(--mm-violet-fill)] text-white border border-[color:var(--mm-violet-accent)] shadow-[0_0_12px_rgba(232,121,249,0.3)]'
+                          : 'bg-[color:var(--mm-cyan-fill)] text-white border border-[color:var(--mm-cyan-accent)] shadow-[0_0_12px_rgba(34,211,238,0.3)]'
                         : 'bg-[color:var(--mm-surface-inset)] text-[color:var(--mm-ink-secondary)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_45%,transparent)] hover:border-[color:var(--mm-cyan-accent)]'
                     }`}
                   >
@@ -535,7 +707,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
 
             <div className="flex items-center gap-3">
               <span className="px-3.5 py-2 rounded-xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)] text-xs font-bold text-[color:var(--mm-ink-secondary)] tabular-nums">
-                Đã trả lời: <strong className="text-[color:var(--mm-cyan-text)]">{answeredCount}/20</strong>
+                Đã trả lời: <strong className="text-[color:var(--mm-cyan-text)]">{answeredCount}/{totalQuestions}</strong>
               </span>
               <button
                 type="button"
@@ -563,11 +735,17 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                   className={`font-black text-xs uppercase tracking-wider ${
                     currentQ.part === 'A'
                       ? 'text-[color:var(--mm-cyan-text)]'
-                      : 'text-[color:var(--mm-amber-text)]'
+                      : currentQ.part === 'B'
+                      ? 'text-[color:var(--mm-amber-text)]'
+                      : 'text-[color:var(--mm-violet-text)]'
                   }`}
                 >
-                  Câu {currentIdx + 1}/20 ·{' '}
-                  {currentQ.part === 'A' ? 'Phần A: Cơ Bản' : 'Phần B: Olympic'}
+                  Câu {currentIdx + 1}/{totalQuestions} ·{' '}
+                  {currentQ.part === 'A'
+                    ? 'Phần A: Cơ Bản'
+                    : currentQ.part === 'B'
+                    ? 'Phần B: Olympic'
+                    : 'Phần C: Nghị Luận'}
                 </span>
                 <span className="text-xs font-black text-[color:var(--mm-amber-text)] tabular-nums">
                   +{currentQ.points} điểm
@@ -580,32 +758,108 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                 </p>
               </div>
 
-              <div className="mb-6 p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.6)] space-y-2.5">
-                <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
-                  Nhập câu trả lời của em
-                </label>
-                <div className="flex items-center gap-2.5">
-                  <input
-                    id={`exam-ans-${currentQ.id}`}
-                    type="text"
-                    inputMode={currentExamInputSpec.mode === 'text_number' ? 'numeric' : 'text'}
-                    value={answers[currentQ.id] || ''}
-                    onChange={(e) => handleSelectOption(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && currentIdx < examQuestions.length - 1) {
-                        setCurrentIdx((prev) => Math.min(examQuestions.length - 1, prev + 1));
+              {currentQ.part === 'C' ? (
+                /* Phần C: Nghị Luận Tư Duy (5đ Chọn lập luận + 5đ Tự trình bày lời giải) */
+                <div className="mb-6 space-y-5">
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-fuchsia-200">
+                      <span>Bước 1 (5 điểm): Chọn lập luận toán học đúng nhất</span>
+                      {answers[currentQ.id] && (
+                        <span className="text-emerald-300">✓ Đã chọn</span>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      {currentQ.options.map((opt, oIdx) => {
+                        const isSelected = (answers[currentQ.id] || '').trim() === opt.trim();
+                        return (
+                          <button
+                            key={oIdx}
+                            type="button"
+                            onClick={() => handleSelectOption(opt)}
+                            className={`w-full p-3.5 rounded-2xl border-2 font-bold text-left transition-all flex items-start gap-2.5 cursor-pointer text-xs sm:text-sm leading-relaxed ${
+                              isSelected
+                                ? 'bg-gradient-to-r from-fuchsia-300/95 via-amber-200/95 to-cyan-300/95 border-white text-slate-950 font-black shadow-[0_0_24px_rgba(232,121,249,0.45)]'
+                                : 'bg-[#080E32]/90 border-fuchsia-300/35 text-white hover:border-fuchsia-300 hover:bg-indigo-900/60'
+                            }`}
+                          >
+                            <span
+                              className={`w-6 h-6 rounded-lg text-xs font-black flex items-center justify-center shrink-0 mt-0.5 ${
+                                isSelected
+                                  ? 'bg-slate-950 text-fuchsia-300'
+                                  : 'bg-fuchsia-400/20 text-fuchsia-200 border border-fuchsia-300/40'
+                              }`}
+                            >
+                              {String.fromCharCode(65 + oIdx)}
+                            </span>
+                            <span>{opt}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_62%,transparent)] space-y-2.5">
+                    <div className="flex items-center justify-between gap-2 text-xs font-black uppercase tracking-wider text-[color:var(--mm-violet-text)]">
+                      <span>Bước 2 (5 điểm): Tự viết lời giải trình bày</span>
+                      {currentReasoningEval && (
+                        <span className="text-[11px] font-bold text-[color:var(--mm-cyan-text)] tabular-nums">
+                          {(reasoningTexts[currentQ.id] || '').trim().length >= 6
+                            ? '✓ Đã trình bày'
+                            : 'Cần ít nhất 6 ký tự'}
+                        </span>
+                      )}
+                    </div>
+                    {currentQ.reasoningPrompt && (
+                      <p className="text-xs font-semibold text-[color:var(--mm-ink-secondary)] leading-relaxed">
+                        {currentQ.reasoningPrompt}
+                      </p>
+                    )}
+                    <textarea
+                      id={`exam-reason-${currentQ.id}`}
+                      rows={4}
+                      value={reasoningTexts[currentQ.id] || ''}
+                      onChange={(e) =>
+                        setReasoningTexts((prev) => ({
+                          ...prev,
+                          [currentQ.id]: e.target.value,
+                        }))
                       }
-                    }}
-                    placeholder={currentExamInputSpec.mode === 'text_number' ? 'Nhập đáp án...' : 'Nhập câu trả lời...'}
-                    className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-xl tabular-nums placeholder:text-[color:var(--mm-ink-muted)] placeholder:text-sm transition-all"
-                  />
-                  {currentExamInputSpec.mode === 'text_number' && currentExamInputSpec.unitLabel && (
-                    <span className="px-4 py-3.5 rounded-xl bg-[color:var(--mm-surface-2)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] text-[color:var(--mm-cyan-text)] font-black text-sm shrink-0">
-                      {currentExamInputSpec.unitLabel}
-                    </span>
-                  )}
+                      placeholder={
+                        currentQ.reasoningPlaceholder ||
+                        'Trình bày ngắn gọn các bước tính toán và lập luận của em...'
+                      }
+                      className="w-full px-4 py-3 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-violet-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:outline-none text-[color:var(--mm-ink-primary)] font-semibold text-sm leading-relaxed placeholder:text-[color:var(--mm-ink-muted)] resize-y"
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="mb-6 p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_58%,transparent)] shadow-[inset_0_2px_12px_rgba(0,0,0,0.6)] space-y-2.5">
+                  <label htmlFor={`exam-ans-${currentQ.id}`} className="block text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)]">
+                    Nhập câu trả lời của em
+                  </label>
+                  <div className="flex items-center gap-2.5">
+                    <input
+                      id={`exam-ans-${currentQ.id}`}
+                      type="text"
+                      inputMode={currentExamInputSpec.mode === 'text_number' ? 'numeric' : 'text'}
+                      value={answers[currentQ.id] || ''}
+                      onChange={(e) => handleSelectOption(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && currentIdx < examQuestions.length - 1) {
+                          setCurrentIdx((prev) => Math.min(examQuestions.length - 1, prev + 1));
+                        }
+                      }}
+                      placeholder={currentExamInputSpec.mode === 'text_number' ? 'Nhập đáp án...' : 'Nhập câu trả lời...'}
+                      className="flex-1 min-w-0 px-4 py-3.5 rounded-xl bg-[color:var(--mm-canvas)] border-2 border-[color:var(--mm-azure-border)] focus:border-[color:var(--mm-amber-brightFill)] focus:shadow-[0_0_20px_rgba(251,191,36,0.28)] focus:outline-none text-[color:var(--mm-ink-primary)] font-black text-xl tabular-nums placeholder:text-[color:var(--mm-ink-muted)] placeholder:text-sm transition-all"
+                    />
+                    {currentExamInputSpec.mode === 'text_number' && currentExamInputSpec.unitLabel && (
+                      <span className="px-4 py-3.5 rounded-xl bg-[color:var(--mm-surface-2)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_62%,transparent)] text-[color:var(--mm-cyan-text)] font-black text-sm shrink-0">
+                        {currentExamInputSpec.unitLabel}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
                 <button
@@ -673,7 +927,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               }`}
             >
               <Sparkles className="w-4 h-4" aria-hidden="true" />
-              <span>Xem Chi Tiết Đáp Án &amp; Lời Giải 20 Câu</span>
+              <span>Xem Chi Tiết Đáp Án &amp; Lời Giải {totalQuestions} Câu</span>
             </button>
           </div>
 
@@ -682,7 +936,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
               {/* Score Summary & Official Certificate Card */}
               <div className="mm-surface-card rounded-3xl p-6 sm:p-8 border-2 border-[color:var(--mm-amber-border)] shadow-2xl relative overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                  <div className="lg:col-span-7 space-y-3">
+                  <div className={`${hasPartC ? 'lg:col-span-6' : 'lg:col-span-7'} space-y-3`}>
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[color:color-mix(in_oklch,var(--mm-amber-tint)_55%,transparent)] border border-[color:var(--mm-amber-border)] text-[color:var(--mm-amber-text)] text-xs font-black uppercase">
                       <ShieldCheck className="w-4 h-4" aria-hidden="true" />
                       <span>Chứng Nhận Hoàn Thành IN MONTH • {finalExam.monthLabel}</span>
@@ -701,7 +955,11 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="lg:col-span-5 grid grid-cols-3 gap-3 text-center">
+                  <div
+                    className={`${
+                      hasPartC ? 'lg:col-span-6 grid-cols-2 sm:grid-cols-4' : 'lg:col-span-5 grid-cols-3'
+                    } grid gap-3 text-center`}
+                  >
                     <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_55%,transparent)]">
                       <div className="text-xs text-[color:var(--mm-ink-secondary)] font-bold">Tổng Điểm</div>
                       <div className="text-3xl font-extrabold font-display text-[color:var(--mm-amber-text)] mt-1 tabular-nums">
@@ -710,19 +968,28 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                       </div>
                     </div>
                     <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)]">
-                      <div className="text-xs text-[color:var(--mm-cyan-text)] font-bold">Phần Cơ Bản</div>
+                      <div className="text-xs text-[color:var(--mm-cyan-text)] font-bold">Cơ Bản</div>
                       <div className="text-2xl font-extrabold font-display text-[color:var(--mm-ink-primary)] mt-1 tabular-nums">
                         {basicScore}
-                        <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/50</span>
+                        <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/{partAMax}</span>
                       </div>
                     </div>
                     <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-amber-border)_55%,transparent)]">
-                      <div className="text-xs text-[color:var(--mm-amber-text)] font-bold">Phần Olympic</div>
+                      <div className="text-xs text-[color:var(--mm-amber-text)] font-bold">Olympic</div>
                       <div className="text-2xl font-extrabold font-display text-[color:var(--mm-ink-primary)] mt-1 tabular-nums">
                         {olympiadScore}
-                        <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/50</span>
+                        <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/{partBMax}</span>
                       </div>
                     </div>
+                    {hasPartC && (
+                      <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_55%,transparent)]">
+                        <div className="text-xs text-[color:var(--mm-violet-text)] font-bold">Nghị Luận</div>
+                        <div className="text-2xl font-extrabold font-display text-[color:var(--mm-ink-primary)] mt-1 tabular-nums">
+                          {reasoningScore}
+                          <span className="text-xs font-sans text-[color:var(--mm-ink-muted)]">/{partCMax}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -795,7 +1062,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                         <div className="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
                           <span className="text-[11px] font-bold text-[color:var(--mm-ink-muted)] flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
-                            Ngày ôn tập gợi ý:
+                            {unitLabel} ôn tập gợi ý:
                           </span>
                           <div className="flex flex-wrap gap-1.5">
                             {meta.reviewDays.map((d) => (
@@ -805,7 +1072,7 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                                 onClick={() => onJumpToDay(d)}
                                 className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-[color:var(--mm-cyan-brightFill)] text-[color:var(--mm-cyan-text)] hover:text-[#05081D] font-black text-xs border border-[color:color-mix(in_oklch,var(--mm-cyan-border)_55%,transparent)] transition-colors duration-200 cursor-pointer tabular-nums min-h-[34px]"
                               >
-                                Ngày {d}
+                                {unitLabel} {d}
                               </button>
                             ))}
                           </div>
@@ -820,12 +1087,17 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
             <div className="mm-surface-card backdrop-blur-xl rounded-3xl p-6 shadow-xl border space-y-4">
               <h4 className="text-lg sm:text-xl font-extrabold font-display text-[color:var(--mm-ink-primary)] flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
-                <span>Chi Tiết Đáp Án &amp; Giải Thích 20 Câu Đề Thi {finalExam.monthLabel}</span>
+                <span>Chi Tiết Đáp Án &amp; Giải Thích {totalQuestions} Câu Đề Thi {finalExam.monthLabel}</span>
               </h4>
               <div className="space-y-3">
                 {examQuestions.map((q, idx) => {
                   const userAns = (answers[q.id] || '').trim();
-                  const correct = isInMonthAnswerCorrect(userAns, q.correctAnswer);
+                  const correct = isQuestionMastered(q);
+                  const reasoningText = (reasoningTexts[q.id] || '').trim();
+                  const reasoningEval =
+                    q.part === 'C'
+                      ? evaluateWeeklyReasoningText(reasoningText, q.reasoningKeywords)
+                      : null;
                   return (
                     <div
                       key={q.id}
@@ -837,9 +1109,15 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                         <span className="font-black text-xs uppercase text-[color:var(--mm-cyan-text)]">
-                          Câu {idx + 1} ({q.part === 'A' ? 'Phần A - Cơ Bản' : 'Phần B - Olympic'})
+                          Câu {idx + 1} (
+                          {q.part === 'A'
+                            ? 'Phần A - Cơ Bản'
+                            : q.part === 'B'
+                            ? 'Phần B - Olympic'
+                            : 'Phần C - Nghị Luận'}
+                          )
                         </span>
-                        <div className="flex items-center gap-2 text-xs font-bold tabular-nums">
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-bold tabular-nums">
                           <span className="text-[color:var(--mm-ink-secondary)]">
                             Bài làm: <strong className="text-[color:var(--mm-ink-primary)]">{userAns || 'Chưa trả lời'}</strong>
                           </span>
@@ -855,6 +1133,22 @@ export const InMonthFinalExamModal: React.FC<InMonthFinalExamModalProps> = ({
                         </div>
                       </div>
                       <p className="text-sm font-bold text-[color:var(--mm-ink-primary)] mb-2">{q.prompt}</p>
+                      {q.part === 'C' && (
+                        <div className="mb-2 space-y-2">
+                          <div className="text-xs bg-[color:var(--mm-surface-inset)] p-3 rounded-xl border border-[color:color-mix(in_oklch,var(--mm-violet-border)_45%,transparent)] text-[color:var(--mm-ink-secondary)]">
+                            <strong className="text-[color:var(--mm-violet-text)]">
+                              Lời giải em đã trình bày ({reasoningEval?.points ?? 0}/5đ):
+                            </strong>{' '}
+                            {reasoningText || 'Chưa viết lời giải trình bày.'}
+                          </div>
+                          {q.reasoningSampleAnswer && (
+                            <div className="text-xs bg-[color:color-mix(in_oklch,var(--mm-violet-tint)_38%,transparent)] p-3 rounded-xl border border-[color:var(--mm-violet-border)] text-[color:var(--mm-ink-primary)]">
+                              <strong className="text-[color:var(--mm-violet-text)]">Lời giải nghị luận mẫu:</strong>{' '}
+                              {q.reasoningSampleAnswer}
+                            </div>
+                          )}
+                        </div>
+                      )}
                       <p className="text-xs text-[color:var(--mm-ink-secondary)] bg-[color:var(--mm-surface-inset)] p-3 rounded-xl border border-white/10 flex items-start gap-1.5">
                         <Lightbulb className="w-4 h-4 text-[color:var(--mm-amber-accent)] shrink-0 mt-0.5" aria-hidden="true" />
                         <span>

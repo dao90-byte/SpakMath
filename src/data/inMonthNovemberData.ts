@@ -84,8 +84,8 @@ export interface InMonthDayPlan {
 
 export interface InMonthExamQuestion {
   id: string;
-  part: 'A' | 'B'; // A: Cơ bản (10 câu), B: Tư duy Olympic (10 câu)
-  points: number; // 5 points each -> 100 total
+  part: 'A' | 'B' | 'C'; // A: Cơ bản, B: Tư duy Olympic, C: Nghị luận Tư duy (khung chuẩn 20 buổi)
+  points: number; // 100 điểm tổng toàn đề
   skillDomain: InMonthSkillDomain;
   relatedDayNumbers: number[];
   prompt: string;
@@ -93,6 +93,11 @@ export interface InMonthExamQuestion {
   correctAnswer: string;
   explanation: string;
   visualModel: InMonthVisualModelConfig;
+  // Dành cho Phần C: Nghị luận Tư duy (chọn lập luận đúng + viết lời giải trình bày)
+  reasoningPrompt?: string;
+  reasoningPlaceholder?: string;
+  reasoningKeywords?: string[];
+  reasoningSampleAnswer?: string;
 }
 
 export interface InMonthFinalExam {
@@ -101,6 +106,7 @@ export interface InMonthFinalExam {
   title: string;
   subtitle: string;
   durationMinutes: number;
+  durationRangeLabel?: string; // Ví dụ: '45–60 phút'
   passingScore: number;
   excellenceScore: number;
   questions: InMonthExamQuestion[];

@@ -18,13 +18,15 @@ import type {
 // ============================================================================
 // CHƯƠNG TRÌNH IN MONTH THÁNG 12 (LỚP 3 · HỌC KỲ 2)
 // CHUẨN TOÁN TƯ DUY SINGAPORE CPA (CONCRETE - PICTORIAL - ABSTRACT)
-// 30 NGÀY × 11 CÂU = 330 CÂU HỎI + ĐỀ THI CUỐI THÁNG 20 CÂU
+// KHUNG CHUẨN 20 BUỔI (4 TUẦN × 5 BUỔI) × 11 CÂU = 220 CÂU HỎI
+// + 4 BÀI KIỂM TRA 15 PHÚT (SAU BUỔI 5, 10, 15, 20)
+// + ĐỀ KIỂM TRA CUỐI THÁNG 45–60 PHÚT (5 CƠ BẢN + 3 OLYMPIC + 2 NGHỊ LUẬN)
 // ============================================================================
 // Mapping 4 trụ cột năng lực Tháng 12 trên InMonthSkillDomain:
-// - 'interval'    -> Tuần 1: Chu Vi Cơ Bản & Toán Ngược (Hình Vuông & Hình Chữ Nhật)
-// - 'bar_model'   -> Tuần 2: Chu Vi Hình Ghép & Kỹ Thuật Dời Cạnh (Chữ L, Bậc Thang, Chữ U, Ghép Hình)
-// - 'remainder'   -> Tuần 3: Đo Lường Khối Lượng (Gam – Ki-lô-gam, Trừ Bì & Cân Thăng Bằng)
-// - 'measurement' -> Tuần 4: Đo Lường Thể Tích (Lít – Mi-li-lít, San Bình & Toán Rót Nước)
+// - 'interval'    -> Tuần 1 (Buổi 1–5): Chu Vi Cơ Bản & Toán Ngược (Hình Vuông & Hình Chữ Nhật)
+// - 'bar_model'   -> Tuần 2 (Buổi 6–10): Chu Vi Hình Ghép & Kỹ Thuật Dời Cạnh (Chữ L, Bậc Thang, Chữ U, Ghép Hình)
+// - 'remainder'   -> Tuần 3 (Buổi 11–15): Đo Lường Khối Lượng (Gam – Ki-lô-gam, Trừ Bì & Cân Thăng Bằng)
+// - 'measurement' -> Tuần 4 (Buổi 16–20): Đo Lường Thể Tích (Lít – Mi-li-lít, San Bình & Toán Rót Nước)
 // ============================================================================
 
 function makeOptions(correct: string, distractors: string[]): string[] {
@@ -115,36 +117,28 @@ function buildBarVisual(
 }
 
 // ============================================================================
-// TUẦN 1 (NGÀY 1 – 7): CHU VI HÌNH VUÔNG, HÌNH CHỮ NHẬT & TOÁN NGƯỢC
+// TUẦN 1 (BUỔI 1 – 5): CHU VI HÌNH VUÔNG, HÌNH CHỮ NHẬT & TOÁN NGƯỢC
 // ============================================================================
 
 const WEEK1_THEMES = [
   {
-    title: 'Ngày 1: Khái niệm Chu vi & Chu vi Hình vuông',
-    topicTag: 'Chu vi hình vuông',
+    title: 'Buổi 1: Khái niệm Chu vi, Hình vuông & Hình chữ nhật',
+    topicTag: 'Chu vi cơ bản',
     goals: [
       'Hiểu bản chất chu vi là tổng độ dài toàn bộ đường viền khép kín',
-      'Tính nhanh chu vi hình vuông và tìm cạnh hình vuông khi biết chu vi',
+      'Vận dụng công thức chu vi hình vuông và hình chữ nhật: (Dài + Rộng) × 2',
     ],
   },
   {
-    title: 'Ngày 2: Chu vi Hình chữ nhật & Bí kíp Nửa chu vi',
-    topicTag: 'Chu vi hình chữ nhật',
-    goals: [
-      'Vận dụng công thức Chu vi hình chữ nhật = (Dài + Rộng) × 2',
-      'Tách cặp (1 Dài + 1 Rộng) để làm chủ khái niệm Nửa chu vi',
-    ],
-  },
-  {
-    title: 'Ngày 3: Toán ngược tìm Chiều dài – Chiều rộng từ Chu vi',
+    title: 'Buổi 2: Bí kíp Nửa chu vi & Toán ngược tìm cạnh',
     topicTag: 'Toán ngược chu vi',
     goals: [
-      'Tìm Nửa chu vi trước bằng cách lấy Chu vi chia cho 2',
-      'Suy ngược ra Chiều dài hoặc Chiều rộng khi biết cạnh còn lại',
+      'Tách cặp (1 Dài + 1 Rộng) bằng cách lấy Chu vi chia 2 để tìm Nửa chu vi',
+      'Suy ngược ra Chiều dài, Chiều rộng hoặc cạnh hình vuông khi biết Chu vi',
     ],
   },
   {
-    title: 'Ngày 4: Đổi đơn vị đo (m – dm – cm) trước khi tính Chu vi',
+    title: 'Buổi 3: Đổi đơn vị đo (m – dm – cm) trước khi tính Chu vi',
     topicTag: 'Đổi đơn vị chu vi',
     goals: [
       'Phát hiện bẫy khác đơn vị đo giữa chiều dài và chiều rộng',
@@ -152,33 +146,25 @@ const WEEK1_THEMES = [
     ],
   },
   {
-    title: 'Ngày 5: Chu vi kết hợp Sơ đồ thanh (Gấp lần & Hơn kém)',
+    title: 'Buổi 4: Chu vi kết hợp Sơ đồ thanh (Gấp lần & Hơn kém)',
     topicTag: 'Chu vi & Sơ đồ thanh',
     goals: [
-      'Kết hợp Sơ đồ thanh Singapore với công thức chu vi hình chữ nhật',
+      'Kết hợp Sơ đồ thanh Singapore với công thức nửa chu vi hình chữ nhật',
       'Giải bài toán chiều dài gấp 2, 3 lần chiều rộng hoặc hơn chiều rộng d đơn vị',
     ],
   },
   {
-    title: 'Ngày 6: Rào vườn chừa cổng & Uốn dây bảo toàn Chu vi',
-    topicTag: 'Rào vườn & Uốn dây',
+    title: 'Buổi 5: Rào vườn chừa cổng, Uốn dây & Tổng ôn Tuần 1',
+    topicTag: 'Rào vườn & Tổng ôn T1',
     goals: [
-      'Tính độ dài hàng rào thực tế khi có chừa khoảng trống cổng ra vào',
-      'Áp dụng định luật bảo toàn độ dài khi uốn cùng một sợi dây thành hình mới',
-    ],
-  },
-  {
-    title: 'Ngày 7: Tổng ôn Tuần 1 — Chinh phục Chu vi cơ bản & Toán ngược',
-    topicTag: 'Tổng ôn Tuần 1',
-    goals: [
-      'Tổng hợp phản xạ tính chu vi hình vuông, hình chữ nhật và toán ngược',
-      'Sẵn sàng vượt qua Bài Kiểm Tra 15 Phút Cuối Tuần 1',
+      'Tính độ dài hàng rào chừa cổng và áp dụng bảo toàn chu vi khi uốn lại dây',
+      'Tổng hợp phản xạ Chu vi cơ bản & sẵn sàng cho Bài Kiểm Tra 15 Phút Tuần 1',
     ],
   },
 ];
 
 function buildWeek1Questions(day: number): InMonthQuestion[] {
-  // Clean calibrated dimensions per day (day 1..7)
+  // Clean calibrated dimensions per session (session 1..5)
   const sqSide = 7 + day * 2; // 9, 11, 13, 15, 17, 19, 21
   const sqPerim = sqSide * 4;
 
@@ -897,28 +883,20 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
 }
 
 // ============================================================================
-// TUẦN 2 (NGÀY 8 – 14): CHU VI HÌNH GHÉP & KỸ THUẬT DỜI CẠNH (SIDE-SHIFTING)
+// TUẦN 2 (BUỔI 6 – 10): CHU VI HÌNH GHÉP & KỸ THUẬT DỜI CẠNH (SIDE-SHIFTING)
 // ============================================================================
 
 const WEEK2_THEMES = [
   {
-    title: 'Ngày 8: Ghép 2, 3, 4 Hình vuông thành Hình chữ nhật',
+    title: 'Buổi 6: Ghép 2, 3, 4 Hình vuông & Lưới ô vuông (2×2, 2×3)',
     topicTag: 'Ghép hình vuông',
     goals: [
       'Nhận diện các cạnh chung bị giấu bên trong không được tính vào chu vi',
-      'Tính nhanh chu vi hình chữ nhật ghép từ N hình vuông giống hệt nhau',
+      'Tính nhanh chu vi hình chữ nhật ghép từ N hình vuông hoặc lưới ô vuông',
     ],
   },
   {
-    title: 'Ngày 9: Ghép lưới ô vuông (2×2, 2×3) & Cắt hình chữ nhật',
-    topicTag: 'Ghép & cắt hình',
-    goals: [
-      'Tính chu vi khi ghép nhiều hình vuông thành lưới chữ nhật nhiều hàng',
-      'So sánh tổng chu vi trước và sau khi cắt 1 hình chữ nhật thành 2 hình',
-    ],
-  },
-  {
-    title: 'Ngày 10: Kỹ thuật Dời Cạnh (Side-Shifting) cho Hình Chữ L',
+    title: 'Buổi 7: Kỹ thuật Dời Cạnh (Side-Shifting) cho Hình Chữ L',
     topicTag: 'Dời cạnh chữ L',
     goals: [
       'Hiểu bản chất dời cạnh ngang và cạnh dọc ra khung hình chữ nhật bao ngoài',
@@ -926,7 +904,7 @@ const WEEK2_THEMES = [
     ],
   },
   {
-    title: 'Ngày 11: Chu vi Hình Bậc Thang nhiều bậc bằng Dời Cạnh',
+    title: 'Buổi 8: Chu vi Hình Bậc Thang nhiều bậc bằng Dời Cạnh',
     topicTag: 'Hình bậc thang',
     goals: [
       'Dời đồng thời nhiều bậc ngang và bậc dọc về khung bao ngoài',
@@ -934,7 +912,7 @@ const WEEK2_THEMES = [
     ],
   },
   {
-    title: 'Ngày 12: Hình Chữ U — Bẫy kinh điển "2 Cạnh Lõm Thừa (+2×d)"',
+    title: 'Buổi 9: Hình Chữ U — Bẫy kinh điển "2 Cạnh Lõm Thừa (+2×d)"',
     topicTag: 'Hình chữ U lõm',
     goals: [
       'Phân biệt cắt ở góc (chu vi không đổi) với cắt lõm ở giữa cạnh (tăng thêm 2 đoạn)',
@@ -942,25 +920,17 @@ const WEEK2_THEMES = [
     ],
   },
   {
-    title: 'Ngày 13: Toán ngược Hình ghép & Hình Chữ T / Khuyết nhiều góc',
-    topicTag: 'Toán ngược hình ghép',
-    goals: [
-      'Tìm chiều cao hoặc độ sâu lõm khi biết tổng chu vi hình chữ L / chữ U',
-      'Vận dụng linh hoạt kỹ thuật dời cạnh cho hình khuyết 2 góc đối diện',
-    ],
-  },
-  {
-    title: 'Ngày 14: Tổng ôn Tuần 2 — Tư duy Olympic Chu vi Hình ghép',
+    title: 'Buổi 10: Toán ngược Hình ghép & Tổng ôn Olympic Tuần 2',
     topicTag: 'Tổng ôn Tuần 2',
     goals: [
-      'Làm chủ hoàn toàn kỹ thuật dời cạnh và đếm cạnh ngoài khi ghép hình',
-      'Sẵn sàng chinh phục Bài Kiểm Tra 15 Phút Cuối Tuần 2',
+      'Tìm cạnh ô vuông hoặc độ sâu rãnh lõm khi biết tổng chu vi hình ghép',
+      'Làm chủ kỹ thuật dời cạnh & sẵn sàng cho Bài Kiểm Tra 15 Phút Tuần 2',
     ],
   },
 ];
 
 function buildWeek2Questions(day: number): InMonthQuestion[] {
-  const offset = day - 7; // 1..7
+  const offset = day - 5; // 1..5 (Buổi 6..10)
 
   // Q1: 2 squares joined in a row (1×2)
   const sq1 = 4 + offset; // 5..11 cm
@@ -1662,28 +1632,20 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
 }
 
 // ============================================================================
-// TUẦN 3 (NGÀY 15 – 21): PHÒNG THÍ NGHIỆM KHỐI LƯỢNG (GAM – KI-LÔ-GAM)
+// TUẦN 3 (BUỔI 11 – 15): PHÒNG THÍ NGHIỆM KHỐI LƯỢNG (GAM – KI-LÔ-GAM)
 // ============================================================================
 
 const WEEK3_THEMES = [
   {
-    title: 'Ngày 15: Đổi đơn vị Gam – Ki-lô-gam (1 kg = 1 000 g)',
+    title: 'Buổi 11: Đổi đơn vị Gam – Ki-lô-gam (1 kg = 1 000 g) & Cộng trừ',
     topicTag: 'Đổi đơn vị kg – g',
     goals: [
       'Ghi nhớ quy tắc chuẩn 1 kg = 1 000 g và đổi thành thạo số đo hỗn hợp',
-      'So sánh khối lượng giữa hai đơn vị kg và g chính xác tuyệt đối',
+      'Quy đổi về cùng đơn vị gam trước khi cộng trừ và nhân nhiều gói hàng',
     ],
   },
   {
-    title: 'Ngày 16: Cộng trừ khối lượng & Bài toán nhiều túi hàng',
-    topicTag: 'Cộng trừ khối lượng',
-    goals: [
-      'Quy đổi cùng đơn vị gam trước khi cộng hoặc trừ khối lượng',
-      'Tính tổng khối lượng của nhiều gói hàng giống nhau',
-    ],
-  },
-  {
-    title: 'Ngày 17: Bài toán Trừ Bì (Vỏ hộp / Giỏ & Vật bên trong)',
+    title: 'Buổi 12: Bài toán Trừ Bì (Vỏ hộp / Giỏ & Vật bên trong)',
     topicTag: 'Bài toán trừ bì',
     goals: [
       'Phân biệt Khối lượng cả bì (gồm vỏ) và Khối lượng tịnh (chỉ phần ruột)',
@@ -1691,7 +1653,7 @@ const WEEK3_THEMES = [
     ],
   },
   {
-    title: 'Ngày 18: Thử thách Cả thùng & Nửa thùng — Tìm khối lượng vỏ',
+    title: 'Buổi 13: Thử thách Cả thùng & Nửa thùng — Tìm khối lượng vỏ',
     topicTag: 'Cả thùng & Nửa thùng',
     goals: [
       'Dùng hiệu giữa "cả thùng đầy" và "nửa thùng" để tách riêng 1 nửa ruột hàng',
@@ -1699,7 +1661,7 @@ const WEEK3_THEMES = [
     ],
   },
   {
-    title: 'Ngày 19: Cân thăng bằng suy luận (Đẳng thức khối lượng)',
+    title: 'Buổi 14: Cân thăng bằng suy luận (Đẳng thức khối lượng)',
     topicTag: 'Cân thăng bằng',
     goals: [
       'Đọc và lập đẳng thức từ hai đĩa cân đang giữ thăng bằng',
@@ -1707,25 +1669,17 @@ const WEEK3_THEMES = [
     ],
   },
   {
-    title: 'Ngày 20: Chia đều theo Gam & San khối lượng hai giỏ',
-    topicTag: 'Chia đều & San giỏ',
+    title: 'Buổi 15: Chia đều theo Gam, San giỏ & Tổng ôn Tuần 3',
+    topicTag: 'San giỏ & Tổng ôn T3',
     goals: [
-      'Chia khối lượng lớn (kg đổi ra g) vào các túi nhỏ đều nhau',
-      'Tìm lượng hàng cần chuyển từ giỏ nặng sang giỏ nhẹ để hai giỏ bằng nhau',
-    ],
-  },
-  {
-    title: 'Ngày 21: Tổng ôn Tuần 3 — Làm chủ Khối lượng kg – g',
-    topicTag: 'Tổng ôn Tuần 3',
-    goals: [
-      'Tổng hợp mọi kỹ năng đổi đơn vị, trừ bì, nửa thùng và cân thăng bằng',
-      'Sẵn sàng chinh phục Bài Kiểm Tra 15 Phút Cuối Tuần 3',
+      'Chia khối lượng lớn vào các túi đều nhau và giải bài toán san khối lượng hai giỏ',
+      'Tổng hợp kỹ năng kg – g & sẵn sàng cho Bài Kiểm Tra 15 Phút Tuần 3',
     ],
   },
 ];
 
 function buildWeek3Questions(day: number): InMonthQuestion[] {
-  const offset = day - 14; // 1..7
+  const offset = day - 10; // 1..5 (Buổi 11..15)
 
   // Q1: Convert X kg Y g -> g
   const kg1 = 1 + (offset % 4); // 2, 3, 4, 1, 2, 3, 4
@@ -2494,28 +2448,20 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
 }
 
 // ============================================================================
-// TUẦN 4 (NGÀY 22 – 28): PHÒNG THÍ NGHIỆM THỂ TÍCH (LÍT – MI-LI-LÍT)
+// TUẦN 4 (BUỔI 16 – 20): PHÒNG THÍ NGHIỆM THỂ TÍCH (LÍT – MI-LI-LÍT)
 // ============================================================================
 
 const WEEK4_THEMES = [
   {
-    title: 'Ngày 22: Đổi đơn vị Lít – Mi-li-lít (1 L = 1 000 mL)',
+    title: 'Buổi 16: Đổi đơn vị Lít – Mi-li-lít (1 L = 1 000 mL) & Cộng trừ',
     topicTag: 'Đổi đơn vị L – mL',
     goals: [
       'Ghi nhớ quy tắc 1 L = 1 000 mL và đổi số đo dung tích hỗn hợp thành thạo',
-      'Bù dung tích cho tròn 1 lít hoặc 2 lít',
+      'Đổi về cùng đơn vị mL trước khi cộng trừ và tính lượng rót nhiều cốc',
     ],
   },
   {
-    title: 'Ngày 23: Cộng trừ thể tích hỗn hợp & Rót nhiều cốc bằng nhau',
-    topicTag: 'Cộng trừ thể tích',
-    goals: [
-      'Đổi cùng đơn vị mL trước khi cộng trừ dung tích hai bình nước',
-      'Tính tổng lượng nước khi rót vào nhiều cốc/chai giống nhau',
-    ],
-  },
-  {
-    title: 'Ngày 24: Chia đều thể tích vào cốc/chai & Tính lượng nước còn lại',
+    title: 'Buổi 17: Chia đều thể tích vào cốc/chai & Tính lượng nước còn lại',
     topicTag: 'Chia đều thể tích',
     goals: [
       'Tính số chai/cốc rót đầy từ một bình lớn (đổi L sang mL)',
@@ -2523,7 +2469,7 @@ const WEEK4_THEMES = [
     ],
   },
   {
-    title: 'Ngày 25: Bài toán San Bình — Rót qua lại để hai bình bằng nhau',
+    title: 'Buổi 18: Bài toán San Bình — Rót qua lại để hai bình bằng nhau',
     topicTag: 'Bài toán san bình',
     goals: [
       'Hiểu bản chất san bình: lượng rót = (Bình nhiều − Bình ít) : 2',
@@ -2531,7 +2477,7 @@ const WEEK4_THEMES = [
     ],
   },
   {
-    title: 'Ngày 26: Bình đầy – Nửa bình nước & Tìm vỏ bình',
+    title: 'Buổi 19: Bình đầy – Nửa bình nước & Tìm vỏ bình',
     topicTag: 'Bình đầy – Nửa bình',
     goals: [
       'Tách riêng khối lượng 1 nửa phần nước từ hiệu hai lần cân',
@@ -2539,25 +2485,17 @@ const WEEK4_THEMES = [
     ],
   },
   {
-    title: 'Ngày 27: Toán đong nước nhiều bước & Sơ đồ thanh L – mL',
-    topicTag: 'Toán đong nước',
-    goals: [
-      'Kết hợp sơ đồ thanh gấp lần / hơn kém với đơn vị L và mL',
-      'Giải bài toán tìm lượng nước ban đầu bằng suy luận ngược',
-    ],
-  },
-  {
-    title: 'Ngày 28: Tổng ôn Tuần 4 — Làm chủ Thể tích L – mL',
+    title: 'Buổi 20: Toán đong nước, Suy luận ngược & Tổng ôn Tuần 4',
     topicTag: 'Tổng ôn Tuần 4',
     goals: [
-      'Hoàn thiện phản xạ đổi đơn vị L – mL, san bình và rót nước 2 bước',
-      'Sẵn sàng chinh phục Bài Kiểm Tra 15 Phút Cuối Tuần 4',
+      'Kết hợp sơ đồ thanh L – mL và suy luận ngược tìm lượng nước ban đầu',
+      'Sẵn sàng chinh phục Bài Kiểm Tra 15 Phút Tuần 4 & Đề Cuối Tháng 12',
     ],
   },
 ];
 
 function buildWeek4Questions(day: number): InMonthQuestion[] {
-  const offset = day - 21; // 1..7
+  const offset = day - 15; // 1..5 (Buổi 16..20)
 
   // Q1: Convert X L Y mL -> mL
   const l1 = 1 + (offset % 4); // 2, 3, 4, 1, 2, 3, 4
@@ -3340,54 +3278,11 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
 }
 
 // ============================================================================
-// TUẦN 5 (NGÀY 29 – 30): TỔNG ÔN CHIẾN LƯỢC TOÀN DIỆN THÁNG 12
-// ============================================================================
-
-function buildWeek5ReviewQuestions(day: 29 | 30): InMonthQuestion[] {
-  // Day 29 mixes Week 1 & Week 2 heavily + preview of Week 3 & 4; Day 30 mixes all 4 pillars for Final Exam prep
-  const w1 = buildWeek1Questions(day === 29 ? 5 : 7);
-  const w2 = buildWeek2Questions(day === 29 ? 12 : 14);
-  const w3 = buildWeek3Questions(day === 29 ? 19 : 21);
-  const w4 = buildWeek4Questions(day === 29 ? 26 : 28);
-
-  const selected: InMonthQuestion[] =
-    day === 29
-      ? [
-          { ...w1[0], id: 'dec-d29-q1', stage: 'warmup' },
-          { ...w2[0], id: 'dec-d29-q2', stage: 'warmup' },
-          { ...w1[4], id: 'dec-d29-q3', stage: 'visualModel' },
-          { ...w2[2], id: 'dec-d29-q4', stage: 'visualModel' },
-          { ...w2[4], id: 'dec-d29-q5', stage: 'visualModel' },
-          { ...w1[5], id: 'dec-d29-q6', stage: 'practice' },
-          { ...w2[5], id: 'dec-d29-q7', stage: 'practice' },
-          { ...w3[4], id: 'dec-d29-q8', stage: 'practice' },
-          { ...w4[5], id: 'dec-d29-q9', stage: 'practice' },
-          { ...w1[9], id: 'dec-d29-q10', stage: 'challenge' },
-          { ...w2[9], id: 'dec-d29-q11', stage: 'challenge' },
-        ]
-      : [
-          { ...w3[0], id: 'dec-d30-q1', stage: 'warmup' },
-          { ...w4[0], id: 'dec-d30-q2', stage: 'warmup' },
-          { ...w1[8], id: 'dec-d30-q3', stage: 'visualModel' },
-          { ...w2[3], id: 'dec-d30-q4', stage: 'visualModel' },
-          { ...w3[5], id: 'dec-d30-q5', stage: 'visualModel' },
-          { ...w4[3], id: 'dec-d30-q6', stage: 'practice' },
-          { ...w2[7], id: 'dec-d30-q7', stage: 'practice' },
-          { ...w3[8], id: 'dec-d30-q8', stage: 'practice' },
-          { ...w4[6], id: 'dec-d30-q9', stage: 'practice' },
-          { ...w3[9], id: 'dec-d30-q10', stage: 'challenge' },
-          { ...w4[9], id: 'dec-d30-q11', stage: 'challenge' },
-        ];
-
-  return selected;
-}
-
-// ============================================================================
-// TỔNG HỢP 30 NGÀY HỌC THÁNG 12 (330 CÂU HỎI CHUẨN CPA)
+// TỔNG HỢP 20 BUỔI HỌC THÁNG 12 (4 TUẦN × 5 BUỔI × 11 CÂU = 220 CÂU HỎI CPA)
 // ============================================================================
 
 export const DECEMBER_IN_MONTH_DAYS: InMonthDayPlan[] = [
-  // Tuần 1 (Ngày 1..7)
+  // Tuần 1 (Buổi 1..5)
   ...WEEK1_THEMES.map((t, i): InMonthDayPlan => {
     const day = i + 1;
     return {
@@ -3406,9 +3301,9 @@ export const DECEMBER_IN_MONTH_DAYS: InMonthDayPlan[] = [
       questions: buildWeek1Questions(day),
     };
   }),
-  // Tuần 2 (Ngày 8..14)
+  // Tuần 2 (Buổi 6..10)
   ...WEEK2_THEMES.map((t, i): InMonthDayPlan => {
-    const day = i + 8;
+    const day = i + 6;
     return {
       id: `dec-day-${day}`,
       dayNumber: day,
@@ -3425,9 +3320,9 @@ export const DECEMBER_IN_MONTH_DAYS: InMonthDayPlan[] = [
       questions: buildWeek2Questions(day),
     };
   }),
-  // Tuần 3 (Ngày 15..21)
+  // Tuần 3 (Buổi 11..15)
   ...WEEK3_THEMES.map((t, i): InMonthDayPlan => {
-    const day = i + 15;
+    const day = i + 11;
     return {
       id: `dec-day-${day}`,
       dayNumber: day,
@@ -3444,9 +3339,9 @@ export const DECEMBER_IN_MONTH_DAYS: InMonthDayPlan[] = [
       questions: buildWeek3Questions(day),
     };
   }),
-  // Tuần 4 (Ngày 22..28)
+  // Tuần 4 (Buổi 16..20)
   ...WEEK4_THEMES.map((t, i): InMonthDayPlan => {
-    const day = i + 22;
+    const day = i + 16;
     return {
       id: `dec-day-${day}`,
       dayNumber: day,
@@ -3463,80 +3358,23 @@ export const DECEMBER_IN_MONTH_DAYS: InMonthDayPlan[] = [
       questions: buildWeek4Questions(day),
     };
   }),
-  // Tuần 5 (Ngày 29..30)
-  {
-    id: 'dec-day-29',
-    dayNumber: 29,
-    weekNumber: 5,
-    weekTitle: 'Tuần 5 · Tổng Ôn Tháng 12',
-    title: 'Ngày 29: Tổng ôn Chu vi Hình học & Kỹ thuật Dời cạnh',
-    subtitle: 'Tổng duyệt Hình vuông, Hình chữ nhật, Ghép hình, Chữ L & Chữ U',
-    topicTag: 'Tổng ôn Chu vi',
-    skillDomain: 'bar_model',
-    estimatedMinutes: 30,
-    planetIcon: '🚀',
-    accentColor: '#E11D48',
-    learningGoals: [
-      'Tổng hợp phản xạ tính chu vi cơ bản, toán ngược và bảo toàn dây uốn',
-      'Thành thạo kỹ thuật dời cạnh và xử lý 2 cạnh lõm hình chữ U',
-    ],
-    questions: buildWeek5ReviewQuestions(29),
-  },
-  {
-    id: 'dec-day-30',
-    dayNumber: 30,
-    weekNumber: 5,
-    weekTitle: 'Tuần 5 · Tổng Ôn Tháng 12',
-    title: 'Ngày 30: Tổng duyệt Đo lường Gam–Lít & Đấu trường Olympic Tháng 12',
-    subtitle: 'Chốt hạ kiến thức kg–g, L–mL, Thùng đầy–Nửa thùng & San bình',
-    topicTag: 'Tổng duyệt Tháng 12',
-    skillDomain: 'measurement',
-    estimatedMinutes: 30,
-    planetIcon: '🏆',
-    accentColor: '#E11D48',
-    learningGoals: [
-      'Làm chủ quy đổi kg–g và L–mL không mắc bẫy đơn vị',
-      'Sẵn sàng đạt điểm tối đa ở Bài Kiểm Tra 15 Phút Tuần 5 và Đề Cuối Tháng 12',
-    ],
-    questions: buildWeek5ReviewQuestions(30),
-  },
 ];
 
 // ============================================================================
-// ĐỀ KIỂM TRA ĐÁNH GIÁ CUỐI THÁNG 12 (20 CÂU: 10 CƠ BẢN + 10 OLYMPIC)
+// ĐỀ KIỂM TRA ĐÁNH GIÁ CUỐI KỲ THÁNG 12 (45–60 PHÚT · 10 CÂU = 100 ĐIỂM)
+// - Phần A: 5 câu Cơ bản × 10 điểm = 50 điểm
+// - Phần B: 3 câu Tư duy Olympic × 10 điểm = 30 điểm
+// - Phần C: 2 câu Nghị luận Tư duy × 10 điểm = 20 điểm (5đ lập luận + 5đ lời giải)
 // ============================================================================
 
 const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
-  // --- PHẦN A: CƠ BẢN (10 CÂU × 5 ĐIỂM = 50 ĐIỂM) ---
+  // --- PHẦN A: CƠ BẢN (5 CÂU × 10 ĐIỂM = 50 ĐIỂM) ---
   {
     id: 'dec-exam-a1',
     part: 'A',
-    points: 5,
+    points: 10,
     skillDomain: 'interval',
-    relatedDayNumbers: [1, 7],
-    prompt: 'Một sân bay trực thăng hình vuông có cạnh dài 18 m. Tính chu vi của sân bay đó.',
-    options: ['72 m', '36 m', '64 m', '76 m'],
-    correctAnswer: '72 m',
-    explanation: 'Chu vi hình vuông bằng cạnh nhân 4: 18 × 4 = 72 (m).',
-    visualModel: buildPerimeterVisual(
-      'Chu vi hình vuông cạnh 18 m',
-      {
-        itemName: 'cạnh hình vuông',
-        unitLabel: 'm',
-        actionPrompt: 'Gấp độ dài 1 cạnh lên 4 lần',
-        interactiveRule: '4 cạnh bằng nhau, mỗi cạnh dài 18 m.',
-        groups: [{ id: 'ea1', label: '4 cạnh bằng nhau', icon: '⬜', count: 4, unitValue: 18, totalValue: 72, color: '#38BDF8', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'measurement' }],
-      },
-      { kind: 'perimeter_shape', shapeKind: 'square', outerWidth: 18, outerHeight: 18, unitLabel: 'm', unknownTarget: 'perimeter', expectedPerimeter: 72 },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi hình vuông} = 18 \\;?\\; 4 = ?`], fullLatexSteps: [`\\text{Chu vi hình vuông} = 18 \\times 4 = 72\\text{ (m)}`], finalAnswerLatex: `72\\text{ m}`, finalNumericValue: 72 }
-    ),
-  },
-  {
-    id: 'dec-exam-a2',
-    part: 'A',
-    points: 5,
-    skillDomain: 'interval',
-    relatedDayNumbers: [2, 4],
+    relatedDayNumbers: [1, 3],
     prompt: 'Một bảng điện tử hình chữ nhật có chiều dài 4 dm và chiều rộng 25 cm. Tính chu vi bảng điện tử đó (đơn vị cm).',
     options: ['130 cm', '58 cm', '65 cm', '120 cm'],
     correctAnswer: '130 cm',
@@ -3549,8 +3387,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi 4 dm sang cm trước khi cộng với 25 cm',
         interactiveRule: 'Dài = 4 dm, Rộng = 25 cm.',
         groups: [
-          { id: 'ea2l', label: 'Chiều dài (4 dm)', icon: '📏', count: 4, unitValue: 10, totalValue: 40, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '4 dm' },
-          { id: 'ea2w', label: 'Chiều rộng', icon: '📐', count: 1, unitValue: 25, totalValue: 25, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'ea1l', label: 'Chiều dài (4 dm)', icon: '📏', count: 4, unitValue: 10, totalValue: 40, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '4 dm' },
+          { id: 'ea1w', label: 'Chiều rộng', icon: '📐', count: 1, unitValue: 25, totalValue: 25, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 40, outerHeight: 25, widthLabel: '4 dm', unitLabel: 'cm', unknownTarget: 'perimeter', expectedPerimeter: 130, showInteractiveShift: true },
@@ -3558,11 +3396,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
     ),
   },
   {
-    id: 'dec-exam-a3',
+    id: 'dec-exam-a2',
     part: 'A',
-    points: 5,
+    points: 10,
     skillDomain: 'interval',
-    relatedDayNumbers: [3, 7],
+    relatedDayNumbers: [2, 5],
     prompt: 'Một tấm thảm hình chữ nhật có chu vi 96 cm và chiều rộng 18 cm. Tính chiều dài của tấm thảm đó.',
     options: ['30 cm', '78 cm', '48 cm', '28 cm'],
     correctAnswer: '30 cm',
@@ -3575,8 +3413,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Chia đôi chu vi tìm Nửa chu vi rồi trừ chiều rộng',
         interactiveRule: 'Chu vi = 96 cm, Rộng = 18 cm.',
         groups: [
-          { id: 'ea3w', label: 'Chiều rộng', icon: '📐', count: 1, unitValue: 18, totalValue: 18, color: '#F59E0B', displayMode: 'measurement' },
-          { id: 'ea3l', label: 'Chiều dài cần tìm', icon: '📏', count: 1, unitValue: 30, totalValue: 30, color: '#38BDF8', isUnknown: true, displayMode: 'measurement' },
+          { id: 'ea2w', label: 'Chiều rộng', icon: '📐', count: 1, unitValue: 18, totalValue: 18, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'ea2l', label: 'Chiều dài cần tìm', icon: '📏', count: 1, unitValue: 30, totalValue: 30, color: '#38BDF8', isUnknown: true, displayMode: 'measurement' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 30, outerHeight: 18, unitLabel: 'cm', unknownTarget: 'length', expectedPerimeter: 96, showInteractiveShift: true },
@@ -3584,37 +3422,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
     ),
   },
   {
-    id: 'dec-exam-a4',
+    id: 'dec-exam-a3',
     part: 'A',
-    points: 5,
+    points: 10,
     skillDomain: 'bar_model',
-    relatedDayNumbers: [8, 9],
-    prompt: 'Ghép 3 hình vuông bằng nhau cạnh 7 cm thành một hình chữ nhật dài (1 hàng 3 ô). Tính chu vi hình chữ nhật mới ghép được.',
-    options: ['56 cm', '84 cm', '28 cm', '42 cm'],
-    correctAnswer: '56 cm',
-    explanation: 'Chiều dài là 7 × 3 = 21 (cm), chiều rộng 7 cm. Chu vi là: (21 + 7) × 2 = 56 (cm).',
-    visualModel: buildPerimeterVisual(
-      'Ghép 3 hình vuông cạnh 7 cm',
-      {
-        itemName: 'đoạn cạnh ngoài',
-        unitLabel: 'cm',
-        actionPrompt: 'Không cộng 2 cạnh chung ở bên trong',
-        interactiveRule: '3 hình vuông cạnh 7 cm xếp 1 hàng ngang.',
-        groups: [
-          { id: 'ea4h', label: 'Trên + Dưới (6 đoạn)', icon: '🟦', count: 6, unitValue: 7, totalValue: 42, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '6 × 7 cm' },
-          { id: 'ea4v', label: 'Trái + Phải (2 đoạn)', icon: '🟩', count: 2, unitValue: 7, totalValue: 14, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: '2 × 7 cm' },
-        ],
-      },
-      { kind: 'perimeter_shape', shapeKind: 'joined_squares', outerWidth: 21, outerHeight: 7, squareSide: 7, gridCols: 3, gridRows: 1, unitLabel: 'cm', unknownTarget: 'perimeter', expectedPerimeter: 56 },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chiều dài} = 7 \\;?\\; 3 = ?`, `\\text{Chu vi} = (\\text{Dài} \\;?\\; 7) \\;?\\; 2 = ?`], fullLatexSteps: [`\\text{Chiều dài} = 7 \\times 3 = 21\\text{ (cm)}`, `\\text{Chu vi} = (21 + 7) \\times 2 = 56\\text{ (cm)}`], finalAnswerLatex: `56\\text{ cm}`, finalNumericValue: 56 }
-    ),
-  },
-  {
-    id: 'dec-exam-a5',
-    part: 'A',
-    points: 5,
-    skillDomain: 'bar_model',
-    relatedDayNumbers: [10, 11],
+    relatedDayNumbers: [7, 10],
     prompt: 'Một mảnh vườn hình chữ L có chiều ngang lớn nhất 22 m và chiều cao lớn nhất 14 m (khuyết một góc hình chữ nhật nhỏ). Tính chu vi mảnh vườn đó.',
     options: ['72 m', '36 m', '68 m', '76 m'],
     correctAnswer: '72 m',
@@ -3627,8 +3439,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Bấm Dời cạnh để đưa góc khuyết về khung chữ nhật',
         interactiveRule: 'Chiều ngang ngoài = 22 m, Chiều cao ngoài = 14 m.',
         groups: [
-          { id: 'ea5w', label: '2 cạnh ngang', icon: '↔️', count: 2, unitValue: 22, totalValue: 44, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 × 22 m' },
-          { id: 'ea5h', label: '2 cạnh cao', icon: '↕️', count: 2, unitValue: 14, totalValue: 28, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 14 m' },
+          { id: 'ea3w', label: '2 cạnh ngang', icon: '↔️', count: 2, unitValue: 22, totalValue: 44, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 × 22 m' },
+          { id: 'ea3h', label: '2 cạnh cao', icon: '↕️', count: 2, unitValue: 14, totalValue: 28, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 14 m' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'l_shape', outerWidth: 22, outerHeight: 14, cutWidth: 8, cutHeight: 5, unitLabel: 'm', unknownTarget: 'perimeter', expectedPerimeter: 72, showInteractiveShift: true },
@@ -3636,37 +3448,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
     ),
   },
   {
-    id: 'dec-exam-a6',
+    id: 'dec-exam-a4',
     part: 'A',
-    points: 5,
+    points: 10,
     skillDomain: 'remainder',
-    relatedDayNumbers: [15, 16],
-    prompt: 'Đổi đơn vị khối lượng: 3 kg 450 g bằng bao nhiêu gam (g)?',
-    options: ['3450 g', '750 g', '3045 g', '3405 g'],
-    correctAnswer: '3450 g',
-    explanation: '3 kg = 3 000 g. Cộng thêm 450 g ta được 3 450 g.',
-    visualModel: buildMeasurementVisual(
-      'Quy đổi 3 kg 450 g sang gam',
-      {
-        itemName: 'khối lượng',
-        unitLabel: 'g',
-        actionPrompt: 'Nhân số kg với 1 000 rồi cộng phần gam lẻ',
-        interactiveRule: '1 kg = 1 000 g.',
-        groups: [
-          { id: 'ea6k', label: '3 kg', icon: '⚖️', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '3 kg' },
-          { id: 'ea6g', label: '450 g', icon: '🪨', count: 1, unitValue: 450, totalValue: 450, color: '#F59E0B', displayMode: 'measurement' },
-        ],
-      },
-      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'unit_convert', operands: [3, 450], expectedNumericResult: 3450, resultUnit: 'g', primaryReading: '3 kg 450 g', secondaryReading: '= ? g', conversionRule: '1 kg = 1 000 g', visualParams: { mode: 'convert', givenA: 3, givenB: 450, unitA: 'kg', unitB: 'g' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`3\\text{ kg} = 3 \\;?\\; 1000 = ?\\text{ (g)}`, `\\text{Tổng} = (\\text{g từ kg}) \\;?\\; 450 = ?`], fullLatexSteps: [`3\\text{ kg} = 3000\\text{ g}`, `3000 + 450 = 3450\\text{ (g)}`], finalAnswerLatex: `3450\\text{ g}`, finalNumericValue: 3450 }
-    ),
-  },
-  {
-    id: 'dec-exam-a7',
-    part: 'A',
-    points: 5,
-    skillDomain: 'remainder',
-    relatedDayNumbers: [17, 20],
+    relatedDayNumbers: [11, 12],
     prompt: 'Một hộp mứt cả vỏ nặng 2 kg 150 g. Biết riêng vỏ hộp nặng 350 g. Hỏi số mứt bên trong hộp cân nặng bao nhiêu gam?',
     options: ['1800 g', '2500 g', '1750 g', '1850 g'],
     correctAnswer: '1800 g',
@@ -3679,8 +3465,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi cả hộp sang gam rồi trừ đi khối lượng vỏ',
         interactiveRule: 'Ruột = Cả hộp − Vỏ hộp.',
         groups: [
-          { id: 'ea7a', label: 'Cả hộp (2 kg 150 g)', icon: '🎁', count: 1, unitValue: 2150, totalValue: 2150, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 kg 150 g' },
-          { id: 'ea7b', label: 'Vỏ hộp', icon: '📦', count: 1, unitValue: 350, totalValue: 350, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'ea4a', label: 'Cả hộp (2 kg 150 g)', icon: '🎁', count: 1, unitValue: 2150, totalValue: 2150, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 kg 150 g' },
+          { id: 'ea4b', label: 'Vỏ hộp', icon: '📦', count: 1, unitValue: 350, totalValue: 350, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
       { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'tare_weight', operands: [2150, 350], expectedNumericResult: 1800, resultUnit: 'g', primaryReading: 'Cả hộp: 2 kg 150 g', secondaryReading: 'Vỏ hộp: 350 g', conversionRule: 'Ruột = Cả hộp − Vỏ', visualParams: { mode: 'subtract', givenA: 2150, givenB: 350, unitA: 'g', labelA: 'Cả hộp: 2 kg 150 g', labelB: 'Vỏ hộp: 350 g' } },
@@ -3688,37 +3474,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
     ),
   },
   {
-    id: 'dec-exam-a8',
+    id: 'dec-exam-a5',
     part: 'A',
-    points: 5,
+    points: 10,
     skillDomain: 'measurement',
-    relatedDayNumbers: [22, 23],
-    prompt: 'Trong bình đang có 350 mL nước. Cần rót thêm bao nhiêu mi-li-lít nước nữa để có đúng 1 L nước?',
-    options: ['650 mL', '750 mL', '550 mL', '1350 mL'],
-    correctAnswer: '650 mL',
-    explanation: 'Đổi 1 L = 1 000 mL. Cần rót thêm: 1 000 - 350 = 650 (mL).',
-    visualModel: buildMeasurementVisual(
-      'Rót thêm cho đầy vạch 1 L (hiện có 350 mL)',
-      {
-        itemName: 'nước',
-        unitLabel: 'mL',
-        actionPrompt: 'Đổi 1 L = 1 000 mL rồi tìm phần còn thiếu',
-        interactiveRule: '1 L = 1 000 mL.',
-        groups: [
-          { id: 'ea8a', label: 'Hiện có', icon: '💧', count: 1, unitValue: 350, totalValue: 350, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'ea8b', label: 'Cần rót thêm', icon: '➕', count: 1, unitValue: 650, totalValue: 650, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
-        ],
-      },
-      { kind: 'measurement_lab', subtype: 'volume_beaker', operation: 'unit_subtract', operands: [1000, 350], expectedNumericResult: 650, resultUnit: 'mL', primaryReading: 'Mục tiêu: 1 L', secondaryReading: 'Hiện có: 350 mL', conversionRule: '1 L = 1 000 mL', visualParams: { mode: 'subtract', givenA: 1000, givenB: 350, unitA: 'mL', labelA: '1 L', labelB: 'Hiện có' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 1\\text{ L} = 1000\\text{ mL}`, `\\text{Cần rót thêm} = 1000 \\;?\\; 350 = ?`], fullLatexSteps: [`1\\text{ L} = 1000\\text{ mL}`, `1000 - 350 = 650\\text{ (mL)}`], finalAnswerLatex: `650\\text{ mL}`, finalNumericValue: 650 }
-    ),
-  },
-  {
-    id: 'dec-exam-a9',
-    part: 'A',
-    points: 5,
-    skillDomain: 'measurement',
-    relatedDayNumbers: [24, 28],
+    relatedDayNumbers: [16, 17],
     prompt: 'Một can chứa 3 L nước ép táo được chia đều vào các chai loại 250 mL. Hỏi chia được tất cả bao nhiêu chai?',
     options: ['12 chai', '10 chai', '15 chai', '8 chai'],
     correctAnswer: '12 chai',
@@ -3731,48 +3491,22 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi 3 L sang mL rồi chia cho 250 mL mỗi chai',
         interactiveRule: '1 L = 1 000 mL.',
         groups: [
-          { id: 'ea9a', label: 'Can nước ép (3 L)', icon: '🍎', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '3 L' },
-          { id: 'ea9b', label: 'Các chai 250 mL', icon: '🍼', count: 12, unitValue: 250, totalValue: 3000, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
+          { id: 'ea5a', label: 'Can nước ép (3 L)', icon: '🍎', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '3 L' },
+          { id: 'ea5b', label: 'Các chai 250 mL', icon: '🍼', count: 12, unitValue: 250, totalValue: 3000, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
         ],
       },
       { kind: 'measurement_lab', subtype: 'volume_beaker', operation: 'unit_divide', operands: [3000, 250], expectedNumericResult: 12, resultUnit: 'chai', primaryReading: 'Can: 3 L', secondaryReading: 'Mỗi chai: 250 mL', conversionRule: 'Đổi L ➔ mL rồi chia 250', visualParams: { mode: 'divide_equal', givenA: 3000, givenB: 250, unitA: 'mL' } },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 3\\text{ L} = 3 \\;?\\; 1000 = ?\\text{ (mL)}`, `\\text{Số chai} = (\\text{Tổng mL}) \\;?\\; 250 = ?`], fullLatexSteps: [`3\\text{ L} = 3000\\text{ mL}`, `3000 \\div 250 = 12\\text{ (chai)}`], finalAnswerLatex: `12\\text{ chai}`, finalNumericValue: 12 }
     ),
   },
-  {
-    id: 'dec-exam-a10',
-    part: 'A',
-    points: 5,
-    skillDomain: 'remainder',
-    relatedDayNumbers: [19, 21],
-    prompt: 'Trên cân thăng bằng, 1 quả bí đỏ cân nặng 1 kg 200 g nặng bằng đúng 6 quả lê bằng nhau. Hỏi mỗi quả lê cân nặng bao nhiêu gam?',
-    options: ['200 g', '250 g', '150 g', '300 g'],
-    correctAnswer: '200 g',
-    explanation: 'Đổi 1 kg 200 g = 1 200 g. Mỗi quả lê nặng: 1 200 : 6 = 200 (g).',
-    visualModel: buildMeasurementVisual(
-      'Cân thăng bằng: 1 quả bí (1 kg 200 g) = 6 quả lê',
-      {
-        itemName: 'quả lê',
-        unitLabel: 'g',
-        actionPrompt: 'Đổi 1 kg 200 g sang gam rồi chia đều cho 6 quả lê',
-        interactiveRule: 'Đĩa trái = Đĩa phải.',
-        groups: [
-          { id: 'ea10a', label: '1 quả bí (1 kg 200 g)', icon: '🎃', count: 1, unitValue: 1200, totalValue: 1200, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '1 kg 200 g' },
-          { id: 'ea10b', label: '6 quả lê bằng nhau', icon: '🍐', count: 6, unitValue: 200, totalValue: 1200, color: '#34D399', isUnknown: true, displayMode: 'groups' },
-        ],
-      },
-      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'balance_eq', operands: [1200, 6], expectedNumericResult: 200, resultUnit: 'g', primaryReading: 'Đĩa trái: 1 kg 200 g', secondaryReading: 'Đĩa phải: 6 quả lê', conversionRule: 'Đổi sang gam rồi chia 6', visualParams: { mode: 'balance_eq', givenA: 1200, givenCount: 6, unitA: 'g', labelA: '1 quả bí (1 kg 200 g)', labelB: '6 quả lê' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 1\\text{ kg } 200\\text{ g} = 1000 \\;?\\; 200 = ?`, `\\text{1 quả lê} = (\\text{Tổng gam}) \\;?\\; 6 = ?`], fullLatexSteps: [`1\\text{ kg } 200\\text{ g} = 1200\\text{ g}`, `1200 \\div 6 = 200\\text{ (g)}`], finalAnswerLatex: `200\\text{ g}`, finalNumericValue: 200 }
-    ),
-  },
 
-  // --- PHẦN B: TƯ DUY OLYMPIC (10 CÂU × 5 ĐIỂM = 50 ĐIỂM) ---
+  // --- PHẦN B: TƯ DUY OLYMPIC (3 CÂU × 10 ĐIỂM = 30 ĐIỂM) ---
   {
     id: 'dec-exam-b1',
     part: 'B',
-    points: 5,
+    points: 10,
     skillDomain: 'interval',
-    relatedDayNumbers: [6, 7],
+    relatedDayNumbers: [4, 5],
     prompt: 'Một sợi dây đồng được uốn thành hình vuông cạnh 15 cm. Nếu duỗi sợi dây đó ra và uốn lại thành hình chữ nhật có chiều rộng 11 cm thì chiều dài hình chữ nhật là bao nhiêu xăng-ti-mét?',
     options: ['19 cm', '49 cm', '30 cm', '21 cm'],
     correctAnswer: '19 cm',
@@ -3796,97 +3530,9 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
   {
     id: 'dec-exam-b2',
     part: 'B',
-    points: 5,
-    skillDomain: 'interval',
-    relatedDayNumbers: [5, 7],
-    prompt: 'Một khu vườn hình chữ nhật có chu vi 96 m, biết chiều dài gấp 3 lần chiều rộng. Tính chiều rộng của khu vườn đó.',
-    options: ['12 m', '24 m', '36 m', '16 m'],
-    correctAnswer: '12 m',
-    explanation: 'Nửa chu vi là 96 : 2 = 48 (m). Tổng số phần là 3 + 1 = 4 (phần). Chiều rộng là: 48 : 4 = 12 (m).',
-    visualModel: buildBarVisual(
-      'Nửa chu vi = Chiều rộng (1 phần) + Chiều dài (3 phần)',
-      {
-        itemName: 'phần cạnh',
-        unitLabel: 'm',
-        actionPrompt: 'Tìm nửa chu vi trước rồi chia theo tổng số phần bằng nhau',
-        interactiveRule: 'Chu vi = 96 m, Dài gấp 3 lần Rộng.',
-        groups: [
-          { id: 'eb2w', label: 'Chiều rộng (1 phần)', icon: '📐', count: 1, unitValue: 12, totalValue: 12, color: '#34D399', isUnknown: true },
-          { id: 'eb2l', label: 'Chiều dài (3 phần)', icon: '📏', count: 3, unitValue: 12, totalValue: 36, color: '#38BDF8', isUnknown: true },
-        ],
-      },
-      {
-        kind: 'bar_model',
-        family: 'part_whole',
-        unitReferenceValue: 12,
-        unitName: 'm',
-        bars: [
-          makeBarSpec({ id: 'bw', label: 'Chiều rộng', units: 1, unitValue: 12, displayValue: '? m', isUnknown: true, color: '#34D399' }),
-          makeBarSpec({ id: 'bl', label: 'Chiều dài', units: 3, unitValue: 12, displayValue: '? m (3 phần)', isUnknown: true, color: '#38BDF8' }),
-        ],
-        totalBracket: { targetBarIds: ['bw', 'bl'], numericValue: 48, displayLabel: 'Nửa chu vi = ?', isUnknown: true },
-      },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Nửa chu vi} = 96 \\;?\\; 2 = ?`, `\\text{Tổng số phần} = 3 \\;?\\; 1 = ?`, `\\text{Chiều rộng} = (\\text{Nửa chu vi}) \\;?\\; (\\text{Tổng phần}) = ?`], fullLatexSteps: [`\\text{Nửa chu vi} = 96 \\div 2 = 48\\text{ (m)}`, `\\text{Tổng số phần} = 3 + 1 = 4\\text{ (phần)}`, `\\text{Chiều rộng} = 48 \\div 4 = 12\\text{ (m)}`], finalAnswerLatex: `12\\text{ m}`, finalNumericValue: 12 }
-    ),
-  },
-  {
-    id: 'dec-exam-b3',
-    part: 'B',
-    points: 5,
+    points: 10,
     skillDomain: 'bar_model',
-    relatedDayNumbers: [12, 14],
-    prompt: 'Một tấm bảng hình chữ U có chiều ngang bao ngoài 24 cm, chiều cao bao ngoài 15 cm và có một rãnh lõm sâu 6 cm ở giữa cạnh trên. Tính chu vi của tấm bảng hình chữ U đó.',
-    options: ['90 cm', '78 cm', '84 cm', '96 cm'],
-    correctAnswer: '90 cm',
-    explanation: 'Chu vi khung chữ nhật bao ngoài là: (24 + 15) × 2 = 78 (cm). Cộng thêm 2 cạnh lõm sâu 6 cm: 78 + 6 × 2 = 90 (cm).',
-    visualModel: buildPerimeterVisual(
-      'Hình chữ U: Khung 24 cm × 15 cm + 2 cạnh lõm sâu 6 cm',
-      {
-        itemName: 'đường viền chữ U',
-        unitLabel: 'cm',
-        actionPrompt: 'Bấm "Dời cạnh & Soi 2 cạnh lõm" để không quên cộng 2 × 6 cm!',
-        interactiveRule: 'Khung ngoài 24 × 15 cm, rãnh lõm sâu 6 cm.',
-        groups: [
-          { id: 'eb3a', label: 'Khung ngoài (24×15)', icon: '⬜', count: 2, unitValue: 39, totalValue: 78, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: 'Khung 24×15 cm' },
-          { id: 'eb3b', label: '2 cạnh lõm màu vàng cam', icon: '⚡', count: 2, unitValue: 6, totalValue: 12, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 6 cm' },
-        ],
-      },
-      { kind: 'perimeter_shape', shapeKind: 'u_shape', outerWidth: 24, outerHeight: 15, recessDepth: 6, recessWidth: 8, unitLabel: 'cm', unknownTarget: 'perimeter', expectedPerimeter: 90, showInteractiveShift: true },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi khung ngoài} = (24 \\;?\\; 15) \\;?\\; 2 = ?`, `\\text{Chu vi chữ U} = (\\text{Khung ngoài}) \\;?\\; (6 \\;?\\; 2) = ?`], fullLatexSteps: [`\\text{Chu vi khung ngoài} = (24 + 15) \\times 2 = 78\\text{ (cm)}`, `\\text{Chu vi hình chữ U} = 78 + 6 \\times 2 = 90\\text{ (cm)}`], finalAnswerLatex: `90\\text{ cm}`, finalNumericValue: 90 }
-    ),
-  },
-  {
-    id: 'dec-exam-b4',
-    part: 'B',
-    points: 5,
-    skillDomain: 'bar_model',
-    relatedDayNumbers: [13, 14],
-    prompt: 'Một sân khấu hình chữ U có khung bao ngoài ngang 30 m, cao 16 m và tổng chu vi đo được là 106 m. Hỏi phần rãnh lõm ở giữa sâu bao nhiêu mét?',
-    options: ['7 m', '14 m', '6 m', '8 m'],
-    correctAnswer: '7 m',
-    explanation: 'Chu vi khung ngoài là (30 + 16) × 2 = 92 (m). Tổng 2 cạnh lõm là 106 - 92 = 14 (m). Độ sâu rãnh lõm là: 14 : 2 = 7 (m).',
-    visualModel: buildPerimeterVisual(
-      'Tìm độ sâu rãnh lõm chữ U (Tổng chu vi = 106 m)',
-      {
-        itemName: 'cạnh lõm',
-        unitLabel: 'm',
-        actionPrompt: 'Lấy tổng chu vi trừ khung ngoài sẽ ra TỔNG 2 CẠNH LÕM, nhớ chia đôi!',
-        interactiveRule: 'Tổng chu vi = 106 m, Khung ngoài = 30 m × 16 m.',
-        groups: [
-          { id: 'eb4a', label: 'Khung ngoài (30×16)', icon: '⬜', count: 2, unitValue: 46, totalValue: 92, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: 'Khung 30×16 m' },
-          { id: 'eb4b', label: '2 cạnh lõm bằng nhau', icon: '⚡', count: 2, unitValue: 7, totalValue: 14, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
-        ],
-      },
-      { kind: 'perimeter_shape', shapeKind: 'u_shape', outerWidth: 30, outerHeight: 16, recessDepth: 7, recessWidth: 10, unitLabel: 'm', unknownTarget: 'recess_depth', expectedPerimeter: 106, showInteractiveShift: true },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi khung ngoài} = (30 \\;?\\; 16) \\;?\\; 2 = ?`, `\\text{Tổng 2 cạnh lõm} = 106 \\;?\\; (\\text{Khung ngoài}) = ?`, `\\text{Độ sâu 1 cạnh lõm} = (\\text{Tổng 2 cạnh}) \\;?\\; 2 = ?`], fullLatexSteps: [`\\text{Chu vi khung ngoài} = (30 + 16) \\times 2 = 92\\text{ (m)}`, `\\text{Tổng 2 cạnh lõm} = 106 - 92 = 14\\text{ (m)}`, `\\text{Độ sâu rãnh lõm} = 14 \\div 2 = 7\\text{ (m)}`], finalAnswerLatex: `7\\text{ m}`, finalNumericValue: 7 }
-    ),
-  },
-  {
-    id: 'dec-exam-b5',
-    part: 'B',
-    points: 5,
-    skillDomain: 'bar_model',
-    relatedDayNumbers: [9, 14],
+    relatedDayNumbers: [6, 10],
     prompt: 'Ghép 6 hình vuông nhỏ giống hệt nhau thành 1 hình chữ nhật gồm 2 hàng, mỗi hàng 3 ô. Biết chu vi hình chữ nhật lớn là 80 cm. Hỏi cạnh mỗi hình vuông nhỏ dài bao nhiêu xăng-ti-mét?',
     options: ['8 cm', '10 cm', '6 cm', '12 cm'],
     correctAnswer: '8 cm',
@@ -3899,7 +3545,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đếm tổng số đoạn cạnh ô vuông nằm trên viền ngoài của lưới 2×3',
         interactiveRule: 'Đếm số đoạn cạnh ô vuông chạy dọc viền ngoài của lưới 2×3.',
         groups: [
-          { id: 'eb5', label: 'Các đoạn viền ngoài = 80 cm', icon: '🧩', count: 10, unitValue: 8, totalValue: 80, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, displayMode: 'measurement' },
+          { id: 'eb2', label: 'Các đoạn viền ngoài = 80 cm', icon: '🧩', count: 10, unitValue: 8, totalValue: 80, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, displayMode: 'measurement' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'joined_squares', outerWidth: 24, outerHeight: 16, squareSide: 8, gridCols: 3, gridRows: 2, unitLabel: 'cm', unknownTarget: 'side', expectedPerimeter: 80 },
@@ -3907,64 +3553,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
     ),
   },
   {
-    id: 'dec-exam-b6',
+    id: 'dec-exam-b3',
     part: 'B',
-    points: 5,
-    skillDomain: 'interval',
-    relatedDayNumbers: [6, 7],
-    prompt: 'Người ta rào xung quanh mảnh đất hình chữ nhật dài 26 m, rộng 14 m và chừa ra hai lối cổng, mỗi cổng rộng 2 m (không rào). Hỏi tổng độ dài hàng rào cần xây là bao nhiêu mét?',
-    options: ['76 m', '80 m', '78 m', '72 m'],
-    correctAnswer: '76 m',
-    explanation: 'Chu vi mảnh đất là (26 + 14) × 2 = 80 (m). Hai lối cổng rộng 2 × 2 = 4 (m). Hàng rào dài: 80 - 4 = 76 (m).',
-    visualModel: buildPerimeterVisual(
-      'Rào mảnh đất 26 m × 14 m (chừa 2 cổng mỗi cổng 2 m)',
-      {
-        itemName: 'hàng rào',
-        unitLabel: 'm',
-        actionPrompt: 'Tính chu vi cả 4 mặt đất rồi trừ đi tổng độ rộng của 2 cổng',
-        interactiveRule: 'Dài = 26 m, Rộng = 14 m, 2 cổng × 2 m.',
-        groups: [
-          { id: 'eb6p', label: 'Chu vi mảnh đất', icon: '🌿', count: 2, unitValue: 40, totalValue: 80, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: 'Khung 26×14 m' },
-          { id: 'eb6g', label: '2 lối cổng', icon: '🚪', count: 2, unitValue: 2, totalValue: 4, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 2 m' },
-        ],
-      },
-      { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 26, outerHeight: 14, unitLabel: 'm', unknownTarget: 'fence_with_gate', gateWidth: 4, gateLabel: '2 lối cổng (mỗi cổng 2 m) — không rào', expectedPerimeter: 80, showInteractiveShift: true },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi mảnh đất} = (26 \\;?\\; 14) \\;?\\; 2 = ?`, `\\text{Tổng độ rộng 2 cổng} = 2 \\;?\\; 2 = ?`, `\\text{Độ dài hàng rào} = (\\text{Chu vi}) \\;?\\; (\\text{2 cổng}) = ?`], fullLatexSteps: [`\\text{Chu vi} = (26 + 14) \\times 2 = 80\\text{ (m)}`, `\\text{Tổng 2 cổng} = 2 \\times 2 = 4\\text{ (m)}`, `\\text{Hàng rào} = 80 - 4 = 76\\text{ (m)}`], finalAnswerLatex: `76\\text{ m}`, finalNumericValue: 76 }
-    ),
-  },
-  {
-    id: 'dec-exam-b7',
-    part: 'B',
-    points: 5,
+    points: 10,
     skillDomain: 'remainder',
-    relatedDayNumbers: [18, 21],
-    prompt: 'Một thùng đựng đầy nho cân nặng 2 450 g. Khi bán đi đúng một nửa số nho thì thùng còn lại cân nặng 1 400 g. Hỏi riêng chiếc thùng rỗng cân nặng bao nhiêu gam?',
-    options: ['350 g', '1050 g', '400 g', '700 g'],
-    correctAnswer: '350 g',
-    explanation: 'Một nửa số nho nặng: 2 450 - 1 400 = 1 050 (g). Chiếc thùng rỗng nặng: 1 400 - 1 050 = 350 (g).',
-    visualModel: buildMeasurementVisual(
-      'Thùng đầy nho (2 450 g) & Thùng nửa nho (1 400 g)',
-      {
-        itemName: 'nho & vỏ thùng',
-        unitLabel: 'g',
-        actionPrompt: 'Hiệu hai lần cân cho biết cân nặng 1 nửa số nho',
-        interactiveRule: 'Thùng đầy = 2 450 g, Thùng nửa = 1 400 g.',
-        groups: [
-          { id: 'eb7a', label: 'Thùng đầy', icon: '🍇', count: 1, unitValue: 2450, totalValue: 2450, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'eb7b', label: 'Thùng nửa', icon: '🧺', count: 1, unitValue: 1400, totalValue: 1400, color: '#34D399', displayMode: 'measurement' },
-          { id: 'eb7c', label: 'Vỏ thùng rỗng', icon: '📦', count: 1, unitValue: 350, totalValue: 350, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
-        ],
-      },
-      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'tare_weight', operands: [2450, 1400], expectedNumericResult: 350, resultUnit: 'g', primaryReading: 'Thùng đầy: 2 450 g', secondaryReading: 'Thùng nửa: 1 400 g', conversionRule: 'Hiệu hai lần cân = 1 nửa số nho', visualParams: { mode: 'tare_half', givenA: 2450, givenB: 1400, unitA: 'g' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Một nửa số nho} = 2450 \\;?\\; 1400 = ?`, `\\text{Vỏ thùng rỗng} = 1400 \\;?\\; (\\text{Nửa số nho}) = ?`], fullLatexSteps: [`\\text{Một nửa số nho} = 2450 - 1400 = 1050\\text{ (g)}`, `\\text{Vỏ thùng rỗng} = 1400 - 1050 = 350\\text{ (g)}`], finalAnswerLatex: `350\\text{ g}`, finalNumericValue: 350 }
-    ),
-  },
-  {
-    id: 'dec-exam-b8',
-    part: 'B',
-    points: 5,
-    skillDomain: 'remainder',
-    relatedDayNumbers: [19, 21],
+    relatedDayNumbers: [14, 15],
     prompt: 'Trên cân thăng bằng: 1 quả dưa lưới và 1 quả cân 250 g nặng bằng đúng 2 kg. Hỏi 2 quả dưa lưới như thế cân nặng tất cả bao nhiêu gam?',
     options: ['3500 g', '1750 g', '3750 g', '4000 g'],
     correctAnswer: '3500 g',
@@ -3977,75 +3570,85 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Tìm cân nặng 1 quả dưa trước, rồi nhân đôi để tìm 2 quả dưa',
         interactiveRule: '1 quả dưa + 250 g = 2 kg.',
         groups: [
-          { id: 'eb8a', label: 'Đĩa phải (2 kg)', icon: '⚖️', count: 2, unitValue: 1000, totalValue: 2000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 kg' },
-          { id: 'eb8b', label: 'Quả cân đĩa trái', icon: '🏋️', count: 1, unitValue: 250, totalValue: 250, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'eb3a', label: 'Đĩa phải (2 kg)', icon: '⚖️', count: 2, unitValue: 1000, totalValue: 2000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 kg' },
+          { id: 'eb3b', label: 'Quả cân đĩa trái', icon: '🏋️', count: 1, unitValue: 250, totalValue: 250, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
       { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'balance_eq', operands: [2000, 250], expectedNumericResult: 3500, resultUnit: 'g', primaryReading: 'Đĩa trái: 1 quả dưa + 250 g', secondaryReading: 'Đĩa phải: 2 kg', conversionRule: 'Bước 1: Tìm 1 quả dưa trên cân thăng bằng · Bước 2: Nhân 2', visualParams: { mode: 'balance_eq', givenA: 2000, givenB: 250, unitA: 'g', labelA: '1 quả dưa + 250 g', labelB: '2 kg' } },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 2\\text{ kg} = 2 \\;?\\; 1000 = ?\\text{ (g)}`, `\\text{1 quả dưa lưới} = (\\text{Đĩa phải}) \\;?\\; 250 = ?`, `\\text{2 quả dưa lưới} = (\\text{1 quả dưa}) \\;?\\; 2 = ?`], fullLatexSteps: [`2\\text{ kg} = 2000\\text{ g}`, `\\text{1 quả dưa lưới} = 2000 - 250 = 1750\\text{ (g)}`, `\\text{2 quả dưa lưới} = 1750 \\times 2 = 3500\\text{ (g)}`], finalAnswerLatex: `3500\\text{ g}`, finalNumericValue: 3500 }
     ),
   },
+
+  // --- PHẦN C: NGHỊ LUẬN TƯ DUY (2 CÂU × 10 ĐIỂM = 20 ĐIỂM: 5đ LẬP LUẬN + 5đ LỜI GIẢI) ---
   {
-    id: 'dec-exam-b9',
-    part: 'B',
-    points: 5,
+    id: 'dec-exam-c1',
+    part: 'C',
+    points: 10,
+    skillDomain: 'bar_model',
+    relatedDayNumbers: [9, 10],
+    prompt: 'Một tấm bảng hình chữ U có khung bao ngoài ngang 24 cm, cao 15 cm và có một rãnh lõm sâu 6 cm ở giữa cạnh trên. Bạn Nam dùng cách dời cạnh rồi kết luận chu vi tấm bảng bằng đúng khung bao ngoài là 78 cm. Nhận xét nào sau đây ĐÚNG?',
+    options: [
+      'Nam tính sai: phải cộng thêm 2 cạnh lõm màu vàng cam (2 × 6 = 12 cm), chu vi đúng là 90 cm',
+      'Nam tính đúng: cứ dời cạnh là chu vi hình chữ U luôn bằng đúng khung bao ngoài 78 cm',
+      'Nam tính sai: chỉ cần cộng thêm 1 lần độ sâu rãnh lõm 6 cm, chu vi là 84 cm',
+      'Nam tính sai: phải trừ đi 2 cạnh lõm nên chu vi chỉ còn 66 cm',
+    ],
+    correctAnswer: 'Nam tính sai: phải cộng thêm 2 cạnh lõm màu vàng cam (2 × 6 = 12 cm), chu vi đúng là 90 cm',
+    explanation: 'Chu vi khung chữ nhật bao ngoài là: (24 + 15) × 2 = 78 (cm). Do rãnh lõm nằm ở giữa cạnh trên nên còn dư 2 cạnh dọc màu vàng cam không dời ra khung ngoài được, phải cộng thêm 6 × 2 = 12 (cm). Chu vi đúng là: 78 + 12 = 90 (cm).',
+    reasoningPrompt: 'Hãy trình bày rõ các bước tính chu vi tấm bảng hình chữ U và giải thích vì sao phải cộng thêm 2 lần độ sâu rãnh lõm.',
+    reasoningPlaceholder: 'Ví dụ: Tính chu vi khung bao ngoài trước, sau đó giải thích vì sao cần cộng thêm 2 cạnh lõm màu vàng cam...',
+    reasoningKeywords: ['78', '12', '90', '2 cạnh lõm', 'cộng thêm'],
+    reasoningSampleAnswer: 'Chu vi khung chữ nhật bao ngoài là (24 + 15) × 2 = 78 cm. Vì rãnh lõm ở giữa cạnh trên có 2 cạnh lõm màu vàng cam (mỗi cạnh 6 cm) không dời ra khung ngoài được nên phải cộng thêm 6 × 2 = 12 cm. Vậy chu vi hình chữ U là 78 + 12 = 90 cm.',
+    visualModel: buildPerimeterVisual(
+      'Nghị luận Hình chữ U: Khung 24 cm × 15 cm + rãnh lõm sâu 6 cm',
+      {
+        itemName: 'đường viền chữ U',
+        unitLabel: 'cm',
+        actionPrompt: 'Bấm "Dời cạnh & Soi 2 cạnh lõm" để quan sát 2 cạnh dọc màu vàng cam',
+        interactiveRule: 'Khung ngoài 24 × 15 cm, rãnh lõm sâu 6 cm.',
+        groups: [
+          { id: 'ec1a', label: 'Khung ngoài (24×15)', icon: '⬜', count: 2, unitValue: 39, totalValue: 78, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: 'Khung 24×15 cm' },
+          { id: 'ec1b', label: '2 cạnh lõm màu vàng cam', icon: '⚡', count: 2, unitValue: 6, totalValue: 12, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 6 cm' },
+        ],
+      },
+      { kind: 'perimeter_shape', shapeKind: 'u_shape', outerWidth: 24, outerHeight: 15, recessDepth: 6, recessWidth: 8, unitLabel: 'cm', unknownTarget: 'perimeter', expectedPerimeter: 90, showInteractiveShift: true },
+      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi khung ngoài} = (24 \\;?\\; 15) \\;?\\; 2 = ?`, `\\text{Chu vi chữ U} = (\\text{Khung ngoài}) \\;?\\; (6 \\;?\\; 2) = ?`], fullLatexSteps: [`\\text{Chu vi khung ngoài} = (24 + 15) \\times 2 = 78\\text{ (cm)}`, `\\text{Chu vi hình chữ U} = 78 + 6 \\times 2 = 90\\text{ (cm)}`], finalAnswerLatex: `90\\text{ cm}`, finalNumericValue: 90 }
+    ),
+  },
+  {
+    id: 'dec-exam-c2',
+    part: 'C',
+    points: 10,
     skillDomain: 'measurement',
-    relatedDayNumbers: [25, 28],
-    prompt: 'Bình A có 2 L 600 mL nước, bình B có 1 L 400 mL nước. Hỏi phải rót bao nhiêu mi-li-lít nước từ bình A sang bình B để lượng nước hai bình bằng nhau?',
-    options: ['600 mL', '1200 mL', '500 mL', '700 mL'],
-    correctAnswer: '600 mL',
-    explanation: 'Đổi: Bình A = 2 600 mL, Bình B = 1 400 mL. Phần hơn là 2 600 - 1 400 = 1 200 (mL). Cần rót sang: 1 200 : 2 = 600 (mL).',
+    relatedDayNumbers: [18, 20],
+    prompt: 'Bình A có 2 L 600 mL nước, bình B có 1 L 400 mL nước. Bạn Hoa tính bình A nhiều hơn bình B 1 200 mL rồi kết luận phải rót đúng 1 200 mL từ bình A sang bình B để hai bình bằng nhau. Lập luận nào sau đây ĐÚNG?',
+    options: [
+      'Hoa sai: chỉ rót một nửa phần hơn (1 200 : 2 = 600 mL) vì khi rót sang, A giảm 600 mL còn B tăng thêm 600 mL',
+      'Hoa đúng: Bình A nhiều hơn Bình B bao nhiêu thì phải rót sang đúng bấy nhiêu (1 200 mL)',
+      'Hoa sai: phải cộng cả hai bình lại rồi chia đôi nên cần rót 2 000 mL',
+      'Hoa sai: chỉ cần rót 400 mL từ Bình A sang Bình B là hai bình bằng nhau',
+    ],
+    correctAnswer: 'Hoa sai: chỉ rót một nửa phần hơn (1 200 : 2 = 600 mL) vì khi rót sang, A giảm 600 mL còn B tăng thêm 600 mL',
+    explanation: 'Đổi: Bình A = 2 600 mL, Bình B = 1 400 mL. Phần hơn là 2 600 - 1 400 = 1 200 (mL). Khi rót từ A sang B thì A giảm còn B tăng cùng một lượng, nên chỉ rót một nửa phần hơn: 1 200 : 2 = 600 (mL). Khi đó cả hai bình đều có 2 000 mL.',
+    reasoningPrompt: 'Hãy giải thích vì sao khi san nước giữa hai bình lại chỉ rót một nửa phần chênh lệch và tính lượng nước mỗi bình sau khi rót.',
+    reasoningPlaceholder: 'Ví dụ: Đổi cả hai bình sang mL, tìm phần chênh lệch rồi giải thích vì sao cần chia đôi lượng chênh lệch đó...',
+    reasoningKeywords: ['2600', '1400', '1200', '600', 'chia đôi', '2000'],
+    reasoningSampleAnswer: 'Đổi Bình A = 2 600 mL, Bình B = 1 400 mL. Bình A nhiều hơn Bình B là 2 600 - 1 400 = 1 200 mL. Khi rót từ A sang B thì A giảm và B tăng nên phải chia đôi phần hơn: 1 200 : 2 = 600 mL. Sau khi rót, mỗi bình đều có 2 000 mL (2 L).',
     visualModel: buildMeasurementVisual(
-      'San bình: Bình A (2 L 600 mL) ➔ Bình B (1 L 400 mL)',
+      'Nghị luận San bình: Bình A (2 L 600 mL) ➔ Bình B (1 L 400 mL)',
       {
         itemName: 'nước cần rót',
         unitLabel: 'mL',
-        actionPrompt: 'Đổi cả hai bình sang mL, tìm hiệu rồi CHIA ĐÔI',
+        actionPrompt: 'Đổi cả hai bình sang mL, tìm hiệu rồi CHIA ĐÔI để hai bình cân bằng',
         interactiveRule: 'Bình A = 2 L 600 mL, Bình B = 1 L 400 mL.',
         groups: [
-          { id: 'eb9a', label: 'Bình A (2 L 600 mL)', icon: '🧪', count: 1, unitValue: 2600, totalValue: 2600, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 L 600 mL' },
-          { id: 'eb9b', label: 'Bình B (1 L 400 mL)', icon: '🧪', count: 1, unitValue: 1400, totalValue: 1400, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: '1 L 400 mL' },
-          { id: 'eb9c', label: 'Lượng rót sang', icon: '💧', count: 1, unitValue: 600, totalValue: 600, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
+          { id: 'ec2a', label: 'Bình A (2 L 600 mL)', icon: '🧪', count: 1, unitValue: 2600, totalValue: 2600, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 L 600 mL' },
+          { id: 'ec2b', label: 'Bình B (1 L 400 mL)', icon: '🧪', count: 1, unitValue: 1400, totalValue: 1400, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: '1 L 400 mL' },
+          { id: 'ec2c', label: 'Lượng rót sang', icon: '💧', count: 1, unitValue: 600, totalValue: 600, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
         ],
       },
       { kind: 'measurement_lab', subtype: 'volume_beaker', operation: 'equalize_transfer', operands: [2600, 1400], expectedNumericResult: 600, resultUnit: 'mL', primaryReading: 'Bình A: 2 L 600 mL', secondaryReading: 'Bình B: 1 L 400 mL', conversionRule: 'Lượng rót = Phần hơn ÷ 2', visualParams: { mode: 'equalize_pour', givenA: 2600, givenB: 1400, unitA: 'mL', labelA: 'Bình A', labelB: 'Bình B' } },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi Bình A} = 2 \\;?\\; 1000 \\;?\\; 600 = ?`, `\\text{Phần hơn} = (\\text{Bình A}) \\;?\\; (\\text{Bình B}) = ?`, `\\text{Lượng cần rót} = (\\text{Phần hơn}) \\;?\\; 2 = ?`], fullLatexSteps: [`\\text{Bình A} = 2600\\text{ mL}, \\quad \\text{Bình B} = 1400\\text{ mL}`, `\\text{Hiệu hai bình} = 2600 - 1400 = 1200\\text{ (mL)}`, `\\text{Lượng cần rót} = 1200 \\div 2 = 600\\text{ (mL)}`], finalAnswerLatex: `600\\text{ mL}`, finalNumericValue: 600 }
-    ),
-  },
-  {
-    id: 'dec-exam-b10',
-    part: 'B',
-    points: 5,
-    skillDomain: 'measurement',
-    relatedDayNumbers: [26, 27],
-    prompt: 'Bình X chứa nhiều hơn bình Y đúng 1 L 200 mL nước. Biết lượng nước ở bình X gấp 3 lần bình Y. Hỏi bình Y chứa bao nhiêu mi-li-lít nước?',
-    options: ['600 mL', '400 mL', '1800 mL', '800 mL'],
-    correctAnswer: '600 mL',
-    explanation: 'Đổi 1 L 200 mL = 1 200 mL. Hiệu số phần là 3 - 1 = 2 (phần). Bình Y (1 phần) chứa: 1 200 : 2 = 600 (mL).',
-    visualModel: buildBarVisual(
-      'Sơ đồ So sánh thể tích: Bình X (3 phần) hơn Bình Y (1 phần) là 1 L 200 mL',
-      {
-        itemName: 'phần nước',
-        unitLabel: 'mL',
-        actionPrompt: 'Đổi phần hơn sang mL rồi chia cho hiệu số phần (3 − 1)',
-        interactiveRule: 'Bình X = 3 phần, Bình Y = 1 phần, hiệu = 1 L 200 mL.',
-        groups: [
-          { id: 'eb10y', label: 'Bình Y (1 phần)', icon: '🧪', count: 1, unitValue: 600, totalValue: 600, color: '#34D399', isUnknown: true },
-          { id: 'eb10x', label: 'Bình X (3 phần)', icon: '🧪', count: 3, unitValue: 600, totalValue: 1800, color: '#38BDF8', isUnknown: true },
-        ],
-      },
-      {
-        kind: 'bar_model',
-        family: 'comparison',
-        unitReferenceValue: 600,
-        unitName: 'mL',
-        bars: [
-          makeBarSpec({ id: 'by', label: 'Bình Y', units: 1, unitValue: 600, displayValue: '? mL (1 phần)', isUnknown: true, color: '#34D399' }),
-          makeBarSpec({ id: 'bx', label: 'Bình X', units: 3, unitValue: 600, displayValue: '? mL (3 phần)', isUnknown: true, color: '#38BDF8' }),
-        ],
-        differenceBracket: { longerBarId: 'bx', shorterBarId: 'by', diffUnits: 2, numericValue: 1200, displayLabel: 'Hơn 1 L 200 mL (2 phần)' },
-      },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 1\\text{ L } 200\\text{ mL} = 1000 \\;?\\; 200 = ?\\text{ (mL)}`, `\\text{Hiệu số phần} = 3 \\;?\\; 1 = ?`, `\\text{Bình Y (1 phần)} = (\\text{Hiệu mL}) \\;?\\; (\\text{Hiệu số phần}) = ?`], fullLatexSteps: [`\\text{Đổi } 1\\text{ L } 200\\text{ mL} = 1200\\text{ mL}`, `\\text{Hiệu số phần} = 3 - 1 = 2\\text{ (phần)}`, `\\text{Bình Y} = 1200 \\div 2 = 600\\text{ (mL)}`], finalAnswerLatex: `600\\text{ mL}`, finalNumericValue: 600 }
     ),
   },
 ];
@@ -4053,9 +3656,10 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
 export const DECEMBER_FINAL_EXAM: InMonthFinalExam = {
   id: 'inmonth-g3-m12-exam',
   monthLabel: 'Tháng 12',
-  title: 'Kiểm Tra Đánh Giá Năng Lực Tháng 12 — Lớp 3',
-  subtitle: 'Phần A: Cơ Bản (50đ) & Phần B: Tư Duy Olympic (50đ)',
-  durationMinutes: 35,
+  title: 'Kiểm Tra Cuối Kỳ Tháng 12 — Lớp 3 (45–60 Phút)',
+  subtitle: 'Phần A: 5 Cơ Bản (50đ) · Phần B: 3 Olympic (30đ) · Phần C: 2 Nghị Luận (20đ)',
+  durationMinutes: 50,
+  durationRangeLabel: '45–60 phút',
   passingScore: 70,
   excellenceScore: 90,
   questions: DECEMBER_EXAM_QUESTIONS,
