@@ -55,47 +55,56 @@ export const SelfAssessmentModal: React.FC<SelfAssessmentProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-      <div className="bg-white rounded-3xl shadow-2xl border-4 border-emerald-400 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030617]/80 backdrop-blur-md p-4">
+      <div className="relative bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.2),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.18),_transparent_55%),linear-gradient(160deg,_rgba(15,24,68,0.98),_rgba(7,12,38,0.99))] rounded-3xl shadow-[0_28px_70px_rgba(3,7,24,0.88),0_0_42px_rgba(34,211,238,0.18)] border border-cyan-300/45 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden text-white animate-in fade-in zoom-in-95 duration-200">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-fuchsia-400 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+        />
+
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 flex items-center justify-between text-white">
+        <div className="relative bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.24),_transparent_58%),radial-gradient(ellipse_at_top_right,_rgba(217,70,239,0.2),_transparent_58%),linear-gradient(180deg,_rgba(12,22,66,0.96),_rgba(6,11,36,0.92))] border-b border-cyan-300/45 shadow-[0_8px_32px_rgba(34,211,238,0.2),inset_0_1px_0_rgba(165,243,252,0.28)] px-6 py-4 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">📋</span>
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-300 via-sky-400 to-fuchsia-400 text-slate-950 flex items-center justify-center text-lg shadow-[0_0_26px_rgba(34,211,238,0.68),0_0_46px_rgba(217,70,239,0.38)] ring-2 ring-cyan-200/45 shrink-0">
+              📋
+            </span>
             <div>
-              <h2 className="text-xl font-bold font-display text-white">
-                Sổ Đánh Giá & Nhật Ký Bài Học (Trang 41)
+              <h2 className="text-xl font-black font-display bg-gradient-to-r from-white via-cyan-200 to-fuchsia-200 bg-clip-text text-transparent drop-shadow-[0_0_16px_rgba(56,189,248,0.68)]">
+                Sổ Đánh Giá &amp; Nhật Ký Bài Học
               </h2>
-              <p className="text-xs text-emerald-100">
+              <p className="text-xs font-medium text-cyan-100/95 drop-shadow-[0_0_10px_rgba(34,211,238,0.48)]">
                 Ghi lại những điều tuyệt vời bé đã đạt được hôm nay!
               </p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-full transition-colors text-white"
+            className="w-10 h-10 rounded-xl bg-white/[0.1] hover:bg-cyan-400/25 border border-cyan-300/30 hover:border-cyan-300/75 shadow-[0_0_14px_rgba(34,211,238,0.18)] hover:shadow-[0_0_22px_rgba(34,211,238,0.5)] flex items-center justify-center transition-all text-white cursor-pointer"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto space-y-6">
+        <div className="p-6 overflow-y-auto space-y-6 bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.14),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(192,132,252,0.14),_transparent_55%)] shadow-[inset_0_10px_30px_rgba(34,211,238,0.1)]">
           {/* Section 1: Vẽ */}
-          <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-between gap-4">
+          <div className="p-4 rounded-2xl bg-[#091238]/90 border border-cyan-300/40 shadow-[0_0_24px_rgba(34,211,238,0.16)] flex items-center justify-between gap-4">
             <div>
-              <h4 className="font-bold text-amber-900 text-sm md:text-base flex items-center gap-2">
-                <span>❶</span> Vẽ lại điều em học được
+              <h4 className="font-bold text-white text-sm md:text-base flex items-center gap-2">
+                <span className="text-cyan-300">1.</span> Vẽ lại điều em học được
               </h4>
-              <p className="text-xs text-amber-700 mt-0.5">
-                Hãy mở bảng vẽ để phác họa lại biểu đồ tranh hoặc bình nước!
+              <p className="text-xs text-cyan-200/80 mt-0.5">
+                Hãy mở bảng vẽ vũ trụ để phác họa lại biểu đồ tranh hoặc sơ đồ đoạn thẳng!
               </p>
             </div>
             <button
+              type="button"
               onClick={() => {
                 onClose();
                 onOpenScratchpad();
               }}
-              className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-md shrink-0 transition-transform active:scale-95"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-xs md:text-sm flex items-center gap-1.5 shadow-[0_0_20px_rgba(34,211,238,0.35)] shrink-0 transition-all active:scale-95 cursor-pointer"
             >
               <Pencil className="w-4 h-4" />
               Mở Bảng Vẽ
@@ -104,8 +113,8 @@ export const SelfAssessmentModal: React.FC<SelfAssessmentProps> = ({
 
           {/* Section 2: Tự đánh giá hiểu bài */}
           <div className="space-y-3">
-            <h4 className="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-              <span>❷</span> Tự đánh giá mức độ tiếp thu:
+            <h4 className="font-bold text-white text-sm md:text-base flex items-center gap-2">
+              <span className="text-cyan-300">2.</span> Tự đánh giá mức độ tiếp thu:
             </h4>
             <div className="space-y-2">
               {[
@@ -115,15 +124,16 @@ export const SelfAssessmentModal: React.FC<SelfAssessmentProps> = ({
               ].map((item) => (
                 <button
                   key={item.id}
+                  type="button"
                   onClick={() => toggleCheck(item.id)}
-                  className={`w-full p-3 rounded-2xl border-2 flex items-center gap-3 text-left transition-all ${
+                  className={`w-full p-3.5 rounded-2xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
                     checks[item.id]
-                      ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-bold'
-                      : 'bg-slate-50 border-slate-200 text-slate-600'
+                      ? 'bg-emerald-500/15 border-emerald-400/55 text-emerald-100 font-bold shadow-[0_0_16px_rgba(52,211,153,0.16)]'
+                      : 'bg-[#091238]/70 border-white/15 text-slate-300 hover:border-cyan-300/50'
                   }`}
                 >
                   {checks[item.id] ? (
-                    <CheckSquare className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <CheckSquare className="w-5 h-5 text-emerald-300 shrink-0" />
                   ) : (
                     <Square className="w-5 h-5 text-slate-400 shrink-0" />
                   )}
@@ -135,19 +145,19 @@ export const SelfAssessmentModal: React.FC<SelfAssessmentProps> = ({
 
           {/* Section 3: Câu chuyện toán học & Tự chấm sao */}
           <div className="space-y-3">
-            <h4 className="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-              <span>❸</span> Câu chuyện toán học & Tự thưởng sao:
+            <h4 className="font-bold text-white text-sm md:text-base flex items-center gap-2">
+              <span className="text-cyan-300">3.</span> Câu chuyện toán học &amp; Tự thưởng sao:
             </h4>
 
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-              <label className="text-xs font-bold text-slate-600 block">
+            <div className="p-4 bg-[#070D28]/90 rounded-2xl border border-cyan-300/25 space-y-3">
+              <label className="text-xs font-bold text-cyan-200 block">
                 Hôm nay, mình sẽ khoe với bố mẹ rằng mình biết làm:
               </label>
               <input
                 type="text"
                 value={storyNote}
                 onChange={(e) => setStoryNote(e.target.value)}
-                className="w-full px-3 py-2 bg-white rounded-xl border border-slate-300 text-xs md:text-sm font-medium focus:ring-2 focus:ring-emerald-400 outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#050A1F] rounded-xl border border-cyan-300/35 text-xs md:text-sm font-medium text-white focus:border-cyan-300 focus:shadow-[0_0_16px_rgba(34,211,238,0.28)] outline-none"
               />
 
               {/* Rubric Star Ratings */}
@@ -161,20 +171,20 @@ export const SelfAssessmentModal: React.FC<SelfAssessmentProps> = ({
                     key={crit.key}
                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs"
                   >
-                    <span className="font-semibold text-slate-700">{crit.label}</span>
+                    <span className="font-semibold text-slate-200">{crit.label}</span>
                     <div className="flex items-center gap-1">
                       {[1, 2, 3].map((starIdx) => (
                         <button
                           key={starIdx}
                           type="button"
                           onClick={() => setRating(crit.key, starIdx)}
-                          className="p-1 hover:scale-125 transition-transform"
+                          className="p-1 hover:scale-125 transition-transform cursor-pointer"
                         >
                           <Star
                             className={`w-5 h-5 ${
                               starIdx <= ratings[crit.key]
-                                ? 'fill-amber-400 text-amber-500'
-                                : 'text-slate-300'
+                                ? 'fill-amber-400 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+                                : 'text-slate-600'
                             }`}
                           />
                         </button>
@@ -187,22 +197,23 @@ export const SelfAssessmentModal: React.FC<SelfAssessmentProps> = ({
           </div>
 
           {/* Mascot cheering quote */}
-          <div className="flex items-center gap-3 p-3.5 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl border border-emerald-200 text-xs md:text-sm text-emerald-900 font-semibold">
+          <div className="flex items-center gap-3 p-3.5 bg-gradient-to-r from-cyan-500/15 via-indigo-500/15 to-fuchsia-500/15 rounded-2xl border border-cyan-300/30 text-xs md:text-sm text-cyan-100 font-semibold">
             <span className="text-3xl">🐰🐵🐹</span>
             <span>
-              "Giỏi lắm bạn ơi! Tích lũy được <span className="font-extrabold text-amber-600">{totalStars} ⭐</span> rồi! Hãy chia sẻ lại với ba mẹ để nhớ bài thật lâu nhé!"
+              &ldquo;Giỏi lắm bạn ơi! Tích lũy được <span className="font-extrabold text-amber-300 tabular-nums">{totalStars} ⭐</span> rồi! Hãy chia sẻ lại với ba mẹ để nhớ bài thật lâu nhé!&rdquo;
             </span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex justify-end">
+        <div className="bg-[#060B24]/90 px-6 py-4 border-t border-cyan-300/20 flex justify-end">
           <button
+            type="button"
             onClick={handleSaveAndCheer}
-            className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-transform active:scale-95 flex items-center gap-2"
+            className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-sm shadow-[0_0_22px_rgba(34,211,238,0.4)] hover:shadow-[0_0_30px_rgba(34,211,238,0.65)] transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
           >
             <HeartHandshake className="w-4 h-4" />
-            Lưu Nhật Ký & Nhận Khen Thưởng
+            Lưu Nhật Ký &amp; Nhận Khen Thưởng
           </button>
         </div>
       </div>
