@@ -160,14 +160,18 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
       </div>
 
       {/* Lesson Metadata Banner - High-Tech Cosmic Station */}
-      <div className="bg-[#0B0F19]/90 rounded-3xl p-5 sm:p-7 border-2 border-slate-800 shadow-[0_0_30px_rgba(0,240,255,0.1)] mb-6 backdrop-blur-md relative overflow-hidden">
+      <div className="bg-[radial-gradient(ellipse_at_top_right,_rgba(34,211,238,0.22),_transparent_52%),radial-gradient(ellipse_at_bottom_left,_rgba(217,70,239,0.2),_transparent_52%),linear-gradient(155deg,_rgba(11,18,54,0.96),_rgba(20,12,56,0.96))] rounded-3xl p-5 sm:p-7 border border-cyan-300/45 shadow-[0_24px_64px_rgba(3,7,24,0.8),0_0_36px_rgba(34,211,238,0.18)] mb-6 backdrop-blur-2xl relative overflow-hidden">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_18px_rgba(34,211,238,0.8)]"
+        />
         {/* Ambient background light */}
-        <div className="absolute -top-16 -right-16 w-48 h-48 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-16 -right-16 w-56 h-56 bg-cyan-400/24 rounded-full blur-3xl pointer-events-none cosmic-light-bloom" />
+        <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-fuchsia-500/24 rounded-full blur-3xl pointer-events-none cosmic-light-bloom" />
 
         <div className="flex flex-wrap items-center gap-2 mb-2.5 relative z-10">
           <span className="text-xs font-black text-cyan-200 bg-cyan-500/20 border border-cyan-400/50 px-3 py-1 rounded-xl font-mono shadow-xs">
-            TRẠM HÀNH TINH {lesson.sgkLessonNumber} · SGK Trang {lesson.sgkPages}
+            TRẠM HÀNH TINH {lesson.sgkLessonNumber}
           </span>
           <span className="text-xs font-bold text-slate-400 ml-auto flex items-center gap-1.5 font-mono">
             <span>⏱️</span>
@@ -266,7 +270,7 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
       {activeTab === 'socratic' && currentSocraticCard && (
         <div ref={cardTopRef} className="space-y-4 scroll-mt-6">
           {/* Interactive Socratic Stage Stepper Bar */}
-          <div className="bg-[#0B0F19] rounded-2xl border-2 border-slate-800 p-2.5 sm:p-3 flex items-center justify-between gap-2 overflow-x-auto shadow-md">
+          <div className="bg-[radial-gradient(ellipse_at_left,_rgba(34,211,238,0.16),_transparent_50%),linear-gradient(135deg,_rgba(11,18,54,0.95),_rgba(18,12,50,0.95))] rounded-2xl border border-cyan-300/40 p-2.5 sm:p-3 flex items-center justify-between gap-2 overflow-x-auto shadow-[0_14px_34px_rgba(3,7,24,0.65)] backdrop-blur-xl">
             <div className="flex items-center gap-2 shrink-0 px-1.5">
               <Sparkles className="w-4 h-4 text-cyan-400" />
               <span className="text-xs font-black uppercase text-cyan-400 font-mono tracking-wider hidden sm:inline">
@@ -326,14 +330,19 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
 
       {/* PHASE 2: PRACTICE EXERCISES */}
       {activeTab === 'practice' && currentExercise && (
-        <div className="bg-[#0B0F19]/90 rounded-3xl border-2 border-slate-800 shadow-[0_0_30px_rgba(0,240,255,0.12)] p-5 sm:p-7 text-white backdrop-blur-md relative overflow-hidden">
+        <div className="bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.22),_transparent_50%),radial-gradient(ellipse_at_bottom_right,_rgba(251,191,36,0.16),_transparent_50%),radial-gradient(ellipse_at_80%_20%,_rgba(217,70,239,0.2),_transparent_52%),linear-gradient(160deg,_rgba(10,17,54,0.97),_rgba(18,11,54,0.98)_55%,_rgba(6,10,34,0.99)_100%)] rounded-3xl border border-cyan-300/50 shadow-[0_30px_80px_rgba(3,7,24,0.88),0_0_46px_rgba(34,211,238,0.2),inset_0_1px_0_rgba(255,255,255,0.18)] p-5 sm:p-7 text-white backdrop-blur-2xl relative overflow-hidden">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-amber-300 shadow-[0_0_22px_rgba(34,211,238,0.85)]"
+          />
           {/* Subtle cosmic accent glow */}
-          <div className="absolute top-0 right-1/4 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-16 right-1/4 w-72 h-72 bg-amber-400/18 rounded-full blur-[110px] pointer-events-none cosmic-light-bloom" />
+          <div className="absolute -bottom-16 -left-16 w-72 h-72 bg-cyan-400/20 rounded-full blur-[110px] pointer-events-none cosmic-light-bloom" />
 
           {/* Exercise Index & Indicator */}
-          <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800 relative z-10">
+          <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-white/15 relative z-10">
             <div className="flex items-center gap-2.5">
-              <span className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 font-black text-sm flex items-center justify-center shadow-[0_0_12px_rgba(251,191,36,0.4)] font-mono">
+              <span className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-300 via-yellow-300 to-orange-400 text-slate-950 font-black text-sm flex items-center justify-center shadow-[0_0_18px_rgba(251,191,36,0.55)] font-mono">
                 {currentExercise.order}
               </span>
               <span className="text-xs sm:text-sm font-black text-white">
@@ -352,15 +361,17 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                  currentExercise.cognitiveLevel === 'thong_hieu' ? '2. Thông hiểu' :
                  currentExercise.cognitiveLevel === 'van_dung' ? '3. Vận dụng' : '4. Vận dụng cao'}
               </span>
-              <span className="text-xs font-bold text-cyan-300 bg-slate-900 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+              <span className="text-xs font-bold text-cyan-200 bg-[#050924]/90 px-2.5 py-0.5 rounded-full border border-cyan-400/45">
                 {exerciseIndex + 1} / {lesson.exercises.length}
               </span>
             </div>
           </div>
 
           {/* Exercise Question Prompt */}
-          <div className="text-lg sm:text-2xl font-black text-white leading-relaxed mb-6 relative z-10 drop-shadow-sm">
-            {currentExercise.prompt}
+          <div className="rounded-2xl bg-[radial-gradient(ellipse_at_top_left,_rgba(56,189,248,0.16),_transparent_58%),linear-gradient(160deg,_rgba(5,9,34,0.95),_rgba(12,15,48,0.96))] border border-cyan-300/35 p-4 sm:p-5 mb-6 relative z-10 shadow-[inset_0_2px_16px_rgba(0,0,0,0.5),0_0_24px_rgba(34,211,238,0.12)]">
+            <div className="text-lg sm:text-2xl font-black text-white leading-relaxed drop-shadow-sm">
+              {currentExercise.prompt}
+            </div>
           </div>
 
           {/* Options List */}
@@ -368,16 +379,16 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
             <div className="space-y-3.5 mb-6 relative z-10">
               {currentExercise.options.map((opt) => {
                 const isSelected = selectedAnswer === opt.label;
-                let btnStyle = 'bg-slate-900/90 hover:bg-slate-800/90 border-slate-800 text-slate-100 hover:border-cyan-500/50 hover:text-white';
+                let btnStyle = 'bg-[#080E32]/92 hover:bg-indigo-900/65 border-cyan-300/30 text-slate-100 hover:border-cyan-300 hover:shadow-[0_0_22px_rgba(34,211,238,0.3)] hover:text-white';
 
                 if (isAnswerSubmitted) {
                   if (opt.label === currentExercise.correctAnswer) {
-                    btnStyle = 'bg-emerald-950/80 border-emerald-400 text-emerald-200 ring-2 ring-emerald-400/50 shadow-[0_0_20px_rgba(16,185,129,0.35)]';
+                    btnStyle = 'bg-emerald-950/85 border-emerald-400 text-emerald-100 ring-2 ring-emerald-400/55 shadow-[0_0_24px_rgba(16,185,129,0.4)]';
                   } else if (isSelected && !isCorrect) {
-                    btnStyle = 'bg-rose-950/80 border-rose-500 text-rose-200 ring-2 ring-rose-500/40';
+                    btnStyle = 'bg-rose-950/85 border-rose-500 text-rose-100 ring-2 ring-rose-500/45';
                   }
                 } else if (isSelected) {
-                  btnStyle = 'bg-cyan-950/70 border-cyan-400 text-cyan-200 ring-2 ring-cyan-400/50 shadow-[0_0_18px_rgba(0,240,255,0.25)]';
+                  btnStyle = 'bg-gradient-to-r from-cyan-500/25 via-indigo-600/35 to-fuchsia-500/25 border-cyan-300 text-white ring-2 ring-cyan-300/55 shadow-[0_0_26px_rgba(34,211,238,0.35)]';
                 }
 
                 return (
@@ -386,10 +397,10 @@ export const VietnamGrade3LessonRunner: React.FC<VietnamGrade3LessonRunnerProps>
                     type="button"
                     onClick={() => handleSelectAnswer(opt.label)}
                     disabled={isAnswerSubmitted}
-                    className={`w-full p-4 sm:p-5 rounded-2xl border-2 text-left font-bold text-sm sm:text-base transition-all flex items-center justify-between gap-3.5 active:scale-[0.99] leading-relaxed ${btnStyle}`}
+                    className={`w-full p-4 sm:p-5 rounded-2xl border-2 text-left font-bold text-sm sm:text-base transition-all flex items-center justify-between gap-3.5 active:scale-[0.99] leading-relaxed cursor-pointer ${btnStyle}`}
                   >
                     <div className="flex items-center gap-3.5">
-                      <span className="w-7 h-7 rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 font-mono text-xs sm:text-sm font-black flex items-center justify-center shrink-0">
+                      <span className="w-7 h-7 rounded-xl bg-cyan-400/15 border border-cyan-300/35 text-cyan-200 font-mono text-xs sm:text-sm font-black flex items-center justify-center shrink-0">
                         {opt.id.toUpperCase()}
                       </span>
                       <span className="leading-relaxed">{opt.label}</span>

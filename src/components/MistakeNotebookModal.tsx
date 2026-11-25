@@ -222,752 +222,763 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
   };
 
   const content = (
-    <div className={`bg-white rounded-3xl shadow-2xl border-4 border-amber-400 w-full flex flex-col overflow-hidden animate-in fade-in duration-200 ${
-      isFullPageTab ? 'max-w-5xl mx-auto shadow-xl' : 'max-w-4xl max-h-[92vh]'
-    }`}>
-        {/* Header */}
-        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 px-6 py-4.5 flex items-center justify-between text-white shadow-md">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl shadow-inner shrink-0">
-              📖
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl md:text-2xl font-black font-display text-white tracking-tight">
-                  Sổ Thu Thập Lỗi Sai & Ôn Luyện
-                </h2>
-                {unresolvedCount > 0 && (
-                  <span className="bg-rose-500 text-white font-extrabold text-xs px-2.5 py-0.5 rounded-full ring-2 ring-white/50 animate-pulse">
-                    {unresolvedCount} cần ôn
-                  </span>
-                )}
-              </div>
-              <p className="text-xs md:text-sm text-amber-100 font-medium">
-                Mỗi sai sót là một bậc thang tiến bộ · Thu thập, phân tích và làm chủ kiến thức!
-              </p>
-            </div>
+    <div
+      className={`relative bg-[radial-gradient(ellipse_at_top_right,_rgba(56,189,248,0.2),_transparent_55%),radial-gradient(ellipse_at_bottom_left,_rgba(168,85,247,0.18),_transparent_55%),linear-gradient(160deg,_rgba(15,24,68,0.98),_rgba(7,12,38,0.99))] rounded-3xl shadow-[0_28px_70px_rgba(3,7,24,0.88),0_0_42px_rgba(34,211,238,0.18)] border border-cyan-300/45 text-white w-full flex flex-col overflow-hidden animate-in fade-in duration-200 ${
+        isFullPageTab ? 'max-w-5xl mx-auto' : 'max-w-4xl max-h-[92vh]'
+      }`}
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 inset-x-8 h-[2.5px] rounded-full bg-gradient-to-r from-cyan-300 via-sky-400 to-fuchsia-400 shadow-[0_0_16px_rgba(34,211,238,0.7)]"
+      />
+
+      {/* Header */}
+      <div className="bg-[#060B24]/90 border-b border-cyan-300/25 px-6 py-4.5 flex items-center justify-between text-white">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400/25 via-sky-400/20 to-fuchsia-400/25 border border-cyan-300/40 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(34,211,238,0.25)] shrink-0">
+            📖
           </div>
+          <div>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h2 className="text-xl md:text-2xl font-black font-display text-white tracking-tight">
+                Sổ Thu Thập Lỗi Sai &amp; Ôn Luyện
+              </h2>
+              {unresolvedCount > 0 && (
+                <span className="bg-rose-500/25 text-rose-200 border border-rose-400/50 font-extrabold text-xs px-2.5 py-0.5 rounded-full shadow-[0_0_12px_rgba(244,63,94,0.3)] tabular-nums">
+                  {unresolvedCount} cần ôn
+                </span>
+              )}
+            </div>
+            <p className="text-xs md:text-sm text-cyan-100/80 font-medium mt-0.5">
+              Mỗi sai sót là một bậc thang tiến bộ · Thu thập, phân tích và làm chủ kiến thức!
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="p-2 rounded-xl bg-white/[0.08] hover:bg-cyan-400/20 border border-white/15 hover:border-cyan-300/60 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] transition-all text-white"
+          title="Đóng sổ"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Navigation Sub-Tabs */}
+      <div className="bg-[#091238]/90 border-b border-cyan-300/20 px-6 py-3 flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
-            onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-full transition-colors text-white"
-            title="Đóng sổ"
+            onClick={() => {
+              sound.playClick();
+              setActiveSubTab('notebook');
+            }}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs md:text-sm font-bold border transition-all ${
+              activeSubTab === 'notebook'
+                ? 'bg-gradient-to-r from-cyan-400/25 to-sky-400/20 border-cyan-300/60 text-cyan-100 shadow-[0_0_16px_rgba(34,211,238,0.28)]'
+                : 'bg-white/[0.05] text-slate-300 hover:text-white hover:bg-white/[0.1] border-white/10 hover:border-cyan-300/35'
+            }`}
           >
-            <X className="w-6 h-6" />
+            <BookOpen className="w-4 h-4 text-cyan-300" />
+            <span className="tabular-nums">Danh Sách Lỗi Thu Thập ({total})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              setActiveSubTab('add');
+            }}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition-all ${
+              activeSubTab === 'add'
+                ? 'bg-gradient-to-r from-cyan-400/25 to-sky-400/20 border-cyan-300/60 text-cyan-100 shadow-[0_0_16px_rgba(34,211,238,0.28)]'
+                : 'bg-white/[0.05] text-slate-300 hover:text-white hover:bg-white/[0.1] border-white/10 hover:border-cyan-300/35'
+            }`}
+          >
+            <Plus className="w-4 h-4 text-sky-300" />
+            <span>Tự Thêm Câu Khó</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              setActiveSubTab('report');
+            }}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition-all ${
+              activeSubTab === 'report'
+                ? 'bg-gradient-to-r from-rose-500/30 to-fuchsia-500/20 border-rose-400/60 text-rose-100 shadow-[0_0_16px_rgba(244,63,94,0.28)]'
+                : 'bg-white/[0.05] text-slate-300 hover:text-white hover:bg-white/[0.1] border-white/10 hover:border-rose-400/40'
+            }`}
+          >
+            <AlertCircle className="w-4 h-4 text-rose-400" />
+            <span className="tabular-nums">Báo Lỗi Đề Bài ({bugs.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              setActiveSubTab('methodology');
+            }}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition-all ${
+              activeSubTab === 'methodology'
+                ? 'bg-gradient-to-r from-amber-400/25 to-fuchsia-400/20 border-amber-300/60 text-amber-100 shadow-[0_0_16px_rgba(251,191,36,0.28)]'
+                : 'bg-white/[0.05] text-slate-300 hover:text-white hover:bg-white/[0.1] border-white/10 hover:border-amber-300/40'
+            }`}
+          >
+            <Brain className="w-4 h-4 text-amber-300" />
+            <span>Kiểm Tra Định Kỳ</span>
+            <span className="bg-amber-400/20 text-amber-200 border border-amber-300/40 text-[9px] font-black px-1.5 py-0.5 rounded-full">
+              MÔ HÌNH
+            </span>
           </button>
         </div>
 
-        {/* Navigation Sub-Tabs */}
-        <div className="bg-amber-50/70 border-b border-amber-200 px-6 py-2.5 flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => {
+        {activeSubTab === 'notebook' && masteredCount > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm('Bạn có chắc muốn xóa tất cả câu đã khắc phục thành công?')) {
                 sound.playClick();
-                setActiveSubTab('notebook');
-              }}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${
-                activeSubTab === 'notebook'
-                  ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-white text-slate-700 hover:bg-amber-100/60 border border-amber-200'
-              }`}
-            >
-              <BookOpen className="w-4 h-4" />
-              <span>Danh Sách Lỗi Thu Thập ({total})</span>
-            </button>
+                clearMasteredMistakes();
+              }
+            }}
+            className="text-xs text-slate-300 hover:text-cyan-200 font-semibold underline underline-offset-4 transition-colors"
+          >
+            Dọn dẹp câu đã thành thạo
+          </button>
+        )}
+      </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setActiveSubTab('add');
-              }}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${
-                activeSubTab === 'add'
-                  ? 'bg-amber-500 text-white shadow-xs'
-                  : 'bg-white text-slate-700 hover:bg-amber-100/60 border border-amber-200'
-              }`}
-            >
-              <Plus className="w-4 h-4" />
-              <span>Tự Thêm Câu Khó</span>
-            </button>
+      {/* Content Body */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+        {activeSubTab === 'notebook' && (
+          <>
+            {/* Stats KPI Ribbon */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="bg-[#070D28]/90 border border-cyan-300/30 rounded-2xl p-3.5 text-center shadow-[0_0_16px_rgba(34,211,238,0.1)]">
+                <span className="text-xs font-bold text-slate-300 block">Tổng câu thu thập</span>
+                <span className="text-2xl font-black text-cyan-300 mt-0.5 block tabular-nums">{total}</span>
+              </div>
+              <div className="bg-[#070D28]/90 border border-rose-400/35 rounded-2xl p-3.5 text-center shadow-[0_0_16px_rgba(244,63,94,0.1)]">
+                <span className="text-xs font-bold text-slate-300 block">Cần ôn luyện</span>
+                <span className="text-2xl font-black text-rose-300 mt-0.5 block tabular-nums">{unresolvedCount}</span>
+              </div>
+              <div className="bg-[#070D28]/90 border border-emerald-400/35 rounded-2xl p-3.5 text-center shadow-[0_0_16px_rgba(52,211,153,0.1)]">
+                <span className="text-xs font-bold text-slate-300 block">Đã nắm vững</span>
+                <span className="text-2xl font-black text-emerald-300 mt-0.5 block tabular-nums">{masteredCount}</span>
+              </div>
+              <div className="bg-[#070D28]/90 border border-indigo-400/35 rounded-2xl p-3.5 text-center shadow-[0_0_16px_rgba(129,140,248,0.12)]">
+                <span className="text-xs font-bold text-slate-300 block">Tỉ lệ sửa sai</span>
+                <span className="text-2xl font-black text-fuchsia-300 mt-0.5 block tabular-nums">{masteryRate}%</span>
+              </div>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setActiveSubTab('report');
-              }}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${
-                activeSubTab === 'report'
-                  ? 'bg-rose-500 text-white shadow-xs'
-                  : 'bg-white text-slate-700 hover:bg-rose-50 border border-rose-200'
-              }`}
-            >
-              <AlertCircle className="w-4 h-4 text-rose-500" />
-              <span>Báo Lỗi Đề Bài ({bugs.length})</span>
-            </button>
+            {/* Filter Row */}
+            <div className="flex items-center justify-between flex-wrap gap-2 border-b border-cyan-300/15 pb-3">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300 flex-wrap">
+                <Filter className="w-3.5 h-3.5 text-cyan-300" />
+                <span>Bộ lọc:</span>
+                <button
+                  type="button"
+                  onClick={() => setFilterStatus('all')}
+                  className={`px-3 py-1 rounded-full border transition-all tabular-nums ${
+                    filterStatus === 'all'
+                      ? 'bg-cyan-400/25 border-cyan-300/60 text-cyan-100 shadow-[0_0_12px_rgba(34,211,238,0.25)]'
+                      : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.1]'
+                  }`}
+                >
+                  Tất cả ({total})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilterStatus('unresolved')}
+                  className={`px-3 py-1 rounded-full border transition-all tabular-nums ${
+                    filterStatus === 'unresolved'
+                      ? 'bg-rose-500/30 border-rose-400/60 text-rose-100 shadow-[0_0_12px_rgba(244,63,94,0.25)]'
+                      : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.1]'
+                  }`}
+                >
+                  Cần ôn ({unresolvedCount})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFilterStatus('mastered')}
+                  className={`px-3 py-1 rounded-full border transition-all tabular-nums ${
+                    filterStatus === 'mastered'
+                      ? 'bg-emerald-500/30 border-emerald-400/60 text-emerald-100 shadow-[0_0_12px_rgba(52,211,153,0.25)]'
+                      : 'bg-white/[0.05] border-white/10 text-slate-300 hover:text-white hover:bg-white/[0.1]'
+                  }`}
+                >
+                  Đã nắm vững ({masteredCount})
+                </button>
+              </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                sound.playClick();
-                setActiveSubTab('methodology');
-              }}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${
-                activeSubTab === 'methodology'
-                  ? 'bg-amber-600 text-white shadow-xs'
-                  : 'bg-white text-slate-700 hover:bg-amber-50 border border-amber-200'
-              }`}
-            >
-              <Brain className="w-4 h-4 text-amber-500" />
-              <span>Kiểm Tra Định Kỳ</span>
-              <span className="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full">
-                MÔ HÌNH
+              <span className="text-xs text-cyan-200/75 italic">
+                💡 Mẹo: Tự nhập đáp án đúng vào ô thử thách để làm chủ ngay!
               </span>
-            </button>
-          </div>
+            </div>
 
-          {activeSubTab === 'notebook' && masteredCount > 0 && (
-            <button
-              type="button"
-              onClick={() => {
-                if (window.confirm('Bạn có chắc muốn xóa tất cả câu đã khắc phục thành công?')) {
-                  sound.playClick();
-                  clearMasteredMistakes();
-                }
-              }}
-              className="text-xs text-slate-500 hover:text-slate-800 font-semibold underline"
-            >
-              Dọn dẹp câu đã thành thạo
-            </button>
-          )}
-        </div>
-
-        {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
-          {activeSubTab === 'notebook' && (
-            <>
-              {/* Stats KPI Ribbon */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-3.5 text-center shadow-xs">
-                  <span className="text-xs font-bold text-slate-500 block">Tổng câu thu thập</span>
-                  <span className="text-2xl font-black text-amber-700 mt-0.5 block">{total}</span>
-                </div>
-                <div className="bg-gradient-to-br from-rose-50 to-red-50 border border-rose-200 rounded-2xl p-3.5 text-center shadow-xs">
-                  <span className="text-xs font-bold text-slate-500 block">Cần ôn luyện</span>
-                  <span className="text-2xl font-black text-rose-600 mt-0.5 block">{unresolvedCount}</span>
-                </div>
-                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-3.5 text-center shadow-xs">
-                  <span className="text-xs font-bold text-slate-500 block">Đã nắm vững</span>
-                  <span className="text-2xl font-black text-emerald-600 mt-0.5 block">{masteredCount}</span>
-                </div>
-                <div className="bg-gradient-to-br from-indigo-50 to-sky-50 border border-indigo-200 rounded-2xl p-3.5 text-center shadow-xs">
-                  <span className="text-xs font-bold text-slate-500 block">Tỉ lệ sửa sai</span>
-                  <span className="text-2xl font-black text-indigo-700 mt-0.5 block">{masteryRate}%</span>
-                </div>
+            {/* Mistakes List */}
+            {filteredMistakes.length === 0 ? (
+              <div className="text-center py-12 px-4 bg-[#070D28]/80 rounded-3xl border border-dashed border-cyan-300/30">
+                <span className="text-5xl block mb-3">🎉</span>
+                <h3 className="text-lg font-bold text-white">Không có câu sai nào trong mục này!</h3>
+                <p className="text-xs md:text-sm text-slate-300 mt-1 max-w-md mx-auto">
+                  {filterStatus === 'unresolved'
+                    ? 'Tuyệt vời! Bé đã khắc phục hết tất cả các câu khó trong sổ tay!'
+                    : 'Khi làm bài tập nếu gặp câu khó hoặc bấm nhầm đáp án, câu hỏi sẽ tự động được thu thập về đây.'}
+                </p>
               </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredMistakes.map((m) => {
+                  const isMastered = m.status === 'mastered';
+                  const feedback = retakeFeedback[m.id];
 
-              {/* Filter Row */}
-              <div className="flex items-center justify-between flex-wrap gap-2 border-b border-slate-100 pb-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-                  <Filter className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Bộ lọc:</span>
-                  <button
-                    type="button"
-                    onClick={() => setFilterStatus('all')}
-                    className={`px-3 py-1 rounded-full transition-colors ${
-                      filterStatus === 'all'
-                        ? 'bg-slate-800 text-white'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    Tất cả ({total})
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFilterStatus('unresolved')}
-                    className={`px-3 py-1 rounded-full transition-colors ${
-                      filterStatus === 'unresolved'
-                        ? 'bg-rose-500 text-white'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    Cần ôn ({unresolvedCount})
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFilterStatus('mastered')}
-                    className={`px-3 py-1 rounded-full transition-colors ${
-                      filterStatus === 'mastered'
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    Đã nắm vững ({masteredCount})
-                  </button>
-                </div>
-
-                <span className="text-xs text-slate-400 italic">
-                  💡 Mẹo: Bấm &quot;Thử thách sửa sai&quot; để luyện tập lại ngay!
-                </span>
-              </div>
-
-              {/* Mistakes List */}
-              {filteredMistakes.length === 0 ? (
-                <div className="text-center py-12 px-4 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                  <span className="text-5xl block mb-3">🎉</span>
-                  <h3 className="text-lg font-bold text-slate-800">Không có câu sai nào trong mục này!</h3>
-                  <p className="text-xs md:text-sm text-slate-500 mt-1 max-w-md mx-auto">
-                    {filterStatus === 'unresolved'
-                      ? 'Tuyệt vời! Bé đã khắc phục hết tất cả các câu khó trong sổ tay!'
-                      : 'Khi làm bài tập nếu gặp câu khó hoặc bấm nhầm đáp án, câu hỏi sẽ tự động được thu thập về đây.'}
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredMistakes.map((m) => {
-                    const isMastered = m.status === 'mastered';
-                    const feedback = retakeFeedback[m.id];
-
-                    return (
-                      <div
-                        key={m.id}
-                        className={`rounded-3xl border-2 transition-all p-5 shadow-sm ${
-                          isMastered
-                            ? 'bg-emerald-50/40 border-emerald-200'
-                            : 'bg-white border-amber-200 hover:border-amber-300'
-                        }`}
-                      >
-                        {/* Card Header */}
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-2.5 flex-wrap">
-                            <span className="text-2xl">{m.mascotAvatar || '🐰'}</span>
-                            <span className="text-xs font-bold bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full">
-                              {m.topicName}
-                            </span>
-                            <span className="text-xs font-semibold text-slate-600">
-                              {m.lessonTitle}
-                            </span>
-                            {m.attemptsCount > 1 && (
-                              <span className="text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
-                                Đã thử {m.attemptsCount} lần
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-2 shrink-0">
-                            <button
-                              type="button"
-                              onClick={() => handleToggleMastery(m)}
-                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-2xs ${
-                                isMastered
-                                  ? 'bg-emerald-600 text-white'
-                                  : 'bg-amber-100 text-amber-900 hover:bg-emerald-500 hover:text-white'
-                              }`}
-                            >
-                              {isMastered ? (
-                                <>
-                                  <CheckCircle2 className="w-3.5 h-3.5" />
-                                  <span>Đã nắm vững ⭐</span>
-                                </>
-                              ) : (
-                                <>
-                                  <RotateCcw className="w-3.5 h-3.5" />
-                                  <span>Cần ôn lại</span>
-                                </>
-                              )}
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(m.id)}
-                              className="text-slate-400 hover:text-rose-500 p-1 rounded-lg transition-colors"
-                              title="Xóa khỏi sổ"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Question Prompt */}
-                        <div className="mt-3.5">
-                          <p className="text-base md:text-lg font-bold text-slate-800">
-                            {m.questionPrompt}
-                          </p>
-                        </div>
-
-                        {/* Student's previous mistake record */}
-                        <div className="bg-rose-50/70 border border-rose-200 rounded-2xl p-3 mt-3">
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-rose-700 block flex items-center gap-1">
-                            <span>❌</span> Câu trả lời chưa chính xác trước đây:
+                  return (
+                    <div
+                      key={m.id}
+                      className={`rounded-3xl border transition-all p-5 ${
+                        isMastered
+                          ? 'bg-emerald-500/10 border-emerald-400/40 shadow-[0_0_20px_rgba(52,211,153,0.12)]'
+                          : 'bg-[#070D28]/90 border-cyan-300/30 hover:border-cyan-300/55 shadow-[0_12px_30px_rgba(3,7,24,0.45)]'
+                      }`}
+                    >
+                      {/* Card Header */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <span className="text-2xl">{m.mascotAvatar || '🐰'}</span>
+                          <span className="text-xs font-bold bg-cyan-400/15 text-cyan-200 border border-cyan-300/35 px-2.5 py-0.5 rounded-full">
+                            {m.topicName}
                           </span>
-                          <p className="text-sm font-bold text-rose-950 mt-1">
-                            {m.userAnswer}
-                          </p>
+                          <span className="text-xs font-semibold text-slate-300">
+                            {m.lessonTitle}
+                          </span>
+                          {m.attemptsCount > 1 && (
+                            <span className="text-[11px] font-bold text-slate-300 bg-white/[0.08] border border-white/10 px-2 py-0.5 rounded-full tabular-nums">
+                              Đã thử {m.attemptsCount} lần
+                            </span>
+                          )}
                         </div>
 
-                        {/* Spark Math Pedagogical Thinking Guidance (No spoilers) */}
-                        <div className="mt-3 bg-amber-50/80 border border-amber-200 rounded-2xl p-3.5 flex items-start gap-2.5">
-                          <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                          <div className="text-xs md:text-sm text-slate-800 font-medium">
-                            <span className="font-extrabold text-amber-900 block mb-1">
-                              💡 Gợi ý tự tư duy (Không đưa sẵn lời giải):
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleMastery(m)}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                              isMastered
+                                ? 'bg-emerald-500/25 border-emerald-300/60 text-emerald-100 shadow-[0_0_14px_rgba(52,211,153,0.28)]'
+                                : 'bg-amber-400/15 border-amber-300/40 text-amber-200 hover:bg-emerald-500/25 hover:border-emerald-300/60 hover:text-emerald-100'
+                            }`}
+                          >
+                            {isMastered ? (
+                              <>
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>Đã nắm vững ⭐</span>
+                              </>
+                            ) : (
+                              <>
+                                <RotateCcw className="w-3.5 h-3.5" />
+                                <span>Cần ôn lại</span>
+                              </>
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(m.id)}
+                            className="text-slate-400 hover:text-rose-300 p-1.5 rounded-lg hover:bg-rose-500/15 transition-colors"
+                            title="Xóa khỏi sổ"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Question Prompt */}
+                      <div className="mt-3.5">
+                        <p className="text-base md:text-lg font-bold text-white leading-relaxed">
+                          {m.questionPrompt}
+                        </p>
+                      </div>
+
+                      {/* Student's previous mistake record */}
+                      <div className="bg-rose-500/12 border border-rose-400/35 rounded-2xl p-3 mt-3">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-rose-300 flex items-center gap-1">
+                          <span>❌</span> Câu trả lời chưa chính xác trước đây:
+                        </span>
+                        <p className="text-sm font-bold text-rose-100 mt-1">
+                          {m.userAnswer}
+                        </p>
+                      </div>
+
+                      {/* Spark Math Pedagogical Thinking Guidance (No spoilers) */}
+                      <div className="mt-3 bg-cyan-500/10 border border-cyan-300/30 rounded-2xl p-3.5 flex items-start gap-2.5">
+                        <Lightbulb className="w-5 h-5 text-amber-300 shrink-0 mt-0.5" />
+                        <div className="text-xs md:text-sm text-cyan-50 font-medium leading-relaxed">
+                          <span className="font-extrabold text-amber-200 block mb-1">
+                            💡 Gợi ý tự tư duy (Không đưa sẵn lời giải):
+                          </span>
+                          {getThinkingGuidance(m)}
+                        </div>
+                      </div>
+
+                      {/* Interactive In-Place Direct Typed Retake Section */}
+                      <div className="mt-4 bg-[#050A1F]/90 border border-cyan-300/25 rounded-2xl p-4 space-y-2.5">
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <span className="text-xs font-black text-cyan-200 uppercase tracking-wider flex items-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                            Thử thách tự tay nhập đáp án đúng:
+                          </span>
+                          {feedback === 'correct' && (
+                            <span className="text-xs font-bold text-emerald-300 flex items-center gap-1">
+                              <Check className="w-4 h-4" /> Chính xác tuyệt đối! Đã làm chủ bài toán ⭐
                             </span>
-                            {getThinkingGuidance(m)}
-                          </div>
+                          )}
+                          {feedback === 'wrong' && (
+                            <span className="text-xs font-bold text-rose-300 flex items-center gap-1">
+                              Chưa chính xác, em hãy suy ngẫm theo gợi ý tự tư duy nhé!
+                            </span>
+                          )}
                         </div>
 
-                        {/* Interactive In-Place Direct Typed Retake Section */}
-                        <div className="mt-4 bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-2xs space-y-2.5">
-                          <div className="flex items-center justify-between flex-wrap gap-2">
-                            <span className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                              Thử thách tự tay nhập đáp án đúng:
-                            </span>
-                            {feedback === 'correct' && (
-                              <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                                <Check className="w-4 h-4" /> Chính xác tuyệt đối! Đã làm chủ bài toán ⭐
-                              </span>
-                            )}
-                            {feedback === 'wrong' && (
-                              <span className="text-xs font-bold text-rose-600 flex items-center gap-1">
-                                Chưa chính xác, em hãy suy ngẫm theo gợi ý tự tư duy nhé!
-                              </span>
-                            )}
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={retakeInputs[m.id] || ''}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setRetakeInputs((prev) => ({ ...prev, [m.id]: val }));
+                              if (retakeFeedback[m.id] === 'wrong') {
+                                setRetakeFeedback((prev) => ({ ...prev, [m.id]: null }));
+                              }
+                            }}
+                            onKeyDown={(e) => e.key === 'Enter' && handleRetakeSubmit(m)}
+                            placeholder="Tự tay gõ câu trả lời của em vào đây..."
+                            disabled={isMastered && feedback === 'correct'}
+                            className="flex-1 px-4 py-2.5 rounded-xl bg-[#050A1F] border border-cyan-300/35 text-sm font-bold text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none disabled:opacity-60"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRetakeSubmit(m)}
+                            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-xs shadow-[0_0_20px_rgba(34,211,238,0.35)] transition-all active:scale-95 shrink-0"
+                          >
+                            Kiểm tra
+                          </button>
+                        </div>
+                      </div>
 
-                          <div className="flex items-center gap-2">
+                      {/* User Personal Notes */}
+                      <div className="mt-3 pt-3 border-t border-cyan-300/15 flex items-center justify-between flex-wrap gap-2 text-xs">
+                        {editingNoteId === m.id ? (
+                          <div className="flex items-center gap-2 w-full">
                             <input
                               type="text"
-                              value={retakeInputs[m.id] || ''}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setRetakeInputs((prev) => ({ ...prev, [m.id]: val }));
-                                if (retakeFeedback[m.id] === 'wrong') {
-                                  setRetakeFeedback((prev) => ({ ...prev, [m.id]: null }));
-                                }
-                              }}
-                              onKeyDown={(e) => e.key === 'Enter' && handleRetakeSubmit(m)}
-                              placeholder="Tự tay gõ câu trả lời của em vào đây..."
-                              disabled={isMastered && feedback === 'correct'}
-                              className="flex-1 px-4 py-2.5 rounded-xl border-2 border-slate-300 text-sm font-bold text-slate-800 focus:border-amber-400 focus:outline-none"
+                              value={tempNote}
+                              onChange={(e) => setTempNote(e.target.value)}
+                              placeholder="Ghi chú mẹo nhớ của riêng em..."
+                              className="flex-1 px-3 py-1.5 rounded-xl bg-[#050A1F] border border-cyan-300/40 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-300"
                             />
                             <button
                               type="button"
-                              onClick={() => handleRetakeSubmit(m)}
-                              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-white font-black text-xs shadow-sm transition-all active:scale-95 shrink-0"
+                              onClick={() => handleSaveNote(m.id)}
+                              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-300 to-sky-300 text-slate-950 font-black"
                             >
-                              Kiểm tra
+                              Lưu
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditingNoteId(null)}
+                              className="px-2 py-1.5 text-slate-300 hover:text-white"
+                            >
+                              Hủy
                             </button>
                           </div>
-                        </div>
-
-                        {/* User Personal Notes */}
-                        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs">
-                          {editingNoteId === m.id ? (
-                            <div className="flex items-center gap-2 w-full">
-                              <input
-                                type="text"
-                                value={tempNote}
-                                onChange={(e) => setTempNote(e.target.value)}
-                                placeholder="Ghi chú mẹo nhớ của riêng em..."
-                                className="flex-1 px-3 py-1.5 rounded-xl border border-amber-300 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => handleSaveNote(m.id)}
-                                className="px-3 py-1.5 rounded-xl bg-amber-500 text-white font-bold"
-                              >
-                                Lưu
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setEditingNoteId(null)}
-                                className="px-2 py-1.5 text-slate-400"
-                              >
-                                Hủy
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-2">
-                              <span className="font-semibold text-slate-500">Mẹo của em:</span>
-                              <span className="text-slate-700 italic">
-                                {m.userNote || 'Chưa có ghi chú'}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEditingNoteId(m.id);
-                                  setTempNote(m.userNote || '');
-                                }}
-                                className="text-amber-600 hover:underline inline-flex items-center gap-0.5 ml-1"
-                              >
-                                <Edit2 className="w-3 h-3" /> Sửa
-                              </button>
-                            </div>
-                          )}
-
-                          {onSelectLesson && m.lessonId && (
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-slate-400">Mẹo của em:</span>
+                            <span className="text-slate-200 italic">
+                              {m.userNote || 'Chưa có ghi chú'}
+                            </span>
                             <button
                               type="button"
                               onClick={() => {
-                                sound.playClick();
-                                onClose();
-                                onSelectLesson(m.lessonId);
+                                setEditingNoteId(m.id);
+                                setTempNote(m.userNote || '');
                               }}
-                              className="inline-flex items-center gap-1 font-bold text-amber-700 hover:text-amber-900 transition-colors ml-auto"
+                              className="text-cyan-300 hover:text-cyan-200 hover:underline inline-flex items-center gap-0.5 ml-1"
                             >
-                              <span>Vào làm lại bài này</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
+                              <Edit2 className="w-3 h-3" /> Sửa
                             </button>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </>
-          )}
+                          </div>
+                        )}
 
-          {/* SubTab 2: Manual Add Mistake Form */}
-          {activeSubTab === 'add' && (
-            <div className="bg-white rounded-3xl border-2 border-amber-200 p-6 shadow-sm max-w-2xl mx-auto">
-              <div className="flex items-center gap-2.5 mb-4">
-                <span className="text-2xl">📝</span>
+                        {onSelectLesson && m.lessonId && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              sound.playClick();
+                              onClose();
+                              onSelectLesson(m.lessonId);
+                            }}
+                            className="inline-flex items-center gap-1 font-bold text-cyan-300 hover:text-cyan-200 transition-colors ml-auto"
+                          >
+                            <span>Vào làm lại bài này</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* SubTab 2: Manual Add Mistake Form */}
+        {activeSubTab === 'add' && (
+          <div className="bg-[#070D28]/90 rounded-3xl border border-cyan-300/35 p-6 shadow-[0_16px_38px_rgba(3,7,24,0.6)] max-w-2xl mx-auto">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-cyan-400/15 border border-cyan-300/35 flex items-center justify-center text-xl shrink-0">
+                📝
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-white">
+                  Thêm bài toán khó hoặc lỗi cần ghi nhớ
+                </h3>
+                <p className="text-xs text-slate-300">
+                  Bé có thể chủ động lưu lại các câu hỏi hóc búa để ôn luyện trước kỳ thi!
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleCreateManualMistake} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-cyan-200 uppercase tracking-wider mb-1">
+                  Đề bài / Câu hỏi khó *
+                </label>
+                <textarea
+                  required
+                  value={newPrompt}
+                  onChange={(e) => setNewPrompt(e.target.value)}
+                  rows={2}
+                  placeholder="Ví dụ: Tính tổng số lít nước khi đổ 3 bình 5L vào bể 20L..."
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-cyan-300/35 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <h3 className="text-lg font-black text-slate-800">
-                    Thêm bài toán khó hoặc lỗi cần ghi nhớ
+                  <label className="block text-xs font-bold text-cyan-200 uppercase tracking-wider mb-1">
+                    Câu trả lời dễ nhầm (Lỗi sai)
+                  </label>
+                  <input
+                    type="text"
+                    value={newUserAnswer}
+                    onChange={(e) => setNewUserAnswer(e.target.value)}
+                    placeholder="Ví dụ: 15 lít (quên trừ dung tích bể)"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-cyan-300/35 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-cyan-200 uppercase tracking-wider mb-1">
+                    Đáp án đúng chuẩn *
+                  </label>
+                  <input
+                    required
+                    type="text"
+                    value={newCorrectAnswer}
+                    onChange={(e) => setNewCorrectAnswer(e.target.value)}
+                    placeholder="Ví dụ: Bể còn thiếu 5 lít nữa mới đầy"
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-cyan-300/35 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-cyan-200 uppercase tracking-wider mb-1">
+                  Bí kíp tư duy / Giải thích
+                </label>
+                <textarea
+                  value={newExplanation}
+                  onChange={(e) => setNewExplanation(e.target.value)}
+                  rows={2}
+                  placeholder="Giải thích vì sao cần làm như vậy..."
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-cyan-300/35 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-cyan-200 uppercase tracking-wider mb-1">
+                    Phân loại lỗi
+                  </label>
+                  <select
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value as any)}
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-cyan-300/35 text-sm text-white focus:border-cyan-300 focus:outline-none"
+                  >
+                    <option value="concept" className="bg-[#050A1F] text-white">Khái niệm &amp; Bản chất</option>
+                    <option value="calculation" className="bg-[#050A1F] text-white">Tính toán số học</option>
+                    <option value="reading" className="bg-[#050A1F] text-white">Đọc hiểu &amp; Quy ước</option>
+                    <option value="other" className="bg-[#050A1F] text-white">Bẫy tư duy khác</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-cyan-200 uppercase tracking-wider mb-1">
+                    Mẹo của em
+                  </label>
+                  <input
+                    type="text"
+                    value={newNote}
+                    onChange={(e) => setNewNote(e.target.value)}
+                    placeholder="Lời nhắc nhở bản thân..."
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-cyan-300/35 text-sm text-white placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab('notebook')}
+                  className="px-5 py-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 text-sm font-bold text-slate-200 transition-colors"
+                >
+                  Quay lại
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-sm shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95"
+                >
+                  Lưu vào Sổ Lỗi
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* SubTab 3: Report Bug Form */}
+        {activeSubTab === 'report' && (
+          <div className="space-y-6 max-w-2xl mx-auto">
+            <div className="bg-[#070D28]/90 rounded-3xl border border-rose-400/35 p-6 shadow-[0_16px_38px_rgba(3,7,24,0.6)]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-400/35 flex items-center justify-center text-xl shrink-0">
+                  🐞
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-white">
+                    Báo cáo lỗi đề bài hoặc lỗi hiển thị
                   </h3>
-                  <p className="text-xs text-slate-500">
-                    Bé có thể chủ động lưu lại các câu hỏi hóc búa để ôn luyện trước kỳ thi!
+                  <p className="text-xs text-slate-300">
+                    Nếu bé phát hiện lỗi chính tả, sai đáp án đề thi hoặc trục trặc giao diện, hãy gửi cho chúng mình nhé!
                   </p>
                 </div>
               </div>
 
-              <form onSubmit={handleCreateManualMistake} className="space-y-4">
+              {bugSuccess && (
+                <div className="mb-4 p-3.5 rounded-2xl bg-emerald-500/15 border border-emerald-400/45 text-emerald-100 text-xs md:text-sm font-bold flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-300" />
+                  Cảm ơn bạn! Đã ghi nhận báo cáo lỗi thành công!
+                </div>
+              )}
+
+              <form onSubmit={handleSubmitBug} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Đề bài / Câu hỏi khó *
+                  <label className="block text-xs font-bold text-rose-200 uppercase tracking-wider mb-1">
+                    Loại lỗi gặp phải
+                  </label>
+                  <select
+                    value={bugCategory}
+                    onChange={(e) => setBugCategory(e.target.value as any)}
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-rose-400/35 text-sm text-white focus:border-rose-400 focus:outline-none"
+                  >
+                    <option value="logic_error" className="bg-[#050A1F] text-white">Lỗi logic / Đáp án đề bài bị sai</option>
+                    <option value="typo" className="bg-[#050A1F] text-white">Lỗi chính tả / câu từ khó hiểu</option>
+                    <option value="display" className="bg-[#050A1F] text-white">Lỗi hiển thị / giao diện bị lệch</option>
+                    <option value="other" className="bg-[#050A1F] text-white">Ý kiến đóng góp khác</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-rose-200 uppercase tracking-wider mb-1">
+                    Mô tả chi tiết lỗi *
                   </label>
                   <textarea
                     required
-                    value={newPrompt}
-                    onChange={(e) => setNewPrompt(e.target.value)}
-                    rows={2}
-                    placeholder="Ví dụ: Tính tổng số lít nước khi đổ 3 bình 5L vào bể 20L..."
-                    className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-amber-400 focus:outline-none"
+                    value={bugDescription}
+                    onChange={(e) => setBugDescription(e.target.value)}
+                    rows={3}
+                    placeholder="Mô tả cụ thể ở bài nào, hiện tượng gì xảy ra để đội ngũ sửa chữa..."
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-[#050A1F] border border-rose-400/35 text-sm text-white placeholder:text-slate-500 focus:border-rose-400 focus:outline-none"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                      Câu trả lời dễ nhầm (Lỗi sai)
-                    </label>
-                    <input
-                      type="text"
-                      value={newUserAnswer}
-                      onChange={(e) => setNewUserAnswer(e.target.value)}
-                      placeholder="Ví dụ: 15 lít (quên trừ dung tích bể)"
-                      className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-amber-400 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                      Đáp án đúng chuẩn *
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      value={newCorrectAnswer}
-                      onChange={(e) => setNewCorrectAnswer(e.target.value)}
-                      placeholder="Ví dụ: Bể còn thiếu 5 lít nữa mới đầy"
-                      className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-amber-400 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                    Bí kíp tư duy / Giải thích
-                  </label>
-                  <textarea
-                    value={newExplanation}
-                    onChange={(e) => setNewExplanation(e.target.value)}
-                    rows={2}
-                    placeholder="Giải thích vì sao cần làm như vậy..."
-                    className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-amber-400 focus:outline-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                      Phân loại lỗi
-                    </label>
-                    <select
-                      value={newCategory}
-                      onChange={(e) => setNewCategory(e.target.value as any)}
-                      className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-amber-400 focus:outline-none bg-white"
-                    >
-                      <option value="concept">Khái niệm & Bản chất</option>
-                      <option value="calculation">Tính toán số học</option>
-                      <option value="reading">Đọc hiểu & Quy ước</option>
-                      <option value="other">Bẫy tư duy khác</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                      Mẹo của em
-                    </label>
-                    <input
-                      type="text"
-                      value={newNote}
-                      onChange={(e) => setNewNote(e.target.value)}
-                      placeholder="Lời nhắc nhở bản thân..."
-                      className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-amber-400 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="pt-2 flex justify-end gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setActiveSubTab('notebook')}
-                    className="px-5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50"
-                  >
-                    Quay lại
-                  </button>
+                <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-black text-sm shadow-md transition-all active:scale-95"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-fuchsia-500 hover:brightness-110 text-white font-black text-sm shadow-[0_0_20px_rgba(244,63,94,0.35)] transition-all active:scale-95"
                   >
-                    Lưu vào Sổ Lỗi
+                    <Send className="w-4 h-4" />
+                    <span>Gửi Báo Cáo Lỗi</span>
                   </button>
                 </div>
               </form>
             </div>
-          )}
 
-          {/* SubTab 3: Report Bug Form */}
-          {activeSubTab === 'report' && (
-            <div className="space-y-6 max-w-2xl mx-auto">
-              <div className="bg-white rounded-3xl border-2 border-rose-200 p-6 shadow-sm">
-                <div className="flex items-center gap-2.5 mb-4">
-                  <span className="text-2xl">🐞</span>
-                  <div>
-                    <h3 className="text-lg font-black text-slate-800">
-                      Báo cáo lỗi đề bài hoặc lỗi hiển thị
-                    </h3>
-                    <p className="text-xs text-slate-500">
-                      Nếu bé phát hiện lỗi chính tả, sai đáp án đề thi hoặc trục trặc giao diện, hãy gửi cho chúng mình nhé!
-                    </p>
-                  </div>
-                </div>
-
-                {bugSuccess && (
-                  <div className="mb-4 p-3.5 rounded-2xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs md:text-sm font-bold flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                    Cảm ơn bạn! Đã ghi nhận báo cáo lỗi thành công!
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmitBug} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                      Loại lỗi gặp phải
-                    </label>
-                    <select
-                      value={bugCategory}
-                      onChange={(e) => setBugCategory(e.target.value as any)}
-                      className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-rose-400 focus:outline-none bg-white"
+            {/* Previously Reported Bugs List */}
+            {bugs.length > 0 && (
+              <div className="bg-[#070D28]/80 rounded-3xl border border-cyan-300/20 p-5">
+                <h4 className="text-xs font-black text-cyan-200 uppercase tracking-wider mb-3 tabular-nums">
+                  Lịch sử các phản hồi đã gửi ({bugs.length})
+                </h4>
+                <div className="space-y-2">
+                  {bugs.map((b) => (
+                    <div
+                      key={b.id}
+                      className="bg-[#050A1F]/90 p-3 rounded-2xl border border-white/10 text-xs flex items-start justify-between gap-3"
                     >
-                      <option value="logic_error">Lỗi logic / Đáp án đề bài bị sai</option>
-                      <option value="typo">Lỗi chính tả / câu từ khó hiểu</option>
-                      <option value="display">Lỗi hiển thị / giao diện bị lệch</option>
-                      <option value="other">Ý kiến đóng góp khác</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                      Mô tả chi tiết lỗi *
-                    </label>
-                    <textarea
-                      required
-                      value={bugDescription}
-                      onChange={(e) => setBugDescription(e.target.value)}
-                      rows={3}
-                      placeholder="Mô tả cụ thể ở bài nào, hiện tượng gì xảy ra để đội ngũ sửa chữa..."
-                      className="w-full px-3.5 py-2.5 rounded-2xl border-2 border-slate-200 text-sm focus:border-rose-400 focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm shadow-md transition-all active:scale-95"
-                    >
-                      <Send className="w-4 h-4" />
-                      <span>Gửi Báo Cáo Lỗi</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              {/* Previously Reported Bugs List */}
-              {bugs.length > 0 && (
-                <div className="bg-slate-50 rounded-3xl border border-slate-200 p-5">
-                  <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3">
-                    Lịch sử các phản hồi đã gửi ({bugs.length})
-                  </h4>
-                  <div className="space-y-2">
-                    {bugs.map((b) => (
-                      <div
-                        key={b.id}
-                        className="bg-white p-3 rounded-2xl border border-slate-200 text-xs flex items-start justify-between gap-3"
-                      >
-                        <div>
-                          <span className="font-bold text-slate-800 block">
-                            {b.lessonTitle || 'Ứng dụng chung'}: {b.description}
-                          </span>
-                          <span className="text-slate-400 text-[11px]">
-                            {new Date(b.timestamp).toLocaleString('vi-VN')}
-                          </span>
-                        </div>
-                        <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-emerald-100 text-emerald-800 shrink-0">
-                          Đã tiếp nhận
+                      <div>
+                        <span className="font-bold text-white block">
+                          {b.lessonTitle || 'Ứng dụng chung'}: {b.description}
+                        </span>
+                        <span className="text-slate-400 text-[11px]">
+                          {new Date(b.timestamp).toLocaleString('vi-VN')}
                         </span>
                       </div>
-                    ))}
-                  </div>
+                      <span className="px-2.5 py-0.5 rounded-full font-bold text-[10px] bg-emerald-500/20 text-emerald-200 border border-emerald-400/35 shrink-0">
+                        Đã tiếp nhận
+                      </span>
+                    </div>
+                  ))}
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* SubTab 4: Methodology Thinking Models & Mindmaps */}
+        {activeSubTab === 'methodology' && (
+          <div className="space-y-6 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-indigo-950/90 via-[#0C194B] to-fuchsia-950/80 rounded-3xl p-6 text-white border border-cyan-300/40 shadow-[0_0_28px_rgba(34,211,238,0.16)] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <span className="w-12 h-12 rounded-2xl bg-cyan-400/15 border border-cyan-300/35 flex items-center justify-center text-3xl shadow-inner shrink-0">
+                  🧠
+                </span>
+                <div>
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400/20 text-amber-200 border border-amber-300/35 px-2.5 py-0.5 rounded-full">
+                    HỆ THỐNG BÀI KIỂM TRA ĐỊNH KỲ TƯ DUY
+                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-white mt-1.5">
+                    Kiểm Tra Định Kỳ &amp; Sơ Đồ Mô Hình Toán Lớp 3
+                  </h3>
+                  <p className="text-xs text-cyan-100/80 mt-0.5 leading-relaxed">
+                    Giúp bé hiểu bản chất từng dạng toán, vượt qua chốt chặn định kỳ và mở khóa hành trình tiếp theo.
+                  </p>
+                </div>
+              </div>
+              {onOpenMethodology && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playClick();
+                    onOpenMethodology();
+                  }}
+                  className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95 transition-all shrink-0"
+                >
+                  Vào Bài Kiểm Tra Định Kỳ →
+                </button>
               )}
             </div>
-          )}
 
-          {/* SubTab 4: Methodology Thinking Models & Mindmaps */}
-          {activeSubTab === 'methodology' && (
-            <div className="space-y-6 max-w-4xl mx-auto">
-              <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 text-white shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3.5">
-                  <span className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner shrink-0">
-                    🧠
-                  </span>
+            {/* Model 1: Comparison Bar Model */}
+            <div className="bg-[#070D28]/90 rounded-3xl border border-cyan-300/35 p-6 shadow-[0_14px_34px_rgba(3,7,24,0.55)] space-y-4">
+              <div className="flex items-center justify-between border-b border-cyan-300/15 pb-3 flex-wrap gap-2">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">📊</span>
                   <div>
-                    <span className="text-[10px] font-black uppercase tracking-wider bg-black/20 text-amber-100 px-2.5 py-0.5 rounded-full">
-                      HỆ THỐNG BÀI KIỂM TRA ĐỊNH KỲ TƯ DUY
-                    </span>
-                    <h3 className="text-base sm:text-lg font-black mt-1">
-                      Kiểm Tra Định Kỳ &amp; Sơ Đồ Mô Hình Toán Lớp 3
-                    </h3>
-                    <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-                      Giúp bé hiểu bản chất từng dạng toán, vượt qua chốt chặn định kỳ và mở khóa hành trình tiếp theo.
+                    <h4 className="font-black text-white text-sm sm:text-base">
+                      Mô Hình 1: So Sánh Hơn - Kém &amp; Bản Chất Phép Trừ
+                    </h4>
+                    <p className="text-xs text-slate-300">
+                      Áp dụng ở Trạm 1 (Biểu đồ dữ liệu) &amp; Trạm 2 (Thể tích Lít &amp; Dung tích)
                     </p>
                   </div>
                 </div>
-                {onOpenMethodology && (
+                <span className="text-xs font-black text-emerald-200 bg-emerald-500/20 border border-emerald-400/40 px-2.5 py-1 rounded-full">
+                  Chốt chặn định kỳ
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="bg-sky-500/10 rounded-2xl p-4 border border-sky-400/30 space-y-2">
+                  <div className="font-black text-sky-200 text-sm">
+                    1. Bản Chất 2 Đoạn Thẳng &amp; Định Nghĩa
+                  </div>
+                  <ul className="space-y-1.5 text-slate-200 list-disc list-inside">
+                    <li><strong>Đoạn dài:</strong> Luôn đại diện cho <em>Số Lớn (Nhiều hơn)</em>.</li>
+                    <li><strong>Đoạn ngắn:</strong> Đại diện cho <em>Số Bé (Ít hơn)</em>.</li>
+                    <li><strong>"Nhiều hơn":</strong> Phần dôi ra vượt mức của số bé.</li>
+                    <li><strong>"Ít hơn":</strong> Khoảng còn thiếu để bằng số lớn.</li>
+                    <li><strong>Tính đối xứng:</strong> A hơn B bao nhiêu thì B kém A bấy nhiêu!</li>
+                  </ul>
+                </div>
+
+                <div className="bg-amber-500/10 rounded-2xl p-4 border border-amber-400/30 space-y-2">
+                  <div className="font-black text-amber-200 text-sm">
+                    2. Cơ Chế Phép Trừ &amp; San Sẻ
+                  </div>
+                  <ul className="space-y-1.5 text-slate-200 list-disc list-inside">
+                    <li><strong>Vì sao dùng phép trừ:</strong> Cắt bỏ phần bằng nhau, giữ lại duy nhất phần chênh lệch.</li>
+                    <li><strong>Công thức 1:</strong> <code className="px-1.5 py-0.5 rounded bg-white/10 text-cyan-200">Chênh Lệch = Số Lớn － Số Bé</code></li>
+                    <li><strong>Công thức 2:</strong> <code className="px-1.5 py-0.5 rounded bg-white/10 text-cyan-200">Số Lớn = Số Bé ＋ Phần Hơn</code></li>
+                    <li><strong>Mô hình san sẻ đều:</strong> Abby rót sang Benny một nửa chênh lệch: <code className="px-1.5 py-0.5 rounded bg-white/10 text-cyan-200">Chênh Lệch : 2</code>.</li>
+                  </ul>
+                </div>
+              </div>
+
+              {onOpenMethodology && (
+                <div className="pt-2 flex justify-end">
                   <button
                     type="button"
                     onClick={() => {
                       sound.playClick();
                       onOpenMethodology();
                     }}
-                    className="px-5 py-2.5 rounded-2xl bg-white text-orange-600 hover:bg-orange-50 font-black text-xs sm:text-sm whitespace-nowrap shadow-md active:scale-95 transition-transform shrink-0"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-xs shadow-[0_0_20px_rgba(34,211,238,0.35)] flex items-center gap-2 active:scale-95 transition-all"
                   >
-                    Vào Bài Kiểm Tra Định Kỳ →
+                    <Brain className="w-4 h-4 text-slate-900" />
+                    <span>Mở Bài Kiểm Tra Định Kỳ Mô Hình Này</span>
+                    <span>→</span>
                   </button>
-                )}
-              </div>
-
-              {/* Model 1: Comparison Bar Model */}
-              <div className="bg-white rounded-3xl border-2 border-amber-300 p-6 shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b pb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">📊</span>
-                    <div>
-                      <h4 className="font-black text-slate-800 text-sm sm:text-base">
-                        Mô Hình 1: So Sánh Hơn - Kém &amp; Bản Chất Phép Trừ
-                      </h4>
-                      <p className="text-xs text-slate-500">
-                        Áp dụng ở Trạm 1 (Biểu đồ dữ liệu) &amp; Trạm 2 (Thể tích Lít &amp; Dung tích)
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
-                    Chốt chặn định kỳ
-                  </span>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div className="bg-sky-50 rounded-2xl p-4 border border-sky-200 space-y-2">
-                    <div className="font-black text-sky-900 text-sm">
-                      1. Bản Chất 2 Đoạn Thẳng &amp; Định Nghĩa
-                    </div>
-                    <ul className="space-y-1.5 text-slate-700 list-disc list-inside">
-                      <li><strong>Đoạn dài:</strong> Luôn đại diện cho <em>Số Lớn (Nhiều hơn)</em>.</li>
-                      <li><strong>Đoạn ngắn:</strong> Đại diện cho <em>Số Bé (Ít hơn)</em>.</li>
-                      <li><strong>"Nhiều hơn":</strong> Phần dôi ra vượt mức của số bé.</li>
-                      <li><strong>"Ít hơn":</strong> Khoảng còn thiếu để bằng số lớn.</li>
-                      <li><strong>Tính đối xứng:</strong> A hơn B bao nhiêu thì B kém A bấy nhiêu!</li>
-                    </ul>
-                  </div>
-
-                  <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200 space-y-2">
-                    <div className="font-black text-amber-900 text-sm">
-                      2. Cơ Chế Phép Trừ &amp; San Sẻ
-                    </div>
-                    <ul className="space-y-1.5 text-slate-700 list-disc list-inside">
-                      <li><strong>Vì sao dùng phép trừ:</strong> Cắt bỏ phần bằng nhau, giữ lại duy nhất phần chênh lệch.</li>
-                      <li><strong>Công thức 1:</strong> <code>Chênh Lệch = Số Lớn － Số Bé</code></li>
-                      <li><strong>Công thức 2:</strong> <code>Số Lớn = Số Bé ＋ Phần Hơn</code></li>
-                      <li><strong>Mô hình san sẻ đều:</strong> Abby rót sang Benny một nửa chênh lệch: <code>Chênh Lệch : 2</code>.</li>
-                    </ul>
-                  </div>
-                </div>
-
-                {onOpenMethodology && (
-                  <div className="pt-2 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        sound.playClick();
-                        onOpenMethodology();
-                      }}
-                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs shadow-sm flex items-center gap-2 active:scale-95 transition-all"
-                    >
-                      <Brain className="w-4 h-4 text-amber-200" />
-                      <span>Mở Bài Kiểm Tra Định Kỳ Mô Hình Này</span>
-                      <span>→</span>
-                    </button>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-          )}
-        </div>
-
-        {/* Modal Footer */}
-        <div className="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
-            <Award className="w-4 h-4 text-amber-500" />
-            <span>Sổ Thu Thập Lỗi · Spark Math Singapore Pedagogy</span>
           </div>
-          {!isFullPageTab && (
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-5 py-2 rounded-2xl bg-white border-2 border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 shadow-2xs transition-colors"
-            >
-              Đóng
-            </button>
-          )}
-        </div>
+        )}
       </div>
+
+      {/* Modal Footer */}
+      <div className="bg-[#060B24]/90 border-t border-cyan-300/25 px-6 py-3.5 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
+          <Award className="w-4 h-4 text-amber-300" />
+          <span>Sổ Thu Thập Lỗi · Spark Math Singapore Pedagogy</span>
+        </div>
+        {!isFullPageTab && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-5 py-2 rounded-2xl bg-white/[0.08] hover:bg-cyan-400/20 border border-white/15 hover:border-cyan-300/60 hover:shadow-[0_0_16px_rgba(34,211,238,0.35)] text-xs font-bold text-white transition-all"
+          >
+            Đóng
+          </button>
+        )}
+      </div>
+    </div>
   );
 
   if (isFullPageTab) {
@@ -975,7 +986,7 @@ export const MistakeNotebookModal: React.FC<MistakeNotebookModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 md:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#030617]/80 backdrop-blur-md p-3 md:p-6 overflow-y-auto">
       {content}
     </div>
   );
