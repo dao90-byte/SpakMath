@@ -200,6 +200,7 @@ const CPAConcretePanel: React.FC<{
         {concrete.groups.map((g: CPAConcreteGroup, idx: number) => {
           const isSelected = selectedGroupIdx === idx;
           const hideNumbers = !isAnswered && !!g.isUnknown;
+          const hasBeforeBadge = !isAnswered && !!g.beforeSolveBadge;
           const groupFill = harmonizeCpaFillColor(g.color);
           const groupInk = getApcaReadableInk(groupFill);
           const mode =
@@ -224,9 +225,13 @@ const CPAConcretePanel: React.FC<{
             (g.id === 'cg_intervals' ||
               (g.id === 'cg_objects' && pictorial.unknownTarget !== 'total_length'));
 
-          const maskCount = isRemainderFullGroupsUnknown || isIntervalCountUnknown;
+          const maskCount =
+            (!isAnswered && !!g.hideCountBeforeSolve) ||
+            isRemainderFullGroupsUnknown ||
+            isIntervalCountUnknown;
           const maskUnitValue =
             hideNumbers &&
+            !g.showUnitValueBeforeSolve &&
             !isRemainderFullGroupsUnknown &&
             (pictorial.kind !== 'interval_model' ||
               pictorial.unknownTarget === 'step_length' ||
@@ -240,7 +245,9 @@ const CPAConcretePanel: React.FC<{
               : Math.min(g.count, 8);
 
           // Format badge & bottom footer cleanly per domain displayMode
-          let badgeText = hideNumbers
+          let badgeText = hasBeforeBadge
+            ? g.beforeSolveBadge!
+            : hideNumbers
             ? `? ${concrete.unitLabel}`
             : `${g.totalValue} ${concrete.unitLabel}`;
           let footerText = `${maskCount ? '?' : g.count} phần × ${maskUnitValue ? '?' : g.unitValue}`;
@@ -259,6 +266,30 @@ const CPAConcretePanel: React.FC<{
                 ? `${g.count} nhóm × ${g.unitValue}`
                 : `? nhóm`;
               footerText = `${maskCount ? '?' : g.count} nhóm × ${g.unitValue}/nhóm`;
+            }
+          } else if (mode === 'groups') {
+            // Non-remainder grouping (e.g., equal bags/bottles/cups in measurement_lab or equal packs in bar_model)
+            const unitSuffix = concrete.unitLabel ? ` ${concrete.unitLabel}` : '';
+            if (maskCount) {
+              badgeText = isAnswered
+                ? `${g.count} nhóm`
+                : '? nhóm';
+              footerText = isAnswered
+                ? `${g.count} × ${g.unitValue}${unitSuffix} = ${g.totalValue}${unitSuffix}`
+                : `? × ${g.unitValue}${unitSuffix}`;
+            } else if (hideNumbers && g.showUnitValueBeforeSolve) {
+              badgeText = `?${unitSuffix}`;
+              footerText = `${g.count} × ${g.unitValue}${unitSuffix} = ?`;
+            } else if (hideNumbers) {
+              badgeText = `?${unitSuffix}`;
+              footerText = `${g.count} nhóm × ?${unitSuffix}`;
+            } else {
+              badgeText = hasBeforeBadge
+                ? g.beforeSolveBadge!
+                : `${g.totalValue}${unitSuffix}`;
+              footerText = hasBeforeBadge
+                ? `${g.count} × ${g.unitValue}${unitSuffix}`
+                : `${g.count} × ${g.unitValue}${unitSuffix} = ${g.totalValue}${unitSuffix}`;
             }
           } else if (mode === 'interval' && pictorial.kind === 'interval_model') {
             if (g.id === 'cg_intervals') {
@@ -289,10 +320,43 @@ const CPAConcretePanel: React.FC<{
                   : `Điểm mốc: ${isAnswered || isObjectsGiven ? g.count : '?'}`;
             }
           } else if (mode === 'measurement') {
-            badgeText = hideNumbers ? '?' : `${g.totalValue}`;
-            footerText = hideNumbers
-              ? 'Đổi về cùng đơn vị chuẩn'
-              : `Giá trị đo: ${g.totalValue}`;
+            const unitSuffix = concrete.unitLabel ? ` ${concrete.unitLabel}` : '';
+            if (hasBeforeBadge) {
+              badgeText = g.beforeSolveBadge!;
+              footerText =
+                pictorial.kind === 'perimeter_shape'
+                  ? 'Dữ kiện hình học từ đề bài'
+                  : 'Dữ kiện đo từ đề bài';
+            } else if (hideNumbers) {
+              badgeText = maskCount ? '?' : `?${unitSuffix}`;
+              if (pictorial.kind === 'perimeter_shape') {
+                footerText = g.showUnitValueBeforeSolve
+                  ? `${g.count} × ${g.unitValue}${unitSuffix} = ?`
+                  : maskCount
+                  ? 'Đếm số đoạn cạnh bao quanh viền ngoài'
+                  : 'Đại lượng hình học cần tìm';
+              } else if (pictorial.kind === 'measurement_lab') {
+                footerText =
+                  pictorial.operation === 'unit_convert'
+                    ? 'Đổi về cùng đơn vị chuẩn'
+                    : 'Đại lượng cần tìm';
+              } else {
+                footerText = 'Đại lượng cần tìm';
+              }
+            } else {
+              badgeText = `${g.totalValue}${unitSuffix}`;
+              if (pictorial.kind === 'perimeter_shape') {
+                footerText =
+                  g.count > 1
+                    ? `${g.count} cạnh × ${g.unitValue}${unitSuffix}`
+                    : `Độ dài: ${g.totalValue}${unitSuffix}`;
+              } else {
+                footerText = `Giá trị đo: ${g.totalValue}${unitSuffix}`;
+              }
+            }
+          } else if (hasBeforeBadge) {
+            badgeText = g.beforeSolveBadge!;
+            footerText = `${g.count} × ${g.unitValue}`;
           }
 
           return (
@@ -329,7 +393,9 @@ const CPAConcretePanel: React.FC<{
                   >
                     {g.icon}{' '}
                     {mode === 'measurement'
-                      ? hideNumbers
+                      ? hasBeforeBadge
+                        ? g.beforeSolveBadge
+                        : hideNumbers
                         ? '?'
                         : g.totalValue
                       : mode === 'interval' && g.id === 'cg_objects'
@@ -638,7 +704,7 @@ const CPASvgBarModelDiagram: React.FC<{
                         >
                           {bar.isSymbolicOnly
                             ? '1 phần'
-                            : bar.isUnknown && !isAnswered
+                            : bar.isUnknown && !isAnswered && !bar.showKnownUnitValue
                             ? '?'
                             : bar.unitValue}
                         </text>
@@ -794,6 +860,8 @@ const CPASvgBarModelDiagram: React.FC<{
             const braceText =
               pictorial.totalBracket.isUnknown && !isAnswered
                 ? pictorial.totalBracket.displayLabel
+                : /nửa chu vi/i.test(pictorial.totalBracket.displayLabel)
+                ? `Nửa CV = ${pictorial.totalBracket.numericValue}`
                 : `Tổng = ${pictorial.totalBracket.numericValue}`;
             return (
               <g>
@@ -847,7 +915,7 @@ const CPASvgBarModelDiagram: React.FC<{
                 : (
                   <>
                     {sel.units} phần ×{' '}
-                    {sel.isUnknown && !isAnswered ? '?' : sel.unitValue}
+                    {sel.isUnknown && !isAnswered && !sel.showKnownUnitValue ? '?' : sel.unitValue}
                     {sel.offsetValue
                       ? maskSelOffset
                         ? sel.offsetValue < 0
@@ -1852,7 +1920,7 @@ function getDisplaySecondaryReading(reading: string, isAnswered: boolean): strin
   if (isAnswered) return reading;
   if (reading.includes('?')) return reading;
   const safePrefixPattern =
-    /^(Rót ra:|Cắt đi:|Bình B:|Nửa hũ:|Phần chồng =|Lấy ra:|Nửa thùng:|BC =|Đĩa trái:|Nửa bình:|Rót 4 cốc|Mối nối chồng:|Rót bớt:|Vỏ \+ Nửa|Mỗi chỗ dán|1 Bưởi =|Nửa can:|Lấy đi:|Cắt bớt:|Chia đều|Rót 3 cốc)/;
+    /^(Rót ra:|Rót đầy |Cắt đi:|Bình B:|Nửa hũ:|Phần chồng =|Lấy ra:|Nửa thùng:|BC =|Đĩa trái:|Đĩa phải:|Phải:|Nửa bình:|Rót \d+ cốc|Mối nối chồng:|Rót bớt:|Vỏ \+ Nửa|Mỗi chỗ dán|1 Bưởi =|Nửa can:|Lấy đi:|Cắt bớt:|Chia đều|Đã có:|Hiện có:|Giỏ 2:|Vỏ hộp:|Vỏ hũ:|Mỗi túi:|Mỗi chai:|Mỗi tách:|Mỗi cốc:|Giỏ nửa táo:|Thùng B:|Thùng nửa:|Chai nửa:|Còn nửa|Đã uống:|Múc |Tìm:)/;
   if (safePrefixPattern.test(reading)) return reading;
 
   const eqIdx = reading.indexOf('=');
@@ -1879,6 +1947,7 @@ const CPASvgMeasurementDiagram: React.FC<{
 }> = ({ pictorial, isAnswered }) => {
   const {
     subtype,
+    operation,
     chartItems,
     primaryReading,
     secondaryReading,
@@ -1951,27 +2020,39 @@ const CPASvgMeasurementDiagram: React.FC<{
       const fullVal = visualParams?.givenA || 1500;
       const halfVal = visualParams?.givenB || 900;
       const unit = visualParams?.unitA || 'g';
-      const fullLabel = visualParams?.labelA || `Đầy (${fullVal} ${unit})`;
-      const halfLabel = visualParams?.labelB || `Một nửa (${halfVal} ${unit})`;
-      const barX = 175;
-      const shellW = 86;
-      const halfContentW = 180;
+      const fullLabel = visualParams?.labelA
+        ? /\d/.test(visualParams.labelA)
+          ? visualParams.labelA
+          : `${visualParams.labelA} (${fullVal} ${unit})`
+        : `Đầy (${fullVal} ${unit})`;
+      const halfLabel = visualParams?.labelB
+        ? /\d/.test(visualParams.labelB)
+          ? visualParams.labelB
+          : `${visualParams.labelB} (${halfVal} ${unit})`
+        : `Một nửa (${halfVal} ${unit})`;
+      const barX = 186;
+      const shellW = 84;
+      const halfContentW = 176;
 
       return (
         <svg viewBox="0 0 720 154" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Sơ đồ tách vỏ và phần ruột">
           {/* Row 1: Full = Shell + Half + Half */}
-          <text x={14} y={48} fill="#E2E8F0" fontSize="11.5" fontWeight="800">{fullLabel}</text>
+          <text x={12} y={48} fill="#E2E8F0" fontSize="11" fontWeight="800">{fullLabel}</text>
           <rect x={barX} y={28} width={shellW} height={32} rx={6} fill="#475569" stroke="#CBD5E1" strokeWidth="1.2" />
-          <text x={barX + shellW / 2} y={48} textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="800">Vỏ (?)</text>
+          <text x={barX + shellW / 2} y={48} textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="800">
+            {isAnswered ? `Vỏ (${expectedNumericResult})` : 'Vỏ (?)'}
+          </text>
           <rect x={barX + shellW + 2} y={28} width={halfContentW} height={32} rx={4} fill="#F59E0B" stroke="#FDE68A" strokeWidth="1.2" />
           <text x={barX + shellW + 2 + halfContentW / 2} y={48} textAnchor="middle" fill="#05081D" fontSize="11" fontWeight="900">Nửa ruột (1/2)</text>
           <rect x={barX + shellW + halfContentW + 4} y={28} width={halfContentW} height={32} rx={6} fill="#FBBF24" stroke="#FEF3C7" strokeWidth="1.4" strokeDasharray="4 3" />
           <text x={barX + shellW + halfContentW + 4 + halfContentW / 2} y={48} textAnchor="middle" fill="#05081D" fontSize="11" fontWeight="900">Nửa ruột lấy ra</text>
 
           {/* Row 2: Half = Shell + Half */}
-          <text x={14} y={96} fill="#E2E8F0" fontSize="11.5" fontWeight="800">{halfLabel}</text>
+          <text x={12} y={96} fill="#E2E8F0" fontSize="11" fontWeight="800">{halfLabel}</text>
           <rect x={barX} y={76} width={shellW} height={32} rx={6} fill="#475569" stroke="#CBD5E1" strokeWidth="1.2" />
-          <text x={barX + shellW / 2} y={96} textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="800">Vỏ (?)</text>
+          <text x={barX + shellW / 2} y={96} textAnchor="middle" fill="#FFFFFF" fontSize="11" fontWeight="800">
+            {isAnswered ? `Vỏ (${expectedNumericResult})` : 'Vỏ (?)'}
+          </text>
           <rect x={barX + shellW + 2} y={76} width={halfContentW} height={32} rx={6} fill="#F59E0B" stroke="#FDE68A" strokeWidth="1.2" />
           <text x={barX + shellW + 2 + halfContentW / 2} y={96} textAnchor="middle" fill="#05081D" fontSize="11" fontWeight="900">Nửa ruột còn lại</text>
 
@@ -2027,68 +2108,245 @@ const CPASvgMeasurementDiagram: React.FC<{
       );
     }
 
-    // 4. Equalize Transfer Beakers (Pour Half Difference from A to B)
+    // 4. Equalize Transfer Diagram (Unit- & Subtype-Aware: Cargo Crates for Mass, Beakers for Volume)
     if (mode === 'equalize_pour') {
       const a = visualParams?.givenA || 750;
       const b = visualParams?.givenB || 350;
+      const eqUnit = resultUnit || visualParams?.unitA || 'mL';
+      const isMassTransfer = subtype === 'weight_balance' || eqUnit === 'g' || eqUnit === 'kg';
       const maxCap = Math.max(a, b, 1) * 1.12;
       const hA = Math.max(24, (a / maxCap) * 86);
       const hB = Math.max(24, (b / maxCap) * 86);
       const eqH = (hA + hB) / 2;
+      const formatLabel = (raw: string | undefined, fallbackPrefix: string, val: number) => {
+        if (!raw) return `${fallbackPrefix} (${val} ${eqUnit})`;
+        return /\d/.test(raw) ? raw : `${raw} (${val} ${eqUnit})`;
+      };
+      const lblA = formatLabel(visualParams?.labelA, isMassTransfer ? 'Thùng A' : 'Bình A', a);
+      const lblB = formatLabel(visualParams?.labelB, isMassTransfer ? 'Thùng B' : 'Bình B', b);
+      const actionVerb = isMassTransfer ? 'Chuyển' : 'Rót';
 
       return (
-        <svg viewBox="0 0 720 156" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Sơ đồ rót nước san bằng hai bình">
-          {/* Beaker A */}
-          <rect x={140} y={24} width={116} height={96} rx={10} fill="rgba(15,23,42,0.75)" stroke="#38BDF8" strokeWidth="2" />
-          <rect x={144} y={118 - hA} width={108} height={hA} rx={6} fill="rgba(14,165,233,0.72)" />
+        <svg
+          viewBox="0 0 720 156"
+          className="w-full h-auto min-w-[500px] select-none"
+          role="img"
+          aria-label={isMassTransfer ? 'Sơ đồ san đều khối lượng hai thùng' : 'Sơ đồ rót nước san bằng hai bình'}
+        >
+          {/* Container A */}
+          <rect
+            x={140}
+            y={24}
+            width={116}
+            height={96}
+            rx={isMassTransfer ? 6 : 10}
+            fill="rgba(15,23,42,0.75)"
+            stroke={isMassTransfer ? '#F59E0B' : '#38BDF8'}
+            strokeWidth="2"
+          />
+          <rect
+            x={144}
+            y={118 - hA}
+            width={108}
+            height={hA}
+            rx={isMassTransfer ? 4 : 6}
+            fill={isMassTransfer ? 'rgba(245,158,11,0.72)' : 'rgba(14,165,233,0.72)'}
+          />
           <line x1={134} y1={118 - eqH} x2={264} y2={118 - eqH} stroke="#FBBF24" strokeWidth="1.6" strokeDasharray="4 4" />
           <text x={198} y={142} textAnchor="middle" fill="#E0F2FE" fontSize="11.5" fontWeight="800">
-            {visualParams?.labelA || `Bình A (${a} mL)`}
+            {lblA}
           </text>
 
-          {/* Curved Pour Arrow */}
+          {/* Curved Transfer Arrow */}
           <path d="M 272 52 Q 360 12 448 52" fill="none" stroke="#FBBF24" strokeWidth="2.5" strokeDasharray="5 4" />
           <polygon points="448,52 436,44 439,56" fill="#FBBF24" />
           <text x={360} y={24} textAnchor="middle" fill="#FDE68A" fontSize="11.5" fontWeight="900">
-            {isAnswered ? `Rót ${expectedNumericResult} mL` : 'Rót 1/2 phần hơn = ? mL'}
+            {isAnswered
+              ? `${actionVerb} ${expectedNumericResult} ${eqUnit}`
+              : `${actionVerb} 1/2 phần hơn = ? ${eqUnit}`}
           </text>
 
-          {/* Beaker B */}
-          <rect x={464} y={24} width={116} height={96} rx={10} fill="rgba(15,23,42,0.75)" stroke="#34D399" strokeWidth="2" />
-          <rect x={468} y={118 - hB} width={108} height={hB} rx={6} fill="rgba(16,185,129,0.72)" />
+          {/* Container B */}
+          <rect
+            x={464}
+            y={24}
+            width={116}
+            height={96}
+            rx={isMassTransfer ? 6 : 10}
+            fill="rgba(15,23,42,0.75)"
+            stroke="#34D399"
+            strokeWidth="2"
+          />
+          <rect
+            x={468}
+            y={118 - hB}
+            width={108}
+            height={hB}
+            rx={isMassTransfer ? 4 : 6}
+            fill="rgba(16,185,129,0.72)"
+          />
           <line x1={458} y1={118 - eqH} x2={588} y2={118 - eqH} stroke="#FBBF24" strokeWidth="1.6" strokeDasharray="4 4" />
           <text x={522} y={142} textAnchor="middle" fill="#D1FAE5" fontSize="11.5" fontWeight="800">
-            {visualParams?.labelB || `Bình B (${b} mL)`}
+            {lblB}
           </text>
         </svg>
       );
     }
 
-    // 5. Weight Balance / Take-Away Weight Diagram
+    // 5. Weight Balance / Mass Operations Diagram
     if (subtype === 'weight_balance') {
-      // Subtraction on weight (e.g. bag of rice take-away) -> Part-Whole Subtraction Bar, NOT an equal two-pan balance!
+      const resUnit = resultUnit || visualParams?.unitA || 'g';
+
+      // 5A. Mass Addition (Part A + Part B = Total) -> Part-Whole Sum Bar, NOT an equal two-pan balance!
+      if (mode === 'sum') {
+        const partALabel = primaryReading || visualParams?.labelA || 'Phần thứ nhất';
+        const partBLabel =
+          (secondaryReading ? getDisplaySecondaryReading(secondaryReading, isAnswered) : undefined) ||
+          visualParams?.labelB ||
+          'Phần thứ hai';
+        return (
+          <svg viewBox="0 0 720 138" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Sơ đồ cộng khối lượng sau quy đổi">
+            <rect x={60} y={24} width={356} height={38} rx={6} fill="#0284C7" stroke="#7DD3FC" strokeWidth="1.4" />
+            <text x={238} y={48} textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="900">
+              {partALabel}
+            </text>
+            <rect x={418} y={24} width={242} height={38} rx={6} fill="#0D9488" stroke="#5EEAD4" strokeWidth="1.4" />
+            <text x={539} y={48} textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="900">
+              {partBLabel}
+            </text>
+            <path d={buildHorizontalCurlyBracePath(60, 660, 72, 12, 'down')} fill="none" stroke="#FBBF24" strokeWidth="2.2" />
+            <text x={360} y={114} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="800">
+              {isAnswered
+                ? `Đổi cùng đơn vị (${resUnit}) rồi cộng ➔ Tổng = ${expectedNumericResult} ${resUnit}`
+                : `Đổi cùng đơn vị (${resUnit}) rồi cộng ➔ Tổng = ? ${resUnit}`}
+            </text>
+          </svg>
+        );
+      }
+
+      // 5B. Equal Packaging / Mass-to-Bag Count Division (Total kg ÷ pack size g = ? bags)
+      // Preserve two-pan balance scale for per-item balance problems (e.g., "3 hộp sữa = 900 g")
+      if (
+        mode === 'divide_equal' &&
+        visualParams?.givenB &&
+        !visualParams?.givenCount &&
+        resUnit !== 'g' &&
+        resUnit !== 'kg'
+      ) {
+        const packSize = visualParams.givenB;
+        const packUnit = visualParams?.unitA || 'g';
+        return (
+          <svg viewBox="0 0 720 144" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Sơ đồ chia đều khối lượng vào các túi">
+            {/* Total weight bar on top */}
+            <text x={360} y={20} textAnchor="middle" fill="#67E8F9" fontSize="12" fontWeight="800">
+              {primaryReading || 'Tổng khối lượng'}
+            </text>
+            <path d={buildHorizontalCurlyBracePath(60, 440, 38, 10, 'up')} fill="none" stroke="#38BDF8" strokeWidth="2" />
+            {/* Sample equal packets */}
+            {[0, 1, 2].map((idx) => (
+              <g key={idx}>
+                <rect x={60 + idx * 96} y={46} width={90} height={38} rx={7} fill="#0284C7" stroke="#7DD3FC" strokeWidth="1.4" />
+                <text x={105 + idx * 96} y={69} textAnchor="middle" fill="#FFFFFF" fontSize="11.5" fontWeight="900">
+                  {packSize} {packUnit}
+                </text>
+              </g>
+            ))}
+            <rect x={348} y={46} width={92} height={38} rx={7} fill="rgba(56,189,248,0.18)" stroke="#7DD3FC" strokeWidth="1.4" strokeDasharray="4 4" />
+            <text x={394} y={69} textAnchor="middle" fill="#BAE6FD" fontSize="12" fontWeight="900">
+              ... ({packSize} {packUnit})
+            </text>
+
+            {/* Arrow & Count Result Box */}
+            <line x1={454} y1={65} x2={494} y2={65} stroke="#FBBF24" strokeWidth="2.4" strokeDasharray="4 3" />
+            <polygon points="494,65 484,59 484,71" fill="#FBBF24" />
+            <rect x={502} y={36} width={174} height={58} rx={12} fill="rgba(16,185,129,0.18)" stroke="#34D399" strokeWidth="1.6" />
+            <text x={589} y={58} textAnchor="middle" fill="#A7F3D0" fontSize="11" fontWeight="800">
+              Số {resUnit} chia được
+            </text>
+            <text x={589} y={80} textAnchor="middle" fill="#FFFFFF" fontSize="14" fontWeight="900">
+              {isAnswered ? `${expectedNumericResult} ${resUnit}` : `? ${resUnit}`}
+            </text>
+
+            <text x={360} y={122} textAnchor="middle" fill="#FDE68A" fontSize="12" fontWeight="800">
+              {isAnswered
+                ? `Đổi sang ${packUnit} rồi chia cho ${packSize} ${packUnit} ➔ ${expectedNumericResult} ${resUnit}`
+                : `Đổi sang ${packUnit} rồi chia đều mỗi phần ${packSize} ${packUnit} ➔ ? ${resUnit}`}
+            </text>
+          </svg>
+        );
+      }
+
+      // 5C. Subtraction / Complement / Tare Weight -> Part-Whole Subtraction Bar, NOT an equal two-pan balance!
       if (mode === 'subtract') {
-        const resUnit = visualParams?.unitA || resultUnit || 'g';
+        const subUnit = visualParams?.unitA || resultUnit || 'g';
+        const isComplement =
+          /^Mục tiêu/i.test(primaryReading || '') || /Đã có/i.test(visualParams?.labelB || secondaryReading || '');
+        const isTare =
+          operation === 'tare_weight' || /Vỏ/i.test(visualParams?.labelB || secondaryReading || '');
+        const topLabel = primaryReading || visualParams?.labelA || 'Khối lượng ban đầu';
+        const knownSubVal = visualParams?.givenB;
+        const formatRightPart = (raw: string | undefined, fallback: string) => {
+          const base = raw || fallback;
+          if (knownSubVal !== undefined && !/\d/.test(base)) {
+            return `${base}: ${knownSubVal} ${subUnit}`;
+          }
+          return base;
+        };
+
+        if (isComplement) {
+          return (
+            <svg viewBox="0 0 720 142" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Sơ đồ bù khối lượng cho đủ mục tiêu">
+              <text x={360} y={22} textAnchor="middle" fill="#67E8F9" fontSize="12" fontWeight="800">
+                {topLabel}
+              </text>
+              <path d={buildHorizontalCurlyBracePath(60, 660, 42, 10, 'up')} fill="none" stroke="#38BDF8" strokeWidth="2" />
+              <rect x={60} y={48} width={260} height={38} rx={6} fill="#0284C7" stroke="#7DD3FC" strokeWidth="1.4" />
+              <text x={190} y={72} textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="900">
+                {formatRightPart(secondaryReading || visualParams?.labelB, 'Đã có')}
+              </text>
+              <rect x={322} y={48} width={338} height={38} rx={6} fill="rgba(245,158,11,0.28)" stroke="#FBBF24" strokeWidth="1.6" strokeDasharray="4 3" />
+              <text x={491} y={72} textAnchor="middle" fill="#FEF3C7" fontSize="12" fontWeight="900">
+                {isAnswered ? `Cần đặt thêm: ${expectedNumericResult} ${subUnit}` : `Cần đặt thêm: ? ${subUnit}`}
+              </text>
+              <text x={360} y={118} textAnchor="middle" fill="#FDE68A" fontSize="12" fontWeight="800">
+                {isAnswered
+                  ? `Đổi cùng đơn vị (${subUnit}) rồi tìm phần thiếu ➔ Cần thêm ${expectedNumericResult} ${subUnit}`
+                  : `Đổi cùng đơn vị (${subUnit}) rồi tìm phần còn thiếu ➔ Cần thêm = ? ${subUnit}`}
+              </text>
+            </svg>
+          );
+        }
+
+        const leftCaption = isTare ? 'Phần ruột' : 'Còn lại';
+        const rightLabel = formatRightPart(
+          visualParams?.labelB || (secondaryReading ? getDisplaySecondaryReading(secondaryReading, isAnswered) : undefined),
+          isTare ? 'Vỏ hộp' : 'Lấy ra'
+        );
+
         return (
           <svg viewBox="0 0 720 142" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Sơ đồ trừ khối lượng sau quy đổi">
             <text x={360} y={22} textAnchor="middle" fill="#67E8F9" fontSize="12" fontWeight="800">
-              {visualParams?.labelA || primaryReading || 'Khối lượng ban đầu'}
+              {topLabel}
             </text>
             <path d={buildHorizontalCurlyBracePath(60, 660, 42, 10, 'up')} fill="none" stroke="#38BDF8" strokeWidth="2" />
-            {/* Remaining part */}
+            {/* Remaining / Net part */}
             <rect x={60} y={48} width={376} height={38} rx={6} fill="#0284C7" stroke="#7DD3FC" strokeWidth="1.4" />
             <text x={248} y={72} textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="900">
-              {isAnswered ? `Còn lại: ${expectedNumericResult} ${resUnit}` : `Còn lại: ? ${resUnit}`}
+              {isAnswered ? `${leftCaption}: ${expectedNumericResult} ${subUnit}` : `${leftCaption}: ? ${subUnit}`}
             </text>
-            {/* Removed part */}
+            {/* Removed / Tare part */}
             <rect x={438} y={48} width={222} height={38} rx={6} fill="rgba(244,63,94,0.68)" stroke="#FDA4AF" strokeWidth="1.4" strokeDasharray="4 3" />
             <text x={549} y={72} textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="900">
-              {visualParams?.labelB || (secondaryReading ? getDisplaySecondaryReading(secondaryReading, isAnswered) : 'Lấy ra')}
+              {rightLabel}
             </text>
             <text x={360} y={118} textAnchor="middle" fill="#FDE68A" fontSize="12" fontWeight="800">
               {isAnswered
-                ? `Đổi cùng đơn vị (${resUnit}) rồi trừ phần lấy ra ➔ Còn lại ${expectedNumericResult} ${resUnit}`
-                : `Đổi cùng đơn vị (${resUnit}) rồi trừ phần lấy ra ➔ Còn lại = ? ${resUnit}`}
+                ? isTare
+                  ? `Đổi cùng đơn vị (${subUnit}) rồi trừ phần vỏ ➔ ${leftCaption} = ${expectedNumericResult} ${subUnit}`
+                  : `Đổi cùng đơn vị (${subUnit}) rồi trừ phần lấy ra ➔ ${leftCaption} ${expectedNumericResult} ${subUnit}`
+                : isTare
+                ? `Đổi cùng đơn vị (${subUnit}) rồi trừ phần vỏ ➔ ${leftCaption} = ? ${subUnit}`
+                : `Đổi cùng đơn vị (${subUnit}) rồi trừ phần lấy ra ➔ ${leftCaption} = ? ${subUnit}`}
             </text>
           </svg>
         );
@@ -2117,16 +2375,16 @@ const CPASvgMeasurementDiagram: React.FC<{
           {/* Left Pan */}
           <line x1={194} y1={52} x2={164} y2={92} stroke="#94A3B8" strokeWidth="1.5" />
           <line x1={194} y1={52} x2={224} y2={92} stroke="#94A3B8" strokeWidth="1.5" />
-          <rect x={110} y={88} width={168} height={34} rx={8} fill="rgba(14,165,233,0.22)" stroke="#38BDF8" strokeWidth="1.5" />
-          <text x={194} y={109} textAnchor="middle" fill="#F8FAFC" fontSize="11.5" fontWeight="800">
+          <rect x={92} y={88} width={204} height={34} rx={8} fill="rgba(14,165,233,0.22)" stroke="#38BDF8" strokeWidth="1.5" />
+          <text x={194} y={109} textAnchor="middle" fill="#F8FAFC" fontSize={leftPanText.length > 22 ? '10.5' : '11.5'} fontWeight="800">
             {leftPanText}
           </text>
 
           {/* Right Pan */}
           <line x1={526} y1={52} x2={496} y2={92} stroke="#94A3B8" strokeWidth="1.5" />
           <line x1={526} y1={52} x2={556} y2={92} stroke="#94A3B8" strokeWidth="1.5" />
-          <rect x={442} y={88} width={168} height={34} rx={8} fill="rgba(251,191,36,0.2)" stroke="#FBBF24" strokeWidth="1.5" />
-          <text x={526} y={109} textAnchor="middle" fill="#FEF3C7" fontSize="11.5" fontWeight="800">
+          <rect x={424} y={88} width={204} height={34} rx={8} fill="rgba(251,191,36,0.2)" stroke="#FBBF24" strokeWidth="1.5" />
+          <text x={526} y={109} textAnchor="middle" fill="#FEF3C7" fontSize={rightPanText.length > 22 ? '10.5' : '11.5'} fontWeight="800">
             {rightPanText}
           </text>
 
@@ -2141,39 +2399,91 @@ const CPASvgMeasurementDiagram: React.FC<{
       );
     }
 
-    // 6. Graduated Cylinder Volume Beaker
+    // 6. Graduated Cylinder Volume Beaker (Context- & Unit-Aware for convert / sum / subtract / complement / divide_equal)
     if (subtype === 'volume_beaker') {
       const a = visualParams?.givenA || 2000;
       const b = visualParams?.givenB || 600;
-      const remainRatio = mode === 'subtract' ? Math.max(0.18, (a - b) / Math.max(a, 1)) : 0.72;
-      const fillH = Math.round(remainRatio * 84);
+      const outUnit = resultUnit || visualParams?.unitB || visualParams?.unitA || 'mL';
+      const isComplement =
+        mode === 'subtract' &&
+        (/Vạch đầy|Mục tiêu/i.test(primaryReading || '') || /Hiện có/i.test(secondaryReading || visualParams?.labelB || ''));
+      const isWorkingBackwards =
+        mode === 'sum' && /Làm ngược|ban đầu/i.test(conversionRule || '');
+      const isCountDivision =
+        mode === 'divide_equal' && outUnit !== 'mL' && outUnit !== 'L';
+
+      const fillRatio = isComplement
+        ? Math.min(0.85, Math.max(0.18, b / Math.max(a, 1)))
+        : mode === 'subtract'
+        ? Math.min(0.88, Math.max(0.18, (a - b) / Math.max(a, 1)))
+        : 0.72;
+      const fillH = Math.round(fillRatio * 84);
+
+      const beakerLabel =
+        mode === 'convert' || mode === 'divide_equal'
+          ? primaryReading || visualParams?.labelA || 'Bình ban đầu'
+          : isComplement
+          ? secondaryReading || visualParams?.labelB || 'Hiện có'
+          : visualParams?.labelA || primaryReading || 'Bình ban đầu';
+
+      const arrowLabel =
+        mode === 'convert'
+          ? conversionRule || '1 L = 1 000 mL'
+          : isComplement
+          ? `Rót thêm tới ${primaryReading?.replace(/^[^:]+:\s*/, '') || '1 L'}`
+          : isWorkingBackwards
+          ? 'Đi ngược phép tính'
+          : mode === 'divide_equal'
+          ? secondaryReading
+            ? getDisplaySecondaryReading(secondaryReading, isAnswered)
+            : 'Chia đều'
+          : visualParams?.labelB ||
+            (secondaryReading ? getDisplaySecondaryReading(secondaryReading, isAnswered) : 'Chia / Rót');
+
+      const resultBoxHeader =
+        mode === 'convert'
+          ? 'Kết quả sau quy đổi'
+          : isComplement
+          ? 'Lượng nước cần rót thêm'
+          : isWorkingBackwards
+          ? 'Lượng nước lúc đầu'
+          : mode === 'sum'
+          ? 'Tổng dung tích'
+          : isCountDivision
+          ? `Số ${outUnit} rót được`
+          : mode === 'divide_equal'
+          ? 'Mỗi chai / phần chứa'
+          : 'Lượng nước còn lại';
 
       return (
         <svg viewBox="0 0 720 146" className="w-full h-auto min-w-[500px] select-none" role="img" aria-label="Bình chia độ đo thể tích">
           {/* Main Beaker */}
-          <rect x={120} y={24} width={124} height={96} rx={10} fill="rgba(15,23,42,0.8)" stroke="#38BDF8" strokeWidth="2" />
-          <rect x={124} y={118 - fillH} width={116} height={fillH} rx={6} fill="rgba(56,189,248,0.62)" />
+          <rect x={110} y={24} width={128} height={96} rx={10} fill="rgba(15,23,42,0.8)" stroke="#38BDF8" strokeWidth="2" />
+          <rect x={114} y={118 - fillH} width={120} height={fillH} rx={6} fill="rgba(56,189,248,0.62)" />
+          {isComplement && (
+            <line x1={108} y1={32} x2={240} y2={32} stroke="#FBBF24" strokeWidth="2" strokeDasharray="4 4" />
+          )}
           {[0, 1, 2, 3].map((t) => (
-            <line key={t} x1={124} y1={38 + t * 22} x2={140} y2={38 + t * 22} stroke="#BAE6FD" strokeWidth="1.4" />
+            <line key={t} x1={114} y1={38 + t * 22} x2={130} y2={38 + t * 22} stroke="#BAE6FD" strokeWidth="1.4" />
           ))}
-          <text x={182} y={138} textAnchor="middle" fill="#E0F2FE" fontSize="11.5" fontWeight="800">
-            {visualParams?.labelA || primaryReading || 'Bình ban đầu'}
+          <text x={174} y={138} textAnchor="middle" fill="#E0F2FE" fontSize={beakerLabel.length > 22 ? '10.5' : '11.5'} fontWeight="800">
+            {beakerLabel}
           </text>
 
           {/* Action Arrow */}
-          <line x1={264} y1={72} x2={376} y2={72} stroke="#FBBF24" strokeWidth="2.5" strokeDasharray="5 4" />
-          <polygon points="376,72 364,65 364,79" fill="#FBBF24" />
-          <text x={320} y={58} textAnchor="middle" fill="#FDE68A" fontSize="11.5" fontWeight="900">
-            {visualParams?.labelB || (secondaryReading ? getDisplaySecondaryReading(secondaryReading, isAnswered) : 'Chia / Rót')}
+          <line x1={254} y1={72} x2={386} y2={72} stroke="#FBBF24" strokeWidth="2.5" strokeDasharray="5 4" />
+          <polygon points="386,72 374,65 374,79" fill="#FBBF24" />
+          <text x={320} y={56} textAnchor="middle" fill="#FDE68A" fontSize={arrowLabel.length > 24 ? '10' : '11'} fontWeight="900">
+            {arrowLabel}
           </text>
 
           {/* Result Callout Box */}
-          <rect x={396} y={40} width={224} height={64} rx={12} fill="rgba(16,185,129,0.16)" stroke="#34D399" strokeWidth="1.6" />
-          <text x={508} y={66} textAnchor="middle" fill="#A7F3D0" fontSize="11" fontWeight="800">
-            {mode === 'divide_equal' ? 'Mỗi chai / phần chứa' : 'Lượng nước còn lại'}
+          <rect x={402} y={40} width={224} height={64} rx={12} fill="rgba(16,185,129,0.16)" stroke="#34D399" strokeWidth="1.6" />
+          <text x={514} y={66} textAnchor="middle" fill="#A7F3D0" fontSize="11" fontWeight="800">
+            {resultBoxHeader}
           </text>
-          <text x={508} y={88} textAnchor="middle" fill="#FFFFFF" fontSize="14" fontWeight="900">
-            {isAnswered ? `${expectedNumericResult} ${visualParams?.unitA || 'mL'}` : `? ${visualParams?.unitA || 'mL'}`}
+          <text x={514} y={88} textAnchor="middle" fill="#FFFFFF" fontSize="14" fontWeight="900">
+            {isAnswered ? `${expectedNumericResult} ${outUnit}` : `? ${outUnit}`}
           </text>
         </svg>
       );
@@ -2395,6 +2705,9 @@ const CPASvgPerimeterDiagram: React.FC<{
     showInteractiveShift,
     widthLabel,
     heightLabel,
+    hidePerimeterBeforeSolve,
+    stepCount,
+    gateLabel,
   } = pictorial;
 
   const showLengthVal =
@@ -2403,19 +2716,34 @@ const CPASvgPerimeterDiagram: React.FC<{
     isAnswered || (unknownTarget !== 'side' && unknownTarget !== 'width');
   const showPerimVal =
     isAnswered ||
-    (unknownTarget !== 'perimeter' &&
+    (!hidePerimeterBeforeSolve &&
+      unknownTarget !== 'perimeter' &&
       unknownTarget !== 'half_perimeter' &&
       unknownTarget !== 'fence_with_gate');
   const showRecessVal = isAnswered || unknownTarget !== 'recess_depth';
 
-  const wText =
-    widthLabel ||
-    (showLengthVal ? `${outerWidth} ${unitLabel}` : `? ${unitLabel}`);
-  const hText =
-    heightLabel ||
-    (showWidthVal ? `${outerHeight} ${unitLabel}` : `? ${unitLabel}`);
+  const wText = widthLabel
+    ? isAnswered && !widthLabel.includes(String(outerWidth))
+      ? `${widthLabel} (= ${outerWidth} ${unitLabel})`
+      : widthLabel
+    : showLengthVal
+    ? `${outerWidth} ${unitLabel}`
+    : `? ${unitLabel}`;
+  const hText = heightLabel
+    ? isAnswered && !heightLabel.includes(String(outerHeight))
+      ? `${heightLabel} (= ${outerHeight} ${unitLabel})`
+      : heightLabel
+    : showWidthVal
+    ? `${outerHeight} ${unitLabel}`
+    : `? ${unitLabel}`;
   const pText = showPerimVal
-    ? `Chu vi = ${expectedPerimeter} ${unitLabel}`
+    ? unknownTarget === 'fence_with_gate' && gateWidth
+      ? `Hàng rào = ${expectedPerimeter - gateWidth} ${unitLabel}`
+      : unknownTarget === 'half_perimeter'
+      ? `Nửa chu vi = ${expectedPerimeter / 2} ${unitLabel}`
+      : `Chu vi = ${expectedPerimeter} ${unitLabel}`
+    : hidePerimeterBeforeSolve
+    ? `Chu vi (không đổi) = ? ${unitLabel}`
     : unknownTarget === 'half_perimeter'
     ? `Nửa chu vi = ? ${unitLabel}`
     : unknownTarget === 'fence_with_gate' && gateWidth
@@ -2569,12 +2897,12 @@ const CPASvgPerimeterDiagram: React.FC<{
                 fontSize="12"
                 fontWeight="800"
               >
-                Cổng ra vào: {gateWidth} {unitLabel} (không rào)
+                {gateLabel || `Cổng ra vào: ${gateWidth} ${unitLabel} (không rào)`}
               </text>
             </>
           )}
           {/* Length & Width labels */}
-          <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill={shiftedView ? '#FDE68A' : '#E0F2FE'} fontSize="14" fontWeight="800">
+          <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill={shiftedView ? '#FDE68A' : '#E0F2FE'} fontSize={wText.length > 22 ? '12.5' : '14'} fontWeight="800">
             Chiều dài = {wText}
           </text>
           <text x={ox + boxW + 14} y={oy + boxH / 2 + 5} textAnchor="start" fill={shiftedView ? '#FDE68A' : '#BAE6FD'} fontSize="13.5" fontWeight="800">
@@ -2587,6 +2915,8 @@ const CPASvgPerimeterDiagram: React.FC<{
           <text x={ox + boxW / 2} y={oy + boxH / 2 + 16} textAnchor="middle" fill="#CBD5E1" fontSize="11.5" fontWeight="700">
             {shiftedView
               ? 'Chu vi = Nửa chu vi × 2'
+              : isAnswered && unknownTarget === 'fence_with_gate' && gateWidth
+              ? `Chu vi ${expectedPerimeter} ${unitLabel} − Cổng ${gateWidth} ${unitLabel}`
               : '2 cạnh dài bằng nhau · 2 cạnh rộng bằng nhau'}
           </text>
         </svg>
@@ -2606,10 +2936,24 @@ const CPASvgPerimeterDiagram: React.FC<{
       const stepX = ox + boxW - cw;
       const stepY = oy + ch;
 
+      const buildStaircasePoints = (steps: number) => {
+        const n = Math.max(2, Math.min(6, steps));
+        const pts: string[] = [`${ox},${oy}`];
+        for (let i = 1; i <= n; i++) {
+          const sx = ox + Math.round((boxW * i) / n);
+          const syTop = oy + Math.round((boxH * (i - 1)) / n);
+          const syBot = oy + Math.round((boxH * i) / n);
+          pts.push(`${sx},${syTop}`);
+          pts.push(`${sx},${syBot}`);
+        }
+        pts.push(`${ox},${oy + boxH}`);
+        return pts.join(' ');
+      };
+
       const polyPoints =
         shapeKind === 'l_shape'
           ? `${ox},${oy} ${stepX},${oy} ${stepX},${stepY} ${ox + boxW},${stepY} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`
-          : `${ox},${oy} ${ox + Math.round(boxW * 0.34)},${oy} ${ox + Math.round(boxW * 0.34)},${oy + Math.round(boxH * 0.33)} ${ox + Math.round(boxW * 0.67)},${oy + Math.round(boxH * 0.33)} ${ox + Math.round(boxW * 0.67)},${oy + Math.round(boxH * 0.66)} ${ox + boxW},${oy + Math.round(boxH * 0.66)} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`;
+          : buildStaircasePoints(stepCount || 3);
 
       return (
         <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ dời cạnh tính chu vi hình ghép">
@@ -2723,11 +3067,12 @@ const CPASvgPerimeterDiagram: React.FC<{
         boxH * Math.min(0.55, Math.max(0.28, (recessDepth || outerHeight * 0.4) / Math.max(1, outerHeight)))
       );
       const rWidthPx = Math.round(
-        boxW * Math.min(0.45, Math.max(0.26, (recessWidth || outerWidth * 0.34) / Math.max(1, outerWidth)))
+        boxW * Math.min(0.45, Math.max(0.28, (recessWidth || outerWidth * 0.34) / Math.max(1, outerWidth)))
       );
       const notchLeft = ox + Math.round((boxW - rWidthPx) / 2);
       const notchRight = notchLeft + rWidthPx;
       const notchBottom = oy + rDepthPx;
+      const recessTag = `+${showRecessVal ? `${recessDepth}` : '?'}`;
 
       const uPoints = `${ox},${oy} ${notchLeft},${oy} ${notchLeft},${notchBottom} ${notchRight},${notchBottom} ${notchRight},${oy} ${ox + boxW},${oy} ${ox + boxW},${oy + boxH} ${ox},${oy + boxH}`;
 
@@ -2752,7 +3097,7 @@ const CPASvgPerimeterDiagram: React.FC<{
             strokeLinejoin="round"
           />
 
-          {/* Highlight the 2 EXTRA vertical recessed walls */}
+          {/* Highlight the 2 EXTRA vertical recessed walls (Amber Gold #F59E0B) */}
           <line
             x1={notchLeft}
             y1={oy}
@@ -2794,26 +3139,46 @@ const CPASvgPerimeterDiagram: React.FC<{
             </>
           )}
 
-          {/* Labels for the 2 recessed walls */}
+          {/* High-contrast pill badges for the 2 recessed walls (safely centered inside the left/right U-arms) */}
+          <rect
+            x={Math.round((ox + notchLeft) / 2) - 18}
+            y={oy + Math.round(rDepthPx / 2) - 10}
+            width={36}
+            height={20}
+            rx={6}
+            fill="rgba(15,23,42,0.88)"
+            stroke="#F59E0B"
+            strokeWidth="1.2"
+          />
           <text
-            x={notchLeft - 8}
-            y={oy + rDepthPx / 2 + 4}
-            textAnchor="end"
+            x={Math.round((ox + notchLeft) / 2)}
+            y={oy + Math.round(rDepthPx / 2) + 4}
+            textAnchor="middle"
             fill="#FCD34D"
-            fontSize="12"
+            fontSize="11.5"
             fontWeight="900"
           >
-            +{showRecessVal ? `${recessDepth}` : '?'}
+            {recessTag}
           </text>
+          <rect
+            x={Math.round((notchRight + ox + boxW) / 2) - 18}
+            y={oy + Math.round(rDepthPx / 2) - 10}
+            width={36}
+            height={20}
+            rx={6}
+            fill="rgba(15,23,42,0.88)"
+            stroke="#F59E0B"
+            strokeWidth="1.2"
+          />
           <text
-            x={notchRight + 8}
-            y={oy + rDepthPx / 2 + 4}
-            textAnchor="start"
+            x={Math.round((notchRight + ox + boxW) / 2)}
+            y={oy + Math.round(rDepthPx / 2) + 4}
+            textAnchor="middle"
             fill="#FCD34D"
-            fontSize="12"
+            fontSize="11.5"
             fontWeight="900"
           >
-            +{showRecessVal ? `${recessDepth}` : '?'}
+            {recessTag}
           </text>
 
           {/* Outer labels */}
@@ -2825,7 +3190,7 @@ const CPASvgPerimeterDiagram: React.FC<{
           </text>
           <text x={ox + boxW / 2} y={oy - 12} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="800">
             {shiftedView
-              ? 'Khung ngoài + 2 cạnh lõm màu vàng!'
+              ? 'Khung ngoài + 2 cạnh lõm màu vàng cam!'
               : pText}
           </text>
         </svg>
@@ -2838,6 +3203,12 @@ const CPASvgPerimeterDiagram: React.FC<{
     const totalH = cellSize * gridRows;
     const jx = Math.round((560 - totalW) / 2);
     const jy = Math.round((238 - totalH) / 2) + 4;
+    const showJoinedSideVal = isAnswered || unknownTarget !== 'side';
+    const joinedSideDisplay = squareSide
+      ? showJoinedSideVal
+        ? `${squareSide} ${unitLabel}/ô`
+        : `? ${unitLabel}/ô`
+      : wText;
 
     return (
       <svg viewBox="0 0 560 250" className="w-full h-auto max-h-[245px]" role="img" aria-label="Sơ đồ ghép các hình vuông bằng nhau">
@@ -2879,10 +3250,10 @@ const CPASvgPerimeterDiagram: React.FC<{
 
         {/* Labels */}
         <text x={jx + totalW / 2} y={jy - 12} textAnchor="middle" fill="#E0F2FE" fontSize="13.5" fontWeight="800">
-          {gridCols} ô ngang ({squareSide ? `${squareSide} ${unitLabel}/ô` : wText})
+          {gridCols} ô ngang ({joinedSideDisplay})
         </text>
         <text x={jx + totalW + 12} y={jy + totalH / 2 + 4} textAnchor="start" fill="#BAE6FD" fontSize="13" fontWeight="800">
-          {gridRows} ô cao
+          {gridRows === 1 ? '1 hàng cao' : `${gridRows} hàng cao`}
         </text>
         <text x={jx + totalW / 2} y={jy + totalH + 22} textAnchor="middle" fill="#FDE68A" fontSize="12.5" fontWeight="800">
           Đường nét đứt bên trong KHÔNG tính vào chu vi · {pText}

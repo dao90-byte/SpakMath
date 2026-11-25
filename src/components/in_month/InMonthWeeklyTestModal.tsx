@@ -417,7 +417,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   {liveScores.passed
                     ? weeklyTest.unlocksDayNumber
                       ? `Chúc mừng em! Đạt ${liveScores.totalScore}/100 điểm (≥ ${weeklyTest.passingScore}%). Toàn bộ bài học của Tuần ${weeklyTest.weekNumber + 1} (bắt đầu từ Ngày ${weeklyTest.unlocksDayNumber}) đã chính thức được mở khóa!`
-                      : `Chúc mừng em đã hoàn thành trọn vẹn Bài Kiểm Tra 15 Phút Tuần 5 với ${liveScores.totalScore}/100 điểm và sẵn sàng bước vào Kỳ Thi Tổng Kết Cuối Tháng 11!`
+                      : `Chúc mừng em đã hoàn thành trọn vẹn Bài Kiểm Tra 15 Phút Tuần 5 với ${liveScores.totalScore}/100 điểm và sẵn sàng bước vào Kỳ Thi Tổng Kết Cuối ${weeklyTest.monthLabel}!`
                     : `Em đạt ${liveScores.totalScore}/100 điểm. Để mở khóa các bài học của tuần kế tiếp, em cần đạt tối thiểu ${weeklyTest.passingScore}/100 điểm. Hãy xem lại hướng dẫn từng câu bên dưới và bấm "Làm Lại Bài Kiểm Tra Ngay" nhé!`}
                 </p>
               </div>
@@ -499,7 +499,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                     className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-300 via-orange-400 to-pink-400 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-2 shadow-[0_0_32px_rgba(251,191,36,0.5)] cursor-pointer transition-all"
                   >
                     <Trophy className="w-4 h-4" aria-hidden="true" />
-                    <span>Bước Vào Kỳ Thi Cuối Tháng 11</span>
+                    <span>Bước Vào Kỳ Thi Cuối {weeklyTest.monthLabel}</span>
                   </button>
                 )}
               </div>

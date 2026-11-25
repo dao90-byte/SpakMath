@@ -93,6 +93,7 @@ export function makeBarSpec(params: {
   isUnknown?: boolean;
   hideOffsetBeforeSolve?: boolean;
   isSymbolicOnly?: boolean;
+  showKnownUnitValue?: boolean;
   color: string;
   highlightNote?: string;
   deltaType?: 'added' | 'removed' | 'transferred_in' | 'transferred_out';
@@ -110,6 +111,7 @@ export function makeBarSpec(params: {
     isUnknown: params.isUnknown,
     hideOffsetBeforeSolve: params.hideOffsetBeforeSolve,
     isSymbolicOnly: params.isSymbolicOnly,
+    showKnownUnitValue: params.showKnownUnitValue,
     color: params.color,
     highlightNote: params.highlightNote,
     deltaType: params.deltaType,

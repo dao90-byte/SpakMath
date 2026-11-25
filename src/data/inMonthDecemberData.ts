@@ -194,9 +194,7 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
   const revRectL = revRectW + 6 + (day % 2) * 2; // 18, 17, 20, 19, 22, 21, 24
   const revRectP = (revRectL + revRectW) * 2;
 
-  // Unit conversion: L in dm, W in cm
-  const dmL = 2 + (day % 4); // 3, 4, 5, 2, 3, 4, 5 dm -> 30..50 cm
-  const cmW = 12 + day * 2; // 14..26 cm (always < dmL*10? Check: if dmL=2 -> 20cm; for day=4 cmW=20, make dmL >= 3)
+  // Unit conversion: L in dm, W in cm (safeDmL >= 3 so safeCmL is always strictly > safeCmW)
   const safeDmL = 3 + (day % 4); // 4, 5, 6, 3, 4, 5, 6 dm -> 30..60 cm
   const safeCmL = safeDmL * 10;
   const safeCmW = 10 + day * 2; // 12..24 cm (strictly < 30..60)
@@ -207,12 +205,6 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
   const ratioMult = day % 2 === 0 ? 3 : 2;
   const ratioL = ratioW * ratioMult;
   const ratioP = (ratioL + ratioW) * 2;
-
-  // Difference rectangle: L = W + diff
-  const diffW = 11 + day; // 12..18
-  const diffDelta = 4 + day; // 5..11
-  const diffL = diffW + diffDelta;
-  const diffP = (diffL + diffW) * 2;
 
   // Reverse find Width given P & L
   const findW_L = 18 + day * 2; // 20..32
@@ -275,6 +267,7 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
               totalValue: sqPerim,
               color: '#38BDF8',
               isUnknown: true,
+              showUnitValueBeforeSolve: true,
               displayMode: 'measurement',
             },
           ],
@@ -383,8 +376,8 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Nhóm thành 2 cặp (1 Dài + 1 Rộng) để tính chu vi nhanh gọn',
           interactiveRule: `Chiều dài = ${rectL} m, chiều rộng = ${rectW} m. Hình có 2 cặp như thế.`,
           groups: [
-            { id: 'g_l', label: '2 cạnh dài', icon: '🟦', count: 2, unitValue: rectL, totalValue: rectL * 2, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_w', label: '2 cạnh rộng', icon: '🟨', count: 2, unitValue: rectW, totalValue: rectW * 2, color: '#F59E0B', displayMode: 'measurement' },
+            { id: 'g_l', label: '2 cạnh dài', icon: '🟦', count: 2, unitValue: rectL, totalValue: rectL * 2, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `2 × ${rectL} m` },
+            { id: 'g_w', label: '2 cạnh rộng', icon: '🟨', count: 2, unitValue: rectW, totalValue: rectW * 2, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: `2 × ${rectW} m` },
           ],
         },
         {
@@ -557,7 +550,7 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           actionPrompt: `Quy đổi ${safeDmL} dm về đơn vị cm (1 dm = 10 cm) rồi tính chu vi`,
           interactiveRule: `Dài = ${safeDmL} dm, Rộng = ${safeCmW} cm. Phải cùng đơn vị cm trước khi cộng!`,
           groups: [
-            { id: 'g_dl', label: `Chiều dài (${safeDmL} dm)`, icon: '📏', count: safeDmL, unitValue: 10, totalValue: safeCmL, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_dl', label: `Chiều dài (${safeDmL} dm)`, icon: '📏', count: safeDmL, unitValue: 10, totalValue: safeCmL, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${safeDmL} dm` },
             { id: 'g_cw', label: 'Chiều rộng', icon: '📐', count: 1, unitValue: safeCmW, totalValue: safeCmW, color: '#F59E0B', displayMode: 'measurement' },
           ],
         },
@@ -615,7 +608,7 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           interactiveRule: `Chiều rộng = ${ratioW} m (1 phần), Chiều dài = ${ratioMult} phần.`,
           groups: [
             { id: 'g_rw', label: 'Chiều rộng (1 phần)', icon: '📐', count: 1, unitValue: ratioW, totalValue: ratioW, color: '#34D399', displayMode: 'measurement' },
-            { id: 'g_rl', label: `Chiều dài (${ratioMult} phần)`, icon: '📏', count: ratioMult, unitValue: ratioW, totalValue: ratioL, color: '#38BDF8', isUnknown: true, displayMode: 'measurement' },
+            { id: 'g_rl', label: `Chiều dài (${ratioMult} phần)`, icon: '📏', count: ratioMult, unitValue: ratioW, totalValue: ratioL, color: '#38BDF8', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'measurement' },
           ],
         },
         {
@@ -727,8 +720,8 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Tính chu vi cả 4 mặt vườn rồi trừ đi phần lối cổng không cần rào',
           interactiveRule: `Chiều dài = ${gardenL} m, chiều rộng = ${gardenW} m, cổng mở = ${gate} m.`,
           groups: [
-            { id: 'g_gl', label: '2 cạnh dài', icon: '🌿', count: 2, unitValue: gardenL, totalValue: gardenL * 2, color: '#34D399', displayMode: 'measurement' },
-            { id: 'g_gw', label: '2 cạnh rộng', icon: '🌱', count: 2, unitValue: gardenW, totalValue: gardenW * 2, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_gl', label: '2 cạnh dài', icon: '🌿', count: 2, unitValue: gardenL, totalValue: gardenL * 2, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: `2 × ${gardenL} m` },
+            { id: 'g_gw', label: '2 cạnh rộng', icon: '🌱', count: 2, unitValue: gardenW, totalValue: gardenW * 2, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `2 × ${gardenW} m` },
             { id: 'g_gate', label: 'Chừa lối cổng', icon: '🚪', count: 1, unitValue: gate, totalValue: gate, color: '#F59E0B', displayMode: 'measurement' },
           ],
         },
@@ -786,7 +779,7 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Sợi dây không đổi độ dài nên Chu vi hai hình bằng nhau!',
           interactiveRule: `Chu vi hình chữ nhật = Chu vi hình vuông cạnh ${wireSqSide} cm.`,
           groups: [
-            { id: 'g_wire', label: `Hình vuông (4 × ${wireSqSide} cm)`, icon: '➰', count: 4, unitValue: wireSqSide, totalValue: wireP, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_wire', label: `Hình vuông (4 × ${wireSqSide} cm)`, icon: '➰', count: 4, unitValue: wireSqSide, totalValue: wireP, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `4 × ${wireSqSide} cm` },
             { id: 'g_rw', label: 'Chiều rộng mới', icon: '📐', count: 1, unitValue: wireRectW, totalValue: wireRectW, color: '#F59E0B', displayMode: 'measurement' },
             { id: 'g_rl', label: 'Chiều dài mới', icon: '📏', count: 1, unitValue: wireRectL, totalValue: wireRectL, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
           ],
@@ -799,6 +792,7 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           unitLabel: 'cm',
           unknownTarget: 'length',
           expectedPerimeter: wireP,
+          hidePerimeterBeforeSolve: true,
           sideShiftHint: 'Cùng 1 sợi dây ➔ Chu vi bảo toàn. Chia đôi chu vi để tìm (Dài + Rộng)!',
           showInteractiveShift: true,
         },
@@ -878,7 +872,8 @@ function buildWeek1Questions(day: number): InMonthQuestion[] {
           totalBracket: {
             targetBarIds: ['bar_w', 'bar_l'],
             numericValue: chHalf,
-            displayLabel: `Nửa chu vi = ${chP} : 2`,
+            displayLabel: 'Nửa chu vi = ?',
+            isUnknown: true,
           },
         },
         {
@@ -1054,8 +1049,8 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Đếm các đoạn viền xanh bên ngoài (bỏ qua đường nét đứt chung ở giữa)',
           interactiveRule: `Mỗi hình vuông có cạnh ${sq1} cm. Khi ghép 2 hình vuông có 6 đoạn cạnh nằm ở viền ngoài.`,
           groups: [
-            { id: 'g_top', label: 'Viền trên + dưới (4 đoạn)', icon: '🟦', count: 4, unitValue: sq1, totalValue: sq1 * 4, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_side', label: 'Viền trái + phải (2 đoạn)', icon: '🟩', count: 2, unitValue: sq1, totalValue: sq1 * 2, color: '#34D399', displayMode: 'measurement' },
+            { id: 'g_top', label: 'Viền trên + dưới (4 đoạn)', icon: '🟦', count: 4, unitValue: sq1, totalValue: sq1 * 4, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `4 × ${sq1} cm` },
+            { id: 'g_side', label: 'Viền trái + phải (2 đoạn)', icon: '🟩', count: 2, unitValue: sq1, totalValue: sq1 * 2, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: `2 × ${sq1} cm` },
           ],
         },
         {
@@ -1111,8 +1106,8 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Quan sát 2 cạnh chung bị ẩn bên trong, chỉ cộng đường viền bao ngoài',
           interactiveRule: `3 viên gạch cạnh ${sq2} cm ghép thành 1 hàng ngang.`,
           groups: [
-            { id: 'g_h', label: 'Trên + Dưới (6 đoạn)', icon: '🧱', count: 6, unitValue: sq2, totalValue: sq2 * 6, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_v', label: 'Trái + Phải (2 đoạn)', icon: '🧱', count: 2, unitValue: sq2, totalValue: sq2 * 2, color: '#F59E0B', displayMode: 'measurement' },
+            { id: 'g_h', label: 'Trên + Dưới (6 đoạn)', icon: '🧱', count: 6, unitValue: sq2, totalValue: sq2 * 6, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `6 × ${sq2} cm` },
+            { id: 'g_v', label: 'Trái + Phải (2 đoạn)', icon: '🧱', count: 2, unitValue: sq2, totalValue: sq2 * 2, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: `2 × ${sq2} cm` },
           ],
         },
         {
@@ -1168,8 +1163,8 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Bấm nút "Dời cạnh tạo Hình chữ nhật" ở Bước 2 để chứng minh chu vi không hề giảm đi!',
           interactiveRule: `Khung hình chữ nhật bao ngoài có chiều ngang ${lW} cm và chiều cao ${lH} cm.`,
           groups: [
-            { id: 'g_lw', label: 'Chiều ngang bao ngoài', icon: '↔️', count: 2, unitValue: lW, totalValue: lW * 2, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_lh', label: 'Chiều cao bao ngoài', icon: '↕️', count: 2, unitValue: lH, totalValue: lH * 2, color: '#F59E0B', displayMode: 'measurement' },
+            { id: 'g_lw', label: 'Chiều ngang bao ngoài', icon: '↔️', count: 2, unitValue: lW, totalValue: lW * 2, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `2 × ${lW} cm` },
+            { id: 'g_lh', label: 'Chiều cao bao ngoài', icon: '↕️', count: 2, unitValue: lH, totalValue: lH * 2, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: `2 × ${lH} cm` },
           ],
         },
         {
@@ -1226,8 +1221,8 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Bấm nút Dời cạnh để thấy tổng mọi bậc ngang = đáy, tổng mọi bậc đứng = chiều cao',
           interactiveRule: `Đáy ngang = ${stW} cm, Chiều cao = ${stH} cm.`,
           groups: [
-            { id: 'g_stw', label: 'Đáy + Tổng bậc ngang', icon: '🪜', count: 2, unitValue: stW, totalValue: stW * 2, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_sth', label: 'Cạnh trái + Tổng bậc đứng', icon: '📐', count: 2, unitValue: stH, totalValue: stH * 2, color: '#34D399', displayMode: 'measurement' },
+            { id: 'g_stw', label: 'Đáy + Tổng bậc ngang', icon: '🪜', count: 2, unitValue: stW, totalValue: stW * 2, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `2 × ${stW} cm` },
+            { id: 'g_sth', label: 'Cạnh trái + Tổng bậc đứng', icon: '📐', count: 2, unitValue: stH, totalValue: stH * 2, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: `2 × ${stH} cm` },
           ],
         },
         {
@@ -1285,8 +1280,8 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Bấm "Dời cạnh & Soi 2 cạnh lõm" để không bỏ sót 2 thành đứng màu vàng!',
           interactiveRule: `Khung ngoài ${uW} cm × ${uH} cm, cộng thêm 2 thành lõm sâu ${uDepth} cm.`,
           groups: [
-            { id: 'g_ubox', label: `Khung ngoài (${uW}×${uH})`, icon: '⬜', count: 2, unitValue: uW + uH, totalValue: 2 * (uW + uH), color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_urec', label: `2 cạnh lõm thừa`, icon: '⚡', count: 2, unitValue: uDepth, totalValue: 2 * uDepth, color: '#F59E0B', displayMode: 'measurement' },
+            { id: 'g_ubox', label: `Khung ngoài (${uW}×${uH})`, icon: '⬜', count: 2, unitValue: uW + uH, totalValue: 2 * (uW + uH), color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `Khung ${uW}×${uH} cm` },
+            { id: 'g_urec', label: `2 cạnh lõm thừa`, icon: '⚡', count: 2, unitValue: uDepth, totalValue: 2 * uDepth, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: `2 × ${uDepth} cm` },
           ],
         },
         {
@@ -1346,8 +1341,8 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Xác định chiều dài (3 ô) và chiều rộng (2 ô) của hình chữ nhật lớn',
           interactiveRule: `Mỗi ô vuông nhỏ có cạnh ${gridSq} cm.`,
           groups: [
-            { id: 'g_gl', label: 'Chiều dài (3 ô)', icon: '🟦', count: 3, unitValue: gridSq, totalValue: gridSq * 3, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_gw', label: 'Chiều rộng (2 ô)', icon: '🟩', count: 2, unitValue: gridSq, totalValue: gridSq * 2, color: '#34D399', displayMode: 'measurement' },
+            { id: 'g_gl', label: 'Chiều dài (3 ô)', icon: '🟦', count: 3, unitValue: gridSq, totalValue: gridSq * 3, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `3 × ${gridSq} cm` },
+            { id: 'g_gw', label: 'Chiều rộng (2 ô)', icon: '🟩', count: 2, unitValue: gridSq, totalValue: gridSq * 2, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: `2 × ${gridSq} cm` },
           ],
         },
         {
@@ -1403,7 +1398,7 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Chú ý: nhát cắt ở giữa tạo ra cạnh mới cho mỗi hình vuông có cạnh bằng chiều rộng!',
           interactiveRule: `Mỗi hình vuông sau khi cắt có 4 cạnh đều bằng ${cutSqSide} cm.`,
           groups: [
-            { id: 'g_sq1', label: '1 hình vuông (4 cạnh)', icon: '✂️', count: 4, unitValue: cutSqSide, totalValue: oneSqP, color: '#38BDF8', isUnknown: true, displayMode: 'measurement' },
+            { id: 'g_sq1', label: '1 hình vuông (4 cạnh)', icon: '✂️', count: 4, unitValue: cutSqSide, totalValue: oneSqP, color: '#38BDF8', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'measurement' },
           ],
         },
         {
@@ -1453,10 +1448,10 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
         {
           itemName: 'đoạn cạnh viền ngoài',
           unitLabel: 'cm',
-          actionPrompt: 'Đếm tổng số đoạn cạnh hình vuông chạy xung quanh đường viền ngoài (4 + 4 + 1 + 1)',
-          interactiveRule: `Tổng 10 đoạn cạnh ngoài bằng ${row4P} cm.`,
+          actionPrompt: 'Đếm tổng số đoạn cạnh hình vuông chạy xung quanh đường viền ngoài của hình ghép',
+          interactiveRule: `Đếm tổng số đoạn cạnh hình vuông bao quanh viền ngoài của hàng 4 ô.`,
           groups: [
-            { id: 'g_10seg', label: `10 đoạn cạnh = ${row4P} cm`, icon: '🧩', count: 10, unitValue: row4Side, totalValue: row4P, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
+            { id: 'g_10seg', label: `Các đoạn viền ngoài = ${row4P} cm`, icon: '🧩', count: 10, unitValue: row4Side, totalValue: row4P, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, displayMode: 'measurement' },
           ],
         },
         {
@@ -1572,7 +1567,7 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'So sánh chu vi chữ U với khung ngoài để tìm tổng 2 cạnh lõm, rồi chia đôi!',
           interactiveRule: `Chu vi chữ U = ${chUP} cm. Khung ngoài có kích thước ${chUW} cm × ${chUH} cm.`,
           groups: [
-            { id: 'g_out', label: `Khung ngoài (${chUW}×${chUH})`, icon: '⬜', count: 2, unitValue: chUW + chUH, totalValue: chURectP, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_out', label: `Khung ngoài (${chUW}×${chUH})`, icon: '⬜', count: 2, unitValue: chUW + chUH, totalValue: chURectP, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `Khung ${chUW}×${chUH} cm` },
             { id: 'g_in2', label: '2 cạnh lõm bằng nhau', icon: '⚡', count: 2, unitValue: chUDepth, totalValue: chUDepth * 2, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
           ],
         },
@@ -1632,7 +1627,7 @@ function buildWeek2Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Bấm "Dời cạnh" để chứng kiến điều kỳ diệu: Cắt ở góc KHÔNG làm giảm chu vi!',
           interactiveRule: `Hình vuông ban đầu có cạnh ${bigSq} cm, cắt góc nhỏ ${smallCut} cm.`,
           groups: [
-            { id: 'g_bsq', label: '4 cạnh khung ngoài', icon: '✨', count: 4, unitValue: bigSq, totalValue: bigSqP, color: '#38BDF8', isUnknown: true, displayMode: 'measurement' },
+            { id: 'g_bsq', label: '4 cạnh khung ngoài', icon: '✨', count: 4, unitValue: bigSq, totalValue: bigSqP, color: '#38BDF8', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'measurement' },
           ],
         },
         {
@@ -1818,7 +1813,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: `Quy đổi từng 1 kg = 1 000 g rồi gộp với ${g1} g lẻ`,
           interactiveRule: `1 kg = 1 000 g.`,
           groups: [
-            { id: 'g_kg', label: `Phần ki-lô-gam (${kg1} kg)`, icon: '⚖️', count: kg1, unitValue: 1000, totalValue: kg1 * 1000, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_kg', label: `Phần ki-lô-gam (${kg1} kg)`, icon: '⚖️', count: kg1, unitValue: 1000, totalValue: kg1 * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${kg1} kg` },
             { id: 'g_rem', label: 'Phần gam lẻ', icon: '🪨', count: 1, unitValue: g1, totalValue: g1, color: '#F59E0B', displayMode: 'measurement' },
           ],
         },
@@ -1900,8 +1895,8 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
             givenA: 1000,
             givenB: usedG,
             unitA: 'g',
-            labelA: '1 kg',
-            labelB: 'Đã có',
+            labelA: 'Mục tiêu: 1 kg',
+            labelB: `Đã có: ${usedG} g`,
           },
         },
         {
@@ -1945,7 +1940,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Quy đổi giỏ 1 sang gam trước khi cộng với giỏ 2',
           interactiveRule: `Giỏ 1 = ${bag1Kg} kg ${bag1G} g, Giỏ 2 = ${bag2G} g.`,
           groups: [
-            { id: 'g_b1', label: `Giỏ 1 (${bag1Kg} kg ${bag1G} g)`, icon: '🍊', count: 1, unitValue: bag1Kg * 1000 + bag1G, totalValue: bag1Kg * 1000 + bag1G, color: '#F59E0B', displayMode: 'measurement' },
+            { id: 'g_b1', label: `Giỏ 1 (${bag1Kg} kg ${bag1G} g)`, icon: '🍊', count: 1, unitValue: bag1Kg * 1000 + bag1G, totalValue: bag1Kg * 1000 + bag1G, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: `${bag1Kg} kg ${bag1G} g` },
             { id: 'g_b2', label: 'Giỏ 2', icon: '🍊', count: 1, unitValue: bag2G, totalValue: bag2G, color: '#34D399', displayMode: 'measurement' },
           ],
         },
@@ -1964,8 +1959,8 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
             givenA: bag1Kg * 1000 + bag1G,
             givenB: bag2G,
             unitA: 'g',
-            labelA: 'Giỏ 1',
-            labelB: 'Giỏ 2',
+            labelA: `Giỏ 1: ${bag1Kg} kg ${bag1G} g`,
+            labelB: `Giỏ 2: ${bag2G} g`,
           },
         },
         {
@@ -2008,7 +2003,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: `Gấp khối lượng 1 gói (${packG} g) lên ${packCount} lần`,
           interactiveRule: `1 gói = ${packG} g, có ${packCount} gói giống hệt nhau.`,
           groups: [
-            { id: 'g_pk', label: `${packCount} gói bánh`, icon: '🍪', count: packCount, unitValue: packG, totalValue: totalPackG, color: '#F59E0B', isUnknown: true, displayMode: 'groups' },
+            { id: 'g_pk', label: `${packCount} gói bánh`, icon: '🍪', count: packCount, unitValue: packG, totalValue: totalPackG, color: '#F59E0B', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
           ],
         },
         {
@@ -2023,7 +2018,8 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
               units: packCount,
               unitValue: packG,
               displayValue: `? g`,
-              isUnknown: false,
+              isUnknown: true,
+              showKnownUnitValue: true,
               color: '#F59E0B',
             }),
           ],
@@ -2073,7 +2069,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Tách riêng khối lượng vỏ hộp ra khỏi tổng khối lượng cả hộp',
           interactiveRule: `Khối lượng kẹo = Khối lượng cả hộp − Khối lượng vỏ hộp.`,
           groups: [
-            { id: 'g_gross', label: `Cả hộp (${grossKg} kg ${grossG} g)`, icon: '🎁', count: 1, unitValue: grossTotal, totalValue: grossTotal, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_gross', label: `Cả hộp (${grossKg} kg ${grossG} g)`, icon: '🎁', count: 1, unitValue: grossTotal, totalValue: grossTotal, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${grossKg} kg ${grossG} g` },
             { id: 'g_box', label: 'Vỏ hộp rỗng', icon: '📦', count: 1, unitValue: boxG, totalValue: boxG, color: '#F59E0B', displayMode: 'measurement' },
             { id: 'g_net', label: 'Phần kẹo bên trong', icon: '🍬', count: 1, unitValue: netG, totalValue: netG, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
           ],
@@ -2093,8 +2089,8 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
             givenA: grossTotal,
             givenB: boxG,
             unitA: 'g',
-            labelA: 'Cả hộp',
-            labelB: 'Vỏ hộp',
+            labelA: `Cả hộp: ${grossKg} kg ${grossG} g`,
+            labelB: `Vỏ hộp: ${boxG} g`,
           },
         },
         {
@@ -2157,7 +2153,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
             givenA: melonG,
             givenCount: appleCount,
             unitA: 'g',
-            labelA: 'Quả dưa',
+            labelA: `1 quả dưa (${melonG} g)`,
             labelB: `${appleCount} quả táo`,
           },
         },
@@ -2201,8 +2197,8 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: `Đổi ${divKg} kg ra gam rồi chia theo sức chứa ${bagSizeG} g mỗi túi`,
           interactiveRule: `1 kg = 1 000 g. Mỗi túi chứa ${bagSizeG} g.`,
           groups: [
-            { id: 'g_flour', label: `Tổng ${divKg} kg (${divKg * 1000} g)`, icon: '🌾', count: divKg, unitValue: 1000, totalValue: divKg * 1000, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_bags', label: `Các túi ${bagSizeG} g`, icon: '🛍️', count: numBags, unitValue: bagSizeG, totalValue: divKg * 1000, color: '#34D399', isUnknown: true, displayMode: 'groups' },
+            { id: 'g_flour', label: `Tổng bột (${divKg} kg)`, icon: '🌾', count: divKg, unitValue: 1000, totalValue: divKg * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${divKg} kg` },
+            { id: 'g_bags', label: `Các túi ${bagSizeG} g`, icon: '🛍️', count: numBags, unitValue: bagSizeG, totalValue: divKg * 1000, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
           ],
         },
         {
@@ -2263,7 +2259,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Đổi số ki-lô-gam ban đầu sang gam trước khi thực hiện phép trừ',
           interactiveRule: `Ban đầu = ${bigKg} kg, đã lấy ra = ${takeG} g.`,
           groups: [
-            { id: 'g_init', label: `Bao gạo (${bigKg} kg)`, icon: '🍚', count: bigKg, unitValue: 1000, totalValue: bigKg * 1000, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_init', label: `Bao gạo (${bigKg} kg)`, icon: '🍚', count: bigKg, unitValue: 1000, totalValue: bigKg * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${bigKg} kg` },
             { id: 'g_take', label: 'Đã lấy ra', icon: '🥣', count: 1, unitValue: takeG, totalValue: takeG, color: '#F59E0B', displayMode: 'measurement' },
           ],
         },
@@ -2282,8 +2278,8 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
             givenA: bigKg * 1000,
             givenB: takeG,
             unitA: 'g',
-            labelA: 'Ban đầu',
-            labelB: 'Lấy ra',
+            labelA: `Bao gạo: ${bigKg} kg`,
+            labelB: `Lấy ra: ${takeG} g`,
           },
         },
         {
@@ -2327,7 +2323,7 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Bỏ cùng một lượng quả cân như nhau ở cả hai đĩa để cô lập hộp dụng cụ',
           interactiveRule: `Hộp + ${leftWeightG} g = ${rightKg} kg + ${rightExtraG} g.`,
           groups: [
-            { id: 'g_r', label: `Đĩa phải (${rightKg} kg + ${rightExtraG} g)`, icon: '⚖️', count: 1, unitValue: rightKg * 1000 + rightExtraG, totalValue: rightKg * 1000 + rightExtraG, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_r', label: `Đĩa phải (${rightKg} kg + ${rightExtraG} g)`, icon: '⚖️', count: 1, unitValue: rightKg * 1000 + rightExtraG, totalValue: rightKg * 1000 + rightExtraG, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${rightKg} kg + ${rightExtraG} g` },
             { id: 'g_lw', label: 'Quả cân đĩa trái', icon: '🏋️', count: 1, unitValue: leftWeightG, totalValue: leftWeightG, color: '#F59E0B', displayMode: 'measurement' },
             { id: 'g_mb', label: 'Hộp dụng cụ', icon: '🧰', count: 1, unitValue: mysteryBoxG, totalValue: mysteryBoxG, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
           ],
@@ -2343,12 +2339,12 @@ function buildWeek3Questions(day: number): InMonthQuestion[] {
           secondaryReading: `Đĩa phải: ${rightKg} kg ${rightExtraG} g`,
           conversionRule: 'Hộp = Đĩa phải − Quả cân đĩa trái',
           visualParams: {
-            mode: 'subtract',
+            mode: 'balance_eq',
             givenA: rightKg * 1000 + rightExtraG,
             givenB: leftWeightG,
             unitA: 'g',
-            labelA: 'Đĩa phải',
-            labelB: 'Quả cân trái',
+            labelA: `Hộp + ${leftWeightG} g`,
+            labelB: `${rightKg} kg + ${rightExtraG} g`,
           },
         },
         {
@@ -2589,9 +2585,8 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
   const bottleMl = offset % 2 === 1 ? 250 : 500;
   const numBottles = (tankL * 1000) / bottleMl;
 
-  // Q6: Equalize two water tanks (pour from A to B)
+  // Q6: Equalize two water tanks (pour from A to B; ensure tankA - tankB_even is always even)
   const tankA = 1800 + offset * 200; // 2000..3200 mL
-  const tankB = 1000 + offset * 100; // 1100..1700 mL -> diff = 900, 1000, 1100... Wait! Ensure diff is EVEN!
   const tankB_even = 1000 + offset * 100 + (offset % 2 === 1 ? 100 : 0); // diff always even: 800, 1000, 1000, 1200, 1200, 1400, 1400
   const diffTank = tankA - tankB_even;
   const pourAmt = diffTank / 2;
@@ -2652,7 +2647,7 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
           actionPrompt: `Quy đổi từng 1 L = 1 000 mL rồi cộng thêm ${ml1} mL`,
           interactiveRule: `1 L = 1 000 mL.`,
           groups: [
-            { id: 'g_l', label: `Phần lít (${l1} L)`, icon: '🧪', count: l1, unitValue: 1000, totalValue: l1 * 1000, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_l', label: `Phần lít (${l1} L)`, icon: '🧪', count: l1, unitValue: 1000, totalValue: l1 * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${l1} L` },
             { id: 'g_ml', label: 'Phần mi-li-lít lẻ', icon: '💧', count: 1, unitValue: ml1, totalValue: ml1, color: '#34D399', displayMode: 'measurement' },
           ],
         },
@@ -2779,7 +2774,7 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Đổi Bình A sang mi-li-lít trước khi gộp cùng Bình B',
           interactiveRule: `Bình A = 1 L ${b1Ml} mL, Bình B = ${b2Ml} mL.`,
           groups: [
-            { id: 'g_ba', label: `Bình A (1 L ${b1Ml} mL)`, icon: '🧪', count: 1, unitValue: 1000 + b1Ml, totalValue: 1000 + b1Ml, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_ba', label: `Bình A (1 L ${b1Ml} mL)`, icon: '🧪', count: 1, unitValue: 1000 + b1Ml, totalValue: 1000 + b1Ml, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `1 L ${b1Ml} mL` },
             { id: 'g_bb', label: 'Bình B', icon: '🧫', count: 1, unitValue: b2Ml, totalValue: b2Ml, color: '#34D399', displayMode: 'measurement' },
           ],
         },
@@ -2798,8 +2793,8 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
             givenA: 1000 + b1Ml,
             givenB: b2Ml,
             unitA: 'mL',
-            labelA: 'Bình A',
-            labelB: 'Bình B',
+            labelA: `Bình A: 1 L ${b1Ml} mL`,
+            labelB: `Bình B: ${b2Ml} mL`,
           },
         },
         {
@@ -2841,11 +2836,11 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
         {
           itemName: 'nước ép',
           unitLabel: 'mL',
-          actionPrompt: `Tính tổng ${cupCount} cốc đã rót, rồi trừ khỏi ${pitcherL} L (${pitcherL * 1000} mL)`,
+          actionPrompt: `Đổi ${pitcherL} L sang mL, tính tổng ${cupCount} cốc đã rót rồi tìm phần còn lại`,
           interactiveRule: `Bình ban đầu = ${pitcherL} L, rót ra ${cupCount} cốc × ${cupMl} mL.`,
           groups: [
-            { id: 'g_p', label: `Bình ban đầu (${pitcherL} L)`, icon: '🫗', count: 1, unitValue: pitcherL * 1000, totalValue: pitcherL * 1000, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_u', label: `Đã rót (${cupCount} cốc × ${cupMl} mL)`, icon: '🥤', count: cupCount, unitValue: cupMl, totalValue: usedWater, color: '#F59E0B', isUnknown: true, displayMode: 'groups' },
+            { id: 'g_p', label: `Bình ban đầu (${pitcherL} L)`, icon: '🫗', count: 1, unitValue: pitcherL * 1000, totalValue: pitcherL * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${pitcherL} L` },
+            { id: 'g_u', label: `Đã rót (${cupCount} cốc × ${cupMl} mL)`, icon: '🥤', count: cupCount, unitValue: cupMl, totalValue: usedWater, color: '#F59E0B', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
             { id: 'g_l', label: 'Còn lại trong bình', icon: '💧', count: 1, unitValue: leftWater, totalValue: leftWater, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
           ],
         },
@@ -2864,15 +2859,16 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
             givenA: pitcherL * 1000,
             givenB: usedWater,
             unitA: 'mL',
-            labelA: 'Bình',
-            labelB: 'Đã rót',
+            labelA: `Bình: ${pitcherL} L`,
+            labelB: `Rót ${cupCount} cốc × ${cupMl} mL`,
           },
         },
         {
           unknownSymbol: '?',
           guidedLatexSteps: [
+            `\\text{Đổi } ${pitcherL}\\text{ L} = ${pitcherL} \\;?\\; 1000 = ?\\text{ (mL)}`,
             `\\text{Lượng nước đã rót} = ${cupMl} \\;?\\; ${cupCount} = ?\\text{ (mL)}`,
-            `\\text{Còn lại trong bình} = ${pitcherL * 1000} \\;?\\; (\\text{Đã rót}) = ?`,
+            `\\text{Còn lại trong bình} = (\\text{Bình ban đầu}) \\;?\\; (\\text{Đã rót}) = ?`,
           ],
           fullLatexSteps: [
             `\\text{Đổi } ${pitcherL}\\text{ L} = ${pitcherL * 1000}\\text{ mL} \\quad ; \\quad \\text{Đã rót} = ${cupMl} \\times ${cupCount} = ${usedWater}\\text{ (mL)}`,
@@ -2909,8 +2905,8 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
           actionPrompt: `Đổi ${tankL} L sang mL rồi chia đều cho mỗi chai ${bottleMl} mL`,
           interactiveRule: `1 L = 1 000 mL. Mỗi chai đựng ${bottleMl} mL.`,
           groups: [
-            { id: 'g_milk', label: `Can sữa (${tankL} L)`, icon: '🥛', count: tankL, unitValue: 1000, totalValue: tankL * 1000, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_bot', label: `Các chai ${bottleMl} mL`, icon: '🍼', count: numBottles, unitValue: bottleMl, totalValue: tankL * 1000, color: '#34D399', isUnknown: true, displayMode: 'groups' },
+            { id: 'g_milk', label: `Can sữa (${tankL} L)`, icon: '🥛', count: tankL, unitValue: 1000, totalValue: tankL * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${tankL} L` },
+            { id: 'g_bot', label: `Các chai ${bottleMl} mL`, icon: '🍼', count: numBottles, unitValue: bottleMl, totalValue: tankL * 1000, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
           ],
         },
         {
@@ -3112,7 +3108,7 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Đổi lít sang mi-li-lít trước khi thực hiện phép trừ',
           interactiveRule: `Ban đầu = ${jugL} L, đã uống = ${drinkMl} mL.`,
           groups: [
-            { id: 'g_jug', label: `Ban đầu (${jugL} L)`, icon: '🚰', count: jugL, unitValue: 1000, totalValue: jugL * 1000, color: '#38BDF8', displayMode: 'measurement' },
+            { id: 'g_jug', label: `Ban đầu (${jugL} L)`, icon: '🚰', count: jugL, unitValue: 1000, totalValue: jugL * 1000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${jugL} L` },
             { id: 'g_dr', label: 'Đã uống', icon: '🥤', count: 1, unitValue: drinkMl, totalValue: drinkMl, color: '#F59E0B', displayMode: 'measurement' },
           ],
         },
@@ -3131,8 +3127,8 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
             givenA: jugL * 1000,
             givenB: drinkMl,
             unitA: 'mL',
-            labelA: 'Ban đầu',
-            labelB: 'Đã uống',
+            labelA: `Ban đầu: ${jugL} L`,
+            labelB: `Đã uống: ${drinkMl} mL`,
           },
         },
         {
@@ -3176,8 +3172,8 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
           actionPrompt: 'Đổi hỗn hợp L và mL về mL rồi chia đều cho 200 mL',
           interactiveRule: `Mỗi tách chứa 200 mL. Tổng lượng trà là ${exactL} L ${exactExtraMl} mL.`,
           groups: [
-            { id: 'g_tea', label: `Ấm trà (${exactL} L ${exactExtraMl} mL)`, icon: '🫖', count: 1, unitValue: exactTotalMl, totalValue: exactTotalMl, color: '#38BDF8', displayMode: 'measurement' },
-            { id: 'g_cups', label: 'Số tách 200 mL', icon: '🍵', count: exactCups, unitValue: 200, totalValue: exactTotalMl, color: '#34D399', isUnknown: true, displayMode: 'groups' },
+            { id: 'g_tea', label: `Ấm trà (${exactL} L ${exactExtraMl} mL)`, icon: '🫖', count: 1, unitValue: exactTotalMl, totalValue: exactTotalMl, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: `${exactL} L ${exactExtraMl} mL` },
+            { id: 'g_cups', label: 'Số tách 200 mL', icon: '🍵', count: exactCups, unitValue: 200, totalValue: exactTotalMl, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
           ],
         },
         {
@@ -3321,8 +3317,8 @@ function buildWeek4Questions(day: number): InMonthQuestion[] {
             givenA: finalWater - addedWater,
             givenB: pouredOutWater,
             unitA: 'mL',
-            labelA: 'Trước khi thêm',
-            labelB: 'Cộng trả múc ra',
+            labelA: `Cuối cùng: ${finalWater} mL`,
+            labelB: `Múc ${pouredOutWater} mL · Thêm ${addedWater} mL`,
           },
         },
         {
@@ -3529,7 +3525,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         unitLabel: 'm',
         actionPrompt: 'Gấp độ dài 1 cạnh lên 4 lần',
         interactiveRule: '4 cạnh bằng nhau, mỗi cạnh dài 18 m.',
-        groups: [{ id: 'ea1', label: '4 cạnh bằng nhau', icon: '⬜', count: 4, unitValue: 18, totalValue: 72, color: '#38BDF8', isUnknown: true, displayMode: 'measurement' }],
+        groups: [{ id: 'ea1', label: '4 cạnh bằng nhau', icon: '⬜', count: 4, unitValue: 18, totalValue: 72, color: '#38BDF8', isUnknown: true, showUnitValueBeforeSolve: true, displayMode: 'measurement' }],
       },
       { kind: 'perimeter_shape', shapeKind: 'square', outerWidth: 18, outerHeight: 18, unitLabel: 'm', unknownTarget: 'perimeter', expectedPerimeter: 72 },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi hình vuông} = 18 \\;?\\; 4 = ?`], fullLatexSteps: [`\\text{Chu vi hình vuông} = 18 \\times 4 = 72\\text{ (m)}`], finalAnswerLatex: `72\\text{ m}`, finalNumericValue: 72 }
@@ -3553,7 +3549,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi 4 dm sang cm trước khi cộng với 25 cm',
         interactiveRule: 'Dài = 4 dm, Rộng = 25 cm.',
         groups: [
-          { id: 'ea2l', label: 'Chiều dài (4 dm)', icon: '📏', count: 4, unitValue: 10, totalValue: 40, color: '#38BDF8', displayMode: 'measurement' },
+          { id: 'ea2l', label: 'Chiều dài (4 dm)', icon: '📏', count: 4, unitValue: 10, totalValue: 40, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '4 dm' },
           { id: 'ea2w', label: 'Chiều rộng', icon: '📐', count: 1, unitValue: 25, totalValue: 25, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
@@ -3605,8 +3601,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Không cộng 2 cạnh chung ở bên trong',
         interactiveRule: '3 hình vuông cạnh 7 cm xếp 1 hàng ngang.',
         groups: [
-          { id: 'ea4h', label: 'Trên + Dưới (6 đoạn)', icon: '🟦', count: 6, unitValue: 7, totalValue: 42, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'ea4v', label: 'Trái + Phải (2 đoạn)', icon: '🟩', count: 2, unitValue: 7, totalValue: 14, color: '#34D399', displayMode: 'measurement' },
+          { id: 'ea4h', label: 'Trên + Dưới (6 đoạn)', icon: '🟦', count: 6, unitValue: 7, totalValue: 42, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '6 × 7 cm' },
+          { id: 'ea4v', label: 'Trái + Phải (2 đoạn)', icon: '🟩', count: 2, unitValue: 7, totalValue: 14, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: '2 × 7 cm' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'joined_squares', outerWidth: 21, outerHeight: 7, squareSide: 7, gridCols: 3, gridRows: 1, unitLabel: 'cm', unknownTarget: 'perimeter', expectedPerimeter: 56 },
@@ -3631,8 +3627,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Bấm Dời cạnh để đưa góc khuyết về khung chữ nhật',
         interactiveRule: 'Chiều ngang ngoài = 22 m, Chiều cao ngoài = 14 m.',
         groups: [
-          { id: 'ea5w', label: '2 cạnh ngang', icon: '↔️', count: 2, unitValue: 22, totalValue: 44, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'ea5h', label: '2 cạnh cao', icon: '↕️', count: 2, unitValue: 14, totalValue: 28, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'ea5w', label: '2 cạnh ngang', icon: '↔️', count: 2, unitValue: 22, totalValue: 44, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 × 22 m' },
+          { id: 'ea5h', label: '2 cạnh cao', icon: '↕️', count: 2, unitValue: 14, totalValue: 28, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 14 m' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'l_shape', outerWidth: 22, outerHeight: 14, cutWidth: 8, cutHeight: 5, unitLabel: 'm', unknownTarget: 'perimeter', expectedPerimeter: 72, showInteractiveShift: true },
@@ -3657,7 +3653,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Nhân số kg với 1 000 rồi cộng phần gam lẻ',
         interactiveRule: '1 kg = 1 000 g.',
         groups: [
-          { id: 'ea6k', label: '3 kg', icon: '⚖️', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement' },
+          { id: 'ea6k', label: '3 kg', icon: '⚖️', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '3 kg' },
           { id: 'ea6g', label: '450 g', icon: '🪨', count: 1, unitValue: 450, totalValue: 450, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
@@ -3683,12 +3679,12 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi cả hộp sang gam rồi trừ đi khối lượng vỏ',
         interactiveRule: 'Ruột = Cả hộp − Vỏ hộp.',
         groups: [
-          { id: 'ea7a', label: 'Cả hộp (2 kg 150 g)', icon: '🎁', count: 1, unitValue: 2150, totalValue: 2150, color: '#38BDF8', displayMode: 'measurement' },
+          { id: 'ea7a', label: 'Cả hộp (2 kg 150 g)', icon: '🎁', count: 1, unitValue: 2150, totalValue: 2150, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 kg 150 g' },
           { id: 'ea7b', label: 'Vỏ hộp', icon: '📦', count: 1, unitValue: 350, totalValue: 350, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
-      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'tare_weight', operands: [2150, 350], expectedNumericResult: 1800, resultUnit: 'g', primaryReading: 'Cả hộp: 2 kg 150 g', secondaryReading: 'Vỏ hộp: 350 g', conversionRule: 'Ruột = Cả hộp − Vỏ', visualParams: { mode: 'subtract', givenA: 2150, givenB: 350, unitA: 'g', labelA: 'Cả hộp', labelB: 'Vỏ' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi cả hộp} = 2000 \\;?\\; 150 = ?`, `\\text{Khối lượng mứt} = (\\text{Cả hộp}) \\;?\\; 350 = ?`], fullLatexSteps: [`2\\text{ kg } 150\\text{ g} = 2150\\text{ g}`, `2150 - 350 = 1800\\text{ (g)}`], finalAnswerLatex: `1800\\text{ g}`, finalNumericValue: 1800 }
+      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'tare_weight', operands: [2150, 350], expectedNumericResult: 1800, resultUnit: 'g', primaryReading: 'Cả hộp: 2 kg 150 g', secondaryReading: 'Vỏ hộp: 350 g', conversionRule: 'Ruột = Cả hộp − Vỏ', visualParams: { mode: 'subtract', givenA: 2150, givenB: 350, unitA: 'g', labelA: 'Cả hộp: 2 kg 150 g', labelB: 'Vỏ hộp: 350 g' } },
+      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi cả hộp} = 2 \\;?\\; 1000 \\;?\\; 150 = ?`, `\\text{Khối lượng mứt} = (\\text{Cả hộp}) \\;?\\; 350 = ?`], fullLatexSteps: [`2\\text{ kg } 150\\text{ g} = 2150\\text{ g}`, `2150 - 350 = 1800\\text{ (g)}`], finalAnswerLatex: `1800\\text{ g}`, finalNumericValue: 1800 }
     ),
   },
   {
@@ -3735,8 +3731,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi 3 L sang mL rồi chia cho 250 mL mỗi chai',
         interactiveRule: '1 L = 1 000 mL.',
         groups: [
-          { id: 'ea9a', label: 'Can nước ép (3 L)', icon: '🍎', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'ea9b', label: 'Các chai 250 mL', icon: '🍼', count: 12, unitValue: 250, totalValue: 3000, color: '#34D399', isUnknown: true, displayMode: 'groups' },
+          { id: 'ea9a', label: 'Can nước ép (3 L)', icon: '🍎', count: 3, unitValue: 1000, totalValue: 3000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '3 L' },
+          { id: 'ea9b', label: 'Các chai 250 mL', icon: '🍼', count: 12, unitValue: 250, totalValue: 3000, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, showUnitValueBeforeSolve: true, displayMode: 'groups' },
         ],
       },
       { kind: 'measurement_lab', subtype: 'volume_beaker', operation: 'unit_divide', operands: [3000, 250], expectedNumericResult: 12, resultUnit: 'chai', primaryReading: 'Can: 3 L', secondaryReading: 'Mỗi chai: 250 mL', conversionRule: 'Đổi L ➔ mL rồi chia 250', visualParams: { mode: 'divide_equal', givenA: 3000, givenB: 250, unitA: 'mL' } },
@@ -3761,11 +3757,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Đổi 1 kg 200 g sang gam rồi chia đều cho 6 quả lê',
         interactiveRule: 'Đĩa trái = Đĩa phải.',
         groups: [
-          { id: 'ea10a', label: '1 quả bí (1 kg 200 g)', icon: '🎃', count: 1, unitValue: 1200, totalValue: 1200, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'ea10a', label: '1 quả bí (1 kg 200 g)', icon: '🎃', count: 1, unitValue: 1200, totalValue: 1200, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '1 kg 200 g' },
           { id: 'ea10b', label: '6 quả lê bằng nhau', icon: '🍐', count: 6, unitValue: 200, totalValue: 1200, color: '#34D399', isUnknown: true, displayMode: 'groups' },
         ],
       },
-      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'balance_eq', operands: [1200, 6], expectedNumericResult: 200, resultUnit: 'g', primaryReading: 'Đĩa trái: 1 kg 200 g', secondaryReading: 'Đĩa phải: 6 quả lê', conversionRule: 'Đổi sang gam rồi chia 6', visualParams: { mode: 'balance_eq', givenA: 1200, givenCount: 6, unitA: 'g', labelA: 'Quả bí', labelB: '6 quả lê' } },
+      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'balance_eq', operands: [1200, 6], expectedNumericResult: 200, resultUnit: 'g', primaryReading: 'Đĩa trái: 1 kg 200 g', secondaryReading: 'Đĩa phải: 6 quả lê', conversionRule: 'Đổi sang gam rồi chia 6', visualParams: { mode: 'balance_eq', givenA: 1200, givenCount: 6, unitA: 'g', labelA: '1 quả bí (1 kg 200 g)', labelB: '6 quả lê' } },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 1\\text{ kg } 200\\text{ g} = 1000 \\;?\\; 200 = ?`, `\\text{1 quả lê} = (\\text{Tổng gam}) \\;?\\; 6 = ?`], fullLatexSteps: [`1\\text{ kg } 200\\text{ g} = 1200\\text{ g}`, `1200 \\div 6 = 200\\text{ (g)}`], finalAnswerLatex: `200\\text{ g}`, finalNumericValue: 200 }
     ),
   },
@@ -3787,13 +3783,13 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         itemName: 'sợi dây',
         unitLabel: 'cm',
         actionPrompt: 'Chu vi hình chữ nhật mới bằng đúng chu vi hình vuông ban đầu',
-        interactiveRule: 'Chu vi = 15 × 4, chiều rộng mới = 11 cm.',
+        interactiveRule: 'Chu vi hình chữ nhật = Chu vi hình vuông cạnh 15 cm, chiều rộng mới = 11 cm.',
         groups: [
-          { id: 'eb1a', label: 'Hình vuông (4 × 15 cm)', icon: '➰', count: 4, unitValue: 15, totalValue: 60, color: '#38BDF8', displayMode: 'measurement' },
+          { id: 'eb1a', label: 'Hình vuông (4 × 15 cm)', icon: '➰', count: 4, unitValue: 15, totalValue: 60, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '4 × 15 cm' },
           { id: 'eb1w', label: 'Chiều rộng mới', icon: '📐', count: 1, unitValue: 11, totalValue: 11, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
-      { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 19, outerHeight: 11, unitLabel: 'cm', unknownTarget: 'length', expectedPerimeter: 60, showInteractiveShift: true },
+      { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 19, outerHeight: 11, unitLabel: 'cm', unknownTarget: 'length', expectedPerimeter: 60, hidePerimeterBeforeSolve: true, showInteractiveShift: true },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi sợi dây} = 15 \\;?\\; 4 = ?`, `\\text{Nửa chu vi} = (\\text{Chu vi}) \\;?\\; 2 = ?`, `\\text{Chiều dài} = (\\text{Nửa chu vi}) \\;?\\; 11 = ?`], fullLatexSteps: [`\\text{Chu vi} = 15 \\times 4 = 60\\text{ (cm)}`, `\\text{Nửa chu vi} = 60 \\div 2 = 30\\text{ (cm)}`, `\\text{Chiều dài} = 30 - 11 = 19\\text{ (cm)}`], finalAnswerLatex: `19\\text{ cm}`, finalNumericValue: 19 }
     ),
   },
@@ -3828,7 +3824,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
           makeBarSpec({ id: 'bw', label: 'Chiều rộng', units: 1, unitValue: 12, displayValue: '? m', isUnknown: true, color: '#34D399' }),
           makeBarSpec({ id: 'bl', label: 'Chiều dài', units: 3, unitValue: 12, displayValue: '? m (3 phần)', isUnknown: true, color: '#38BDF8' }),
         ],
-        totalBracket: { targetBarIds: ['bw', 'bl'], numericValue: 48, displayLabel: 'Nửa chu vi = 96 : 2' },
+        totalBracket: { targetBarIds: ['bw', 'bl'], numericValue: 48, displayLabel: 'Nửa chu vi = ?', isUnknown: true },
       },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Nửa chu vi} = 96 \\;?\\; 2 = ?`, `\\text{Tổng số phần} = 3 \\;?\\; 1 = ?`, `\\text{Chiều rộng} = (\\text{Nửa chu vi}) \\;?\\; (\\text{Tổng phần}) = ?`], fullLatexSteps: [`\\text{Nửa chu vi} = 96 \\div 2 = 48\\text{ (m)}`, `\\text{Tổng số phần} = 3 + 1 = 4\\text{ (phần)}`, `\\text{Chiều rộng} = 48 \\div 4 = 12\\text{ (m)}`], finalAnswerLatex: `12\\text{ m}`, finalNumericValue: 12 }
     ),
@@ -3851,8 +3847,8 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Bấm "Dời cạnh & Soi 2 cạnh lõm" để không quên cộng 2 × 6 cm!',
         interactiveRule: 'Khung ngoài 24 × 15 cm, rãnh lõm sâu 6 cm.',
         groups: [
-          { id: 'eb3a', label: 'Khung ngoài (24×15)', icon: '⬜', count: 2, unitValue: 39, totalValue: 78, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'eb3b', label: '2 cạnh lõm màu vàng', icon: '⚡', count: 2, unitValue: 6, totalValue: 12, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'eb3a', label: 'Khung ngoài (24×15)', icon: '⬜', count: 2, unitValue: 39, totalValue: 78, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: 'Khung 24×15 cm' },
+          { id: 'eb3b', label: '2 cạnh lõm màu vàng cam', icon: '⚡', count: 2, unitValue: 6, totalValue: 12, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 6 cm' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'u_shape', outerWidth: 24, outerHeight: 15, recessDepth: 6, recessWidth: 8, unitLabel: 'cm', unknownTarget: 'perimeter', expectedPerimeter: 90, showInteractiveShift: true },
@@ -3877,7 +3873,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Lấy tổng chu vi trừ khung ngoài sẽ ra TỔNG 2 CẠNH LÕM, nhớ chia đôi!',
         interactiveRule: 'Tổng chu vi = 106 m, Khung ngoài = 30 m × 16 m.',
         groups: [
-          { id: 'eb4a', label: 'Khung ngoài (30×16)', icon: '⬜', count: 2, unitValue: 46, totalValue: 92, color: '#38BDF8', displayMode: 'measurement' },
+          { id: 'eb4a', label: 'Khung ngoài (30×16)', icon: '⬜', count: 2, unitValue: 46, totalValue: 92, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: 'Khung 30×16 m' },
           { id: 'eb4b', label: '2 cạnh lõm bằng nhau', icon: '⚡', count: 2, unitValue: 7, totalValue: 14, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
         ],
       },
@@ -3901,9 +3897,9 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         itemName: 'đoạn cạnh viền ngoài',
         unitLabel: 'cm',
         actionPrompt: 'Đếm tổng số đoạn cạnh ô vuông nằm trên viền ngoài của lưới 2×3',
-        interactiveRule: 'Viền ngoài có (3 + 2) × 2 = 10 đoạn cạnh bằng nhau.',
+        interactiveRule: 'Đếm số đoạn cạnh ô vuông chạy dọc viền ngoài của lưới 2×3.',
         groups: [
-          { id: 'eb5', label: '10 đoạn cạnh ngoài = 80 cm', icon: '🧩', count: 10, unitValue: 8, totalValue: 80, color: '#34D399', isUnknown: true, displayMode: 'measurement' },
+          { id: 'eb5', label: 'Các đoạn viền ngoài = 80 cm', icon: '🧩', count: 10, unitValue: 8, totalValue: 80, color: '#34D399', isUnknown: true, hideCountBeforeSolve: true, displayMode: 'measurement' },
         ],
       },
       { kind: 'perimeter_shape', shapeKind: 'joined_squares', outerWidth: 24, outerHeight: 16, squareSide: 8, gridCols: 3, gridRows: 2, unitLabel: 'cm', unknownTarget: 'side', expectedPerimeter: 80 },
@@ -3928,11 +3924,11 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         actionPrompt: 'Tính chu vi cả 4 mặt đất rồi trừ đi tổng độ rộng của 2 cổng',
         interactiveRule: 'Dài = 26 m, Rộng = 14 m, 2 cổng × 2 m.',
         groups: [
-          { id: 'eb6p', label: 'Chu vi mảnh đất', icon: '🌿', count: 2, unitValue: 40, totalValue: 80, color: '#34D399', displayMode: 'measurement' },
-          { id: 'eb6g', label: '2 lối cổng', icon: '🚪', count: 2, unitValue: 2, totalValue: 4, color: '#F59E0B', displayMode: 'measurement' },
+          { id: 'eb6p', label: 'Chu vi mảnh đất', icon: '🌿', count: 2, unitValue: 40, totalValue: 80, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: 'Khung 26×14 m' },
+          { id: 'eb6g', label: '2 lối cổng', icon: '🚪', count: 2, unitValue: 2, totalValue: 4, color: '#F59E0B', displayMode: 'measurement', beforeSolveBadge: '2 × 2 m' },
         ],
       },
-      { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 26, outerHeight: 14, unitLabel: 'm', unknownTarget: 'fence_with_gate', gateWidth: 4, expectedPerimeter: 80, showInteractiveShift: true },
+      { kind: 'perimeter_shape', shapeKind: 'rectangle', outerWidth: 26, outerHeight: 14, unitLabel: 'm', unknownTarget: 'fence_with_gate', gateWidth: 4, gateLabel: '2 lối cổng (mỗi cổng 2 m) — không rào', expectedPerimeter: 80, showInteractiveShift: true },
       { unknownSymbol: '?', guidedLatexSteps: [`\\text{Chu vi mảnh đất} = (26 \\;?\\; 14) \\;?\\; 2 = ?`, `\\text{Tổng độ rộng 2 cổng} = 2 \\;?\\; 2 = ?`, `\\text{Độ dài hàng rào} = (\\text{Chu vi}) \\;?\\; (\\text{2 cổng}) = ?`], fullLatexSteps: [`\\text{Chu vi} = (26 + 14) \\times 2 = 80\\text{ (m)}`, `\\text{Tổng 2 cổng} = 2 \\times 2 = 4\\text{ (m)}`, `\\text{Hàng rào} = 80 - 4 = 76\\text{ (m)}`], finalAnswerLatex: `76\\text{ m}`, finalNumericValue: 76 }
     ),
   },
@@ -3979,14 +3975,14 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         itemName: 'quả dưa lưới',
         unitLabel: 'g',
         actionPrompt: 'Tìm cân nặng 1 quả dưa trước, rồi nhân đôi để tìm 2 quả dưa',
-        interactiveRule: '1 dưa + 250 g = 2 kg (2 000 g).',
+        interactiveRule: '1 quả dưa + 250 g = 2 kg.',
         groups: [
-          { id: 'eb8a', label: 'Đĩa phải (2 kg)', icon: '⚖️', count: 2, unitValue: 1000, totalValue: 2000, color: '#38BDF8', displayMode: 'measurement' },
+          { id: 'eb8a', label: 'Đĩa phải (2 kg)', icon: '⚖️', count: 2, unitValue: 1000, totalValue: 2000, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 kg' },
           { id: 'eb8b', label: 'Quả cân đĩa trái', icon: '🏋️', count: 1, unitValue: 250, totalValue: 250, color: '#F59E0B', displayMode: 'measurement' },
         ],
       },
-      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'balance_eq', operands: [2000, 250], expectedNumericResult: 3500, resultUnit: 'g', primaryReading: '1 dưa + 250 g = 2 kg', secondaryReading: 'Tìm: 2 quả dưa', conversionRule: 'Tìm 1 quả dưa rồi nhân 2', visualParams: { mode: 'subtract', givenA: 2000, givenB: 250, unitA: 'g', labelA: '2 kg', labelB: 'Quả cân' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{1 quả dưa lưới} = 2000 \\;?\\; 250 = ?`, `\\text{2 quả dưa lưới} = (\\text{1 quả dưa}) \\;?\\; 2 = ?`], fullLatexSteps: [`\\text{1 quả dưa lưới} = 2000 - 250 = 1750\\text{ (g)}`, `\\text{2 quả dưa lưới} = 1750 \\times 2 = 3500\\text{ (g)}`], finalAnswerLatex: `3500\\text{ g}`, finalNumericValue: 3500 }
+      { kind: 'measurement_lab', subtype: 'weight_balance', operation: 'balance_eq', operands: [2000, 250], expectedNumericResult: 3500, resultUnit: 'g', primaryReading: 'Đĩa trái: 1 quả dưa + 250 g', secondaryReading: 'Đĩa phải: 2 kg', conversionRule: 'Bước 1: Tìm 1 quả dưa trên cân thăng bằng · Bước 2: Nhân 2', visualParams: { mode: 'balance_eq', givenA: 2000, givenB: 250, unitA: 'g', labelA: '1 quả dưa + 250 g', labelB: '2 kg' } },
+      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 2\\text{ kg} = 2 \\;?\\; 1000 = ?\\text{ (g)}`, `\\text{1 quả dưa lưới} = (\\text{Đĩa phải}) \\;?\\; 250 = ?`, `\\text{2 quả dưa lưới} = (\\text{1 quả dưa}) \\;?\\; 2 = ?`], fullLatexSteps: [`2\\text{ kg} = 2000\\text{ g}`, `\\text{1 quả dưa lưới} = 2000 - 250 = 1750\\text{ (g)}`, `\\text{2 quả dưa lưới} = 1750 \\times 2 = 3500\\text{ (g)}`], finalAnswerLatex: `3500\\text{ g}`, finalNumericValue: 3500 }
     ),
   },
   {
@@ -4005,15 +4001,15 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         itemName: 'nước cần rót',
         unitLabel: 'mL',
         actionPrompt: 'Đổi cả hai bình sang mL, tìm hiệu rồi CHIA ĐÔI',
-        interactiveRule: 'Bình A = 2 600 mL, Bình B = 1 400 mL.',
+        interactiveRule: 'Bình A = 2 L 600 mL, Bình B = 1 L 400 mL.',
         groups: [
-          { id: 'eb9a', label: 'Bình A (2 L 600 mL)', icon: '🧪', count: 1, unitValue: 2600, totalValue: 2600, color: '#38BDF8', displayMode: 'measurement' },
-          { id: 'eb9b', label: 'Bình B (1 L 400 mL)', icon: '🧪', count: 1, unitValue: 1400, totalValue: 1400, color: '#34D399', displayMode: 'measurement' },
+          { id: 'eb9a', label: 'Bình A (2 L 600 mL)', icon: '🧪', count: 1, unitValue: 2600, totalValue: 2600, color: '#38BDF8', displayMode: 'measurement', beforeSolveBadge: '2 L 600 mL' },
+          { id: 'eb9b', label: 'Bình B (1 L 400 mL)', icon: '🧪', count: 1, unitValue: 1400, totalValue: 1400, color: '#34D399', displayMode: 'measurement', beforeSolveBadge: '1 L 400 mL' },
           { id: 'eb9c', label: 'Lượng rót sang', icon: '💧', count: 1, unitValue: 600, totalValue: 600, color: '#F59E0B', isUnknown: true, displayMode: 'measurement' },
         ],
       },
       { kind: 'measurement_lab', subtype: 'volume_beaker', operation: 'equalize_transfer', operands: [2600, 1400], expectedNumericResult: 600, resultUnit: 'mL', primaryReading: 'Bình A: 2 L 600 mL', secondaryReading: 'Bình B: 1 L 400 mL', conversionRule: 'Lượng rót = Phần hơn ÷ 2', visualParams: { mode: 'equalize_pour', givenA: 2600, givenB: 1400, unitA: 'mL', labelA: 'Bình A', labelB: 'Bình B' } },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Phần hơn} = 2600 \\;?\\; 1400 = ?`, `\\text{Lượng cần rót} = (\\text{Phần hơn}) \\;?\\; 2 = ?`], fullLatexSteps: [`\\text{Hiệu hai bình} = 2600 - 1400 = 1200\\text{ (mL)}`, `\\text{Lượng cần rót} = 1200 \\div 2 = 600\\text{ (mL)}`], finalAnswerLatex: `600\\text{ mL}`, finalNumericValue: 600 }
+      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi Bình A} = 2 \\;?\\; 1000 \\;?\\; 600 = ?`, `\\text{Phần hơn} = (\\text{Bình A}) \\;?\\; (\\text{Bình B}) = ?`, `\\text{Lượng cần rót} = (\\text{Phần hơn}) \\;?\\; 2 = ?`], fullLatexSteps: [`\\text{Bình A} = 2600\\text{ mL}, \\quad \\text{Bình B} = 1400\\text{ mL}`, `\\text{Hiệu hai bình} = 2600 - 1400 = 1200\\text{ (mL)}`, `\\text{Lượng cần rót} = 1200 \\div 2 = 600\\text{ (mL)}`], finalAnswerLatex: `600\\text{ mL}`, finalNumericValue: 600 }
     ),
   },
   {
@@ -4049,7 +4045,7 @@ const DECEMBER_EXAM_QUESTIONS: InMonthExamQuestion[] = [
         ],
         differenceBracket: { longerBarId: 'bx', shorterBarId: 'by', diffUnits: 2, numericValue: 1200, displayLabel: 'Hơn 1 L 200 mL (2 phần)' },
       },
-      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Hiệu số phần} = 3 \\;?\\; 1 = ?`, `\\text{Bình Y (1 phần)} = 1200 \\;?\\; (\\text{Hiệu số phần}) = ?`], fullLatexSteps: [`\\text{Đổi } 1\\text{ L } 200\\text{ mL} = 1200\\text{ mL}`, `\\text{Hiệu số phần} = 3 - 1 = 2\\text{ (phần)}`, `\\text{Bình Y} = 1200 \\div 2 = 600\\text{ (mL)}`], finalAnswerLatex: `600\\text{ mL}`, finalNumericValue: 600 }
+      { unknownSymbol: '?', guidedLatexSteps: [`\\text{Đổi } 1\\text{ L } 200\\text{ mL} = 1000 \\;?\\; 200 = ?\\text{ (mL)}`, `\\text{Hiệu số phần} = 3 \\;?\\; 1 = ?`, `\\text{Bình Y (1 phần)} = (\\text{Hiệu mL}) \\;?\\; (\\text{Hiệu số phần}) = ?`], fullLatexSteps: [`\\text{Đổi } 1\\text{ L } 200\\text{ mL} = 1200\\text{ mL}`, `\\text{Hiệu số phần} = 3 - 1 = 2\\text{ (phần)}`, `\\text{Bình Y} = 1200 \\div 2 = 600\\text{ (mL)}`], finalAnswerLatex: `600\\text{ mL}`, finalNumericValue: 600 }
     ),
   },
 ];

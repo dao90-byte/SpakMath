@@ -65,7 +65,15 @@ export function evaluateWeeklyReasoningText(
     return { points: 0, matchedKeywords: [], isComplete: false };
   }
 
-  const matched = keywords.filter((kw) => clean.includes(kw.toLowerCase()));
+  // Normalize spaced/dotted thousand groups ("2 050" / "2.050" -> "2050") so standard Vietnamese formatting matches numeric keywords
+  const normalizeNumericText = (s: string) =>
+    s.replace(/\b(\d{1,3})(?:[\s.](\d{3}))+\b/g, (full) => full.replace(/[\s.]/g, ''));
+
+  const normalizedClean = normalizeNumericText(clean);
+  const matched = keywords.filter((kw) => {
+    const low = kw.toLowerCase();
+    return clean.includes(low) || normalizedClean.includes(normalizeNumericText(low));
+  });
   if (clean.length >= 6 && (matched.length >= 1 || clean.length >= 14)) {
     return { points: 5, matchedKeywords: matched, isComplete: true };
   }

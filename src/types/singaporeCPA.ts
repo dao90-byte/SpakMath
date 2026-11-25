@@ -25,6 +25,12 @@ export interface CPAConcreteGroup {
   isUnknown?: boolean;
   /** Optional display override for concrete chip summary (e.g. avoid nonsensical "1 phần × 12" on non-unit items) */
   displayMode?: 'units' | 'groups' | 'measurement' | 'interval';
+  /** When true, masks `count` (shown as ?) before solving (e.g. when finding the number of bags/bottles/segments) */
+  hideCountBeforeSolve?: boolean;
+  /** When true and isUnknown is true, keeps the given `unitValue` visible while masking `totalValue` as ? before solving */
+  showUnitValueBeforeSolve?: boolean;
+  /** Optional raw given-value badge shown before solving when `totalValue` is an uncalculated intermediate product/conversion (e.g. "4 dm", "3 kg") */
+  beforeSolveBadge?: string;
 }
 
 export interface CPAConcreteSpec {
@@ -57,6 +63,8 @@ export interface BarModelBarSpec {
   hideOffsetBeforeSolve?: boolean;
   /** When true, avoids displaying invented absolute bar totals after solving (keeps symbolic/relative labels) */
   isSymbolicOnly?: boolean;
+  /** When true and isUnknown is true, shows the given unitValue inside each equal block while keeping the bar total masked as ? */
+  showKnownUnitValue?: boolean;
   color: string;
   highlightNote?: string;
   deltaType?: 'added' | 'removed' | 'transferred_in' | 'transferred_out';
@@ -248,6 +256,12 @@ export interface PerimeterPictorialSpec {
   /** Optional custom labels for the outer sides */
   widthLabel?: string;
   heightLabel?: string;
+  /** When true, masks expectedPerimeter before solving because it is an uncalculated intermediate value (e.g. wire-bending problems) */
+  hidePerimeterBeforeSolve?: boolean;
+  /** Number of steps rendered for 'staircase' shapes (default 3) */
+  stepCount?: number;
+  /** Optional custom gate label for fence_with_gate problems (e.g. multiple gates) */
+  gateLabel?: string;
 }
 
 export type PlaceValueMode =

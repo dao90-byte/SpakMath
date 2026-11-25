@@ -5,7 +5,12 @@ import {
   DECEMBER_IN_MONTH_DAYS,
 } from '../data/inMonthDecemberData';
 import { DECEMBER_WEEKLY_TESTS } from '../data/inMonthDecemberWeeklyTestsData';
+import { evaluateWeeklyReasoningText } from '../data/inMonthWeeklyTestsData';
 import { GRADE_3_IN_MONTH_PROGRAMS } from '../data/inMonthGrade3Catalog';
+import {
+  getInMonthQuestionInputSpec,
+  isInMonthAnswerCorrect,
+} from '../utils/inMonthAnswerUtils';
 import {
   verifyBarModelPictorial,
   verifyMeasurementPictorial,
@@ -37,8 +42,10 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
 
     for (const wt of DECEMBER_WEEKLY_TESTS) {
       expect(wt.monthNumber).toBe(12);
+      expect(wt.monthLabel).toBe('Tháng 12');
       expect(wt.durationMinutes).toBe(15);
       expect(wt.questions.length).toBe(10);
+      expect(wt.subtitle.toLowerCase()).not.toContain('mở khóa');
       const calcCount = wt.questions.filter((q) => q.section === 'calculation').length;
       const reasonCount = wt.questions.filter((q) => q.section === 'reasoning').length;
       expect(calcCount).toBe(6);
@@ -126,24 +133,71 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
         if (pic.subtype !== 'length_chart') {
           expect(pic.visualParams?.mode).toBeTruthy();
         }
+        // Top-level visualModel readings must stay synchronized with cpaSpec.pictorial
+        if (q.visualModel.primaryReading && pic.primaryReading) {
+          expect(q.visualModel.primaryReading, `[${q.id}] lệch primaryReading`).toBe(pic.primaryReading);
+        }
+        if (q.visualModel.secondaryReading && pic.secondaryReading) {
+          expect(q.visualModel.secondaryReading, `[${q.id}] lệch secondaryReading`).toBe(pic.secondaryReading);
+        }
+        // Subtraction mode on weight_balance must satisfy operands[0] - operands[1] === expectedNumericResult
+        if (pic.subtype === 'weight_balance' && pic.visualParams?.mode === 'subtract') {
+          expect(
+            pic.operands[0] - pic.operands[1],
+            `[${q.id}] phép trừ khối lượng không khớp expectedNumericResult`
+          ).toBe(pic.expectedNumericResult);
+        }
+        // Balance scale must never place "Đĩa phải" on the left pan
+        if (pic.subtype === 'weight_balance' && pic.visualParams?.mode === 'balance_eq') {
+          expect(pic.visualParams.labelA || '', `[${q.id}] đảo đĩa cân`).not.toMatch(/Đĩa phải/i);
+        }
       }
     }
   });
 
-  it('Kiểm chứng toàn bộ sơ đồ thanh Bar Model xuất hiện trong Tháng 12 (San giỏ, San bình, Toán ngược)', () => {
+  it('Kiểm chứng toàn bộ sơ đồ thanh Bar Model xuất hiện trong Tháng 12 (San giỏ, San bình, Toán ngược, Before-After)', () => {
     const barQs = all400Questions.filter(
       (q) => q.visualModel.cpaSpec?.pictorial.kind === 'bar_model'
     );
     expect(barQs.length).toBeGreaterThan(0);
 
+    const invalidBlocks: string[] = [];
     for (const q of barQs) {
       const pic = q.visualModel.cpaSpec!.pictorial;
       if (pic.kind === 'bar_model') {
         const res = verifyBarModelPictorial(pic);
         expect(res.errors).toEqual([]);
         expect(res.valid).toBe(true);
+
+        const allBars = [
+          ...pic.bars,
+          ...(pic.beforeBars || []),
+          ...(pic.afterBars || []),
+        ];
+        for (const bar of allBars) {
+          // Never leave isUnknown=false when displayValue contains '?' (would render solved numericValue before solving)
+          expect(
+            !bar.isUnknown && bar.displayValue.includes('?'),
+            `[${q.id}] bar "${bar.id}" lộ số đã giải trước khi làm bài`
+          ).toBe(false);
+          for (const blk of bar.blocks) {
+            if (blk.numericValue <= 0) {
+              invalidBlocks.push(`[${q.id}] Bar "${bar.id}" block có numericValue <= 0 (${blk.numericValue})`);
+            }
+          }
+        }
+
+        // Before-after transfer bar IDs must exist in both beforeBars and afterBars so transfer invariant actually runs
+        if (pic.family === 'before_after' && pic.beforeBars && pic.afterBars && pic.transferSpec) {
+          expect(pic.beforeBars.some((b) => b.id === pic.transferSpec!.fromBarId)).toBe(true);
+          expect(pic.afterBars.some((b) => b.id === pic.transferSpec!.fromBarId)).toBe(true);
+          expect(pic.beforeBars.some((b) => b.id === pic.transferSpec!.toBarId)).toBe(true);
+          expect(pic.afterBars.some((b) => b.id === pic.transferSpec!.toBarId)).toBe(true);
+        }
       }
     }
+
+    expect(invalidBlocks).toEqual([]);
   });
 
   it('Toàn bộ biểu thức LaTeX trong bước Abstract của 400 câu hỏi Tháng 12 đều render KaTeX chính xác 100%', () => {
@@ -215,14 +269,78 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
     expect(leaks).toEqual([]);
   });
 
-  it('Không có bất kỳ rò rỉ đáp án nào trong tiêu đề mô hình, nhóm Concrete, hoặc thanh offset trước khi giải trên cả 400 câu Tháng 12', () => {
+  it('Tất cả 400 câu hỏi Tháng 12 đều có 4 phương án duy nhất, không chứa đại lượng âm, khớp bộ chấm điểm nhập đáp án & chấm nghị luận', () => {
+    const issues: string[] = [];
+
+    for (const q of all400Questions) {
+      if (q.options.length !== 4) {
+        issues.push(`[${q.id}] Số phương án phải là 4, thực tế: ${q.options.length}`);
+      }
+      const unique = new Set(q.options.map((o) => o.trim()));
+      if (unique.size !== q.options.length) {
+        issues.push(`[${q.id}] Có phương án trùng lặp: ${JSON.stringify(q.options)}`);
+      }
+      if (!q.options.includes(q.correctAnswer)) {
+        issues.push(`[${q.id}] correctAnswer "${q.correctAnswer}" không nằm trong options`);
+      }
+      for (const opt of q.options) {
+        if (
+          /^\s*-\d+/.test(opt) ||
+          /(?:^|\s)-\d+\s*(?:cm|dm|m|km|g|kg|mL|L|túi|chai|cốc|tách|quả|hộp)/i.test(opt)
+        ) {
+          issues.push(`[${q.id}] Phương án chứa đại lượng âm phi logic: "${opt}"`);
+        }
+      }
+
+      const isReasoning = 'section' in q && q.section === 'reasoning';
+      const ansNum = q.visualModel.cpaSpec!.abstract.finalNumericValue;
+
+      if (!isReasoning) {
+        const spec = getInMonthQuestionInputSpec(q.correctAnswer);
+        if (spec.mode !== 'text_number') {
+          issues.push(`[${q.id}] inputSpec không khớp mode: mode=${spec.mode}`);
+        } else if (spec.expectedNumber !== ansNum) {
+          issues.push(`[${q.id}] inputSpec không khớp số: expected=${spec.expectedNumber}, ansNum=${ansNum}`);
+        }
+        if (!isInMonthAnswerCorrect(q.correctAnswer, q.correctAnswer)) {
+          issues.push(`[${q.id}] isInMonthAnswerCorrect từ chối đúng correctAnswer`);
+        }
+        if (!isInMonthAnswerCorrect(String(ansNum), q.correctAnswer)) {
+          issues.push(`[${q.id}] isInMonthAnswerCorrect từ chối số nguyên ${ansNum}`);
+        }
+        for (const opt of q.options) {
+          if (opt !== q.correctAnswer && isInMonthAnswerCorrect(opt, q.correctAnswer)) {
+            issues.push(`[${q.id}] Phương án nhiễu "${opt}" bị chấm nhầm là đúng`);
+          }
+        }
+      } else {
+        const rq = q as (typeof DECEMBER_WEEKLY_TESTS)[number]['questions'][number];
+        for (const opt of rq.options) {
+          if (opt !== rq.correctAnswer && isInMonthAnswerCorrect(opt, rq.correctAnswer)) {
+            issues.push(`[${q.id}] Phương án nhiễu nghị luận "${opt}" bị chấm nhầm là đúng`);
+          }
+        }
+        const evalRes = evaluateWeeklyReasoningText(rq.reasoningSampleAnswer, rq.reasoningKeywords);
+        if (evalRes.points !== 5 || evalRes.matchedKeywords.length < 2) {
+          issues.push(
+            `[${q.id}] Đáp án mẫu nghị luận chỉ đạt ${evalRes.points}/5đ (${evalRes.matchedKeywords.length} từ khóa)`
+          );
+        }
+      }
+    }
+
+    expect(issues).toEqual([]);
+  });
+
+  it('Không có bất kỳ rò rỉ đáp án nào trong tiêu đề mô hình, nhóm Concrete, thanh offset, hoặc gợi ý nghị luận trên cả 400 câu Tháng 12', () => {
     const leaks: string[] = [];
 
     for (const q of all400Questions) {
       const cpa = q.visualModel.cpaSpec!;
       const ansNum = cpa.abstract.finalNumericValue;
+      const normPrompt = q.prompt.replace(/\b(\d{1,3})\s(\d{3})\b/g, '$1$2');
       const ansInPrompt =
-        ansNum > 0 && new RegExp(`(?<!\\d)${ansNum}(?!\\d)`).test(q.prompt);
+        ansNum > 0 && new RegExp(`(?<!\\d)${ansNum}(?!\\d)`).test(normPrompt);
 
       if (ansNum >= 2 && !ansInPrompt) {
         const regex = new RegExp(`(?<!\\d)${ansNum}(?!\\d)`);
@@ -233,7 +351,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
           ['conversionRule', q.visualModel.conversionRule],
         ];
         for (const [fieldName, text] of fields) {
-          if (text && regex.test(text)) {
+          if (text && regex.test(text.replace(/\b(\d{1,3})\s(\d{3})\b/g, '$1$2'))) {
             leaks.push(`[${q.id}] Lộ đáp án (${ansNum}) trong visualModel.${fieldName}: "${text}"`);
           }
         }
@@ -241,8 +359,11 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
 
       if (ansNum >= 2 && !ansInPrompt) {
         for (const g of cpa.concrete.groups) {
-          if (!g.isUnknown && (g.totalValue === ansNum || g.unitValue === ansNum)) {
+          if (!g.isUnknown && !g.beforeSolveBadge && (g.totalValue === ansNum || g.unitValue === ansNum)) {
             leaks.push(`[${q.id}] Lộ giá trị trong concrete.groups (${g.id}): total=${g.totalValue}, unit=${g.unitValue}`);
+          }
+          if (g.displayMode === 'groups' && g.count === ansNum && !g.hideCountBeforeSolve) {
+            leaks.push(`[${q.id}] Lộ số lượng đáp án (count=${g.count}) trong concrete.groups (${g.id}) vì thiếu hideCountBeforeSolve`);
           }
         }
       }
@@ -262,8 +383,120 @@ describe('Tháng 12 — Kiểm chứng Toán học & Cấu trúc Singapore CPA (
           }
         }
       }
+
+      if ('section' in q && q.section === 'reasoning' && ansNum >= 2 && !ansInPrompt) {
+        const rq = q as (typeof DECEMBER_WEEKLY_TESTS)[number]['questions'][number];
+        const regex = new RegExp(`(?<!\\d)${ansNum}(?!\\d)`);
+        if (rq.reasoningPrompt && regex.test(rq.reasoningPrompt)) {
+          leaks.push(`[${q.id}] Lộ đáp án (${ansNum}) trong reasoningPrompt: "${rq.reasoningPrompt}"`);
+        }
+        const placeholderWithoutStepNums = (rq.reasoningPlaceholder || '').replace(/Bước\s+\d+/gi, '');
+        if (placeholderWithoutStepNums && regex.test(placeholderWithoutStepNums)) {
+          leaks.push(`[${q.id}] Lộ đáp án (${ansNum}) trong reasoningPlaceholder: "${rq.reasoningPlaceholder}"`);
+        }
+      }
     }
 
     expect(leaks).toEqual([]);
   });
+
+  it('Kiểm chứng các lỗi toán học, logic trực quan và cờ chống rò rỉ CPA đã được khắc phục triệt để trong Tháng 12', () => {
+    const findQ = (id: string) => {
+      const found = all400Questions.find((q) => q.id === id);
+      expect(found, `Không tìm thấy câu hỏi ${id}`).toBeDefined();
+      return found!;
+    };
+
+    // 1. dec-exam-b8 không còn mâu thuẫn toán học (2000 - 250 = 3500) mà dùng cân thăng bằng balance_eq
+    const examB8Pic = findQ('dec-exam-b8').visualModel.cpaSpec!.pictorial;
+    expect(examB8Pic.kind).toBe('measurement_lab');
+    if (examB8Pic.kind === 'measurement_lab') {
+      expect(examB8Pic.visualParams?.mode).toBe('balance_eq');
+      expect(examB8Pic.visualParams?.labelA).toBe('1 quả dưa + 250 g');
+      expect(examB8Pic.visualParams?.labelB).toBe('2 kg');
+    }
+
+    // 2. Các bài cân đĩa thăng bằng đặt đúng đĩa trái / đĩa phải
+    for (const id of ['dec-d15-q9', 'dec-d21-q9', 'dec-w3-q4', 'dec-w3-q9']) {
+      const pic = findQ(id).visualModel.cpaSpec!.pictorial;
+      expect(pic.kind).toBe('measurement_lab');
+      if (pic.kind === 'measurement_lab') {
+        expect(pic.visualParams?.mode).toBe('balance_eq');
+        expect(pic.visualParams?.labelA).not.toMatch(/Đĩa phải/i);
+      }
+    }
+
+    // 3. Tuần 3 Q4: thanh bar_packs ẩn tổng trước khi giải và hiển thị đơn vị mỗi gói
+    for (let day = 15; day <= 21; day++) {
+      const pic = findQ(`dec-d${day}-q4`).visualModel.cpaSpec!.pictorial;
+      expect(pic.kind).toBe('bar_model');
+      if (pic.kind === 'bar_model') {
+        expect(pic.bars[0].isUnknown).toBe(true);
+        expect(pic.bars[0].showKnownUnitValue).toBe(true);
+      }
+    }
+
+    // 4. Uốn dây bảo toàn chu vi ẩn chu vi chưa tính trước khi giải
+    for (const id of ['dec-d1-q10', 'dec-d7-q10', 'dec-d29-q10', 'dec-exam-b1']) {
+      const pic = findQ(id).visualModel.cpaSpec!.pictorial;
+      expect(pic.kind).toBe('perimeter_shape');
+      if (pic.kind === 'perimeter_shape') {
+        expect(pic.hidePerimeterBeforeSolve).toBe(true);
+      }
+    }
+
+    // 5. Tổng nửa chu vi trong Bar Model (Tuần 1 Q11 & dec-exam-b2) ẩn kết quả chia 2 trước khi giải
+    for (const id of ['dec-d1-q11', 'dec-d7-q11', 'dec-exam-b2']) {
+      const pic = findQ(id).visualModel.cpaSpec!.pictorial;
+      expect(pic.kind).toBe('bar_model');
+      if (pic.kind === 'bar_model') {
+        expect(pic.totalBracket?.isUnknown).toBe(true);
+      }
+    }
+
+    // 6. dec-w1-q6 dùng widthLabel để không lộ chiều dài 24 cm trước khi giải
+    const w1q6Pic = findQ('dec-w1-q6').visualModel.cpaSpec!.pictorial;
+    expect(w1q6Pic.kind).toBe('perimeter_shape');
+    if (w1q6Pic.kind === 'perimeter_shape') {
+      expect(w1q6Pic.widthLabel).toBe('Gấp 2 lần rộng');
+    }
+
+    // 7. dec-w2-q10 hình bậc thang 4 bậc hiển thị đúng 4 bậc
+    const w2q10Pic = findQ('dec-w2-q10').visualModel.cpaSpec!.pictorial;
+    expect(w2q10Pic.kind).toBe('perimeter_shape');
+    if (w2q10Pic.kind === 'perimeter_shape') {
+      expect(w2q10Pic.stepCount).toBe(4);
+    }
+
+    // 8. dec-exam-b6 hiển thị đúng nhãn 2 lối cổng
+    const examB6Pic = findQ('dec-exam-b6').visualModel.cpaSpec!.pictorial;
+    expect(examB6Pic.kind).toBe('perimeter_shape');
+    if (examB6Pic.kind === 'perimeter_shape') {
+      expect(examB6Pic.gateLabel).toContain('2 lối cổng');
+    }
+
+    // 9. Không còn bất kỳ câu hình chữ U nào mô tả sai màu "đỏ" (SVG vẽ màu vàng cam #F59E0B)
+    for (const q of all400Questions) {
+      const cpa = q.visualModel.cpaSpec!;
+      if (cpa.pictorial.kind === 'perimeter_shape' && cpa.pictorial.shapeKind === 'u_shape') {
+        const text = [
+          cpa.pictorial.sideShiftHint || '',
+          cpa.concrete.actionPrompt || '',
+          cpa.concrete.interactiveRule || '',
+        ].join(' ');
+        expect(text, `[${q.id}] mô tả sai màu chữ U`).not.toMatch(/màu đỏ|vách đỏ/i);
+      }
+    }
+
+    // 10. dec-w5-q10 Bar Model Before-After đồng bộ ID thanh và ẩn kết quả 1000 mL lúc sau trước khi giải
+    const w5q10Pic = findQ('dec-w5-q10').visualModel.cpaSpec!.pictorial;
+    expect(w5q10Pic.kind).toBe('bar_model');
+    if (w5q10Pic.kind === 'bar_model') {
+      expect(w5q10Pic.family).toBe('before_after');
+      expect(w5q10Pic.beforeBars?.map((b) => b.id)).toEqual(['bar_a', 'bar_b']);
+      expect(w5q10Pic.afterBars?.map((b) => b.id)).toEqual(['bar_a', 'bar_b']);
+      expect(w5q10Pic.afterBars?.every((b) => b.isUnknown === true)).toBe(true);
+    }
+  });
 });
+
