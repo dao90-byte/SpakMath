@@ -318,13 +318,25 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
 
     let cancelled = false;
     let clearRafId: number | null = null;
+    let resizeTimerId: number | null = null;
+    const liveRectRef = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
 
     const syncLiveCanvasSize = () => {
       if (cancelled) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const r = canvas.getBoundingClientRect();
+      const cssW = r.width > 0 ? r.width : window.innerWidth;
+      const cssH = r.height > 0 ? r.height : window.innerHeight;
+      liveRectRef.left = r.left;
+      liveRectRef.top = r.top;
+      liveRectRef.width = cssW;
+      liveRectRef.height = cssH;
+
+      // Cap live-preview DPR at 1.5 to avoid 4x GPU fill-rate stalls when zoomed on HiDPI screens
+      // (Committed strokes render as razor-sharp vector SVG paths regardless of live canvas DPR)
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       dprRef.current = dpr;
-      const targetW = Math.max(1, Math.floor(window.innerWidth * dpr));
-      const targetH = Math.max(1, Math.floor(window.innerHeight * dpr));
+      const targetW = Math.max(1, Math.floor(cssW * dpr));
+      const targetH = Math.max(1, Math.floor(cssH * dpr));
       if (canvas.width !== targetW || canvas.height !== targetH) {
         canvas.width = targetW;
         canvas.height = targetH;
@@ -336,6 +348,16 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       }
     };
 
+    const scheduleSyncSize = () => {
+      if (resizeTimerId !== null) window.clearTimeout(resizeTimerId);
+      resizeTimerId = window.setTimeout(() => {
+        resizeTimerId = null;
+        if (!isDrawingRef.current) {
+          syncLiveCanvasSize();
+        }
+      }, 120);
+    };
+
     syncLiveCanvasSize();
 
     const measureAnchorOrigin = () => {
@@ -345,14 +367,14 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       return { left: r.left, top: r.top };
     };
 
-    const drawEraserCursor = (vx: number, vy: number) => {
+    const drawEraserCursor = (cx: number, cy: number) => {
       const ctx = liveCtxRef.current;
       if (!ctx) return;
       clearLiveCanvas();
       const dpr = dprRef.current;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.beginPath();
-      ctx.arc(vx, vy, ERASER_RADIUS, 0, Math.PI * 2);
+      ctx.arc(cx, cy, ERASER_RADIUS, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(251, 191, 36, 0.16)';
       ctx.fill();
       ctx.lineWidth = 1.5;
@@ -396,6 +418,8 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       const samples = coalesced && coalesced.length > 0 ? coalesced : [e];
       const origin = anchorOriginRef.current;
       const docPts = activeDocPointsRef.current;
+      const rectLeft = liveRectRef.left;
+      const rectTop = liveRectRef.top;
 
       let prevX = lastViewXRef.current;
       let prevY = lastViewYRef.current;
@@ -408,20 +432,20 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
 
       for (let i = 0; i < samples.length; i++) {
         const s = samples[i];
-        const vx = s.clientX;
-        const vy = s.clientY;
-        const dx = vx - prevX;
-        const dy = vy - prevY;
+        const cx = s.clientX - rectLeft;
+        const cy = s.clientY - rectTop;
+        const dx = cx - prevX;
+        const dy = cy - prevY;
         if (dx * dx + dy * dy < 0.25) continue;
 
-        const midX = (prevX + vx) * 0.5;
-        const midY = (prevY + vy) * 0.5;
+        const midX = (prevX + cx) * 0.5;
+        const midY = (prevY + cy) * 0.5;
 
         ctx.quadraticCurveTo(prevX, prevY, midX, midY);
-        docPts.push(vx - origin.left, vy - origin.top);
+        docPts.push(s.clientX - origin.left, s.clientY - origin.top);
 
-        prevX = vx;
-        prevY = vy;
+        prevX = cx;
+        prevY = cy;
         prevMidX = midX;
         prevMidY = midY;
         drewAny = true;
@@ -451,6 +475,17 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
         clearLiveCanvas();
       }
 
+      // Sync canvas rect & backing store if zoom changed before this stroke
+      const r = canvas.getBoundingClientRect();
+      liveRectRef.left = r.left;
+      liveRectRef.top = r.top;
+      if (
+        Math.abs(r.width - liveRectRef.width) > 2 ||
+        Math.abs(r.height - liveRectRef.height) > 2
+      ) {
+        syncLiveCanvasSize();
+      }
+
       try {
         canvas.setPointerCapture(e.pointerId);
       } catch {
@@ -464,13 +499,13 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       activePointerIdRef.current = e.pointerId;
       rawUpdateSeenRef.current = false;
 
-      const vx = e.clientX;
-      const vy = e.clientY;
+      const cx = e.clientX - liveRectRef.left;
+      const cy = e.clientY - liveRectRef.top;
 
       if (currentMode === 'eraser') {
         eraserPushedSnapshotRef.current = false;
-        drawEraserCursor(vx, vy);
-        eraseAtViewportPoint(vx, vy);
+        drawEraserCursor(cx, cy);
+        eraseAtViewportPoint(e.clientX, e.clientY);
         return;
       }
 
@@ -485,22 +520,22 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      lastViewXRef.current = vx;
-      lastViewYRef.current = vy;
-      lastViewMidXRef.current = vx;
-      lastViewMidYRef.current = vy;
-      activeDocPointsRef.current = [vx - origin.left, vy - origin.top];
+      lastViewXRef.current = cx;
+      lastViewYRef.current = cy;
+      lastViewMidXRef.current = cx;
+      lastViewMidYRef.current = cy;
+      activeDocPointsRef.current = [e.clientX - origin.left, e.clientY - origin.top];
 
       // Instant zero-delay contact dot
       ctx.beginPath();
-      ctx.arc(vx, vy, PEN_WIDTH * 0.5, 0, Math.PI * 2);
+      ctx.arc(cx, cy, PEN_WIDTH * 0.5, 0, Math.PI * 2);
       ctx.fill();
     };
 
     const handlePointerMove = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
       if (modeRef.current === 'eraser') {
-        drawEraserCursor(e.clientX, e.clientY);
+        drawEraserCursor(e.clientX - liveRectRef.left, e.clientY - liveRectRef.top);
         eraseAtViewportPoint(e.clientX, e.clientY);
       } else {
         processPenSamples(e);
@@ -576,16 +611,20 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     canvas.addEventListener('pointermove', handlePointerMove, { passive: true });
     canvas.addEventListener('pointerup', finishStroke, { passive: true });
     canvas.addEventListener('pointercancel', finishStroke, { passive: true });
-    window.addEventListener('resize', syncLiveCanvasSize, { passive: true });
+    window.addEventListener('resize', scheduleSyncSize, { passive: true });
+    const vv = window.visualViewport;
+    vv?.addEventListener('resize', scheduleSyncSize, { passive: true });
 
     return () => {
       cancelled = true;
       if (clearRafId !== null) cancelAnimationFrame(clearRafId);
+      if (resizeTimerId !== null) window.clearTimeout(resizeTimerId);
       canvas.removeEventListener('pointerdown', handlePointerDown);
       canvas.removeEventListener('pointermove', handlePointerMove);
       canvas.removeEventListener('pointerup', finishStroke);
       canvas.removeEventListener('pointercancel', finishStroke);
-      window.removeEventListener('resize', syncLiveCanvasSize);
+      window.removeEventListener('resize', scheduleSyncSize);
+      vv?.removeEventListener('resize', scheduleSyncSize);
       inkPresenterRef.current = null;
       liveCtxRef.current = null;
     };
@@ -678,6 +717,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       <canvas
         ref={liveCanvasRef}
         aria-hidden={!isDrawingMode}
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
         className={`fixed inset-0 ${elevated ? 'z-[52]' : 'z-[38]'} w-screen h-screen block ${
           isDrawingMode && !isSuspended
             ? 'pointer-events-auto touch-none cursor-crosshair'
@@ -694,10 +734,10 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
           }`}
         >
           <div
-            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-2 rounded-2xl backdrop-blur-2xl border transition-all duration-200 ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-2 rounded-2xl border transition-all duration-200 ${
               isDrawingMode
-                ? 'bg-[rgba(7,15,44,0.95)] border-sky-300/80 shadow-[0_12px_36px_rgba(2,6,23,0.85),0_0_24px_rgba(56,189,248,0.34)]'
-                : 'bg-[rgba(8,16,46,0.88)] border-sky-300/45 shadow-[0_10px_30px_rgba(2,6,23,0.75),0_0_16px_rgba(56,189,248,0.18)] hover:border-sky-300/75'
+                ? 'bg-[#070F2C] border-sky-300/80 shadow-[0_12px_36px_rgba(2,6,23,0.85),0_0_24px_rgba(56,189,248,0.34)]'
+                : 'backdrop-blur-md bg-[rgba(8,16,46,0.9)] border-sky-300/45 shadow-[0_10px_30px_rgba(2,6,23,0.75),0_0_16px_rgba(56,189,248,0.18)] hover:border-sky-300/75'
             }`}
           >
             {/* Pen Mode Primary Toggle Button */}
