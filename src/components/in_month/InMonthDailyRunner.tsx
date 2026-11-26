@@ -169,10 +169,14 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
   const [isPaused, setIsPaused] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const answerInputRef = useRef<HTMLInputElement>(null);
+  const activeStorageKey = getStorageKey(monthNumber, dayPlan.dayNumber);
+  const hydratedKeyRef = useRef<string>(activeStorageKey);
 
   // Hydrate saved state when switching days or months
   useEffect(() => {
+    if (hydratedKeyRef.current === activeStorageKey) return;
     const saved = loadSavedDayState(monthNumber, dayPlan.dayNumber, dayPlan.questions.length);
+    hydratedKeyRef.current = activeStorageKey;
     setCurrentIdx(saved.currentIdx);
     setAnswers(saved.answers);
     setSolvedMap(saved.solvedMap);
@@ -180,10 +184,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
     setElapsedSeconds(saved.elapsedSeconds);
     setIsPaused(false);
     setShowCelebration(false);
-  }, [monthNumber, dayPlan.dayNumber, dayPlan.questions.length]);
+  }, [activeStorageKey, monthNumber, dayPlan.dayNumber, dayPlan.questions.length]);
 
-  // Persist in-progress state automatically to localStorage
+  // Persist in-progress state automatically to localStorage (only when hydrated for this exact day)
   useEffect(() => {
+    if (hydratedKeyRef.current !== activeStorageKey) return;
     try {
       const payload: SavedDayState = {
         currentIdx,
@@ -192,11 +197,11 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
         wrongAttemptsMap,
         elapsedSeconds,
       };
-      localStorage.setItem(getStorageKey(monthNumber, dayPlan.dayNumber), JSON.stringify(payload));
+      localStorage.setItem(activeStorageKey, JSON.stringify(payload));
     } catch {
       // Ignore storage write errors
     }
-  }, [monthNumber, dayPlan.dayNumber, currentIdx, answers, solvedMap, wrongAttemptsMap, elapsedSeconds]);
+  }, [activeStorageKey, currentIdx, answers, solvedMap, wrongAttemptsMap, elapsedSeconds]);
 
   // Clear direct on-screen ink annotations when moving to another question
   useEffect(() => {

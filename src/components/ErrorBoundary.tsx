@@ -47,11 +47,19 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   private handleResetStorageAndReload = () => {
-    if (window.confirm('Xóa bộ nhớ đệm và tải lại trang? Các lỗi đã thu thập vẫn sẽ được lưu trữ.')) {
-      const devErrors = localStorage.getItem('spark_math_dev_errors');
-      localStorage.clear();
-      if (devErrors) {
-        localStorage.setItem('spark_math_dev_errors', devErrors);
+    if (window.confirm('Xóa bộ nhớ đệm tạm và tải lại trang? Toàn bộ tiến trình học của em vẫn sẽ được giữ nguyên.')) {
+      try {
+        // Only clear temporary scratchpad/draft caches — NEVER wipe completed progress or scores
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && (k === 'spark_math_scratchpad_data' || k.includes('_draft'))) {
+            keysToRemove.push(k);
+          }
+        }
+        keysToRemove.forEach((k) => localStorage.removeItem(k));
+      } catch {
+        // Ignore storage errors
       }
       window.location.reload();
     }

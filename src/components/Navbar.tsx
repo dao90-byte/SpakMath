@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { sound } from '../utils/soundEffects';
+import {
+  exportProgressBackupFile,
+  importProgressBackupFile,
+} from '../utils/progressPersistence';
 import {
   Volume2,
   VolumeX,
@@ -9,7 +13,9 @@ import {
   Brain,
   Rocket,
   Orbit,
-  Sparkles
+  Sparkles,
+  Download,
+  Upload,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -39,10 +45,33 @@ export const Navbar: React.FC<NavbarProps> = ({
   starsCount,
 }) => {
   const [isMuted, setIsMuted] = useState(sound.getMuted());
+  const backupFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleToggleSound = () => {
     const next = sound.toggleMute();
     setIsMuted(next);
+  };
+
+  const handleExportProgress = () => {
+    sound.playClick();
+    const count = exportProgressBackupFile();
+    if (count === 0) {
+      window.alert('Chưa có dữ liệu tiến trình học nào để sao lưu.');
+    }
+  };
+
+  const handleImportProgressFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const count = await importProgressBackupFile(file);
+      window.alert(`Đã khôi phục thành công ${count} mục tiến trình học! Trang sẽ tải lại ngay.`);
+      window.location.reload();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Không thể đọc file sao lưu.';
+      window.alert(`Lỗi khôi phục: ${msg}`);
+    }
   };
 
   return (
@@ -308,6 +337,37 @@ export const Navbar: React.FC<NavbarProps> = ({
               <KeyRound className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
+
+          {/* 1-Click Backup & Restore Progress Buttons */}
+          <button
+            type="button"
+            onClick={handleExportProgress}
+            aria-label="Sao lưu tiến trình học (.json)"
+            title="Sao lưu tiến trình học ra file (.json)"
+            className="w-10 h-10 rounded-xl border border-emerald-300/50 bg-emerald-500/20 hover:bg-emerald-400/30 hover:border-emerald-300 text-emerald-200 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_4px_16px_rgba(1,3,16,0.72)]"
+          >
+            <Download className="w-4 h-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              sound.playClick();
+              backupFileInputRef.current?.click();
+            }}
+            aria-label="Khôi phục tiến trình học từ file"
+            title="Khôi phục tiến trình học từ file sao lưu (.json)"
+            className="w-10 h-10 rounded-xl border border-amber-300/50 bg-amber-500/20 hover:bg-amber-400/30 hover:border-amber-300 text-amber-200 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_4px_16px_rgba(1,3,16,0.72)]"
+          >
+            <Upload className="w-4 h-4" aria-hidden="true" />
+          </button>
+          <input
+            ref={backupFileInputRef}
+            type="file"
+            accept="application/json,.json"
+            onChange={handleImportProgressFile}
+            className="hidden"
+            aria-hidden="true"
+          />
 
           {/* Primary Action: Bảng Nháp (Electric Cosmic Cyan-Sky, Harmonized with Galaxy Theme) */}
           <button
