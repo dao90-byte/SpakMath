@@ -290,12 +290,8 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
       }
 
       if (!ctxRef.current) {
-        // Opaque + desynchronized unlocks direct hardware scanout low-latency ink in Chromium
         const ctx =
-          (canvas.getContext('2d', {
-            alpha: false,
-            desynchronized: true,
-          }) as CanvasRenderingContext2D | null) || canvas.getContext('2d');
+          canvas.getContext('2d', { alpha: false }) || canvas.getContext('2d');
         if (!ctx) return;
         ctxRef.current = ctx;
         gridPatternRef.current = createCosmicGridPattern(ctx);
@@ -316,21 +312,6 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
     };
 
     const rafId = requestAnimationFrame(initCanvasBackingStore);
-
-    // Request W3C OS-Compositor Delegated Ink Presenter when supported (Chrome/Edge)
-    const navWithInk = navigator as NavigatorWithInk;
-    if (navWithInk.ink?.requestPresenter) {
-      navWithInk.ink
-        .requestPresenter({ presentationArea: canvas })
-        .then((presenter) => {
-          if (!cancelled) {
-            inkPresenterRef.current = presenter;
-          }
-        })
-        .catch(() => {
-          inkPresenterRef.current = null;
-        });
-    }
 
     // Keep cached bounding rect synchronized automatically (zero layout reflow during drawing)
     const resizeObserver =
@@ -373,7 +354,7 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
       let prevMidY = lastMidYRef.current;
       let drewAny = false;
 
-      // Single batched GPU path for ALL coalesced points in this hardware tick
+      // Single batched GPU path for ALL coalesced points in this display frame
       ctx.beginPath();
       ctx.moveTo(prevMidX, prevMidY);
 
@@ -404,18 +385,6 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
         lastYRef.current = prevY;
         lastMidXRef.current = prevMidX;
         lastMidYRef.current = prevMidY;
-      }
-
-      // Feed OS-level Delegated Ink Trail for sub-frame visual response on pencil tool
-      if (inkPresenterRef.current && stroke.tool === 'pencil') {
-        try {
-          inkPresenterRef.current.updateInkTrailStartPoint(e, {
-            color: stroke.color,
-            diameter: stroke.width,
-          });
-        } catch {
-          // Ignore unsupported pointer types
-        }
       }
     };
 
@@ -466,29 +435,10 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
       ctx.beginPath();
       ctx.arc(x, y, width * 0.5, 0, Math.PI * 2);
       ctx.fill();
-
-      if (inkPresenterRef.current && !isEraser) {
-        try {
-          inkPresenterRef.current.updateInkTrailStartPoint(e, {
-            color: strokeColor,
-            diameter: width,
-          });
-        } catch {
-          // Ignore
-        }
-      }
-    };
-
-    const handlePointerRawUpdate = (e: PointerEvent) => {
-      if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
-      rawUpdateSeenRef.current = true;
-      processPointerSamples(e);
     };
 
     const handlePointerMove = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
-      // If browser already delivered raw sub-frame hardware updates for this stroke, skip redundant vsync move
-      if (rawUpdateSeenRef.current) return;
       processPointerSamples(e);
     };
 
@@ -537,11 +487,6 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
     };
 
     canvas.addEventListener('pointerdown', handlePointerDown, { passive: false });
-    canvas.addEventListener(
-      'pointerrawupdate' as keyof HTMLElementEventMap,
-      handlePointerRawUpdate as EventListener,
-      { passive: true }
-    );
     canvas.addEventListener('pointermove', handlePointerMove, { passive: true });
     canvas.addEventListener('pointerup', finishStroke, { passive: true });
     canvas.addEventListener('pointercancel', finishStroke, { passive: true });
@@ -553,10 +498,6 @@ export const Scratchpad: React.FC<ScratchpadProps> = ({ isOpen, onClose }) => {
       cancelAnimationFrame(rafId);
       resizeObserver?.disconnect();
       canvas.removeEventListener('pointerdown', handlePointerDown);
-      canvas.removeEventListener(
-        'pointerrawupdate' as keyof HTMLElementEventMap,
-        handlePointerRawUpdate as EventListener
-      );
       canvas.removeEventListener('pointermove', handlePointerMove);
       canvas.removeEventListener('pointerup', finishStroke);
       canvas.removeEventListener('pointercancel', finishStroke);

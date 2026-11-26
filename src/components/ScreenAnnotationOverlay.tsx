@@ -317,6 +317,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     if (!canvas) return;
 
     let cancelled = false;
+    let clearRafId: number | null = null;
 
     const syncLiveCanvasSize = () => {
       if (cancelled) return;
@@ -329,31 +330,13 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
         canvas.height = targetH;
       }
       if (!liveCtxRef.current) {
-        const ctx =
-          (canvas.getContext('2d', {
-            alpha: true,
-            desynchronized: true,
-          }) as CanvasRenderingContext2D | null) || canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) return;
         liveCtxRef.current = ctx;
       }
     };
 
     syncLiveCanvasSize();
-
-    const navWithInk = navigator as NavigatorWithInk;
-    if (navWithInk.ink?.requestPresenter) {
-      navWithInk.ink
-        .requestPresenter({ presentationArea: canvas })
-        .then((presenter) => {
-          if (!cancelled) {
-            inkPresenterRef.current = presenter;
-          }
-        })
-        .catch(() => {
-          inkPresenterRef.current = null;
-        });
-    }
 
     const measureAnchorOrigin = () => {
       const svg = svgRef.current;
@@ -451,17 +434,6 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
         lastViewMidXRef.current = prevMidX;
         lastViewMidYRef.current = prevMidY;
       }
-
-      if (inkPresenterRef.current) {
-        try {
-          inkPresenterRef.current.updateInkTrailStartPoint(e, {
-            color: colorRef.current,
-            diameter: PEN_WIDTH,
-          });
-        } catch {
-          // Ignore unsupported pointer types
-        }
-      }
     };
 
     const handlePointerDown = (e: PointerEvent) => {
@@ -473,6 +445,11 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       if (!ctx) return;
 
       e.preventDefault();
+      if (clearRafId !== null) {
+        cancelAnimationFrame(clearRafId);
+        clearRafId = null;
+        clearLiveCanvas();
+      }
 
       try {
         canvas.setPointerCapture(e.pointerId);
@@ -518,33 +495,10 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
       ctx.beginPath();
       ctx.arc(vx, vy, PEN_WIDTH * 0.5, 0, Math.PI * 2);
       ctx.fill();
-
-      if (inkPresenterRef.current) {
-        try {
-          inkPresenterRef.current.updateInkTrailStartPoint(e, {
-            color: strokeColor,
-            diameter: PEN_WIDTH,
-          });
-        } catch {
-          // Ignore
-        }
-      }
-    };
-
-    const handlePointerRawUpdate = (e: PointerEvent) => {
-      if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
-      rawUpdateSeenRef.current = true;
-      if (modeRef.current === 'eraser') {
-        drawEraserCursor(e.clientX, e.clientY);
-        eraseAtViewportPoint(e.clientX, e.clientY);
-      } else {
-        processPenSamples(e);
-      }
     };
 
     const handlePointerMove = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
-      if (rawUpdateSeenRef.current) return;
       if (modeRef.current === 'eraser') {
         drawEraserCursor(e.clientX, e.clientY);
         eraseAtViewportPoint(e.clientX, e.clientY);
@@ -556,6 +510,7 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     const finishStroke = (e: PointerEvent) => {
       if (!isDrawingRef.current || activePointerIdRef.current !== e.pointerId) return;
 
+      let committed = false;
       if (modeRef.current === 'pen') {
         const origin = anchorOriginRef.current;
         const endVx = e.clientX;
@@ -586,15 +541,27 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
 
           committedStrokesRef.current = nextList;
           setCommittedStrokes(nextList);
+          committed = true;
         }
       }
 
-      clearLiveCanvas();
       isDrawingRef.current = false;
       activePointerIdRef.current = null;
       activeDocPointsRef.current = [];
       rawUpdateSeenRef.current = false;
       eraserPushedSnapshotRef.current = false;
+
+      if (committed) {
+        // Clear live canvas on the next frame after React commits the SVG stroke (prevents blink)
+        clearRafId = requestAnimationFrame(() => {
+          clearRafId = null;
+          if (!isDrawingRef.current) {
+            clearLiveCanvas();
+          }
+        });
+      } else {
+        clearLiveCanvas();
+      }
 
       try {
         if (canvas.hasPointerCapture(e.pointerId)) {
@@ -606,11 +573,6 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
     };
 
     canvas.addEventListener('pointerdown', handlePointerDown, { passive: false });
-    canvas.addEventListener(
-      'pointerrawupdate' as keyof HTMLElementEventMap,
-      handlePointerRawUpdate as EventListener,
-      { passive: true }
-    );
     canvas.addEventListener('pointermove', handlePointerMove, { passive: true });
     canvas.addEventListener('pointerup', finishStroke, { passive: true });
     canvas.addEventListener('pointercancel', finishStroke, { passive: true });
@@ -618,11 +580,8 @@ export const ScreenAnnotationOverlay: React.FC<ScreenAnnotationOverlayProps> = (
 
     return () => {
       cancelled = true;
+      if (clearRafId !== null) cancelAnimationFrame(clearRafId);
       canvas.removeEventListener('pointerdown', handlePointerDown);
-      canvas.removeEventListener(
-        'pointerrawupdate' as keyof HTMLElementEventMap,
-        handlePointerRawUpdate as EventListener
-      );
       canvas.removeEventListener('pointermove', handlePointerMove);
       canvas.removeEventListener('pointerup', finishStroke);
       canvas.removeEventListener('pointercancel', finishStroke);
