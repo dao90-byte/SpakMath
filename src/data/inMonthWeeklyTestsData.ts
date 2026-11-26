@@ -192,7 +192,7 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'bar_model',
         relatedDayNumbers: [5, 6],
-        prompt: '[Tính toán 5] Thùng A có 18 lít dầu. Thùng B có số lít dầu nhiều hơn 2 lần số dầu của thùng A là 9 lít. Hỏi thùng B có bao nhiêu lít dầu?',
+        prompt: '[Tính toán 5] Thùng A có 18 lít dầu. Thùng B có số lít dầu gấp 2 lần số dầu của thùng A và thêm 9 lít. Hỏi thùng B có bao nhiêu lít dầu?',
         options: ['45 lít', '36 lít', '27 lít', '54 lít'],
         correctAnswer: '45 lít',
         explanation: 'Hai lần số dầu thùng A là: 18 × 2 = 36 (lít). Số dầu của thùng B là: 36 + 9 = 45 (lít).',
@@ -299,26 +299,26 @@ const RAW_NOVEMBER_WEEKLY_TESTS: InMonthWeeklyTest[] = [
         points: 10,
         skillDomain: 'bar_model',
         relatedDayNumbers: [5, 7],
-        prompt: '[Nghị luận 3] Mai có 15 bông hoa. Lan có số hoa kém 3 lần số hoa của Mai là 7 bông. Để tìm số hoa của Lan, em thực hiện các bước lập luận nào?',
+        prompt: '[Nghị luận 3] Mai có 15 bông hoa. Lan có số hoa gấp 3 lần số hoa của Mai và trừ đi 7 bông. Để tìm số hoa của Lan, em thực hiện các bước lập luận nào?',
         options: [
-          'Bước 1 lấy 15 × 3 = 45 (bông) để tìm 3 lần số hoa của Mai; Bước 2 lấy 45 - 7 = 38 (bông) vì kém 7 bông.',
+          'Bước 1 lấy 15 × 3 = 45 (bông) để tìm 3 lần số hoa của Mai; Bước 2 lấy 45 - 7 = 38 (bông) để trừ đi 7 bông.',
           'Bước 1 lấy 15 : 3 = 5 (bông); Bước 2 lấy 5 + 7 = 12 (bông).',
           'Bước 1 lấy 15 × 3 = 45 (bông); Bước 2 lấy 45 + 7 = 52 (bông).',
           'Bước 1 lấy 15 - 7 = 8 (bông); Bước 2 lấy 8 × 3 = 24 (bông).',
         ],
         correctAnswer:
-          'Bước 1 lấy 15 × 3 = 45 (bông) để tìm 3 lần số hoa của Mai; Bước 2 lấy 45 - 7 = 38 (bông) vì kém 7 bông.',
+          'Bước 1 lấy 15 × 3 = 45 (bông) để tìm 3 lần số hoa của Mai; Bước 2 lấy 45 - 7 = 38 (bông) để trừ đi 7 bông.',
         reasoningPrompt:
           'Em hãy viết phép tính hoàn chỉnh để tìm số bông hoa của Lan và giải thích vì sao phải trừ 7:',
-        reasoningPlaceholder: 'Ví dụ: Ta tính 15 × 3 - 7 = 38 bông hoa, vì kém 3 lần là 7 bông nên phải trừ đi 7...',
+        reasoningPlaceholder: 'Ví dụ: Ta tính 15 × 3 - 7 = 38 bông hoa, vì gấp 3 lần rồi trừ đi 7 bông...',
         reasoningKeywords: ['38', '45', '15', '7', 'trừ'],
         reasoningSampleAnswer:
-          'Ba lần số hoa của Mai là 15 × 3 = 45 (bông). Vì Lan kém mức đó 7 bông nên Lan có: 45 - 7 = 38 (bông).',
+          'Ba lần số hoa của Mai là 15 × 3 = 45 (bông). Trừ đi 7 bông, Lan có số hoa là: 45 - 7 = 38 (bông).',
         explanation:
-          '"Kém 3 lần số hoa của Mai là 7 bông" nghĩa là ít hơn (15 × 3) là 7 bông. Vậy số hoa của Lan = 15 × 3 - 7 = 38 bông.',
+          '"Gấp 3 lần số hoa của Mai và trừ đi 7 bông" nghĩa là lấy (15 × 3) rồi trừ 7. Vậy số hoa của Lan = 15 × 3 - 7 = 38 bông.',
         visualModel: {
           type: 'bar_model',
-          title: '3 lần hoa của Mai · Lan kém mức đó 7 bông',
+          title: 'Gấp 3 lần hoa của Mai rồi trừ đi 7 bông',
           bars: [
             { label: 'Mai', valueLabel: '15 bông', units: 1, color: '#0284C7' },
             { label: 'Lan', valueLabel: '3 phần bớt 7 = ? bông', units: 3, color: '#EC4899', highlightNote: '-7 bông' },
