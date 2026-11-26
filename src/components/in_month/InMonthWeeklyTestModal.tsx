@@ -91,6 +91,14 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
   onOpenScratchpad,
 }) => {
   const questions = weeklyTest.questions;
+  const calcEntries = questions
+    .map((q, idx) => ({ q, idx }))
+    .filter((entry) => entry.q.section === 'calculation');
+  const reasonEntries = questions
+    .map((q, idx) => ({ q, idx }))
+    .filter((entry) => entry.q.section === 'reasoning');
+  const calcMax = calcEntries.reduce((sum, entry) => sum + entry.q.points, 0);
+  const reasonMax = reasonEntries.reduce((sum, entry) => sum + entry.q.points, 0);
   const defaultSeconds = weeklyTest.durationMinutes * 60; // 15 * 60 = 900s
 
   const initialDraft = !savedResult
@@ -154,16 +162,19 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
 
       if (q.section === 'calculation') {
         if (isOptionRight) {
-          calculationScore += q.points; // 10 points
+          calculationScore += q.points;
         }
       } else {
-        // Reasoning section: 5 points for selecting the right argument + up to 5 points for written solution
+        // Reasoning section: half points for selecting the right argument + half points for written explanation
+        const optionMax = Math.floor(q.points / 2);
+        const textMax = q.points - optionMax;
         const textVal = textMap[q.id] || '';
         const evalRes = evaluateWeeklyReasoningText(textVal, q.reasoningKeywords);
+        const scaledTextPoints = Math.round((evalRes.points / 5) * textMax);
         if (isOptionRight) {
-          reasoningScore += 5;
+          reasoningScore += optionMax;
         }
-        reasoningScore += evalRes.points;
+        reasoningScore += scaledTextPoints;
       }
     });
 
@@ -279,12 +290,18 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
   };
 
   const completedCount = questions.filter((q) => isQuestionCompleted(q.id)).length;
-  const currentQ = questions[currentIdx];
+  const safeCurrentIdx = Math.min(currentIdx, Math.max(0, questions.length - 1));
+  const currentQ = questions[safeCurrentIdx];
   const currentInputSpec = getInMonthQuestionInputSpec(currentQ.correctAnswer);
   const currentReasoningEval =
     currentQ.section === 'reasoning'
       ? evaluateWeeklyReasoningText(reasoningTexts[currentQ.id] || '', currentQ.reasoningKeywords)
       : null;
+  const currentOptionMax = Math.floor(currentQ.points / 2);
+  const currentTextMax = currentQ.points - currentOptionMax;
+  const currentScaledTextPoints = currentReasoningEval
+    ? Math.round((currentReasoningEval.points / 5) * currentTextMax)
+    : 0;
 
   const liveScores = computeScores(selectedAnswers, reasoningTexts);
 
@@ -320,7 +337,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   <span>Kiểm Tra 15 Phút · Tuần {weeklyTest.weekNumber}</span>
                 </span>
                 <span className="text-cyan-200/90 hidden sm:inline">
-                  6 Câu Tính Toán (60đ) + 4 Câu Nghị Luận (40đ)
+                  {calcEntries.length} Câu Tính Toán ({calcMax}đ) + {reasonEntries.length} Câu Nghị Luận ({reasonMax}đ)
                 </span>
               </div>
               <h1 className="text-base sm:text-xl font-black font-display bg-gradient-to-r from-white via-cyan-100 to-amber-200 bg-clip-text text-transparent mt-0.5">
@@ -430,14 +447,14 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   <div className="text-[11px] font-bold uppercase text-[color:var(--mm-cyan-text)]">Tính Toán</div>
                   <div className="text-2xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums mt-1">
                     {liveScores.calculationScore}
-                    <span className="text-xs text-[color:var(--mm-ink-muted)] font-normal">/60</span>
+                    <span className="text-xs text-[color:var(--mm-ink-muted)] font-normal">/{calcMax}</span>
                   </div>
                 </div>
                 <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_58%,transparent)] text-center">
                   <div className="text-[11px] font-bold uppercase text-[color:var(--mm-violet-text)]">Nghị Luận</div>
                   <div className="text-2xl font-black font-display text-[color:var(--mm-ink-primary)] tabular-nums mt-1">
                     {liveScores.reasoningScore}
-                    <span className="text-xs text-[color:var(--mm-ink-muted)] font-normal">/40</span>
+                    <span className="text-xs text-[color:var(--mm-ink-muted)] font-normal">/{reasonMax}</span>
                   </div>
                 </div>
                 <div
@@ -513,15 +530,15 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
           </div>
         )}
 
-        {/* QUESTION MATRIX NAVIGATOR (1..6 Calculation, 7..10 Reasoning) */}
+        {/* DYNAMIC QUESTION MATRIX NAVIGATOR (Calculation + Reasoning) */}
         <div className="rounded-3xl mm-surface-card border p-4 shadow-[0_18px_46px_rgba(3,7,24,0.72)] flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-cyan-text)] mr-1 flex items-center gap-1">
               <Calculator className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Tính toán:</span>
             </span>
-            {questions.slice(0, 6).map((q, idx) => {
-              const isCurr = currentIdx === idx;
+            {calcEntries.map(({ q, idx }) => {
+              const isCurr = safeCurrentIdx === idx;
               const done = isQuestionCompleted(q.id);
               const isRightAfterSubmit =
                 isSubmitted && isInMonthAnswerCorrect(selectedAnswers[q.id] || '', q.correctAnswer);
@@ -551,9 +568,8 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
               <MessageSquareQuote className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Nghị luận:</span>
             </span>
-            {questions.slice(6, 10).map((q, offset) => {
-              const idx = offset + 6;
-              const isCurr = currentIdx === idx;
+            {reasonEntries.map(({ q, idx }) => {
+              const isCurr = safeCurrentIdx === idx;
               const done = isQuestionCompleted(q.id);
               const isOptionRight = isInMonthAnswerCorrect(
                 selectedAnswers[q.id] || '',
@@ -590,7 +606,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
           </div>
 
           <div className="text-xs font-bold text-[color:var(--mm-cyan-text)] tabular-nums">
-            Đã làm: <span className="text-[color:var(--mm-amber-text)] font-black">{completedCount}/10</span> câu · Đạt tối thiểu:{' '}
+            Đã làm: <span className="text-[color:var(--mm-amber-text)] font-black">{completedCount}/{questions.length}</span> câu · Đạt tối thiểu:{' '}
             <span className="text-[color:var(--mm-emerald-text)] font-black">{weeklyTest.passingScore}/100đ</span>
           </div>
         </div>
@@ -659,7 +675,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                 </span>
               </div>
               <span className="text-xs font-black text-[color:var(--mm-amber-text)] tabular-nums">
-                Câu {currentIdx + 1} / {questions.length}
+                Câu {safeCurrentIdx + 1} / {questions.length}
               </span>
             </div>
 
@@ -672,7 +688,7 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
 
             {currentQ.section === 'calculation' ? (
               /* ========================================== */
-              /* PHẦN I: TÍNH TOÁN (6 CÂU x 10 ĐIỂM)         */
+              /* PHẦN I: TÍNH TOÁN (NHẬP ĐÁP ÁN TRỰC TIẾP)  */
               /* ========================================== */
               <div className="space-y-4">
                 {currentInputSpec.mode === 'division_remainder' ? (
@@ -768,10 +784,10 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
               /* PHẦN II: NGHỊ LUẬN TƯ DUY (CHỌN LẬP LUẬN ĐÚNG + VIẾT LỜI GIẢI) */
               /* ============================================================ */
               <div className="space-y-5">
-                {/* Bước 1: Chọn lập luận đúng (5 điểm) */}
+                {/* Bước 1: Chọn lập luận đúng */}
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-fuchsia-200">
-                    <span>Bước 1 (5 điểm): Chọn lập luận toán học đúng nhất</span>
+                    <span>Bước 1 ({currentOptionMax} điểm): Chọn lập luận toán học đúng nhất</span>
                     {selectedAnswers[currentQ.id] && (
                       <span className="text-emerald-300">✓ Đã chọn lập luận</span>
                     )}
@@ -830,14 +846,14 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                   </div>
                 </div>
 
-                {/* Bước 2: Tự viết lời giải ngắn (5 điểm) */}
+                {/* Bước 2: Tự viết lời giải ngắn */}
                 <div className="p-4 rounded-2xl bg-[color:var(--mm-surface-inset)] border border-[color:color-mix(in_oklch,var(--mm-violet-border)_65%,transparent)] space-y-2.5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <label
                       htmlFor={`reasoning-input-${currentQ.id}`}
                       className="text-xs font-black uppercase tracking-wider text-[color:var(--mm-amber-text)]"
                     >
-                      Bước 2 (5 điểm): Tự viết phép tính &amp; lời giải ngắn của em
+                      Bước 2 ({currentTextMax} điểm): Tự viết phép tính &amp; lời giải ngắn của em
                     </label>
                     {currentReasoningEval && (
                       <span
@@ -850,9 +866,9 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
                         }`}
                       >
                         {currentReasoningEval.points === 5
-                          ? '✓ Lời giải đầy đủ (+5đ)'
+                          ? `✓ Lời giải đầy đủ (+${currentTextMax}đ)`
                           : currentReasoningEval.points > 0
-                          ? `✓ Đã viết lời giải (+${currentReasoningEval.points}đ)`
+                          ? `✓ Đã viết lời giải (+${currentScaledTextPoints}đ)`
                           : 'Hãy nêu phép tính hoặc con số kết quả'}
                       </span>
                     )}
@@ -889,19 +905,19 @@ export const InMonthWeeklyTestModal: React.FC<InMonthWeeklyTestModalProps> = ({
             <div className="pt-3 border-t border-white/15 flex items-center justify-between gap-3">
               <button
                 type="button"
-                disabled={currentIdx === 0}
-                onClick={() => setCurrentIdx((prev) => Math.max(0, prev - 1))}
+                disabled={safeCurrentIdx === 0}
+                onClick={() => setCurrentIdx((prev) => Math.max(0, Math.min(prev, questions.length - 1) - 1))}
                 className="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-35 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-all min-h-[44px]"
               >
                 <ChevronLeft className="w-4 h-4" aria-hidden="true" />
                 <span>Câu trước</span>
               </button>
 
-              {currentIdx < questions.length - 1 ? (
+              {safeCurrentIdx < questions.length - 1 ? (
                 <button
                   type="button"
                   onClick={() =>
-                    setCurrentIdx((prev) => Math.min(questions.length - 1, prev + 1))
+                    setCurrentIdx((prev) => Math.min(questions.length - 1, Math.max(0, prev) + 1))
                   }
                   className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-300 via-sky-300 to-fuchsia-300 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-[0_0_24px_rgba(34,211,238,0.4)] cursor-pointer transition-all min-h-[44px]"
                 >

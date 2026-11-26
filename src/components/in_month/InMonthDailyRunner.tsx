@@ -472,12 +472,15 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
                       Thông Báo Trước Ở Phần Mở Đầu · {unitLabel} Cuối Tuần {weeklyTestForThisDay.weekNumber}
                     </span>
                     <span className="px-2 py-0.5 rounded-md bg-white/10 border border-cyan-300/40 text-cyan-200 text-[11px]">
-                      15 Phút · 6 Tính Toán + 4 Nghị Luận
+                      15 Phút · {weeklyTestForThisDay.questions.filter((q) => q.section === 'calculation').length} Tính Toán +{' '}
+                      {weeklyTestForThisDay.questions.filter((q) => q.section === 'reasoning').length} Nghị Luận
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm font-bold text-white leading-relaxed">
                     Hôm nay là {unitLower} học cuối cùng của <strong>{dayPlan.weekTitle}</strong>! Ngay sau khi hoàn thành bài học hôm nay, em sẽ thực hiện{' '}
-                    <strong className="text-amber-200">{weeklyTestForThisDay.title}</strong> (15 phút · gồm 6 câu Tính toán &amp; 4 câu Nghị luận).{' '}
+                    <strong className="text-amber-200">{weeklyTestForThisDay.title}</strong> (15 phút · gồm{' '}
+                    {weeklyTestForThisDay.questions.filter((q) => q.section === 'calculation').length} câu Tính toán &amp;{' '}
+                    {weeklyTestForThisDay.questions.filter((q) => q.section === 'reasoning').length} câu Nghị luận).{' '}
                     {weeklyTestForThisDay.unlocksDayNumber
                       ? `Em cần hoàn thành và đạt từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để mở khóa các bài học của tuần kế tiếp (bắt đầu từ ${unitLabel} ${weeklyTestForThisDay.unlocksDayNumber}).`
                       : `Em hãy hoàn thành bài kiểm tra với kết quả từ ${weeklyTestForThisDay.passingScore}/100 điểm trở lên để khép lại trọn vẹn ${totalWeeks} tuần học và bước vào Bài Kiểm Tra Cuối ${monthLabel}!`}
@@ -835,36 +838,42 @@ export const InMonthDailyRunner: React.FC<InMonthDailyRunnerProps> = ({
               </div>
 
               {/* IF THIS IS THE LAST SESSION OF A WEEK WITH A 15-MINUTE WEEKLY TEST */}
-              {weeklyTestForThisDay && onOpenWeeklyTest && (
-                <div className="my-4 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_right,_rgba(232,121,249,0.28),_transparent_55%),linear-gradient(145deg,_rgba(15,23,66,0.95),_rgba(30,15,72,0.95))] border-2 border-fuchsia-300/75 text-left space-y-2.5 shadow-[0_0_32px_rgba(232,121,249,0.28)]">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4" aria-hidden="true" />
-                      <span>Bài Kiểm Tra 15 Phút Cuối Tuần {weeklyTestForThisDay.weekNumber}</span>
-                    </span>
-                    <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-white/10 text-cyan-200">
-                      Cần đạt ≥ {weeklyTestForThisDay.passingScore}/100đ
-                    </span>
+              {weeklyTestForThisDay && onOpenWeeklyTest && (() => {
+                const wtCalcQs = weeklyTestForThisDay.questions.filter((q) => q.section === 'calculation');
+                const wtReasonQs = weeklyTestForThisDay.questions.filter((q) => q.section === 'reasoning');
+                const wtCalcMax = wtCalcQs.reduce((s, q) => s + q.points, 0);
+                const wtReasonMax = wtReasonQs.reduce((s, q) => s + q.points, 0);
+                return (
+                  <div className="my-4 p-4 rounded-2xl bg-[radial-gradient(ellipse_at_top_right,_rgba(232,121,249,0.28),_transparent_55%),linear-gradient(145deg,_rgba(15,23,66,0.95),_rgba(30,15,72,0.95))] border-2 border-fuchsia-300/75 text-left space-y-2.5 shadow-[0_0_32px_rgba(232,121,249,0.28)]">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4" aria-hidden="true" />
+                        <span>Bài Kiểm Tra 15 Phút Cuối Tuần {weeklyTestForThisDay.weekNumber}</span>
+                      </span>
+                      <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-white/10 text-cyan-200">
+                        Cần đạt ≥ {weeklyTestForThisDay.passingScore}/100đ
+                      </span>
+                    </div>
+                    <p className="text-xs text-indigo-100 leading-relaxed">
+                      Em đã hoàn thành {unitLower} học cuối của <strong>{dayPlan.weekTitle}</strong>! Hãy thực hiện Bài Kiểm Tra 15 Phút gồm{' '}
+                      <strong>{wtCalcQs.length} câu Tính Toán ({wtCalcMax}đ)</strong> và <strong>{wtReasonQs.length} câu Nghị Luận Tư Duy ({wtReasonMax}đ)</strong>{' '}
+                      {weeklyTestForThisDay.unlocksDayNumber
+                        ? 'để mở khóa các bài học của tuần kế tiếp.'
+                        : `để hoàn tất ${totalWeeks} tuần học và bước vào Kỳ Thi Cuối ${monthLabel}.`}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-cyan-200">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-300/40">
+                        <Calculator className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
+                        {wtCalcQs.length} câu Tính toán ({wtCalcMax}đ)
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-fuchsia-500/20 border border-fuchsia-300/40">
+                        <MessageSquareQuote className="w-3.5 h-3.5 text-fuchsia-300" aria-hidden="true" />
+                        {wtReasonQs.length} câu Nghị luận ({wtReasonMax}đ)
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-indigo-100 leading-relaxed">
-                    Em đã hoàn thành {unitLower} học cuối của <strong>{dayPlan.weekTitle}</strong>! Hãy thực hiện Bài Kiểm Tra 15 Phút gồm{' '}
-                    <strong>6 câu Tính Toán (60đ)</strong> và <strong>4 câu Nghị Luận Tư Duy (40đ)</strong>{' '}
-                    {weeklyTestForThisDay.unlocksDayNumber
-                      ? 'để mở khóa các bài học của tuần kế tiếp.'
-                      : `để hoàn tất ${totalWeeks} tuần học và bước vào Kỳ Thi Cuối ${monthLabel}.`}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-cyan-200">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-300/40">
-                      <Calculator className="w-3.5 h-3.5 text-cyan-300" aria-hidden="true" />
-                      6 câu Tính toán
-                    </span>
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-fuchsia-500/20 border border-fuchsia-300/40">
-                      <MessageSquareQuote className="w-3.5 h-3.5 text-fuchsia-300" aria-hidden="true" />
-                      4 câu Nghị luận
-                    </span>
-                  </div>
-                </div>
-              )}
+                );
+              })()}
 
               <div className="space-y-2.5">
                 {weeklyTestForThisDay && onOpenWeeklyTest ? (

@@ -661,6 +661,10 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
                     const wtUnlocked = isWeeklyTestUnlocked(weeklyTestAfterThisDay);
                     const wtResult = weeklyTestResults[weeklyTestAfterThisDay.weekNumber];
                     const isPassed = !!wtResult?.passed;
+                    const wtCalcQs = weeklyTestAfterThisDay.questions.filter((q) => q.section === 'calculation');
+                    const wtReasonQs = weeklyTestAfterThisDay.questions.filter((q) => q.section === 'reasoning');
+                    const wtCalcMax = wtCalcQs.reduce((sum, q) => sum + q.points, 0);
+                    const wtReasonMax = wtReasonQs.reduce((sum, q) => sum + q.points, 0);
 
                     return (
                       <button
@@ -706,12 +710,12 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
 
                               <span className="inline-flex items-center gap-1 text-[color:var(--mm-cyan-text)]">
                                 <Calculator className="w-3.5 h-3.5 text-[color:var(--mm-cyan-accent)]" aria-hidden="true" />
-                                <span>6 câu Tính toán (60đ)</span>
+                                <span>{wtCalcQs.length} câu Tính toán ({wtCalcMax}đ)</span>
                               </span>
                               <span aria-hidden="true" className="text-[color:var(--mm-ink-muted)]">·</span>
                               <span className="inline-flex items-center gap-1 text-[color:var(--mm-violet-text)]">
                                 <MessageSquareQuote className="w-3.5 h-3.5 text-[color:var(--mm-violet-accent)]" aria-hidden="true" />
-                                <span>4 câu Nghị luận (40đ)</span>
+                                <span>{wtReasonQs.length} câu Nghị luận ({wtReasonMax}đ)</span>
                               </span>
                             </div>
 
@@ -721,7 +725,7 @@ export const InMonthCalendarHub: React.FC<InMonthCalendarHubProps> = ({
 
                             <p className="text-xs sm:text-sm text-[color:var(--mm-ink-secondary)]">
                               {isPassed
-                                ? `Đã vượt qua xuất sắc với ${wtResult.totalScore}/100 điểm (Tính toán: ${wtResult.calculationScore}/60đ · Nghị luận: ${wtResult.reasoningScore}/40đ). ${
+                                ? `Đã vượt qua xuất sắc với ${wtResult.totalScore}/100 điểm (Tính toán: ${wtResult.calculationScore}/${wtCalcMax}đ · Nghị luận: ${wtResult.reasoningScore}/${wtReasonMax}đ). ${
                                     weeklyTestAfterThisDay.unlocksDayNumber
                                       ? `Đã mở khóa Tuần ${weeklyTestAfterThisDay.weekNumber + 1} (từ ${unitLabel} ${weeklyTestAfterThisDay.unlocksDayNumber})!`
                                       : `Đã hoàn tất trọn vẹn ${totalWeeks} tuần học!`

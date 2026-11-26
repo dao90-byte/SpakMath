@@ -22,7 +22,7 @@ import {
   INITIAL_COSMIC_PROGRESS,
 } from '../utils/cosmicProgressStorage';
 
-describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Singapore CPA (270 câu: 20 Buổi + 4 Đề 15p + Đề Cuối Kỳ 45–60p)', () => {
+describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Singapore CPA (246 câu: 20 Buổi + 4 Đề 15p + Đề Cuối Kỳ 45–60p)', () => {
   const allDailyQuestions = DECEMBER_IN_MONTH_DAYS.flatMap((d) => d.questions);
   const allWeeklyQuestions = DECEMBER_WEEKLY_TESTS.flatMap((w) => w.questions);
   const allExamQuestions = DECEMBER_FINAL_EXAM.questions;
@@ -32,13 +32,13 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     ...allExamQuestions,
   ];
 
-  it('Đạt đúng khung chuẩn 20 buổi (4 tuần × 5 buổi = 220 câu), 4 đề 15p sau Buổi 5–10–15–20 (40 câu), và Đề Cuối Kỳ 45–60p gồm 5 Cơ bản + 3 Olympic + 2 Nghị luận (10 câu) = 270 câu', () => {
+  it('Đạt đúng khung chuẩn 20 buổi (4 tuần × 5 buổi = 220 câu), 4 đề 15p sau Buổi 5–10–15–20 (mỗi đề 3 Tính toán + 1 Nghị luận = 16 câu), và Đề Cuối Kỳ 45–60p gồm 5 Cơ bản + 3 Olympic + 2 Nghị luận (10 câu) = 246 câu', () => {
     expect(DECEMBER_IN_MONTH_DAYS.length).toBe(20);
     expect(allDailyQuestions.length).toBe(220);
     expect(DECEMBER_WEEKLY_TESTS.length).toBe(4);
-    expect(allWeeklyQuestions.length).toBe(40);
+    expect(allWeeklyQuestions.length).toBe(16);
     expect(allExamQuestions.length).toBe(10);
-    expect(allQuestions.length).toBe(270);
+    expect(allQuestions.length).toBe(246);
 
     // Kiểm tra phân bổ 4 tuần × 5 buổi liên tiếp 1..20
     DECEMBER_IN_MONTH_DAYS.forEach((session, idx) => {
@@ -59,12 +59,14 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
       expect(wt.monthNumber).toBe(12);
       expect(wt.monthLabel).toBe('Tháng 12');
       expect(wt.durationMinutes).toBe(15);
-      expect(wt.questions.length).toBe(10);
+      expect(wt.questions.length).toBe(4);
       expect(wt.subtitle.toLowerCase()).not.toContain('mở khóa');
-      const calcCount = wt.questions.filter((q) => q.section === 'calculation').length;
-      const reasonCount = wt.questions.filter((q) => q.section === 'reasoning').length;
-      expect(calcCount).toBe(6);
-      expect(reasonCount).toBe(4);
+      const calcQs = wt.questions.filter((q) => q.section === 'calculation');
+      const reasonQs = wt.questions.filter((q) => q.section === 'reasoning');
+      expect(calcQs.length).toBe(3);
+      expect(reasonQs.length).toBe(1);
+      expect(calcQs.reduce((s, q) => s + q.points, 0)).toBe(60);
+      expect(reasonQs.reduce((s, q) => s + q.points, 0)).toBe(40);
       const totalPts = wt.questions.reduce((s, q) => s + q.points, 0);
       expect(totalPts).toBe(100);
       for (const q of wt.questions) {
@@ -74,7 +76,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
           expect(dNum).toBeLessThanOrEqual(20);
         }
       }
-      for (const rq of wt.questions.filter((q) => q.section === 'reasoning')) {
+      for (const rq of reasonQs) {
         expect(rq.reasoningPrompt && rq.reasoningPrompt.length > 10).toBe(true);
         expect(rq.reasoningKeywords && rq.reasoningKeywords.length >= 3).toBe(true);
         expect(rq.reasoningSampleAnswer && rq.reasoningSampleAnswer.length > 10).toBe(true);
@@ -135,7 +137,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     }
   });
 
-  it('Toàn bộ 270 câu hỏi Tháng 12 đều có cpaSpec hợp lệ và vượt qua bộ kiểm chứng bất biến Toán học', () => {
+  it('Toàn bộ 246 câu hỏi Tháng 12 đều có cpaSpec hợp lệ và vượt qua bộ kiểm chứng bất biến Toán học', () => {
     const failures: string[] = [];
 
     for (const q of allQuestions) {
@@ -157,7 +159,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     const perimQs = allQuestions.filter(
       (q) => q.visualModel.cpaSpec?.pictorial.kind === 'perimeter_shape'
     );
-    expect(perimQs.length).toBeGreaterThanOrEqual(105);
+    expect(perimQs.length).toBeGreaterThanOrEqual(95);
 
     const shapeCounts: Record<string, number> = {};
     for (const q of perimQs) {
@@ -182,7 +184,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     const measQs = allQuestions.filter(
       (q) => q.visualModel.cpaSpec?.pictorial.kind === 'measurement_lab'
     );
-    expect(measQs.length).toBeGreaterThanOrEqual(90);
+    expect(measQs.length).toBeGreaterThanOrEqual(80);
 
     for (const q of measQs) {
       const pic = q.visualModel.cpaSpec!.pictorial;
@@ -260,7 +262,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     expect(invalidBlocks).toEqual([]);
   });
 
-  it('Toàn bộ biểu thức LaTeX trong bước Abstract của 270 câu hỏi Tháng 12 đều render KaTeX chính xác 100%', () => {
+  it('Toàn bộ biểu thức LaTeX trong bước Abstract của 246 câu hỏi Tháng 12 đều render KaTeX chính xác 100%', () => {
     const latexErrors: string[] = [];
 
     for (const q of allQuestions) {
@@ -291,7 +293,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     expect(latexErrors).toEqual([]);
   });
 
-  it('Tất cả 270 câu hỏi Tháng 12 đều ẩn phép tính (\\;?\\;) và kết quả chưa giải (= ?) trong guidedLatexSteps', () => {
+  it('Tất cả 246 câu hỏi Tháng 12 đều ẩn phép tính (\\;?\\;) và kết quả chưa giải (= ?) trong guidedLatexSteps', () => {
     const leaks: string[] = [];
 
     for (const q of allQuestions) {
@@ -329,7 +331,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     expect(leaks).toEqual([]);
   });
 
-  it('Tất cả 270 câu hỏi Tháng 12 đều có 4 phương án duy nhất, không chứa đại lượng âm, khớp bộ chấm điểm nhập đáp án & chấm nghị luận', () => {
+  it('Tất cả 246 câu hỏi Tháng 12 đều có 4 phương án duy nhất, không chứa đại lượng âm, khớp bộ chấm điểm nhập đáp án & chấm nghị luận', () => {
     const issues: string[] = [];
 
     for (const q of allQuestions) {
@@ -400,7 +402,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     expect(issues).toEqual([]);
   });
 
-  it('Không có bất kỳ rò rỉ đáp án nào trong tiêu đề mô hình, nhóm Concrete, thanh offset, hoặc gợi ý nghị luận trên cả 270 câu Tháng 12', () => {
+  it('Không có bất kỳ rò rỉ đáp án nào trong tiêu đề mô hình, nhóm Concrete, thanh offset, hoặc gợi ý nghị luận trên cả 246 câu Tháng 12', () => {
     const leaks: string[] = [];
 
     for (const q of allQuestions) {
@@ -491,7 +493,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
     }
 
     // 2. Các bài cân đĩa thăng bằng đặt đúng đĩa trái / đĩa phải (Tuần 3: Buổi 11..15 & Đề Tuần 3)
-    for (const id of ['dec-d11-q9', 'dec-d15-q9', 'dec-w3-q4', 'dec-w3-q9']) {
+    for (const id of ['dec-d11-q9', 'dec-d15-q9', 'dec-w3-q2']) {
       const pic = findQ(id).visualModel.cpaSpec!.pictorial;
       expect(pic.kind).toBe('measurement_lab');
       if (pic.kind === 'measurement_lab') {
@@ -528,21 +530,30 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
       }
     }
 
-    // 6. dec-w1-q6 dùng widthLabel để không lộ chiều dài 24 cm trước khi giải
-    const w1q6Pic = findQ('dec-w1-q6').visualModel.cpaSpec!.pictorial;
-    expect(w1q6Pic.kind).toBe('perimeter_shape');
-    if (w1q6Pic.kind === 'perimeter_shape') {
-      expect(w1q6Pic.widthLabel).toBe('Gấp 2 lần rộng');
+    // 6. dec-w1-q3 dùng widthLabel để không lộ chiều dài 24 cm trước khi giải
+    const w1q3Pic = findQ('dec-w1-q3').visualModel.cpaSpec!.pictorial;
+    expect(w1q3Pic.kind).toBe('perimeter_shape');
+    if (w1q3Pic.kind === 'perimeter_shape') {
+      expect(w1q3Pic.widthLabel).toBe('Gấp 2 lần rộng');
     }
 
-    // 7. dec-w2-q10 hình bậc thang 4 bậc hiển thị đúng 4 bậc
-    const w2q10Pic = findQ('dec-w2-q10').visualModel.cpaSpec!.pictorial;
-    expect(w2q10Pic.kind).toBe('perimeter_shape');
-    if (w2q10Pic.kind === 'perimeter_shape') {
-      expect(w2q10Pic.stepCount).toBe(4);
+    // 7. dec-w2-q4 hình bậc thang 4 bậc hiển thị đúng 4 bậc
+    const w2q4Pic = findQ('dec-w2-q4').visualModel.cpaSpec!.pictorial;
+    expect(w2q4Pic.kind).toBe('perimeter_shape');
+    if (w2q4Pic.kind === 'perimeter_shape') {
+      expect(w2q4Pic.stepCount).toBe(4);
     }
 
-    // 8. Không còn bất kỳ câu hình chữ U nào mô tả sai màu "đỏ" (SVG vẽ màu vàng cam #F59E0B)
+    // 8. dec-w4-q4 ẩn tổng phần hiệu bị giảm (2 × 150 = ? mL) và hiện giá trị đơn vị trước khi giải
+    const w4q4Pic = findQ('dec-w4-q4').visualModel.cpaSpec!.pictorial;
+    expect(w4q4Pic.kind).toBe('bar_model');
+    if (w4q4Pic.kind === 'bar_model') {
+      const b1 = w4q4Pic.bars.find((b) => b.id === 'b1');
+      expect(b1?.isUnknown).toBe(true);
+      expect(b1?.showKnownUnitValue).toBe(true);
+    }
+
+    // 9. Không còn bất kỳ câu hình chữ U nào mô tả sai màu "đỏ" (SVG vẽ màu vàng cam #F59E0B)
     for (const q of allQuestions) {
       const cpa = q.visualModel.cpaSpec!;
       if (cpa.pictorial.kind === 'perimeter_shape' && cpa.pictorial.shapeKind === 'u_shape') {
@@ -555,7 +566,7 @@ describe('Tháng 12 — Kiểm chứng Toán học & Khung Chuẩn 20 Buổi Sin
       }
     }
 
-    // 9. Kiểm tra 2 câu Phần C Nghị luận Đề Cuối Kỳ Tháng 12 đạt tối đa 5/5 điểm bài mẫu
+    // 10. Kiểm tra 2 câu Phần C Nghị luận Đề Cuối Kỳ Tháng 12 đạt tối đa 5/5 điểm bài mẫu
     for (const id of ['dec-exam-c1', 'dec-exam-c2']) {
       const q = findQ(id) as (typeof DECEMBER_FINAL_EXAM.questions)[number];
       expect(q.part).toBe('C');
